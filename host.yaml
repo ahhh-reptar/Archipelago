@@ -6,7 +6,7 @@ general_options:
 # These overwrite command line arguments!
 server_options:
   host: null
-  port: 38281
+  port: 38282
   password: null
   multidata: null
   savefile: null
