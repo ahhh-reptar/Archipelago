@@ -946,8 +946,9 @@ class StardewLogic:
         if difficulty <= 40:
             skill_required = 0
         skill_rule = self.has_skill_level("Fishing", skill_required)
+        number_fishing_rod_required = 1 if difficulty < 50 else 2
         if self.options[options.ToolProgression] == options.ToolProgression.option_progressive:
-            return self.received("Progressive Fishing Rod") & skill_rule
+            return self.received("Progressive Fishing Rod", number_fishing_rod_required) & skill_rule
 
         return skill_rule
 
