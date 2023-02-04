@@ -160,5 +160,7 @@ class StardewValleyWorld(World):
             "experience_multiplier": self.options[options.ExperienceMultiplier],
             "debris_multiplier": self.options[options.DebrisMultiplier],
             "quick_start": self.options[options.QuickStart],
+            "gifting": self.options[options.Gifting],
+            "gift_tax": self.options[options.GiftTax],
             "modified_bundles": modified_bundles,
         }

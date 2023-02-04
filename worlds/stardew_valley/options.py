@@ -250,11 +250,38 @@ class DebrisMultiplier(Choice):
 
 
 class QuickStart(Toggle):
-    """Do you want the quick start package? You will get 4 Quality Sprinklers and 1 Iridium Band,
+    """Do you want the quick start package? You will get a few items to help early game automation,
     so you can use the multiple day sleep at its maximum."""
     internal_name = "quick_start"
     display_name = "Quick Start"
     default = 1
+
+
+class Gifting(Toggle):
+    """Do you want to enable gifting items to and from other Stardew Valley worlds?"""
+    internal_name = "gifting"
+    display_name = "Gifting"
+    default = 1
+
+
+class GiftTax(SpecialRange):
+    """Joja Prime will deliver gifts within one business day, for a price!
+    Sending a gift will cost a percentage of the item's monetary value as a tax on the sender"""
+    internal_name = "gift_tax"
+    display_name = "Gift Tax"
+    range_start = 0
+    range_end = 400
+    step = 20
+    default = 30
+
+    special_range_names = {
+        "Taxation is theft": 0,
+        "Soft tax": 20,
+        "Rough tax": 40,
+        "Communism": 100,
+        "Oppression": 200,
+        "They better really need it": 400,
+    }
 
 
 stardew_valley_options: Dict[str, type(Option)] = {
@@ -276,6 +303,8 @@ stardew_valley_options: Dict[str, type(Option)] = {
         ExperienceMultiplier,
         DebrisMultiplier,
         QuickStart,
+        Gifting,
+        GiftTax,
     ]
 }
 default_options = {option.internal_name: option.default for option in stardew_valley_options.values()}
