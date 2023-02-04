@@ -291,11 +291,15 @@ arcade_machines = [
     LocationData(609, "JotPK World 3", "JotPK: Ammo 3"),
     LocationData(610, "JotPK World 1", "JotPK: Cowboy 1"),
     LocationData(611, "JotPK World 2", "JotPK: Cowboy 2"),
-    LocationData(612, "Junimo Kart 1", "Junimo Kart: Level 1"),
-    LocationData(613, "Junimo Kart 1", "Junimo Kart: Level 2"),
-    LocationData(614, "Junimo Kart 2", "Junimo Kart: Level 3"),
-    LocationData(615, "Junimo Kart 2", "Junimo Kart: Level 4"),
-    LocationData(616, "Junimo Kart 3", "Junimo Kart: Level 5"),
+    LocationData(612, "Junimo Kart 1", "Junimo Kart: Crumble Cavern"),
+    LocationData(613, "Junimo Kart 1", "Junimo Kart: Slippery Slopes"),
+    LocationData(614, "Junimo Kart 2", "Junimo Kart: Secret Level"),
+    LocationData(615, "Junimo Kart 2", "Junimo Kart: The Gem Sea Giant"),
+    LocationData(616, "Junimo Kart 2", "Junimo Kart: Slomp's Stomp"),
+    LocationData(617, "Junimo Kart 2", "Junimo Kart: Ghastly Galleon"),
+    LocationData(618, "Junimo Kart 3", "Junimo Kart: Glowshroom Grotto"),
+    LocationData(619, "Junimo Kart 3", "Junimo Kart: Red Hot Rollercoaster"),
+    LocationData(620, "Junimo Kart 3", "Junimo Kart: Sunset Speedway (Victory)"),
 ]
 
 arcade_machines_victories = [

@@ -600,8 +600,8 @@ class StardewLogic:
             "Juice": self.has("Keg"),
             "Junimo Kart Small Buff": self.has_junimo_kart_power_level(2),
             "Junimo Kart Medium Buff": self.has_junimo_kart_power_level(4),
-            "Junimo Kart Big Buff": self.has_junimo_kart_power_level(5),
-            "Junimo Kart Max Buff": self.has_junimo_kart_power_level(6),
+            "Junimo Kart Big Buff": self.has_junimo_kart_power_level(6),
+            "Junimo Kart Max Buff": self.has_junimo_kart_power_level(8),
             "Kale": self.received("Spring"),
             "Keg": self.has_skill_level("Farming", 8) & self.has("Iron Bar") & self.has("Copper Bar") & self.has(
                 "Oak Resin"),

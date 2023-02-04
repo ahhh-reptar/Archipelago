@@ -416,12 +416,7 @@ def create_unique_items(item_factory: StardewItemFactory, world_options: options
         items.append(item_factory("JotPK: Extra Life"))
         items.append(item_factory("JotPK: Extra Life"))
         items.append(item_factory("JotPK: Increased Drop Rate"))
-        items.append(item_factory("Junimo Kart: Extra Life"))
-        items.append(item_factory("Junimo Kart: Extra Life"))
-        items.append(item_factory("Junimo Kart: Extra Life"))
-        items.append(item_factory("Junimo Kart: Extra Life"))
-        items.append(item_factory("Junimo Kart: Extra Life"))
-        items.append(item_factory("Junimo Kart: Extra Life"))
+        items.extend(item_factory(item) for item in ["Junimo Kart: Extra Life"] * 8)
 
     items.append(item_factory(random.choice(items_by_group[Group.GALAXY_WEAPONS])))
 
