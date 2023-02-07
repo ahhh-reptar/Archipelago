@@ -230,9 +230,9 @@ buildings = [
     LocationData(413, "Stardew Valley", "Stable Blueprint"),
     LocationData(414, "Stardew Valley", "Slime Hutch Blueprint"),
     LocationData(415, "Stardew Valley", "Shipping Bin Blueprint"),
-    LocationData(416, "Stardew Valley", "House Kitchen Blueprint"),
-    LocationData(417, "Stardew Valley", "House Kids Room Blueprint"),
-    LocationData(418, "Stardew Valley", "House Cellar Blueprint"),
+    LocationData(416, "Stardew Valley", "Kitchen Blueprint"),
+    LocationData(417, "Stardew Valley", "Kids Room Blueprint"),
+    LocationData(418, "Stardew Valley", "Cellar Blueprint"),
 ]
 
 story_quests = [

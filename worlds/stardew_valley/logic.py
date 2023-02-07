@@ -774,9 +774,9 @@ class StardewLogic:
             "Stable": self.can_spend_money(10000) & self.has(["Hardwood", "Iron Bar"]),
             "Well": self.can_spend_money(1000) & self.has("Stone"),
             "Shipping Bin": self.can_spend_money(250) & self.has("Wood"),
-            "House Kitchen": self.can_spend_money(10000) & self.has("Wood") & self.has_house(0),
-            "House Kids Room": self.can_spend_money(50000) & self.has("Hardwood") & self.has_house(1),
-            "House Cellar": self.can_spend_money(100000) & self.has_house(2),
+            "Kitchen": self.can_spend_money(10000) & self.has("Wood") & self.has_house(0),
+            "Kids Room": self.can_spend_money(50000) & self.has("Hardwood") & self.has_house(1),
+            "Cellar": self.can_spend_money(100000) & self.has_house(2),
         })
 
         self.quest_rules.update({
@@ -946,13 +946,13 @@ class StardewLogic:
             return self.received(f"Progressive House", upgrade_level)
 
         if upgrade_level == 1:
-            return _Has("House Kitchen", self.building_rules)
+            return _Has("Kitchen", self.building_rules)
 
         if upgrade_level == 2:
-            return _Has("House Kids Room", self.building_rules)
+            return _Has("Kids Room", self.building_rules)
 
         # if upgrade_level == 3:
-        return _Has("House Cellar", self.building_rules)
+        return _Has("Cellar", self.building_rules)
 
     def can_complete_quest(self, quest: str) -> StardewRule:
         return _Has(quest, self.quest_rules)
