@@ -171,27 +171,27 @@ all_items: List[ItemData] = [
     ItemData(70, "Progressive Fishing Rod", ItemClassification.progression, {Group.PROGRESSIVE_TOOLS}),
     ItemData(71, "Golden Scythe", ItemClassification.useful),
     ItemData(72, "Progressive Mine Elevator", ItemClassification.progression),
-    ItemData(73, "Progressive Farming Level", ItemClassification.progression, {Group.SKILL_LEVEL_UP}),
-    ItemData(74, "Progressive Fishing Level", ItemClassification.progression, {Group.SKILL_LEVEL_UP}),
-    ItemData(75, "Progressive Foraging Level", ItemClassification.progression, {Group.SKILL_LEVEL_UP}),
-    ItemData(76, "Progressive Mining Level", ItemClassification.progression, {Group.SKILL_LEVEL_UP}),
-    ItemData(77, "Progressive Combat Level", ItemClassification.progression, {Group.SKILL_LEVEL_UP}),
+    ItemData(73, "Farming Level", ItemClassification.progression, {Group.SKILL_LEVEL_UP}),
+    ItemData(74, "Fishing Level", ItemClassification.progression, {Group.SKILL_LEVEL_UP}),
+    ItemData(75, "Foraging Level", ItemClassification.progression, {Group.SKILL_LEVEL_UP}),
+    ItemData(76, "Mining Level", ItemClassification.progression, {Group.SKILL_LEVEL_UP}),
+    ItemData(77, "Combat Level", ItemClassification.progression, {Group.SKILL_LEVEL_UP}),
     ItemData(78, "Earth Obelisk", ItemClassification.useful),
     ItemData(79, "Water Obelisk", ItemClassification.useful),
     ItemData(80, "Desert Obelisk", ItemClassification.progression),
     ItemData(81, "Island Obelisk", ItemClassification.progression),
     ItemData(82, "Junimo Hut", ItemClassification.useful),
     ItemData(83, "Gold Clock", ItemClassification.useful),
-    ItemData(84, "Building: Progressive Coop", ItemClassification.progression),
-    ItemData(85, "Building: Progressive Barn", ItemClassification.progression),
-    ItemData(86, "Building: Well", ItemClassification.useful),
-    ItemData(87, "Building: Silo", ItemClassification.progression),
-    ItemData(88, "Building: Mill", ItemClassification.progression),
-    ItemData(89, "Building: Progressive Shed", ItemClassification.progression),
-    ItemData(90, "Building: Fish Pond", ItemClassification.progression),
-    ItemData(91, "Building: Stable", ItemClassification.useful),
-    ItemData(92, "Building: Slime Hutch", ItemClassification.useful),
-    ItemData(93, "Building: Shipping Bin", ItemClassification.progression),
+    ItemData(84, "Progressive Coop", ItemClassification.progression),
+    ItemData(85, "Progressive Barn", ItemClassification.progression),
+    ItemData(86, "Well", ItemClassification.useful),
+    ItemData(87, "Silo", ItemClassification.progression),
+    ItemData(88, "Mill", ItemClassification.progression),
+    ItemData(89, "Progressive Shed", ItemClassification.progression),
+    ItemData(90, "Fish Pond", ItemClassification.progression),
+    ItemData(91, "Stable", ItemClassification.useful),
+    ItemData(92, "Slime Hutch", ItemClassification.useful),
+    ItemData(93, "Shipping Bin", ItemClassification.progression),
     ItemData(94, "Beach Bridge", ItemClassification.progression),
     ItemData(95, "Adventurer's Guild", ItemClassification.progression),
     ItemData(96, "Club Card", ItemClassification.progression),
@@ -207,9 +207,10 @@ all_items: List[ItemData] = [
     ItemData(106, "Galaxy Sword", ItemClassification.progression, {Group.GALAXY_WEAPONS, Group.WEAPON}),
     ItemData(107, "Galaxy Dagger", ItemClassification.progression, {Group.GALAXY_WEAPONS, Group.WEAPON}),
     ItemData(108, "Galaxy Hammer", ItemClassification.progression, {Group.GALAXY_WEAPONS, Group.WEAPON}),
-    ItemData(109, "Progressive Movement Speed Bonus", ItemClassification.useful),
-    ItemData(110, "Progressive Luck Bonus", ItemClassification.useful),
+    ItemData(109, "Movement Speed Bonus", ItemClassification.useful),
+    ItemData(110, "Luck Bonus", ItemClassification.useful),
     ItemData(111, "Lava Katana", ItemClassification.progression, {Group.MINES_FLOOR_110, Group.WEAPON}),
+    ItemData(112, "Progressive House", ItemClassification.progression),
 ]
 item_table: Dict[str, ItemData] = {}
 items_by_group: Dict[Group, List[ItemData]] = {}
@@ -376,21 +377,24 @@ def create_unique_items(item_factory: StardewItemFactory, world_options: options
 
     if world_options[options.BuildingProgression] in {options.BuildingProgression.option_progressive,
                                                       options.BuildingProgression.option_progressive_early_shipping_bin}:
-        items.append(item_factory("Building: Progressive Coop"))
-        items.append(item_factory("Building: Progressive Coop"))
-        items.append(item_factory("Building: Progressive Coop"))
-        items.append(item_factory("Building: Progressive Barn"))
-        items.append(item_factory("Building: Progressive Barn"))
-        items.append(item_factory("Building: Progressive Barn"))
-        items.append(item_factory("Building: Well"))
-        items.append(item_factory("Building: Silo"))
-        items.append(item_factory("Building: Mill"))
-        items.append(item_factory("Building: Progressive Shed"))
-        items.append(item_factory("Building: Progressive Shed"))
-        items.append(item_factory("Building: Fish Pond"))
-        items.append(item_factory("Building: Stable"))
-        items.append(item_factory("Building: Slime Hutch"))
-        items.append(item_factory("Building: Shipping Bin"))
+        items.append(item_factory("Progressive Coop"))
+        items.append(item_factory("Progressive Coop"))
+        items.append(item_factory("Progressive Coop"))
+        items.append(item_factory("Progressive Barn"))
+        items.append(item_factory("Progressive Barn"))
+        items.append(item_factory("Progressive Barn"))
+        items.append(item_factory("Well"))
+        items.append(item_factory("Silo"))
+        items.append(item_factory("Mill"))
+        items.append(item_factory("Progressive Shed"))
+        items.append(item_factory("Progressive Shed"))
+        items.append(item_factory("Fish Pond"))
+        items.append(item_factory("Stable"))
+        items.append(item_factory("Slime Hutch"))
+        items.append(item_factory("Shipping Bin"))
+        items.append(item_factory("Progressive House"))
+        items.append(item_factory("Progressive House"))
+        items.append(item_factory("Progressive House"))
 
     items.append(item_factory("Beach Bridge"))
 
@@ -423,8 +427,8 @@ def create_unique_items(item_factory: StardewItemFactory, world_options: options
     items.append(item_factory(
         friendship_pack.create_name_from_multiplier(world_options[options.ResourcePackMultiplier])))
 
-    items.extend(item_factory(item) for item in ["Progressive Movement Speed Bonus"] * 4)
-    items.extend(item_factory(item) for item in ["Progressive Luck Bonus"] * 4)
+    items.extend(item_factory(item) for item in ["Movement Speed Bonus"] * 4)
+    items.extend(item_factory(item) for item in ["Luck Bonus"] * 4)
 
     return items
 

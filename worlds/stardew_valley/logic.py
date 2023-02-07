@@ -774,6 +774,9 @@ class StardewLogic:
             "Stable": self.can_spend_money(10000) & self.has(["Hardwood", "Iron Bar"]),
             "Well": self.can_spend_money(1000) & self.has("Stone"),
             "Shipping Bin": self.can_spend_money(250) & self.has("Wood"),
+            "House Kitchen": self.can_spend_money(10000) & self.has("Wood") & self.has_house(0),
+            "House Kids Room": self.can_spend_money(50000) & self.has("Hardwood") & self.has_house(1),
+            "House Cellar": self.can_spend_money(100000) & self.has_house(2),
         })
 
         self.quest_rules.update({
@@ -896,7 +899,7 @@ class StardewLogic:
             return _True()
 
         if self.options[options.SkillProgression] == options.SkillProgression.option_progressive:
-            return self.received(f"Progressive {skill} Level", count=level)
+            return self.received(f"{skill} Level", count=level)
 
         if skill == "Fishing" and self.options[options.ToolProgression] == options.ToolProgression.option_progressive:
             return self.can_get_fishing_xp()
@@ -908,8 +911,8 @@ class StardewLogic:
             return _True()
 
         if self.options[options.SkillProgression] == options.SkillProgression.option_progressive:
-            skills_items = ["Progressive Farming Level", "Progressive Mining Level", "Progressive Foraging Level",
-                            "Progressive Fishing Level", "Progressive Combat Level"]
+            skills_items = ["Farming Level", "Mining Level", "Foraging Level",
+                            "Fishing Level", "Combat Level"]
             return self.received(skills_items, count=level)
 
         if level > 40 and self.options[options.ToolProgression] == options.ToolProgression.option_progressive:
@@ -928,9 +931,28 @@ class StardewLogic:
             elif building.startswith("Deluxe"):
                 count = 3
                 building = " ".join(["Progressive", *building.split(" ")[1:]])
-            return self.received(f"Building: {building}", count)
+            return self.received(f"{building}", count)
 
         return _Has(building, self.building_rules)
+
+    def has_house(self, upgrade_level: int) -> StardewRule:
+        if upgrade_level < 1:
+            return _True()
+
+        if upgrade_level > 3:
+            return _False()
+
+        if not self.options[options.BuildingProgression] == options.BuildingProgression.option_vanilla:
+            return self.received(f"Progressive House", upgrade_level)
+
+        if upgrade_level == 1:
+            return _Has("House Kitchen", self.building_rules)
+
+        if upgrade_level == 2:
+            return _Has("House Kids Room", self.building_rules)
+
+        # if upgrade_level == 3:
+        return _Has("House Cellar", self.building_rules)
 
     def can_complete_quest(self, quest: str) -> StardewRule:
         return _Has(quest, self.quest_rules)
@@ -953,7 +975,7 @@ class StardewLogic:
         return skill_rule
 
     def can_cook(self) -> StardewRule:
-        return self.has_upgraded_house(1) or self.has_skill_level("Foraging", 9)
+        return self.has_house(1) or self.has_skill_level("Foraging", 9)
 
     def can_smelt(self, item: str):
         return self.has("Furnace") & self.has(item)
@@ -1049,18 +1071,7 @@ class StardewLogic:
         return self.received("Junimo Kart: Extra Life", power_level)
 
     def can_get_married(self) -> StardewRule:
-        return self.can_reach_region("Tide Pools") & self.received("Fall")
-
-    def has_upgraded_house(self, level: int) -> StardewRule:
-        return self.can_upgrade_house(level)
-
-    def can_upgrade_house(self, level: int) -> StardewRule:
-        if level == 1:
-            return self.can_spend_money(10000)
-        if level == 2:
-            return self.can_spend_money(60000) & self.has("Hardwood")
-        if level == 3:
-            return self.can_spend_money(160000) & self.has("Hardwood")
+        return self.can_reach_region("Tide Pools") & self.can_have_relationship("Bachelor", 10) & self.has_house(1)
 
     def can_have_relationship(self, npc: str, hearts: int) -> StardewRule:
         if npc == "Leo":
@@ -1111,8 +1122,7 @@ class StardewLogic:
                                # Completing the museum not expected
                                # Catching every fish not expected
                                # Shipping every item not expected
-                               self.can_get_married() & self.has_upgraded_house(2),
-                               # Married with 2 house upgrades
+                               self.can_get_married() & self.has_house(2),
                                self.received("Fall"),  # 5 Friends (TODO)
                                self.received("Winter"),  # 10 friends (TODO)
                                self.received("Fall"),  # Max Pet takes 56 days min

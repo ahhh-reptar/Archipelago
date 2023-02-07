@@ -13,6 +13,11 @@ help_wanted_per_season = {
     3: "Fall",
     4: "Winter",
     5: "Year Two",
+    6: "Year Two",
+    7: "Year Two",
+    8: "Year Two",
+    9: "Year Two",
+    10: "Year Two",
 }
 
 
@@ -110,25 +115,27 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: options.Stard
         MultiWorldRules.set_rule(multi_world.get_location(quest.name, player),
                                  logic.quest_rules[quest.name].simplify())
 
-    # Story Quests
-    for quest in locations.help_wanted_quests:
-        prefix = "Help Wanted: "
-        words = quest.name.split(" ")
-        level = int(words[-1])
-        type_of_quest = quest.name[len(prefix):-(1 + len(words[-1]))]
-        if type_of_quest == "Item Delivery":
-            level = int((level + 1) / 2)
-        rule = logic.received(help_wanted_per_season[min(5, level)])
-        if type_of_quest == "Fishing":
-            rule = rule & logic.can_fish()
-        if type_of_quest == "Slay Monsters":
-            rule = rule & logic.has_any_weapon()
+    # Help Wanted Quests
+    desired_number_help_wanted: int = world_options[options.HelpWantedLocations] // 7
+    for i in range(1, desired_number_help_wanted + 1):
+        prefix = "Help Wanted:"
+        delivery = "Item Delivery"
+        rule = logic.received(help_wanted_per_season[min(5, i)])
+        fishing_rule = rule & logic.can_fish()
+        slay_rule = rule & logic.has_any_weapon()
+        for j in range(i, i + 4):
+            MultiWorldRules.set_rule(multi_world.get_location(f"{prefix} {delivery} {j}", player),
+                                     rule.simplify())
 
-        MultiWorldRules.set_rule(multi_world.get_location(quest.name, player),
+        MultiWorldRules.set_rule(multi_world.get_location(f"{prefix} Gathering {i}", player),
                                  rule.simplify())
+        MultiWorldRules.set_rule(multi_world.get_location(f"{prefix} Fishing {i}", player),
+                                 fishing_rule.simplify())
+        MultiWorldRules.set_rule(multi_world.get_location(f"{prefix} Slay Monsters {i}", player),
+                                 slay_rule.simplify())
 
     if world_options[options.BuildingProgression] == options.BuildingProgression.option_progressive_early_shipping_bin:
-        summer.access_rule = summer.access_rule & logic.received("Building: Shipping Bin")
+        summer.access_rule = summer.access_rule & logic.received("Shipping Bin")
 
     # Backpacks
     if world_options[options.BackpackProgression] != options.BackpackProgression.option_vanilla:
