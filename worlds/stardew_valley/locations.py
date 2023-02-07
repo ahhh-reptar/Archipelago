@@ -299,12 +299,11 @@ arcade_machines = [
     LocationData(617, "Junimo Kart 2", "Junimo Kart: Ghastly Galleon"),
     LocationData(618, "Junimo Kart 3", "Junimo Kart: Glowshroom Grotto"),
     LocationData(619, "Junimo Kart 3", "Junimo Kart: Red Hot Rollercoaster"),
-    LocationData(620, "Junimo Kart 3", "Junimo Kart: Sunset Speedway (Victory)"),
 ]
 
 arcade_machines_victories = [
-    LocationData(617, "JotPK World 3", "Journey of the Prairie King Victory"),
-    LocationData(618, "Junimo Kart 3", "Junimo Kart Victory"),
+    LocationData(620, "JotPK World 3", "Journey of the Prairie King Victory"),
+    LocationData(621, "Junimo Kart 3", "Junimo Kart: Sunset Speedway (Victory)"),
 ]
 
 other_locations = [

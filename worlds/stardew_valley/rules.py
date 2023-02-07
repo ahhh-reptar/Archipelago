@@ -154,7 +154,7 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: options.Stard
                                  logic.has("Junimo Kart Medium Buff").simplify())
         MultiWorldRules.add_rule(multi_world.get_entrance("Reach Junimo Kart 3", player),
                                  logic.has("Junimo Kart Big Buff").simplify())
-        MultiWorldRules.add_rule(multi_world.get_location("Junimo Kart Victory", player),
+        MultiWorldRules.add_rule(multi_world.get_location("Junimo Kart: Sunset Speedway (Victory)", player),
                                  logic.has("Junimo Kart Max Buff").simplify())
         MultiWorldRules.add_rule(multi_world.get_entrance("Play Journey of the Prairie King", player),
                                  logic.has("JotPK Small Buff").simplify())
