@@ -146,13 +146,13 @@ class StardewValleyWorld(World):
 
         return {
             "starting_money": self.options[options.StartingMoney],
+            "entrance_randomization": self.options[options.EntranceRandomization],
             "backpack_progression": self.options[options.BackpackProgression],
             "tool_progression": self.options[options.ToolProgression],
             "elevator_progression": self.options[options.TheMinesElevatorsProgression],
             "skill_progression": self.options[options.SkillProgression],
             "building_progression": self.options[options.BuildingProgression],
             "arcade_machine_progression": self.options[options.ArcadeMachineLocations],
-            "entrance_randomization": self.options[options.EntranceRandomization],
             "help_wanted_locations": self.options[options.HelpWantedLocations],
             "death_link": self.options["death_link"],
             "goal": self.options[options.Goal],
