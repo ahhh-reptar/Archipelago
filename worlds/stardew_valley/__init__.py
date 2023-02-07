@@ -152,6 +152,8 @@ class StardewValleyWorld(World):
             "skill_progression": self.options[options.SkillProgression],
             "building_progression": self.options[options.BuildingProgression],
             "arcade_machine_progression": self.options[options.ArcadeMachineLocations],
+            "entrance_randomization": self.options[options.EntranceRandomization],
+            "help_wanted_locations": self.options[options.HelpWantedLocations],
             "death_link": self.options["death_link"],
             "goal": self.options[options.Goal],
             "seed": self.multiworld.slot_seeds[self.player].randrange(1000000000),  # Seed should be max 9 digits
