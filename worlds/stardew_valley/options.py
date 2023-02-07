@@ -98,6 +98,26 @@ class BundlePrice(Choice):
     option_expensive = 3
 
 
+class EntranceRandomization(Choice):
+    """Should area entrances be randomized?
+    With Disabled, no entrance randomization is done
+    With Pelican Town, only buildings in the main town area are randomized with each other
+    With Non Progression, only buildings that are always available are randomized with each other
+    With Buildings, All buildings in the world are randomized with each other
+    With Everything, All buildings and areas are randomized with each other
+    With Chaos, same as everything, but the buildings are shuffled again every in-game day. You can't learn it!
+    """
+    internal_name = "entrance_randomization"
+    display_name = "Entrance Randomization"
+    default = 1
+    option_disabled = 0
+    option_pelican_town = 1
+    option_non_progression = 2
+    # option_buildings = 3
+    # option_everything = 4
+    # option_chaos = 4
+
+
 class BackpackProgression(Choice):
     """How is the backpack progression handled?
     With Vanilla, you can buy them at Pierre's.
@@ -187,6 +207,25 @@ class ArcadeMachineLocations(Choice):
     option_victories = 1
     option_victories_easy = 2
     option_full_shuffling = 3
+
+
+class HelpWantedLocations(SpecialRange):
+    """How many "Help Wanted" quests need to be completed as ArchipelagoLocations
+    Out of every 7 quests, 4 will be item deliveries, and then 1 of each for: Fishing, Gathering and Slaying Monsters."""
+    internal_name = "help_wanted_locations"
+    default = 14
+    range_start = 0
+    range_end = 56
+    step = 7
+    display_name = "Number of Help Wanted locations"
+
+    special_range_names = {
+        "none": 0,
+        "minimum": 7,
+        "normal": 14,
+        "lots": 28,
+        "maximum": 56,
+    }
 
 
 class MultipleDaySleepEnabled(Toggle):

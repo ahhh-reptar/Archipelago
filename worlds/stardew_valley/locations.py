@@ -319,30 +319,56 @@ help_wanted_quests = [
     LocationData(804, "Stardew Valley", "Help Wanted: Gathering 4"),
     LocationData(805, "Stardew Valley", "Help Wanted: Gathering 5"),
     LocationData(806, "Stardew Valley", "Help Wanted: Gathering 6"),
+    LocationData(807, "Stardew Valley", "Help Wanted: Gathering 7"),
+    LocationData(808, "Stardew Valley", "Help Wanted: Gathering 8"),
     LocationData(811, "Stardew Valley", "Help Wanted: Slay Monsters 1"),
     LocationData(812, "Stardew Valley", "Help Wanted: Slay Monsters 2"),
     LocationData(813, "Stardew Valley", "Help Wanted: Slay Monsters 3"),
     LocationData(814, "Stardew Valley", "Help Wanted: Slay Monsters 4"),
     LocationData(815, "Stardew Valley", "Help Wanted: Slay Monsters 5"),
     LocationData(816, "Stardew Valley", "Help Wanted: Slay Monsters 6"),
+    LocationData(817, "Stardew Valley", "Help Wanted: Slay Monsters 7"),
+    LocationData(818, "Stardew Valley", "Help Wanted: Slay Monsters 8"),
     LocationData(821, "Stardew Valley", "Help Wanted: Fishing 1"),
     LocationData(822, "Stardew Valley", "Help Wanted: Fishing 2"),
     LocationData(823, "Stardew Valley", "Help Wanted: Fishing 3"),
     LocationData(824, "Stardew Valley", "Help Wanted: Fishing 4"),
     LocationData(825, "Stardew Valley", "Help Wanted: Fishing 5"),
     LocationData(826, "Stardew Valley", "Help Wanted: Fishing 6"),
-    LocationData(831, "Stardew Valley", "Help Wanted: Item Delivery 1"),
-    LocationData(832, "Stardew Valley", "Help Wanted: Item Delivery 2"),
-    LocationData(833, "Stardew Valley", "Help Wanted: Item Delivery 3"),
-    LocationData(834, "Stardew Valley", "Help Wanted: Item Delivery 4"),
-    LocationData(835, "Stardew Valley", "Help Wanted: Item Delivery 5"),
-    LocationData(836, "Stardew Valley", "Help Wanted: Item Delivery 6"),
-    LocationData(837, "Stardew Valley", "Help Wanted: Item Delivery 7"),
-    LocationData(838, "Stardew Valley", "Help Wanted: Item Delivery 8"),
-    LocationData(839, "Stardew Valley", "Help Wanted: Item Delivery 9"),
-    LocationData(840, "Stardew Valley", "Help Wanted: Item Delivery 10"),
-    LocationData(841, "Stardew Valley", "Help Wanted: Item Delivery 11"),
-    LocationData(842, "Stardew Valley", "Help Wanted: Item Delivery 12"),
+    LocationData(827, "Stardew Valley", "Help Wanted: Fishing 7"),
+    LocationData(828, "Stardew Valley", "Help Wanted: Fishing 8"),
+    LocationData(841, "Stardew Valley", "Help Wanted: Item Delivery 1"),
+    LocationData(842, "Stardew Valley", "Help Wanted: Item Delivery 2"),
+    LocationData(843, "Stardew Valley", "Help Wanted: Item Delivery 3"),
+    LocationData(844, "Stardew Valley", "Help Wanted: Item Delivery 4"),
+    LocationData(845, "Stardew Valley", "Help Wanted: Item Delivery 5"),
+    LocationData(846, "Stardew Valley", "Help Wanted: Item Delivery 6"),
+    LocationData(847, "Stardew Valley", "Help Wanted: Item Delivery 7"),
+    LocationData(848, "Stardew Valley", "Help Wanted: Item Delivery 8"),
+    LocationData(849, "Stardew Valley", "Help Wanted: Item Delivery 9"),
+    LocationData(850, "Stardew Valley", "Help Wanted: Item Delivery 10"),
+    LocationData(851, "Stardew Valley", "Help Wanted: Item Delivery 11"),
+    LocationData(852, "Stardew Valley", "Help Wanted: Item Delivery 12"),
+    LocationData(853, "Stardew Valley", "Help Wanted: Item Delivery 13"),
+    LocationData(854, "Stardew Valley", "Help Wanted: Item Delivery 14"),
+    LocationData(855, "Stardew Valley", "Help Wanted: Item Delivery 15"),
+    LocationData(856, "Stardew Valley", "Help Wanted: Item Delivery 16"),
+    LocationData(857, "Stardew Valley", "Help Wanted: Item Delivery 17"),
+    LocationData(858, "Stardew Valley", "Help Wanted: Item Delivery 18"),
+    LocationData(859, "Stardew Valley", "Help Wanted: Item Delivery 19"),
+    LocationData(860, "Stardew Valley", "Help Wanted: Item Delivery 20"),
+    LocationData(861, "Stardew Valley", "Help Wanted: Item Delivery 21"),
+    LocationData(862, "Stardew Valley", "Help Wanted: Item Delivery 22"),
+    LocationData(863, "Stardew Valley", "Help Wanted: Item Delivery 23"),
+    LocationData(864, "Stardew Valley", "Help Wanted: Item Delivery 24"),
+    LocationData(865, "Stardew Valley", "Help Wanted: Item Delivery 25"),
+    LocationData(866, "Stardew Valley", "Help Wanted: Item Delivery 26"),
+    LocationData(867, "Stardew Valley", "Help Wanted: Item Delivery 27"),
+    LocationData(868, "Stardew Valley", "Help Wanted: Item Delivery 28"),
+    LocationData(869, "Stardew Valley", "Help Wanted: Item Delivery 29"),
+    LocationData(870, "Stardew Valley", "Help Wanted: Item Delivery 30"),
+    LocationData(871, "Stardew Valley", "Help Wanted: Item Delivery 31"),
+    LocationData(872, "Stardew Valley", "Help Wanted: Item Delivery 32"),
 ]
 
 events_locations = [
@@ -375,6 +401,20 @@ all_locations = [
 location_table: Dict[str, LocationData] = {location.name: location for location in all_locations}
 
 
+def extend_help_wanted_quests(randomized_locations: list[LocationData], desired_number_of_quests: int):
+    for i in range(0, desired_number_of_quests):
+        batch = i // 7
+        index_this_batch = i % 7
+        if index_this_batch < 4:
+            randomized_locations.append(location_table[f"Help Wanted: Item Delivery {(batch * 4) + index_this_batch + 1}"])
+        elif index_this_batch == 4:
+            randomized_locations.append(location_table[f"Help Wanted: Fishing {batch + 1}"])
+        elif index_this_batch == 5:
+            randomized_locations.append(location_table[f"Help Wanted: Slay Monsters {batch + 1}"])
+        elif index_this_batch == 6:
+            randomized_locations.append(location_table[f"Help Wanted: Gathering {batch + 1}"])
+
+
 def create_locations(location_collector: StardewLocationCollector, world_options: options.StardewOptions):
     randomized_locations = []
 
@@ -403,10 +443,9 @@ def create_locations(location_collector: StardewLocationCollector, world_options
     if world_options[options.ArcadeMachineLocations] == options.ArcadeMachineLocations.option_full_shuffling:
         randomized_locations.extend(arcade_machines)
 
-    randomized_locations.extend(other_locations)
-
     randomized_locations.extend(story_quests)
-    randomized_locations.extend(help_wanted_quests)
+    extend_help_wanted_quests(randomized_locations, world_options[options.HelpWantedLocations])
+    randomized_locations.extend(other_locations)
 
     for location_data in randomized_locations:
         location_collector(location_data.name, location_data.code, location_data.region)
