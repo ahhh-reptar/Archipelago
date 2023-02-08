@@ -143,3 +143,19 @@ class TestLocationGeneration(SVTestBase):
         for location in self.multiworld.get_locations(self.player):
             if not location.event:
                 assert location.name in location_table
+
+
+class TestLocationAndItemCount(SVTestBase):
+    options = {
+        options.BackpackProgression.internal_name: options.BackpackProgression.option_vanilla,
+        options.ToolProgression.internal_name: options.ToolProgression.option_vanilla,
+        options.TheMinesElevatorsProgression.internal_name: options.TheMinesElevatorsProgression.option_vanilla,
+        options.SkillProgression.internal_name: options.SkillProgression.option_vanilla,
+        options.BuildingProgression.internal_name: options.BuildingProgression.option_vanilla,
+        options.ArcadeMachineLocations.internal_name: options.ArcadeMachineLocations.option_disabled,
+        options.HelpWantedLocations.internal_name: 0,
+        options.NumberOfPlayerBuffs.internal_name: 12,
+    }
+
+    def test_minimal_location_maximal_items_still_valid(self):
+        assert len(self.multiworld.get_locations()) >= len(self.multiworld.get_items())

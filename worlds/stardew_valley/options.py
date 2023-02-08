@@ -228,6 +228,18 @@ class HelpWantedLocations(SpecialRange):
     }
 
 
+class NumberOfPlayerBuffs(Range):
+    """Number of buffs to the player of each type that exist as items in the pool.
+    Buffs include movement speed (+25% multiplier, stacks additively)
+    and daily luck bonus (0.025 flat value per buff)"""
+    internal_name = "player_buff_number"
+    display_name = "Number of Player Buffs"
+    range_start = 0
+    range_end = 12
+    default = 4
+    step = 1
+
+
 class MultipleDaySleepEnabled(Toggle):
     """Should you be able to sleep automatically multiple day strait?"""
     internal_name = "multiple_day_sleep_enabled"
@@ -338,6 +350,7 @@ stardew_valley_options: Dict[str, type(Option)] = {
         TheMinesElevatorsProgression,
         ArcadeMachineLocations,
         HelpWantedLocations,
+        NumberOfPlayerBuffs,
         Goal,
         MultipleDaySleepEnabled,
         MultipleDaySleepCost,

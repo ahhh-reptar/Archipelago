@@ -427,8 +427,9 @@ def create_unique_items(item_factory: StardewItemFactory, world_options: options
     items.append(item_factory(
         friendship_pack.create_name_from_multiplier(world_options[options.ResourcePackMultiplier])))
 
-    items.extend(item_factory(item) for item in ["Movement Speed Bonus"] * 4)
-    items.extend(item_factory(item) for item in ["Luck Bonus"] * 4)
+    number_of_buffs: int = world_options[options.NumberOfPlayerBuffs]
+    items.extend(item_factory(item) for item in ["Movement Speed Bonus"] * number_of_buffs)
+    items.extend(item_factory(item) for item in ["Luck Bonus"] * number_of_buffs)
 
     return items
 
