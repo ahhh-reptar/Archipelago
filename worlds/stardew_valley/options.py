@@ -59,7 +59,7 @@ class ResourcePackMultiplier(SpecialRange):
     default = 100
     range_start = 0
     range_end = 200
-    step = 10
+    step = 25
     display_name = "Resource Pack Multiplier"
 
     special_range_names = {
@@ -311,15 +311,15 @@ class GiftTax(SpecialRange):
     range_start = 0
     range_end = 400
     step = 20
-    default = 30
+    default = 20
 
     special_range_names = {
-        "Taxation is theft": 0,
-        "Soft tax": 20,
-        "Rough tax": 40,
-        "Communism": 100,
-        "Oppression": 200,
-        "They better really need it": 400,
+        "taxation is theft": 0,
+        "soft tax": 20,
+        "rough tax": 40,
+        "communism": 100,
+        "oppression": 200,
+        "they better really need it": 400,
     }
 
 

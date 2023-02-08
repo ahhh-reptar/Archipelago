@@ -111,7 +111,7 @@ class TestProgressiveElevator(SVTestBase):
         self.collect([self.get_item_by_name("Progressive Pickaxe")] * 2)
         self.collect([self.get_item_by_name("Progressive Mine Elevator")] * 22)
         self.collect(self.multiworld.create_item("Bone Sword", self.player))
-        self.collect([self.get_item_by_name("Progressive Combat Level")] * 4)
+        self.collect([self.get_item_by_name("Combat Level")] * 4)
         self.collect(self.get_item_by_name("Adventurer's Guild"))
 
         assert not self.multiworld.get_region("The Mines - Floor 120", self.player).can_reach(self.multiworld.state)
@@ -124,15 +124,15 @@ class TestProgressiveElevator(SVTestBase):
         self.collect([self.get_item_by_name("Progressive Pickaxe")] * 2)
         self.collect([self.get_item_by_name("Progressive Mine Elevator")] * 22)
         self.collect(self.multiworld.create_item("Bone Sword", self.player))
-        self.collect([self.get_item_by_name("Progressive Combat Level")] * 4)
+        self.collect([self.get_item_by_name("Combat Level")] * 4)
         self.collect(self.get_item_by_name("Adventurer's Guild"))
 
         assert not self.multiworld.get_region("The Mines - Floor 120", self.player).can_reach(self.multiworld.state)
 
         self.collect(self.get_item_by_name("Progressive Pickaxe"))
         self.collect(self.multiworld.create_item("Steel Falchion", self.player))
-        self.collect(self.get_item_by_name("Progressive Combat Level"))
-        self.collect(self.get_item_by_name("Progressive Combat Level"))
+        self.collect(self.get_item_by_name("Combat Level"))
+        self.collect(self.get_item_by_name("Combat Level"))
 
         assert self.multiworld.get_region("The Mines - Floor 120", self.player).can_reach(self.multiworld.state)
 

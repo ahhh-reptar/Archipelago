@@ -16,9 +16,10 @@ class TestProgressiveToolsLogic(SVTestBase):
 
         fishing_rod = self.get_item_by_name("Progressive Fishing Rod")
         self.multiworld.state.collect(fishing_rod, event=True)
+        self.multiworld.state.collect(fishing_rod, event=True)
         assert not self.world.logic.has("Sturgeon")(self.multiworld.state)
 
-        fishing_level = self.get_item_by_name("Progressive Fishing Level")
+        fishing_level = self.get_item_by_name("Fishing Level")
         self.multiworld.state.collect(fishing_level, event=True)
         assert not self.world.logic.has("Sturgeon")(self.multiworld.state)
 
@@ -88,7 +89,7 @@ class TestBuildingLogic(SVTestBase):
         assert not self.world.logic.can_reach_location("Big Coop Blueprint")(self.multiworld.state), \
             f"Rule is {repr(self.multiworld.get_location('Big Coop Blueprint', self.player).access_rule)}"
 
-        self.multiworld.state.collect(self.get_item_by_name("Building: Progressive Coop"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Progressive Coop"), event=True)
         assert self.world.logic.can_reach_location("Big Coop Blueprint")(self.multiworld.state), \
             f"Rule is {repr(self.multiworld.get_location('Big Coop Blueprint', self.player).access_rule)}"
 
@@ -98,10 +99,10 @@ class TestBuildingLogic(SVTestBase):
         self.multiworld.state.collect(self.get_item_by_name("Year Two"), event=True)
         assert not self.world.logic.can_reach_location("Deluxe Coop Blueprint")(self.multiworld.state)
 
-        self.multiworld.state.collect(self.get_item_by_name("Building: Progressive Coop"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Progressive Coop"), event=True)
         assert not self.world.logic.can_reach_location("Deluxe Coop Blueprint")(self.multiworld.state)
 
-        self.multiworld.state.collect(self.get_item_by_name("Building: Progressive Coop"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Progressive Coop"), event=True)
         assert self.world.logic.can_reach_location("Deluxe Coop Blueprint")(self.multiworld.state)
 
     def test_big_shed_blueprint(self):
@@ -112,7 +113,7 @@ class TestBuildingLogic(SVTestBase):
         assert not self.world.logic.can_reach_location("Big Shed Blueprint")(self.multiworld.state), \
             f"Rule is {repr(self.multiworld.get_location('Big Shed Blueprint', self.player).access_rule)}"
 
-        self.multiworld.state.collect(self.get_item_by_name("Building: Progressive Shed"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Progressive Shed"), event=True)
         assert self.world.logic.can_reach_location("Big Shed Blueprint")(self.multiworld.state), \
             f"Rule is {repr(self.multiworld.get_location('Big Shed Blueprint', self.player).access_rule)}"
 
@@ -224,7 +225,7 @@ class TestWeaponsLogic(SVTestBase):
         self.multiworld.state.collect(self.get_item_by_name("Progressive Pickaxe"), event=True)
         self.multiworld.state.collect(self.get_item_by_name("Progressive Pickaxe"), event=True)
         self.multiworld.state.collect(self.get_item_by_name("Progressive Pickaxe"), event=True)
-        self.collect([self.get_item_by_name("Progressive Combat Level")] * 10)
+        self.collect([self.get_item_by_name("Combat Level")] * 10)
         self.collect([self.get_item_by_name("Progressive Mine Elevator")] * 24)
         self.multiworld.state.collect(self.get_item_by_name("Bus Repair"), event=True)
         self.multiworld.state.collect(self.get_item_by_name("Skull Key"), event=True)
