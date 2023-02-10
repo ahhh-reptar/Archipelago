@@ -5,7 +5,7 @@ from BaseClasses import MultiWorld
 from worlds.generic import Rules as MultiWorldRules
 from . import options, locations
 from .bundles import Bundle
-from .logic import StardewLogic, _And, season_per_skill_level, tool_prices
+from .logic import StardewLogic, _And, season_per_skill_level, tool_prices, week_days
 
 help_wanted_per_season = {
     1: "Spring",
@@ -153,6 +153,14 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: options.Stard
                              logic.has("Sweet Gem Berry").simplify())
     MultiWorldRules.add_rule(multi_world.get_location("Galaxy Sword Shrine", player),
                              logic.has("Prismatic Shard").simplify())
+
+    # Traveling Merchant
+    for day in week_days:
+        item_for_day = f"Traveling Merchant: {day}"
+        for i in range(1, 4):
+            location_name = f"Traveling Merchant {day} Item {i}"
+            MultiWorldRules.set_rule(multi_world.get_location(location_name, player),
+                                     logic.received(item_for_day))
 
     if world_options[options.ArcadeMachineLocations] == options.ArcadeMachineLocations.option_full_shuffling:
         MultiWorldRules.add_rule(multi_world.get_entrance("Play Junimo Kart", player),

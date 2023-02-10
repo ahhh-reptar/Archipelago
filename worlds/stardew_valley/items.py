@@ -211,6 +211,15 @@ all_items: List[ItemData] = [
     ItemData(110, "Luck Bonus", ItemClassification.useful),
     ItemData(111, "Lava Katana", ItemClassification.progression, {Group.MINES_FLOOR_110, Group.WEAPON}),
     ItemData(112, "Progressive House", ItemClassification.progression),
+    ItemData(113, "Traveling Merchant: Sunday", ItemClassification.progression),
+    ItemData(114, "Traveling Merchant: Monday", ItemClassification.progression),
+    ItemData(115, "Traveling Merchant: Tuesday", ItemClassification.progression),
+    ItemData(116, "Traveling Merchant: Wednesday", ItemClassification.progression),
+    ItemData(117, "Traveling Merchant: Thursday", ItemClassification.progression),
+    ItemData(118, "Traveling Merchant: Friday", ItemClassification.progression),
+    ItemData(119, "Traveling Merchant: Saturday", ItemClassification.progression),
+    ItemData(120, "Traveling Merchant Stock Size", ItemClassification.progression),
+    ItemData(121, "Traveling Merchant Discount", ItemClassification.progression),
 ]
 item_table: Dict[str, ItemData] = {}
 items_by_group: Dict[Group, List[ItemData]] = {}
@@ -329,17 +338,13 @@ def create_items(item_factory: StardewItemFactory, locations_count: int, world_o
     return items
 
 
-def create_unique_items(item_factory: StardewItemFactory, world_options: options.StardewOptions, random: Random) -> \
-        List[Item]:
-    items = []
-
-    items.extend(item_factory(item) for item in items_by_group[Group.COMMUNITY_REWARD])
-
+def create_backpack_items(item_factory: StardewItemFactory, world_options: options.StardewOptions, items: List[Item]):
     if (world_options[options.BackpackProgression] == options.BackpackProgression.option_progressive or
             world_options[options.BackpackProgression] == options.BackpackProgression.option_early_progressive):
         items.extend(item_factory(item) for item in ["Progressive Backpack"] * 2)
 
-    # The Mines rewards
+
+def create_mine_rewards(item_factory: StardewItemFactory, items: List[Item], random: Random):
     items.append(item_factory("Rusty Sword"))
     items.append(item_factory(random.choice(items_by_group[Group.MINES_FLOOR_10])))
     items.append(item_factory(random.choice(items_by_group[Group.MINES_FLOOR_20])))
@@ -352,22 +357,27 @@ def create_unique_items(item_factory: StardewItemFactory, world_options: options
     items.append(item_factory(random.choice(items_by_group[Group.MINES_FLOOR_110])))
     items.append(item_factory("Skull Key"))
 
+
+def create_mine_elevators(item_factory: StardewItemFactory, world_options: options.StardewOptions, items: List[Item]):
     if (world_options[options.TheMinesElevatorsProgression] ==
             options.TheMinesElevatorsProgression.option_progressive or
             world_options[options.TheMinesElevatorsProgression] ==
             options.TheMinesElevatorsProgression.option_progressive_from_previous_floor):
         items.extend([item_factory(item) for item in ["Progressive Mine Elevator"] * 24])
 
-    # Tools
+
+def create_tools(item_factory: StardewItemFactory, world_options: options.StardewOptions, items: List[Item]):
     if world_options[options.ToolProgression] == options.ToolProgression.option_progressive:
         items.extend(item_factory(item) for item in items_by_group[Group.PROGRESSIVE_TOOLS] * 4)
-
     items.append(item_factory("Golden Scythe"))
 
-    # Skills
+
+def create_skills(item_factory: StardewItemFactory, world_options: options.StardewOptions, items: List[Item]):
     if world_options[options.SkillProgression] == options.SkillProgression.option_progressive:
         items.extend([item_factory(item) for item in items_by_group[Group.SKILL_LEVEL_UP] * 10])
 
+
+def create_wizard_buildings(item_factory: StardewItemFactory, items: List[Item]):
     items.append(item_factory("Earth Obelisk"))
     items.append(item_factory("Water Obelisk"))
     items.append(item_factory("Desert Obelisk"))
@@ -375,6 +385,8 @@ def create_unique_items(item_factory: StardewItemFactory, world_options: options
     items.append(item_factory("Junimo Hut"))
     items.append(item_factory("Gold Clock"))
 
+
+def create_carpenter_buildings(item_factory: StardewItemFactory, world_options: options.StardewOptions, items: List[Item]):
     if world_options[options.BuildingProgression] in {options.BuildingProgression.option_progressive,
                                                       options.BuildingProgression.option_progressive_early_shipping_bin}:
         items.append(item_factory("Progressive Coop"))
@@ -396,17 +408,21 @@ def create_unique_items(item_factory: StardewItemFactory, world_options: options
         items.append(item_factory("Progressive House"))
         items.append(item_factory("Progressive House"))
 
-    items.append(item_factory("Beach Bridge"))
 
+def create_special_quest_rewards(item_factory: StardewItemFactory, items: List[Item]):
     items.append(item_factory("Adventurer's Guild"))
     items.append(item_factory("Club Card"))
     items.append(item_factory("Magnifying Glass"))
     items.append(item_factory("Bear's Knowledge"))
     items.append(item_factory("Iridium Snake Milk"))
 
+
+def create_stardrops(item_factory: StardewItemFactory, items: List[Item]):
     items.append(item_factory("Stardrop"))  # The Mines level 100
     items.append(item_factory("Stardrop"))  # Old Master Cannoli
 
+
+def create_arcade_machine_items(item_factory: StardewItemFactory, world_options: options.StardewOptions, items: List[Item]):
     if world_options[options.ArcadeMachineLocations] == options.ArcadeMachineLocations.option_full_shuffling:
         items.append(item_factory("JotPK: Progressive Boots"))
         items.append(item_factory("JotPK: Progressive Boots"))
@@ -422,15 +438,46 @@ def create_unique_items(item_factory: StardewItemFactory, world_options: options
         items.append(item_factory("JotPK: Increased Drop Rate"))
         items.extend(item_factory(item) for item in ["Junimo Kart: Extra Life"] * 8)
 
-    items.append(item_factory(random.choice(items_by_group[Group.GALAXY_WEAPONS])))
 
-    items.append(item_factory(
-        friendship_pack.create_name_from_multiplier(world_options[options.ResourcePackMultiplier])))
-
+def create_player_buffs(item_factory: StardewItemFactory, world_options: options.StardewOptions, items: List[Item]):
     number_of_buffs: int = world_options[options.NumberOfPlayerBuffs]
     items.extend(item_factory(item) for item in ["Movement Speed Bonus"] * number_of_buffs)
     items.extend(item_factory(item) for item in ["Luck Bonus"] * number_of_buffs)
 
+
+def create_traveling_merchant_items(item_factory: StardewItemFactory, items: List[Item]):
+    items.append(item_factory("Traveling Merchant: Sunday"))
+    items.append(item_factory("Traveling Merchant: Monday"))
+    items.append(item_factory("Traveling Merchant: Tuesday"))
+    items.append(item_factory("Traveling Merchant: Wednesday"))
+    items.append(item_factory("Traveling Merchant: Thursday"))
+    items.append(item_factory("Traveling Merchant: Friday"))
+    items.append(item_factory("Traveling Merchant: Saturday"))
+    items.extend(item_factory(item) for item in ["Traveling Merchant Stock Size"] * 6)
+    items.extend(item_factory(item) for item in ["Traveling Merchant Discount"] * 8)
+
+
+def create_unique_items(item_factory: StardewItemFactory, world_options: options.StardewOptions, random: Random) -> \
+        List[Item]:
+    items = []
+
+    items.extend(item_factory(item) for item in items_by_group[Group.COMMUNITY_REWARD])
+
+    create_backpack_items(item_factory, world_options, items)
+    create_mine_rewards(item_factory, items, random)
+    create_mine_elevators(item_factory, world_options, items)
+    create_tools(item_factory, world_options, items)
+    create_skills(item_factory, world_options, items)
+    create_wizard_buildings(item_factory, items)
+    create_carpenter_buildings(item_factory, world_options, items)
+    items.append(item_factory("Beach Bridge"))
+    create_special_quest_rewards(item_factory, items)
+    create_stardrops(item_factory, items)
+    create_arcade_machine_items(item_factory, world_options, items)
+    items.append(item_factory(random.choice(items_by_group[Group.GALAXY_WEAPONS])))
+    items.append(item_factory(friendship_pack.create_name_from_multiplier(world_options[options.ResourcePackMultiplier])))
+    create_player_buffs(item_factory, world_options, items)
+    create_traveling_merchant_items(item_factory, items)
     return items
 
 

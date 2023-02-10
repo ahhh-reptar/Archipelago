@@ -87,7 +87,7 @@ def initialize_season_per_skill_level():
 
 
 initialize_season_per_skill_level()
-
+week_days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
 class StardewRule:
     def __call__(self, state: CollectionState) -> bool:
@@ -726,7 +726,7 @@ class StardewLogic:
             "Super Cucumber": self.can_fish(80) & (self.received("Summer") | self.received("Fall")),
             "Survival Burger": self.can_cook() & self.has_skill_level("Foraging", 2) &
                                self.has(["Bread", "Cave Carrot", "Eggplant"]),
-            "Sweet Gem Berry": self.received("Fall") | self.received("Greenhouse"),
+            "Sweet Gem Berry": (self.received("Fall") | self.received("Greenhouse")) & self.has_traveling_merchant(),
             "Sweet Pea": self.received("Summer"),
             "Tapper": self.has_skill_level("Foraging", 3),
             "Tiger Trout": self.can_fish(60) & (self.received("Fall") | self.received("Winter")),
@@ -1069,6 +1069,10 @@ class StardewLogic:
         if self.options[options.ArcadeMachineLocations] != options.ArcadeMachineLocations.option_full_shuffling:
             return _True()
         return self.received("Junimo Kart: Extra Life", power_level)
+
+    def has_traveling_merchant(self, tier: int = 1):
+        traveling_merchant_days = [f"Traveling Merchant: {day}" for day in week_days]
+        return self.received(traveling_merchant_days, tier)
 
     def can_get_married(self) -> StardewRule:
         return self.can_reach_region("Tide Pools") & self.can_have_relationship("Bachelor", 10) & self.has_house(1)

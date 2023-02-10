@@ -374,6 +374,36 @@ help_wanted_quests = [
     LocationData(872, "Stardew Valley", "Help Wanted: Item Delivery 32"),
 ]
 
+traveling_merchant_locations = [
+    LocationData(901, "Stardew Valley", "Traveling Merchant Sunday Item 1"),
+    LocationData(902, "Stardew Valley", "Traveling Merchant Sunday Item 2"),
+    LocationData(903, "Stardew Valley", "Traveling Merchant Sunday Item 3"),
+
+    LocationData(911, "Stardew Valley", "Traveling Merchant Monday Item 1"),
+    LocationData(912, "Stardew Valley", "Traveling Merchant Monday Item 2"),
+    LocationData(913, "Stardew Valley", "Traveling Merchant Monday Item 3"),
+
+    LocationData(921, "Stardew Valley", "Traveling Merchant Tuesday Item 1"),
+    LocationData(922, "Stardew Valley", "Traveling Merchant Tuesday Item 2"),
+    LocationData(923, "Stardew Valley", "Traveling Merchant Tuesday Item 3"),
+
+    LocationData(931, "Stardew Valley", "Traveling Merchant Wednesday Item 1"),
+    LocationData(932, "Stardew Valley", "Traveling Merchant Wednesday Item 2"),
+    LocationData(933, "Stardew Valley", "Traveling Merchant Wednesday Item 3"),
+
+    LocationData(941, "Stardew Valley", "Traveling Merchant Thursday Item 1"),
+    LocationData(942, "Stardew Valley", "Traveling Merchant Thursday Item 2"),
+    LocationData(943, "Stardew Valley", "Traveling Merchant Thursday Item 3"),
+
+    LocationData(951, "Stardew Valley", "Traveling Merchant Friday Item 1"),
+    LocationData(952, "Stardew Valley", "Traveling Merchant Friday Item 2"),
+    LocationData(953, "Stardew Valley", "Traveling Merchant Friday Item 3"),
+
+    LocationData(961, "Stardew Valley", "Traveling Merchant Saturday Item 1"),
+    LocationData(962, "Stardew Valley", "Traveling Merchant Saturday Item 2"),
+    LocationData(963, "Stardew Valley", "Traveling Merchant Saturday Item 3"),
+]
+
 events_locations = [
     LocationData(None, "Stardew Valley", "Succeed Grandpa's Evaluation"),
     LocationData(None, "Community Center", "Complete Community Center"),
@@ -400,6 +430,7 @@ all_locations = [
     *arcade_machines_victories,
     *story_quests,
     *help_wanted_quests,
+    *traveling_merchant_locations,
 ]
 location_table: Dict[str, LocationData] = {location.name: location for location in all_locations}
 
@@ -449,6 +480,8 @@ def create_locations(location_collector: StardewLocationCollector, world_options
     randomized_locations.extend(story_quests)
     extend_help_wanted_quests(randomized_locations, world_options[options.HelpWantedLocations])
     randomized_locations.extend(other_locations)
+
+    randomized_locations.extend(traveling_merchant_locations)
 
     for location_data in randomized_locations:
         location_collector(location_data.name, location_data.code, location_data.region)
