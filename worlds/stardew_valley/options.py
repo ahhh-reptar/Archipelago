@@ -41,14 +41,23 @@ class Goal(Choice):
         return super().get_option_name(value)
 
 
-class StartingMoney(Range):
-    """Amount of gold when arriving at the farm."""
+class StartingMoney(SpecialRange):
+    """Amount of gold when arriving at the farm.
+    Set to -1 or unlimited for infinite money in this playthrough"""
     internal_name = "starting_money"
     display_name = "Starting Gold"
-    range_start = 0
+    range_start = -1
     range_end = 50000
-    default = 2000
-    step = 500
+    default = 5000
+
+    special_range_names = {
+        "unlimited": -1,
+        "vanilla": 500,
+        "extra": 2000,
+        "rich": 5000,
+        "very rich": 20000,
+        "filthy rich": 50000,
+    }
 
 
 class ResourcePackMultiplier(SpecialRange):
