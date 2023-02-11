@@ -1,7 +1,9 @@
 import bisect
+import csv
 import enum
 import logging
 import math
+import os
 from collections import OrderedDict
 from dataclasses import dataclass, field
 from functools import cached_property
@@ -15,7 +17,7 @@ ITEM_CODE_OFFSET = 717000
 RESOURCE_PACK_CODE_OFFSET = 500
 
 logger = logging.getLogger(__name__)
-
+world_folder = os.path.dirname(__file__)
 
 class Group(enum.Enum):
     RESOURCE_PACK = enum.auto()
@@ -105,122 +107,19 @@ class StardewItemFactory(Protocol):
         raise NotImplementedError
 
 
-all_items: List[ItemData] = [
-    ItemData(None, "Victory", ItemClassification.progression),
-    ItemData(None, "Spring", ItemClassification.progression),
-    ItemData(None, "Summer", ItemClassification.progression),
-    ItemData(None, "Fall", ItemClassification.progression),
-    ItemData(None, "Winter", ItemClassification.progression),
-    ItemData(None, "Year Two", ItemClassification.progression),
-    ItemData(0, "Joja Cola", ItemClassification.filler, {Group.TRASH}),
-    ItemData(15, "Rusty Key", ItemClassification.progression),
-    ItemData(16, "Dwarvish Translation Guide", ItemClassification.progression),
-    ItemData(17, "Bridge Repair", ItemClassification.progression, {Group.COMMUNITY_REWARD}),
-    ItemData(18, "Greenhouse", ItemClassification.progression, {Group.COMMUNITY_REWARD}),
-    ItemData(19, "Glittering Boulder Removed", ItemClassification.progression, {Group.COMMUNITY_REWARD}),
-    ItemData(20, "Minecarts Repair", ItemClassification.useful, {Group.COMMUNITY_REWARD}),
-    ItemData(21, "Bus Repair", ItemClassification.progression, {Group.COMMUNITY_REWARD}),
-    ItemData(22, "Movie Theater", ItemClassification.useful),
-    ItemData(23, "Stardrop", ItemClassification.useful),
-    ItemData(24, "Progressive Backpack", ItemClassification.progression_skip_balancing),
-    ItemData(25, "Rusty Sword", ItemClassification.progression, {Group.WEAPON}),
-    ItemData(26, "Leather Boots", ItemClassification.progression, {Group.MINES_FLOOR_10, Group.FOOTWEAR}),
-    ItemData(27, "Work Boots", ItemClassification.useful, {Group.MINES_FLOOR_10, Group.FOOTWEAR}),
-    ItemData(28, "Wooden Blade", ItemClassification.progression, {Group.MINES_FLOOR_10, Group.WEAPON}),
-    ItemData(29, "Iron Dirk", ItemClassification.progression, {Group.MINES_FLOOR_10, Group.WEAPON}),
-    ItemData(30, "Wind Spire", ItemClassification.progression, {Group.MINES_FLOOR_10, Group.WEAPON}),
-    ItemData(31, "Femur", ItemClassification.progression, {Group.MINES_FLOOR_10, Group.WEAPON}),
-    ItemData(32, "Steel Smallsword", ItemClassification.progression, {Group.MINES_FLOOR_20, Group.WEAPON}),
-    ItemData(33, "Wood Club", ItemClassification.progression, {Group.MINES_FLOOR_20, Group.WEAPON}),
-    ItemData(34, "Elf Blade", ItemClassification.progression, {Group.MINES_FLOOR_20, Group.WEAPON}),
-    ItemData(35, "Glow Ring", ItemClassification.useful, {Group.MINES_FLOOR_20, Group.RING}),
-    ItemData(36, "Magnet Ring", ItemClassification.useful, {Group.MINES_FLOOR_20, Group.RING}),
-    ItemData(37, "Slingshot", ItemClassification.progression, {Group.WEAPON}),
-    ItemData(38, "Tundra Boots", ItemClassification.useful, {Group.MINES_FLOOR_50, Group.FOOTWEAR}),
-    ItemData(39, "Thermal Boots", ItemClassification.useful, {Group.MINES_FLOOR_50, Group.FOOTWEAR}),
-    ItemData(40, "Combat Boots", ItemClassification.useful, {Group.MINES_FLOOR_50, Group.FOOTWEAR}),
-    ItemData(41, "Silver Saber", ItemClassification.progression, {Group.MINES_FLOOR_50, Group.WEAPON}),
-    ItemData(42, "Pirate's Sword", ItemClassification.progression, {Group.MINES_FLOOR_50, Group.WEAPON}),
-    ItemData(43, "Crystal Dagger", ItemClassification.progression, {Group.MINES_FLOOR_60, Group.WEAPON}),
-    ItemData(44, "Cutlass", ItemClassification.progression, {Group.MINES_FLOOR_60, Group.WEAPON}),
-    ItemData(45, "Iron Edge", ItemClassification.progression, {Group.MINES_FLOOR_60, Group.WEAPON}),
-    ItemData(46, "Burglar's Shank", ItemClassification.progression, {Group.MINES_FLOOR_60, Group.WEAPON}),
-    ItemData(47, "Wood Mallet", ItemClassification.progression, {Group.MINES_FLOOR_60, Group.WEAPON}),
-    ItemData(48, "Master Slingshot", ItemClassification.progression, {Group.WEAPON}),
-    ItemData(49, "Firewalker Boots", ItemClassification.useful, {Group.MINES_FLOOR_80, Group.FOOTWEAR}),
-    ItemData(50, "Dark Boots", ItemClassification.useful, {Group.MINES_FLOOR_80, Group.FOOTWEAR}),
-    ItemData(51, "Claymore", ItemClassification.progression, {Group.MINES_FLOOR_80, Group.WEAPON}),
-    ItemData(52, "Templar's Blade", ItemClassification.progression, {Group.MINES_FLOOR_80, Group.WEAPON}),
-    ItemData(53, "Kudgel", ItemClassification.progression, {Group.MINES_FLOOR_80, Group.WEAPON}),
-    ItemData(54, "Shadow Dagger", ItemClassification.progression, {Group.MINES_FLOOR_80, Group.WEAPON}),
-    ItemData(55, "Obsidian Edge", ItemClassification.progression, {Group.MINES_FLOOR_90, Group.WEAPON}),
-    ItemData(56, "Tempered Broadsword", ItemClassification.progression, {Group.MINES_FLOOR_90, Group.WEAPON}),
-    ItemData(57, "Wicked Kris", ItemClassification.progression, {Group.MINES_FLOOR_90, Group.WEAPON}),
-    ItemData(58, "Bone Sword", ItemClassification.progression, {Group.MINES_FLOOR_90, Group.WEAPON}),
-    ItemData(59, "Ossified Blade", ItemClassification.progression, {Group.MINES_FLOOR_90, Group.WEAPON}),
-    ItemData(60, "Space Boots", ItemClassification.useful, {Group.MINES_FLOOR_110, Group.FOOTWEAR}),
-    ItemData(61, "Crystal Shoes", ItemClassification.useful, {Group.MINES_FLOOR_110, Group.FOOTWEAR}),
-    ItemData(62, "Steel Falchion", ItemClassification.progression, {Group.MINES_FLOOR_110, Group.WEAPON}),
-    ItemData(63, "The Slammer", ItemClassification.progression, {Group.MINES_FLOOR_110, Group.WEAPON}),
-    ItemData(64, "Skull Key", ItemClassification.progression),
-    ItemData(65, "Progressive Hoe", ItemClassification.progression, {Group.PROGRESSIVE_TOOLS}),
-    ItemData(66, "Progressive Pickaxe", ItemClassification.progression, {Group.PROGRESSIVE_TOOLS}),
-    ItemData(67, "Progressive Axe", ItemClassification.progression, {Group.PROGRESSIVE_TOOLS}),
-    ItemData(68, "Progressive Watering Can", ItemClassification.progression, {Group.PROGRESSIVE_TOOLS}),
-    ItemData(69, "Progressive Trash Can", ItemClassification.progression, {Group.PROGRESSIVE_TOOLS}),
-    ItemData(70, "Progressive Fishing Rod", ItemClassification.progression, {Group.PROGRESSIVE_TOOLS}),
-    ItemData(71, "Golden Scythe", ItemClassification.useful),
-    ItemData(72, "Progressive Mine Elevator", ItemClassification.progression),
-    ItemData(73, "Farming Level", ItemClassification.progression, {Group.SKILL_LEVEL_UP}),
-    ItemData(74, "Fishing Level", ItemClassification.progression, {Group.SKILL_LEVEL_UP}),
-    ItemData(75, "Foraging Level", ItemClassification.progression, {Group.SKILL_LEVEL_UP}),
-    ItemData(76, "Mining Level", ItemClassification.progression, {Group.SKILL_LEVEL_UP}),
-    ItemData(77, "Combat Level", ItemClassification.progression, {Group.SKILL_LEVEL_UP}),
-    ItemData(78, "Earth Obelisk", ItemClassification.useful),
-    ItemData(79, "Water Obelisk", ItemClassification.useful),
-    ItemData(80, "Desert Obelisk", ItemClassification.progression),
-    ItemData(81, "Island Obelisk", ItemClassification.progression),
-    ItemData(82, "Junimo Hut", ItemClassification.useful),
-    ItemData(83, "Gold Clock", ItemClassification.useful),
-    ItemData(84, "Progressive Coop", ItemClassification.progression),
-    ItemData(85, "Progressive Barn", ItemClassification.progression),
-    ItemData(86, "Well", ItemClassification.useful),
-    ItemData(87, "Silo", ItemClassification.progression),
-    ItemData(88, "Mill", ItemClassification.progression),
-    ItemData(89, "Progressive Shed", ItemClassification.progression),
-    ItemData(90, "Fish Pond", ItemClassification.progression),
-    ItemData(91, "Stable", ItemClassification.useful),
-    ItemData(92, "Slime Hutch", ItemClassification.useful),
-    ItemData(93, "Shipping Bin", ItemClassification.progression),
-    ItemData(94, "Beach Bridge", ItemClassification.progression),
-    ItemData(95, "Adventurer's Guild", ItemClassification.progression),
-    ItemData(96, "Club Card", ItemClassification.progression),
-    ItemData(97, "Magnifying Glass", ItemClassification.progression),
-    ItemData(98, "Bear's Knowledge", ItemClassification.progression),
-    ItemData(99, "Iridium Snake Milk", ItemClassification.progression),
-    ItemData(100, "JotPK: Progressive Boots", ItemClassification.progression, {Group.ARCADE_MACHINE_BUFFS}),
-    ItemData(101, "JotPK: Progressive Gun", ItemClassification.progression, {Group.ARCADE_MACHINE_BUFFS}),
-    ItemData(102, "JotPK: Progressive Ammo", ItemClassification.progression, {Group.ARCADE_MACHINE_BUFFS}),
-    ItemData(103, "JotPK: Extra Life", ItemClassification.progression, {Group.ARCADE_MACHINE_BUFFS}),
-    ItemData(104, "JotPK: Increased Drop Rate", ItemClassification.progression, {Group.ARCADE_MACHINE_BUFFS}),
-    ItemData(105, "Junimo Kart: Extra Life", ItemClassification.progression, {Group.ARCADE_MACHINE_BUFFS}),
-    ItemData(106, "Galaxy Sword", ItemClassification.progression, {Group.GALAXY_WEAPONS, Group.WEAPON}),
-    ItemData(107, "Galaxy Dagger", ItemClassification.progression, {Group.GALAXY_WEAPONS, Group.WEAPON}),
-    ItemData(108, "Galaxy Hammer", ItemClassification.progression, {Group.GALAXY_WEAPONS, Group.WEAPON}),
-    ItemData(109, "Movement Speed Bonus", ItemClassification.useful),
-    ItemData(110, "Luck Bonus", ItemClassification.useful),
-    ItemData(111, "Lava Katana", ItemClassification.progression, {Group.MINES_FLOOR_110, Group.WEAPON}),
-    ItemData(112, "Progressive House", ItemClassification.progression),
-    ItemData(113, "Traveling Merchant: Sunday", ItemClassification.progression),
-    ItemData(114, "Traveling Merchant: Monday", ItemClassification.progression),
-    ItemData(115, "Traveling Merchant: Tuesday", ItemClassification.progression),
-    ItemData(116, "Traveling Merchant: Wednesday", ItemClassification.progression),
-    ItemData(117, "Traveling Merchant: Thursday", ItemClassification.progression),
-    ItemData(118, "Traveling Merchant: Friday", ItemClassification.progression),
-    ItemData(119, "Traveling Merchant: Saturday", ItemClassification.progression),
-    ItemData(120, "Traveling Merchant Stock Size", ItemClassification.progression),
-    ItemData(121, "Traveling Merchant Discount", ItemClassification.progression),
-]
+def load_item_csv():
+    items = []
+    with open(world_folder + "/data/items.csv") as item_csv:
+        item_reader = csv.DictReader(item_csv)
+        for item in item_reader:
+            id = int(item["id"]) if item["id"] != "None" else None
+            classification = ItemClassification[item["classification"]]
+            groups = {Group[group] for group in item["groups"].split(",") if group}
+            items.append(ItemData(id, item["name"], classification, groups))
+    return items
+
+
+all_items: List[ItemData] = load_item_csv()
 item_table: Dict[str, ItemData] = {}
 items_by_group: Dict[Group, List[ItemData]] = {}
 

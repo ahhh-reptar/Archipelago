@@ -1,0 +1,115 @@
+id,name,classification,groups
+None,Victory,progression,
+None,Spring,progression,
+None,Summer,progression,
+None,Fall,progression,
+None,Winter,progression,
+None,Year Two,progression,
+0,Joja Cola,filler,TRASH
+15,Rusty Key,progression,
+16,Dwarvish Translation Guide,progression,
+17,Bridge Repair,progression,COMMUNITY_REWARD
+18,Greenhouse,progression,COMMUNITY_REWARD
+19,Glittering Boulder Removed,progression,COMMUNITY_REWARD
+20,Minecarts Repair,useful,COMMUNITY_REWARD
+21,Bus Repair,progression,COMMUNITY_REWARD
+22,Movie Theater,useful,
+23,Stardrop,useful,
+24,Progressive Backpack,progression,
+25,Rusty Sword,progression,WEAPON
+26,Leather Boots,progression,"MINES_FLOOR_10,FOOTWEAR"
+27,Work Boots,useful,"MINES_FLOOR_10,FOOTWEAR"
+28,Wooden Blade,progression,"MINES_FLOOR_10,WEAPON"
+29,Iron Dirk,progression,"MINES_FLOOR_10,WEAPON"
+30,Wind Spire,progression,"MINES_FLOOR_10,WEAPON"
+31,Femur,progression,"MINES_FLOOR_10,WEAPON"
+32,Steel Smallsword,progression,"MINES_FLOOR_20,WEAPON"
+33,Wood Club,progression,"MINES_FLOOR_20,WEAPON"
+34,Elf Blade,progression,"MINES_FLOOR_20,WEAPON"
+35,Glow Ring,useful,"MINES_FLOOR_20,RING"
+36,Magnet Ring,useful,"MINES_FLOOR_20,RING"
+37,Slingshot,progression,WEAPON
+38,Tundra Boots,useful,"MINES_FLOOR_50,FOOTWEAR"
+39,Thermal Boots,useful,"MINES_FLOOR_50,FOOTWEAR"
+40,Combat Boots,useful,"MINES_FLOOR_50,FOOTWEAR"
+41,Silver Saber,progression,"MINES_FLOOR_50,WEAPON"
+42,Pirate's Sword,progression,"MINES_FLOOR_50,WEAPON"
+43,Crystal Dagger,progression,"MINES_FLOOR_60,WEAPON"
+44,Cutlass,progression,"MINES_FLOOR_60,WEAPON"
+45,Iron Edge,progression,"MINES_FLOOR_60,WEAPON"
+46,Burglar's Shank,progression,"MINES_FLOOR_60,WEAPON"
+47,Wood Mallet,progression,"MINES_FLOOR_60,WEAPON"
+48,Master Slingshot,progression,WEAPON
+49,Firewalker Boots,useful,"MINES_FLOOR_80,FOOTWEAR"
+50,Dark Boots,useful,"MINES_FLOOR_80,FOOTWEAR"
+51,Claymore,progression,"MINES_FLOOR_80,WEAPON"
+52,Templar's Blade,progression,"MINES_FLOOR_80,WEAPON"
+53,Kudgel,progression,"MINES_FLOOR_80,WEAPON"
+54,Shadow Dagger,progression,"MINES_FLOOR_80,WEAPON"
+55,Obsidian Edge,progression,"MINES_FLOOR_90,WEAPON"
+56,Tempered Broadsword,progression,"MINES_FLOOR_90,WEAPON"
+57,Wicked Kris,progression,"MINES_FLOOR_90,WEAPON"
+58,Bone Sword,progression,"MINES_FLOOR_90,WEAPON"
+59,Ossified Blade,progression,"MINES_FLOOR_90,WEAPON"
+60,Space Boots,useful,"MINES_FLOOR_110,FOOTWEAR"
+61,Crystal Shoes,useful,"MINES_FLOOR_110,FOOTWEAR"
+62,Steel Falchion,progression,"MINES_FLOOR_110,WEAPON"
+63,The Slammer,progression,"MINES_FLOOR_110,WEAPON"
+64,Skull Key,progression,
+65,Progressive Hoe,progression,PROGRESSIVE_TOOLS
+66,Progressive Pickaxe,progression,PROGRESSIVE_TOOLS
+67,Progressive Axe,progression,PROGRESSIVE_TOOLS
+68,Progressive Watering Can,progression,PROGRESSIVE_TOOLS
+69,Progressive Trash Can,progression,PROGRESSIVE_TOOLS
+70,Progressive Fishing Rod,progression,PROGRESSIVE_TOOLS
+71,Golden Scythe,useful,
+72,Progressive Mine Elevator,progression,
+73,Farming Level,progression,SKILL_LEVEL_UP
+74,Fishing Level,progression,SKILL_LEVEL_UP
+75,Foraging Level,progression,SKILL_LEVEL_UP
+76,Mining Level,progression,SKILL_LEVEL_UP
+77,Combat Level,progression,SKILL_LEVEL_UP
+78,Earth Obelisk,useful,
+79,Water Obelisk,useful,
+80,Desert Obelisk,progression,
+81,Island Obelisk,progression,
+82,Junimo Hut,useful,
+83,Gold Clock,useful,
+84,Progressive Coop,progression,
+85,Progressive Barn,progression,
+86,Well,useful,
+87,Silo,progression,
+88,Mill,progression,
+89,Progressive Shed,progression,
+90,Fish Pond,progression,
+91,Stable,useful,
+92,Slime Hutch,useful,
+93,Shipping Bin,progression,
+94,Beach Bridge,progression,
+95,Adventurer's Guild,progression,
+96,Club Card,progression,
+97,Magnifying Glass,progression,
+98,Bear's Knowledge,progression,
+99,Iridium Snake Milk,progression,
+100,JotPK: Progressive Boots,progression,ARCADE_MACHINE_BUFFS
+101,JotPK: Progressive Gun,progression,ARCADE_MACHINE_BUFFS
+102,JotPK: Progressive Ammo,progression,ARCADE_MACHINE_BUFFS
+103,JotPK: Extra Life,progression,ARCADE_MACHINE_BUFFS
+104,JotPK: Increased Drop Rate,progression,ARCADE_MACHINE_BUFFS
+105,Junimo Kart: Extra Life,progression,ARCADE_MACHINE_BUFFS
+106,Galaxy Sword,progression,"GALAXY_WEAPONS,WEAPON"
+107,Galaxy Dagger,progression,"GALAXY_WEAPONS,WEAPON"
+108,Galaxy Hammer,progression,"GALAXY_WEAPONS,WEAPON"
+109,Movement Speed Bonus,useful,
+110,Luck Bonus,useful,
+111,Lava Katana,progression,"MINES_FLOOR_110,WEAPON"
+112,Progressive House,progression,
+113,Traveling Merchant: Sunday,progression,
+114,Traveling Merchant: Monday,progression,
+115,Traveling Merchant: Tuesday,progression,
+116,Traveling Merchant: Wednesday,progression,
+117,Traveling Merchant: Thursday,progression,
+118,Traveling Merchant: Friday,progression,
+119,Traveling Merchant: Saturday,progression,
+120,Traveling Merchant Stock Size,progression,
+121,Traveling Merchant Discount,progression,
