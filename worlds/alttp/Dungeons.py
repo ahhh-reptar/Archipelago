@@ -1,11 +1,11 @@
 import typing
 
 from BaseClasses import Dungeon
-from worlds.alttp.Bosses import BossFactory
 from Fill import fill_restrictive
+from worlds.alttp.Bosses import BossFactory
 from worlds.alttp.Items import ItemFactory
-from worlds.alttp.Regions import lookup_boss_drops
 from worlds.alttp.Options import smallkey_shuffle
+from worlds.alttp.Regions import lookup_boss_drops
 
 
 def create_dungeons(world, player):
@@ -111,11 +111,11 @@ def create_dungeons(world, player):
 
 
 def get_dungeon_item_pool(world) -> typing.List:
-    return [item for dungeon in world.dungeons.values() for item in dungeon.all_items]
+    return [item for dungeon in world.dungeons.values() for item in dungeon.loaded_items]
 
 
 def get_dungeon_item_pool_player(world, player) -> typing.List:
-    return [item for dungeon in world.dungeons.values() if dungeon.player == player for item in dungeon.all_items]
+    return [item for dungeon in world.dungeons.values() if dungeon.player == player for item in dungeon.loaded_items]
 
 
 def get_unfilled_dungeon_locations(multiworld) -> typing.List:

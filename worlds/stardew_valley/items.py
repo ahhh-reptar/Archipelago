@@ -1,6 +1,7 @@
 import bisect
 import csv
 import enum
+import itertools
 import logging
 import math
 import os
@@ -14,10 +15,10 @@ from BaseClasses import Item, ItemClassification
 from . import options
 
 ITEM_CODE_OFFSET = 717000
-RESOURCE_PACK_CODE_OFFSET = 500
 
 logger = logging.getLogger(__name__)
 world_folder = os.path.dirname(__file__)
+
 
 class Group(enum.Enum):
     RESOURCE_PACK = enum.auto()
@@ -38,6 +39,13 @@ class Group(enum.Enum):
     SKILL_LEVEL_UP = enum.auto()
     ARCADE_MACHINE_BUFFS = enum.auto()
     GALAXY_WEAPONS = enum.auto()
+    BASE_RESOURCE = enum.auto()
+    WARP_TOTEM = enum.auto()
+    GEODE = enum.auto()
+    ORE = enum.auto()
+    FERTILIZER = enum.auto()
+    SEED = enum.auto()
+    FISHING_RESOURCE = enum.auto()
 
 
 @dataclass(frozen=True)
@@ -62,10 +70,11 @@ class ResourcePackData:
     default_amount: int = 1
     scaling_factor: int = 1
     classification: ItemClassification = ItemClassification.filler
+    groups: frozenset[Group] = frozenset()
 
-    def as_item_data(self, base_code: int) -> [ItemData]:
-        return [ItemData(base_code + i, self.create_item_name(quantity), self.classification, {Group.RESOURCE_PACK})
-                for i, (_, quantity) in enumerate(self.scale_quantity.items())]
+    def as_item_data(self, counter: itertools.count) -> [ItemData]:
+        return [ItemData(next(counter), self.create_item_name(quantity), self.classification, {Group.RESOURCE_PACK} | self.groups)
+                for quantity in self.scale_quantity.values()]
 
     def create_item_name(self, quantity: int) -> str:
         return f"Resource Pack: {quantity} {self.name}"
@@ -112,24 +121,39 @@ def load_item_csv():
     with open(world_folder + "/data/items.csv") as item_csv:
         item_reader = csv.DictReader(item_csv)
         for item in item_reader:
-            id = int(item["id"]) if item["id"] != "None" else None
+            id = int(item["id"]) if item["id"] else None
             classification = ItemClassification[item["classification"]]
             groups = {Group[group] for group in item["groups"].split(",") if group}
             items.append(ItemData(id, item["name"], classification, groups))
     return items
 
 
-all_items: List[ItemData] = load_item_csv()
+def load_resource_pack_csv() -> List[ResourcePackData]:
+    resource_packs = []
+    with open(world_folder + "/data/resource_packs.csv") as file:
+        resource_pack_reader = csv.DictReader(file)
+        for resource_pack in resource_pack_reader:
+            groups = frozenset(Group[group] for group in resource_pack["groups"].split(",") if group)
+            resource_packs.append(ResourcePackData(resource_pack["name"],
+                                                   int(resource_pack['default_amount']),
+                                                   int(resource_pack['scaling_factor']),
+                                                   ItemClassification[resource_pack["classification"]],
+                                                   groups))
+    return resource_packs + [(friendship_pack)]
+
+
+events = [
+    ItemData(None, "Victory", ItemClassification.progression),
+    ItemData(None, "Spring", ItemClassification.progression),
+    ItemData(None, "Summer", ItemClassification.progression),
+    ItemData(None, "Fall", ItemClassification.progression),
+    ItemData(None, "Winter", ItemClassification.progression),
+    ItemData(None, "Year Two", ItemClassification.progression),
+]
+
+all_items: List[ItemData] = load_item_csv() + events
 item_table: Dict[str, ItemData] = {}
 items_by_group: Dict[Group, List[ItemData]] = {}
-
-
-def initialize_resource_pack_items():
-    resource_pack_code = RESOURCE_PACK_CODE_OFFSET
-    for resource_pack in resource_packs + [friendship_pack]:
-        new_items = resource_pack.as_item_data(resource_pack_code)
-        item_table.update({item.name: item for item in new_items})
-        resource_pack_code = new_items[-1].code_without_offset + 1
 
 
 def initialize_groups():
@@ -144,81 +168,10 @@ def initialize_item_table():
     item_table.update({item.name: item for item in all_items})
 
 
-base_resource_packs = {
-    ResourcePackData("Money", default_amount=1000, scaling_factor=500, classification=ItemClassification.useful),
-    ResourcePackData("Stone", default_amount=50, scaling_factor=25),
-    ResourcePackData("Wood", default_amount=50, scaling_factor=25),
-    ResourcePackData("Hardwood", default_amount=10, scaling_factor=5, classification=ItemClassification.useful),
-    ResourcePackData("Fiber", default_amount=30, scaling_factor=15),
-    ResourcePackData("Coal", default_amount=10, scaling_factor=5),
-    ResourcePackData("Clay", default_amount=10, scaling_factor=5),
-}
-
-warp_totem_resource_packs = [
-    ResourcePackData("Warp Totem: Beach", default_amount=5, scaling_factor=2),
-    ResourcePackData("Warp Totem: Desert", default_amount=5, scaling_factor=2),
-    ResourcePackData("Warp Totem: Farm", default_amount=5, scaling_factor=2),
-    ResourcePackData("Warp Totem: Island", default_amount=5, scaling_factor=2),
-    ResourcePackData("Warp Totem: Mountains", default_amount=5, scaling_factor=2),
-]
-
-geode_resource_packs = [
-    ResourcePackData("Geode", default_amount=12, scaling_factor=6),
-    ResourcePackData("Frozen Geode", default_amount=8, scaling_factor=4),
-    ResourcePackData("Magma Geode", default_amount=6, scaling_factor=3),
-    ResourcePackData("Omni Geode", default_amount=4, scaling_factor=2, classification=ItemClassification.useful),
-]
-
-metal_resource_packs = [
-    ResourcePackData("Copper Ore", default_amount=75, scaling_factor=25),
-    ResourcePackData("Iron Ore", default_amount=50, scaling_factor=25),
-    ResourcePackData("Gold Ore", default_amount=25, scaling_factor=13, classification=ItemClassification.useful),
-    ResourcePackData("Iridium Ore", default_amount=10, scaling_factor=5, classification=ItemClassification.useful),
-    ResourcePackData("Quartz", default_amount=10, scaling_factor=5)
-]
-
-fertilizer_resource_packs = [
-    ResourcePackData("Basic Fertilizer", default_amount=30, scaling_factor=10),
-    ResourcePackData("Basic Retaining Soil", default_amount=30, scaling_factor=10),
-    ResourcePackData("Speed-Gro", default_amount=30, scaling_factor=10),
-    ResourcePackData("Quality Fertilizer", default_amount=20, scaling_factor=10),
-    ResourcePackData("Quality Retaining Soil", default_amount=20, scaling_factor=10),
-    ResourcePackData("Deluxe Speed-Gro", default_amount=20, scaling_factor=10),
-    ResourcePackData("Deluxe Fertilizer", default_amount=10, scaling_factor=10,
-                     classification=ItemClassification.useful),
-    ResourcePackData("Deluxe Retaining Soil", default_amount=10, scaling_factor=10,
-                     classification=ItemClassification.useful),
-    ResourcePackData("Hyper Speed-Gro", default_amount=10, scaling_factor=10, classification=ItemClassification.useful),
-    ResourcePackData("Tree Fertilizer", default_amount=10, scaling_factor=10),
-]
-
-seed_resource_packs = [
-    ResourcePackData("Spring Seeds", default_amount=30, scaling_factor=10),
-    ResourcePackData("Summer Seeds", default_amount=30, scaling_factor=10),
-    ResourcePackData("Fall Seeds", default_amount=30, scaling_factor=10),
-    ResourcePackData("Winter Seeds", default_amount=30, scaling_factor=10),
-    ResourcePackData("Mahogany Seed", default_amount=5, scaling_factor=2),
-]
-
-fishing_resource_packs = [
-    ResourcePackData("Bait", default_amount=30, scaling_factor=10),
-    ResourcePackData("Crab Pot", default_amount=3),
-]
-
-resource_packs = [
-    *base_resource_packs,
-    *warp_totem_resource_packs,
-    *geode_resource_packs,
-    *metal_resource_packs,
-    *fertilizer_resource_packs,
-    *seed_resource_packs,
-    *fishing_resource_packs,
-]
-
 friendship_pack = FriendshipPackData("Friendship Bonus", default_amount=2, classification=ItemClassification.useful)
+all_resource_packs = load_resource_pack_csv()
 
 initialize_item_table()
-initialize_resource_pack_items()
 initialize_groups()
 
 
@@ -390,7 +343,7 @@ def fill_with_resource_packs(item_factory: StardewItemFactory, world_options: op
     items = []
 
     for i in range(required_resource_pack):
-        resource_pack = random.choice(resource_packs)
+        resource_pack = random.choice(all_resource_packs)
         items.append(item_factory(resource_pack.create_name_from_multiplier(resource_pack_multiplier)))
 
     return items
