@@ -29,18 +29,18 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: options.Stard
         MultiWorldRules.add_rule(multi_world.get_entrance(f"Dig to The Mines - Floor {floor}", player),
                                  logic.can_mine_to_floor(floor).simplify())
 
-    MultiWorldRules.add_rule(multi_world.get_entrance("Enter the Quarry", player),
+    MultiWorldRules.add_rule(multi_world.get_entrance("Enter Quarry", player),
                              logic.received("Bridge Repair").simplify())
-    MultiWorldRules.add_rule(multi_world.get_entrance("Enter the Secret Woods", player),
+    MultiWorldRules.add_rule(multi_world.get_entrance("Enter Secret Woods", player),
                              logic.has_tool("Axe", "Iron").simplify())
-    MultiWorldRules.add_rule(multi_world.get_entrance("Take the Bus to the Desert", player),
+    MultiWorldRules.add_rule(multi_world.get_entrance("Take Bus To Desert", player),
                              logic.received("Bus Repair").simplify())
-    MultiWorldRules.add_rule(multi_world.get_entrance("Enter the Skull Cavern", player),
+    MultiWorldRules.add_rule(multi_world.get_entrance("Enter Skull Cavern", player),
                              logic.received("Skull Key").simplify())
 
-    MultiWorldRules.add_rule(multi_world.get_entrance("Use the Desert Obelisk", player),
+    MultiWorldRules.add_rule(multi_world.get_entrance("Use Desert Obelisk", player),
                              logic.received("Desert Obelisk").simplify())
-    MultiWorldRules.add_rule(multi_world.get_entrance("Use the Island Obelisk", player),
+    MultiWorldRules.add_rule(multi_world.get_entrance("Use Island Obelisk", player),
                              logic.received("Island Obelisk").simplify())
 
     # Those checks do not exist if ToolProgression is vanilla
