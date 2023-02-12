@@ -35,7 +35,7 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: options.Stard
                              logic.received("Bridge Repair").simplify())
     MultiWorldRules.add_rule(multi_world.get_entrance("Enter Secret Woods", player),
                              logic.has_tool("Axe", "Iron").simplify())
-    MultiWorldRules.add_rule(multi_world.get_entrance("Take Bus To Desert", player),
+    MultiWorldRules.add_rule(multi_world.get_entrance("Take Bus to Desert", player),
                              logic.received("Bus Repair").simplify())
     MultiWorldRules.add_rule(multi_world.get_entrance("Enter Skull Cavern", player),
                              logic.received("Skull Key").simplify())
