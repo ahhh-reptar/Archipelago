@@ -32,7 +32,7 @@ if __name__ == '__main__':
                                        and item.code_without_offset is not None) + 1)
     items_to_write = []
     for item in loaded_items:
-        if Group.RESOURCE_PACK in item.groups or Group.FRIENDSHIP_PACK in item.groups:
+        if item.has_any_group(Group.RESOURCE_PACK, Group.FRIENDSHIP_PACK):
             continue
 
         if item.code_without_offset is None:

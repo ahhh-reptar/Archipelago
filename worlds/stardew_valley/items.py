@@ -64,6 +64,10 @@ class ItemData:
     def code(self):
         return ITEM_CODE_OFFSET + self.code_without_offset if self.code_without_offset is not None else None
 
+    def has_any_group(self, *group: Group) -> bool:
+        groups = set(group)
+        return bool(groups.intersection(self.groups))
+
 
 @dataclass(frozen=True)
 class ResourcePackData:

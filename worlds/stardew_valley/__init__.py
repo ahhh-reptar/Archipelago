@@ -4,7 +4,7 @@ from BaseClasses import Region, RegionType, Entrance, Location, Item, Tutorial
 from worlds.AutoWorld import World, WebWorld
 from . import rules, logic
 from .bundles import get_all_bundles, Bundle
-from .items import item_table, create_items, ItemData
+from .items import item_table, create_items, ItemData, Group
 from .locations import location_table, create_locations, LocationData
 from .logic import StardewLogic, StardewRule, _True, _And
 from .options import stardew_valley_options, StardewOptions, fetch_options
@@ -87,7 +87,7 @@ class StardewValleyWorld(World):
                                if not location.event])
         items_to_exclude = [excluded_items
                             for excluded_items in self.multiworld.precollected_items[self.player]
-                            if excluded_items.name in {item.name for item in items.all_items}]
+                            if not item_table[excluded_items.name].has_any_group(Group.RESOURCE_PACK, Group.FRIENDSHIP_PACK)]
         created_items = create_items(self.create_item, locations_count + len(items_to_exclude), self.options,
                                      self.multiworld.random)
         self.multiworld.itempool += created_items
