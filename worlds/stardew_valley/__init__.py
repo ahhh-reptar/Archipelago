@@ -95,37 +95,44 @@ class StardewValleyWorld(World):
         for item in items_to_exclude:
             self.multiworld.itempool.remove(item)
 
+        self.setup_season_events()
+        self.setup_victory()
+
     def set_rules(self):
-        self.multiworld.push_precollected(self.create_item("Spring"))
-        self.create_event_location(location_table["Summer"], self.logic.received("Spring"), "Summer")
-        self.create_event_location(location_table["Fall"], self.logic.received("Summer"), "Fall")
-        self.create_event_location(location_table["Winter"], self.logic.received("Fall"), "Winter")
-        self.create_event_location(location_table["Year Two"], self.logic.received("Winter"), "Year Two")
         set_rules(self.multiworld, self.player, self.options, self.logic, self.modified_bundles)
-
-    def generate_basic(self):
-        if self.options[options.Goal] == options.Goal.option_community_center:
-            self.create_event_location(location_table["Complete Community Center"],
-                                       self.logic.can_complete_community_center(),
-                                       "Victory")
-        elif self.options[options.Goal] == options.Goal.option_grandpa_evaluation:
-            self.create_event_location(location_table["Succeed Grandpa's Evaluation"],
-                                       self.logic.can_finish_grandpa_evaluation(),
-                                       "Victory")
-        elif self.options[options.Goal] == options.Goal.option_bottom_of_the_mines:
-            self.create_event_location(location_table["Reach the Bottom of The Mines"],
-                                       self.logic.can_mine_to_floor(120), "Victory")
-        elif self.options[options.Goal] == options.Goal.option_cryptic_note:
-            self.create_event_location(location_table["Complete Quest Cryptic Note"],
-                                       self.logic.can_complete_quest("Cryptic Note"), "Victory")
-
-        self.multiworld.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
 
     def create_item(self, item: str | ItemData) -> StardewItem:
         if isinstance(item, str):
             item = item_table[item]
 
         return StardewItem(item.name, item.classification, item.code, self.player)
+
+    def setup_season_events(self):
+        self.multiworld.push_precollected(self.create_item("Spring"))
+        self.create_event_location(location_table["Summer"], self.logic.received("Spring"), "Summer")
+        self.create_event_location(location_table["Fall"], self.logic.received("Summer"), "Fall")
+        self.create_event_location(location_table["Winter"], self.logic.received("Fall"), "Winter")
+        self.create_event_location(location_table["Year Two"], self.logic.received("Winter"), "Year Two")
+
+    def setup_victory(self):
+        if self.options[options.Goal] == options.Goal.option_community_center:
+            self.create_event_location(location_table["Complete Community Center"],
+                                       self.logic.can_complete_community_center().simplify(),
+                                       "Victory")
+        elif self.options[options.Goal] == options.Goal.option_grandpa_evaluation:
+            self.create_event_location(location_table["Succeed Grandpa's Evaluation"],
+                                       self.logic.can_finish_grandpa_evaluation().simplify(),
+                                       "Victory")
+        elif self.options[options.Goal] == options.Goal.option_bottom_of_the_mines:
+            self.create_event_location(location_table["Reach the Bottom of The Mines"],
+                                       self.logic.can_mine_to_floor(120).simplify(),
+                                       "Victory")
+        elif self.options[options.Goal] == options.Goal.option_cryptic_note:
+            self.create_event_location(location_table["Complete Quest Cryptic Note"],
+                                       self.logic.can_complete_quest("Cryptic Note").simplify(),
+                                       "Victory")
+
+        self.multiworld.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
 
     def create_event_location(self, location_data: LocationData, rule: StardewRule, item: str):
         region = self.multiworld.get_region(location_data.region, self.player)
