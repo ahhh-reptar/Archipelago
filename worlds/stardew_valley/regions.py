@@ -1,8 +1,10 @@
 from dataclasses import dataclass, field
 from enum import IntFlag
-from typing import Iterable, Dict, Protocol, Optional, List
+from random import Random
+from typing import Iterable, Dict, Protocol, Optional, List, Tuple
 
 from BaseClasses import Region, Entrance
+from . import options
 from .options import StardewOptions
 
 
@@ -55,7 +57,7 @@ stardew_valley_regions = [
     RegionData("Town", ["Enter Community Center", "Town To Beach", "Enter Hospital",
                         "Enter Pierre's General Store", "Enter Saloon", "Enter Josh's House", "Enter Mayor's Manor",
                         "Enter Sam's House", "Enter Haley's House", "Town To Sewers", "Enter Clint's Blacksmith", "Enter Museum",
-                        "Enter JojaMart"]),
+                        "Enter JojaMart"], RandomizationFlag.PELICAN_TOWN),
     RegionData("Beach", ["Enter Willy's Fish Shop", "Enter Elliott's House", "Enter Tide Pools"]),
     RegionData("Railroad", ["Enter Bathhouse Entrance", "Enter Witch Warp Cave"]),  # "Enter Perfection Cutscene Area"
     RegionData("Marnie's Ranch", []),
@@ -70,25 +72,25 @@ stardew_valley_regions = [
     RegionData("Adventurer's Guild", []),
     RegionData("Community Center",
                ["Access Crafts Room", "Access Pantry", "Access Fish Tank", "Access Boiler Room", "Access Bulletin Board",
-                "Access Vault"]),
+                "Access Vault"], RandomizationFlag.PELICAN_TOWN),
     RegionData("Crafts Room", []),
     RegionData("Pantry", []),
     RegionData("Fish Tank", []),
     RegionData("Boiler Room", []),
     RegionData("Bulletin Board", []),
     RegionData("Vault", []),
-    RegionData("Hospital", ["Enter Harvey's Room"]),
+    RegionData("Hospital", ["Enter Harvey's Room"], RandomizationFlag.PELICAN_TOWN),
     RegionData("Harvey's Room", []),
-    RegionData("Pierre's General Store", ["Enter Sunroom"]),
+    RegionData("Pierre's General Store", ["Enter Sunroom"], RandomizationFlag.PELICAN_TOWN),
     RegionData("Sunroom", []),
-    RegionData("Saloon", ["Play Journey of the Prairie King", "Play Junimo Kart"]),
-    RegionData("Josh's House", []),
-    RegionData("Mayor's Manor", []),
-    RegionData("Sam's House", []),
-    RegionData("Haley's House", []),
-    RegionData("Clint's Blacksmith", []),
-    RegionData("Museum", []),
-    RegionData("JojaMart", []),
+    RegionData("Saloon", ["Play Journey of the Prairie King", "Play Junimo Kart"], RandomizationFlag.PELICAN_TOWN),
+    RegionData("Josh's House", [], RandomizationFlag.PELICAN_TOWN),
+    RegionData("Mayor's Manor", [], RandomizationFlag.PELICAN_TOWN),
+    RegionData("Sam's House", [], RandomizationFlag.PELICAN_TOWN),
+    RegionData("Haley's House", [], RandomizationFlag.PELICAN_TOWN),
+    RegionData("Clint's Blacksmith", [], RandomizationFlag.PELICAN_TOWN),
+    RegionData("Museum", [], RandomizationFlag.PELICAN_TOWN),
+    RegionData("JojaMart", [], RandomizationFlag.PELICAN_TOWN),
     RegionData("Willy's Fish Shop", []),
     RegionData("Elliott's House", []),
     RegionData("Tide Pools", []),
@@ -181,42 +183,31 @@ mandatory_connections = [
     ConnectionData("Enter Quarry Mine Entrance", "Quarry Mine Entrance"),
     ConnectionData("Enter Quarry Mine", "Quarry Mine"),
     ConnectionData("Mountain To Town", "Town"),
-    ConnectionData("Enter Community Center", "Community Center"),
-    # ConnectionData("Exit Community Center", "Town", reverse="Enter Community Center", flag=RandomizationFlag.PELICAN_TOWN),
+    ConnectionData("Enter Community Center", "Community Center", "Exit Community Center", RandomizationFlag.PELICAN_TOWN),
     ConnectionData("Access Crafts Room", "Crafts Room"),
     ConnectionData("Access Pantry", "Pantry"),
     ConnectionData("Access Fish Tank", "Fish Tank"),
     ConnectionData("Access Boiler Room", "Boiler Room"),
     ConnectionData("Access Bulletin Board", "Bulletin Board"),
     ConnectionData("Access Vault", "Vault"),
-    ConnectionData("Enter Hospital", "Hospital"),
-    # ConnectionData("Exit Hospital", "Town", reverse="Enter Hospital", flag=RandomizationFlag.PELICAN_TOWN),
+    ConnectionData("Enter Hospital", "Hospital", "Exit Hospital", RandomizationFlag.PELICAN_TOWN),
     ConnectionData("Enter Harvey's Room", "Harvey's Room"),
-    ConnectionData("Enter Pierre's General Store", "Pierre's General Store"),
-    # ConnectionData("Exit Pierre's General Store", "Town", reverse="Enter Pierre's General Story", flag=RandomizationFlag.PELICAN_TOWN),
+    ConnectionData("Enter Pierre's General Store", "Pierre's General Store", "Exit Pierre's General Store", RandomizationFlag.PELICAN_TOWN),
     ConnectionData("Enter Sunroom", "Sunroom"),
-    ConnectionData("Enter Clint's Blacksmith", "Clint's Blacksmith"),
-    # ConnectionData("Exit Clint's Blacksmith", "Town", reverse="Enter Clint's Blacksmith", flag=RandomizationFlag.PELICAN_TOWN),
-    ConnectionData("Enter Saloon", "Saloon"),
-    # ConnectionData("Exit Saloon", "Town", reverse="Enter Saloon", flag=RandomizationFlag.PELICAN_TOWN),
+    ConnectionData("Enter Clint's Blacksmith", "Clint's Blacksmith", "Exit Clint's Blacksmith", RandomizationFlag.PELICAN_TOWN),
+    ConnectionData("Enter Saloon", "Saloon", "Exit Saloon", RandomizationFlag.PELICAN_TOWN),
     ConnectionData("Play Journey of the Prairie King", "JotPK World 1"),
     ConnectionData("Reach JotPK World 2", "JotPK World 2"),
     ConnectionData("Reach JotPK World 3", "JotPK World 3"),
     ConnectionData("Play Junimo Kart", "Junimo Kart 1"),
     ConnectionData("Reach Junimo Kart 2", "Junimo Kart 2"),
     ConnectionData("Reach Junimo Kart 3", "Junimo Kart 3"),
-    ConnectionData("Enter Sam's House", "Sam's House"),
-    # ConnectionData("Exit Sam's House", "Town", reverse="Enter Sam's House", flag=RandomizationFlag.PELICAN_TOWN),
-    ConnectionData("Enter Haley's House", "Haley's House"),
-    # ConnectionData("Exit Haley's House", "Town", reverse="Enter Haley's House", flag=RandomizationFlag.PELICAN_TOWN),
-    ConnectionData("Enter Mayor's Manor", "Mayor's Manor"),
-    # ConnectionData("Exit Mayor's Manor", "Town", reverse="Enter Mayor's Manor", flag=RandomizationFlag.PELICAN_TOWN),
-    ConnectionData("Enter Josh's House", "Josh's House"),
-    # ConnectionData("Exit Josh's House", "Town", reverse="Enter Josh's House", flag=RandomizationFlag.PELICAN_TOWN),
-    ConnectionData("Enter Museum", "Museum"),
-    # ConnectionData("Exit Museum", "Town", reverse="Enter Museum", flag=RandomizationFlag.PELICAN_TOWN),
-    ConnectionData("Enter JojaMart", "JojaMart"),
-    # ConnectionData("Exit JojaMart", "Town", reverse="Enter JojaMart", flag=RandomizationFlag.PELICAN_TOWN),
+    ConnectionData("Enter Sam's House", "Sam's House", "Exit Sam's House", RandomizationFlag.PELICAN_TOWN),
+    ConnectionData("Enter Haley's House", "Haley's House", "Exit Haley's House", RandomizationFlag.PELICAN_TOWN),
+    ConnectionData("Enter Mayor's Manor", "Mayor's Manor", "Exit Mayor's Manor", RandomizationFlag.PELICAN_TOWN),
+    ConnectionData("Enter Josh's House", "Josh's House", "Exit Josh's House", RandomizationFlag.PELICAN_TOWN),
+    ConnectionData("Enter Museum", "Museum", "Exit Museum", RandomizationFlag.PELICAN_TOWN),
+    ConnectionData("Enter JojaMart", "JojaMart", "Exit JojaMart", RandomizationFlag.PELICAN_TOWN),
     ConnectionData("Town To Beach", "Beach"),
     ConnectionData("Enter Elliott's House", "Elliott's House"),
     ConnectionData("Enter Willy's Fish Shop", "Willy's Fish Shop"),
@@ -256,15 +247,30 @@ mandatory_connections = [
 ]
 
 
-def create_regions(region_factory: RegionFactory, options: StardewOptions) -> Iterable[Region]:
+def create_regions(region_factory: RegionFactory, random: Random, world_options: StardewOptions) -> Tuple[Iterable[Region], Dict[str, str]]:
     regions: Dict[str: Region] = {region.name: region_factory(region.name, region.exits) for region in stardew_valley_regions}
     entrances: Dict[str: Entrance] = {entrance.name: entrance
                                       for region in regions.values()
                                       for entrance in region.exits}
 
-    for connection in mandatory_connections:
+    connections, randomized_data = randomize_connections(random, world_options)
+
+    for connection in connections:
         if connection.name not in entrances:
             continue
         entrances[connection.name].connect(regions[connection.destination])
 
-    return regions.values()
+    return regions.values(), randomized_data
+
+
+def randomize_connections(random: Random, world_options: StardewOptions) -> Tuple[List[ConnectionData], Dict[str, str]]:
+    connections_to_randomize = []
+    if world_options[options.EntranceRandomization] == options.EntranceRandomization.option_pelican_town:
+        connections_to_randomize = [connection for connection in mandatory_connections if RandomizationFlag.PELICAN_TOWN in connection.flag]
+
+    randomized_data = {}
+    for connection in connections_to_randomize:
+        randomized_data[connection.name] = connection.name
+        randomized_data[connection.reverse] = connection.reverse
+
+    return mandatory_connections, randomized_data

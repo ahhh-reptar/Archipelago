@@ -55,6 +55,7 @@ class StardewValleyWorld(World):
 
     web = StardewWebWorld()
     modified_bundles: Dict[str, Bundle]
+    randomized_entrances: Dict[str, str]
 
     def generate_early(self):
         self.options = fetch_options(self.multiworld, self.player)
@@ -70,7 +71,7 @@ class StardewValleyWorld(World):
             region.exits = [Entrance(self.player, exit_name, region) for exit_name in exits]
             return region
 
-        world_regions = create_regions(create_region, self.options)
+        world_regions, self.randomized_entrances = create_regions(create_region, self.multiworld.random, self.options)
         self.multiworld.regions.extend(world_regions)
 
         def add_location(name: str, code: Optional[int], region: str):
@@ -173,4 +174,5 @@ class StardewValleyWorld(World):
             "gifting": self.options[options.Gifting],
             "gift_tax": self.options[options.GiftTax],
             "modified_bundles": modified_bundles,
+            "randomized_entrances": self.randomized_entrances
         }
