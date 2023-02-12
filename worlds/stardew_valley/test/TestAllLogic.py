@@ -18,9 +18,9 @@ def collect_all(mw):
 collect_all(multi_world)
 
 
-@pytest.mark.parametrize("item", all_bundle_items_except_money, ids=[i.name for i in all_bundle_items_except_money])
-def test_given_bundle_item_then_is_available_in_logic(item: BundleItem):
-    assert item.name in logic.item_rules
+@pytest.mark.parametrize("bundle_item", all_bundle_items_except_money, ids=[i.item.name for i in all_bundle_items_except_money])
+def test_given_bundle_item_then_is_available_in_logic(bundle_item: BundleItem):
+    assert bundle_item.item.name in logic.item_rules
 
 
 @pytest.mark.parametrize("item", logic.item_rules.keys(), ids=logic.item_rules.keys())

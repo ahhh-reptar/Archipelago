@@ -6,6 +6,8 @@ from typing import Dict, Union, Optional, Iterable, Sized, Tuple, List
 from BaseClasses import CollectionState, ItemClassification
 from . import options
 from .bundle_data import BundleItem
+from .fish_data import all_fish_items
+from .game_item import FishItem
 from .items import all_items, Group, item_table
 from .options import StardewOptions
 
@@ -88,6 +90,7 @@ def initialize_season_per_skill_level():
 
 initialize_season_per_skill_level()
 week_days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+
 
 class StardewRule:
     def __call__(self, state: CollectionState) -> bool:
@@ -446,17 +449,18 @@ class StardewLogic:
     options: StardewOptions
 
     item_rules: Dict[str, StardewRule] = field(default_factory=dict)
+    fish_rules: Dict[str, StardewRule] = field(default_factory=dict)
     building_rules: Dict[str, StardewRule] = field(default_factory=dict)
     quest_rules: Dict[str, StardewRule] = field(default_factory=dict)
 
     def __post_init__(self):
+        self.fish_rules.update({fish.name: self.can_catch_fish(fish) for fish in all_fish_items})
+
         self.item_rules.update({
             "Aged Roe": self.has("Preserves Jar") & self.has("Roe"),
-            "Albacore": (self.received("Fall") | self.received("Winter")) & self.can_fish(60),
             "Algae Soup": self.can_cook() & self.has("Green Algae") & self.can_have_relationship("Clint", 3),
             "Amaranth": self.received("Fall"),
             "Amethyst": self.can_mine_in_the_mines_floor_1_40(),
-            "Anchovy": self.can_fish(30) & (self.received("Spring") | self.received("Fall")),
             "Ancient Drum": self.has("Frozen Geode"),
             "Any Egg": self.has("Chicken Egg") | self.has("Duck Egg"),
             "Apple": self.received("Fall"),
@@ -476,18 +480,10 @@ class StardewLogic:
             "Bok Choy": self.received("Fall"),
             "Bouquet": self.can_have_relationship("Any", 8),
             "Bread": self.can_spend_money(120) | (self.can_spend_money(100) & self.can_cook()),
-            "Bream": self.can_fish(35),
             "Broken CD": self.can_crab_pot(),
             "Broken Glasses": self.can_crab_pot(),
             "Bug Meat": self.can_mine_in_the_mines_floor_1_40(),
-            "Bullhead": self.can_fish(46),
             "Cactus Fruit": self.can_reach_region("The Desert"),
-            "Carp": self.can_fish(15) & (self.received("Spring") | self.received("Summer") | self.received("Fall") |
-                                         self.can_reach_region("Secret Woods")),
-            "Catfish": self.can_fish(75) & (self.received("Spring") |
-                                            self.received("Fall") |
-                                            (self.received("Summer") & self.can_reach_region("Secret Woods")) |
-                                            (self.received("Winter") & self.has("Rain Totem"))),
             "Cauliflower": self.received("Spring"),
             "Cave Carrot": self.has_mine_elevator_to_floor(10),
             "Caviar": self.has("Preserves Jar") & self.has("Sturgeon Roe"),
@@ -501,7 +497,6 @@ class StardewLogic:
             "Chicken": self.has_building("Coop"),
             "Chicken Egg": self.has(["Egg", "Egg (Brown)", "Large Egg", "Large Egg (Brown)"], 1),
             "Chowder": self.can_cook() & self.can_have_relationship("Willy", 3) & self.has(["Clam", "Cow Milk"]),
-            "Chub": self.can_fish(35),
             "Clam": _True(),
             "Clay": _True(),
             "Cloth": (self.has("Wool") & self.has("Loom")) |
@@ -533,7 +528,7 @@ class StardewLogic:
             "Dish O' The Sea": self.can_cook() & self.has_skill_level("Fishing", 3) &
                                self.has(["Sardine", "Hashbrowns"]),
             "Dorado": self.can_fish(78) & self.received("Summer"),
-            "Dried Starfish": self.can_fish(),
+            "Dried Starfish": self.can_fish() & self.can_reach_region("Beach"),
             "Driftwood": self.can_crab_pot(),
             "Duck Egg": self.has("Duck"),
             "Duck Feather": self.has("Duck"),
@@ -543,11 +538,10 @@ class StardewLogic:
             "Dwarf Scroll III": self.can_mine_in_the_mines_floor_1_40(),
             "Dwarf Scroll IV": self.can_mine_in_the_mines_floor_81_120(),
             "Earth Crystal": self.can_mine_in_the_mines_floor_1_40(),
-            "Eel": self.can_fish(70) & (self.received("Spring") | self.received("Fall")),
             "Egg": self.has("Chicken"),
             "Egg (Brown)": self.has("Chicken"),
             "Eggplant": self.received("Fall"),
-            "Elvish Jewelry": self.can_fish(),
+            "Elvish Jewelry": self.can_fish() & self.can_reach_region("Forest"),
             "Emerald": self.can_mine_in_the_mines_floor_81_120() | self.can_mine_in_the_skull_cavern(),
             "Fairy Rose": self.received("Fall"),
             "Farmer's Lunch": self.can_cook() & self.has_skill_level("Farming", 3) & self.has("Omelet") & self.has(
@@ -555,7 +549,6 @@ class StardewLogic:
             "Fiber": _True(),
             "Fiddlehead Fern": self.can_reach_region("Secret Woods") & self.received("Summer"),
             "Fire Quartz": self.can_mine_in_the_mines_floor_81_120(),
-            "Flounder": self.can_fish(50),
             "Fried Egg": self.can_cook() & self.has("Any Egg"),
             "Fried Mushroom": self.can_cook() & self.can_have_relationship("Demetrius", 3) & self.has(
                 "Morel") & self.has("Common Mushroom"),
@@ -563,8 +556,6 @@ class StardewLogic:
             "Frozen Tear": self.can_mine_in_the_mines_floor_41_80(),
             "Furnace": self.has("Stone") & self.has("Copper Ore"),
             "Geode": self.can_mine_in_the_mines_floor_1_40(),
-            "Ghostfish": self.can_fish(50) & (
-                    self.has_mine_elevator_to_floor(20) | self.has_mine_elevator_to_floor(60)),
             "Goat Cheese": self.has("Goat Milk") & self.has("Cheese Press"),
             "Goat Milk": self.has("Goat"),
             "Goat": self.has_building("Big Barn"),
@@ -573,12 +564,9 @@ class StardewLogic:
             "Grape": self.received("Summer"),
             "Green Algae": self.can_fish(),
             "Green Bean": self.received("Spring"),
-            "Halibut": self.can_fish(50) & (
-                    self.received("Spring") | self.received("Summer") | self.received("Winter")),
             "Hardwood": self.has_tool("Axe", "Copper"),
             "Hashbrowns": self.can_cook() & self.can_spend_money(50) & self.has("Potato"),
             "Hazelnut": self.received("Fall"),
-            "Herring": self.can_fish(25) & (self.received("Spring") | self.received("Winter")),
             "Holly": self.received("Winter"),
             "Honey": self.can_reach_region("The Desert") |
                      (self.has("Bee House") &
@@ -586,7 +574,6 @@ class StardewLogic:
             "Hops": self.received("Summer"),
             "Hot Java Ring": self.can_reach_region("Ginger Island"),
             "Hot Pepper": self.received("Summer"),
-            "Ice Pip": self.can_fish(85),
             "Iridium Bar": self.can_smelt("Iridium Ore"),
             "Iridium Ore": self.can_mine_in_the_skull_cavern(),
             "Iron Bar": self.can_smelt("Iron Ore"),
@@ -605,15 +592,12 @@ class StardewLogic:
             "Kale": self.received("Spring"),
             "Keg": self.has_skill_level("Farming", 8) & self.has("Iron Bar") & self.has("Copper Bar") & self.has(
                 "Oak Resin"),
-            "Largemouth Bass": self.can_fish(50),
             "Large Egg": self.has("Chicken"),
             "Large Egg (Brown)": self.has("Chicken"),
             "Large Goat Milk": self.has("Goat"),
             "Large Milk": self.has("Cow"),
-            "Lava Eel": self.can_mine_to_floor(100) & self.can_fish(90),
             "Leek": self.received("Spring"),
             "Lightning Rod": self.has_skill_level("Foraging", 6),
-            "Lingcod": self.can_fish(85) & self.received("Winter"),
             "Lobster": self.can_crab_pot(),
             "Loom": self.has_skill_level("Farming", 7) & self.has("Pine Tar"),
             "Magma Geode": self.can_mine_in_the_mines_floor_81_120() |
@@ -622,7 +606,6 @@ class StardewLogic:
             "Maple Syrup": self.has("Tapper"),
             "Mead": self.has("Keg") & self.has("Honey"),
             "Melon": self.received("Summer"),
-            "Midnight Carp": self.can_fish(55) & (self.received("Fall") | self.received("Winter")),
             "Milk": self.has("Cow"),
             "Miner's Treat": self.can_cook() & self.has_skill_level("Mining", 3) & self.has("Cow Milk") & self.has(
                 "Cave Carrot"),
@@ -630,7 +613,6 @@ class StardewLogic:
             "Mussel": _True(),
             "Nautilus Shell": self.received("Winter"),
             "Oak Resin": self.has("Tapper"),
-            "Octopus": self.can_fish(95) & self.received("Summer"),
             "Oil Maker": self.has_skill_level("Farming", 8) & self.has("Hardwood") & self.has("Gold Bar"),
             "Omelet": self.can_cook() & self.can_spend_money(100) & self.has("Any Egg") & self.has("Cow Milk"),
             "Omni Geode": self.can_mine_in_the_mines_floor_41_80() |
@@ -651,11 +633,9 @@ class StardewLogic:
             "Peach": self.received("Summer"),
             "Pepper Poppers": self.can_cook() & self.has("Cheese") & self.has(
                 "Hot Pepper") & self.can_have_relationship("Shane", 3),
-            "Perch": self.can_fish(35) & self.received("Winter"),
             "Periwinkle": self.can_crab_pot(),
             "Pickles": self.has("Preserves Jar"),
             "Pig": self.has_building("Deluxe Barn"),
-            "Pike": self.can_fish(60) & (self.received("Summer") | self.received("Winter")),
             "Pine Tar": self.has("Tapper"),
             "Pizza": self.can_spend_money(600),
             "Pomegranate": self.received("Fall"),
@@ -663,7 +643,6 @@ class StardewLogic:
             "Potato": self.received("Spring"),
             "Preserves Jar": self.has_skill_level("Farming", 4),
             "Prismatic Shard": self.received("Year Two"),
-            "Pufferfish": self.can_fish(80) & self.received("Summer"),
             "Pumpkin": self.received("Fall"),
             "Purple Mushroom": self.can_mine_in_the_mines_floor_81_120() | self.can_mine_in_the_skull_cavern(),
             "Quartz": self.can_mine_in_the_mines_floor_1_40(),
@@ -671,14 +650,11 @@ class StardewLogic:
             "Rabbit's Foot": self.has("Rabbit"),
             "Radish": self.received("Summer"),
             "Rainbow Shell": self.received("Summer"),
-            "Rainbow Trout": self.can_fish(45) & self.received("Summer"),
             "Rain Totem": self.has_skill_level("Foraging", 9),
             "Recycling Machine": self.has_skill_level("Fishing", 4) & self.has("Wood") &
                                  self.has("Stone") & self.has("Iron Bar"),
             "Red Cabbage": self.received("Year Two"),
-            "Red Mullet": self.can_fish(55) & (self.received("Summer") | self.received("Winter")),
             "Red Mushroom": self.can_reach_region("Secret Woods") & (self.received("Summer") | self.received("Fall")),
-            "Red Snapper": self.can_fish(40) & (self.received("Summer") | self.received("Fall")),
             "Refined Quartz": self.has("Quartz") | self.has("Fire Quartz") |
                               (self.has("Recycling Machine") & (self.has("Broken CD") | self.has("Broken Glasses"))),
             "Rhubarb": self.received("Spring") & self.can_reach_region("The Desert"),
@@ -689,22 +665,15 @@ class StardewLogic:
             "Salad": self.can_spend_money(220) | (
                     self.can_cook() & self.can_have_relationship("Emily", 3) & self.has("Leek") & self.has(
                 "Dandelion")),
-            "Salmon": self.can_fish(50) & self.received("Fall"),
             "Salmonberry": self.received("Spring"),
             "Salmon Dinner": self.can_cook() & self.can_have_relationship("Gus", 3) & self.has("Salmon") & self.has(
                 "Amaranth") & self.has("Kale"),
-            "Sandfish": self.can_fish(65) & self.can_reach_region("The Desert"),
-            "Sardine": self.can_fish(30) & (self.received("Spring") | self.received("Fall") | self.received("Winter")),
             "Sashimi": self.can_fish() & self.can_cook() & self.can_have_relationship("Linus", 3),
-            "Scorpion Carp": self.can_fish(90) & self.can_reach_region("The Desert"),
-            "Sea Cucumber": self.can_fish(40) & (self.received("Fall") | self.received("Winter")),
             "Sea Urchin": self.can_reach_region("Tide Pools") | self.received("Summer"),
             "Seaweed": self.can_fish() | self.can_reach_region("Tide Pools"),
-            "Shad": self.can_fish(45) & (self.received("Spring") | self.received("Summer") | self.received("Fall")),
             "Sheep": self.has_building("Deluxe Barn"),
             "Shrimp": self.can_crab_pot(),
             "Slime": self.can_mine_in_the_mines_floor_1_40(),
-            "Smallmouth Bass": self.can_fish(28) & (self.received("Spring") | self.received("Fall")),
             "Snail": self.can_crab_pot(),
             "Snow Yam": self.received("Winter"),
             "Soggy Newspaper": self.can_crab_pot(),
@@ -712,25 +681,18 @@ class StardewLogic:
             "Spaghetti": self.can_spend_money(240),
             "Spice Berry": self.received("Summer"),
             "Spring Onion": self.received("Spring"),
-            "Squid": self.can_fish(75) & self.received("Winter"),
             "Staircase": self.has_skill_level("Mining", 2),
             "Starfruit": (self.received("Summer") | self.received("Greenhouse")) & self.can_reach_region("The Desert"),
             "Stone": self.has_tool("Pickaxe"),
-            "Stonefish": self.can_fish(65) & self.can_mine_to_floor(20),
             "Strawberry": self.received("Spring"),
-            "Sturgeon": self.can_fish(78) & (self.received("Summer") | self.received("Winter")),
             "Sturgeon Roe": self.has("Sturgeon") & self.has_building("Fish Pond"),
             "Summer Spangle": self.received("Summer"),
-            "Sunfish": self.can_fish(30) & (self.received("Spring") | self.received("Summer")),
             "Sunflower": self.received("Summer") | self.received("Fall"),
-            "Super Cucumber": self.can_fish(80) & (self.received("Summer") | self.received("Fall")),
             "Survival Burger": self.can_cook() & self.has_skill_level("Foraging", 2) &
                                self.has(["Bread", "Cave Carrot", "Eggplant"]),
             "Sweet Gem Berry": (self.received("Fall") | self.received("Greenhouse")) & self.has_traveling_merchant(),
             "Sweet Pea": self.received("Summer"),
             "Tapper": self.has_skill_level("Foraging", 3),
-            "Tiger Trout": self.can_fish(60) & (self.received("Fall") | self.received("Winter")),
-            "Tilapia": self.can_fish(50) & (self.received("Summer") | self.received("Fall")),
             "Tomato": self.received("Summer"),
             "Topaz": self.can_mine_in_the_mines_floor_1_40(),
             "Tortilla": self.can_cook() & self.can_spend_money(100) & self.has("Corn"),
@@ -740,10 +702,8 @@ class StardewLogic:
             "Truffle Oil": self.has("Truffle") & self.has("Oil Maker"),
             "Truffle": self.has("Pig") & self.received("Year Two"),
             "Tulip": self.received("Spring"),
-            "Tuna": self.can_fish(70) & (self.received("Summer") | self.received("Winter")),
             "Unmilled Rice": self.received("Year Two"),
             "Void Essence": self.can_mine_in_the_mines_floor_81_120() | self.can_mine_in_the_skull_cavern(),
-            "Walleye": self.can_fish(45) & (self.received("Fall") | (self.received("Winter") & self.has("Rain Totem"))),
             "Wheat": self.received("Summer") | self.received("Fall"),
             "White Algae": self.can_fish() & self.can_mine_in_the_mines_floor_1_40(),
             "Wild Horseradish": self.received("Spring"),
@@ -752,11 +712,11 @@ class StardewLogic:
             "Wine": self.has("Keg"),
             "Winter Root": self.received("Winter"),
             "Wood": self.has_tool("Axe"),
-            "Woodskip": self.can_fish(50) & self.can_reach_region("Secret Woods"),
             "Wool": self.has("Rabbit") | self.has("Sheep"),
             "Yam": self.received("Fall"),
             "Hay": self.has_building("Silo"),
         })
+        self.item_rules.update(self.fish_rules)
 
         self.building_rules.update({
             "Barn": self.can_spend_money(6000) & self.has(["Wood", "Stone"]),
@@ -856,6 +816,9 @@ class StardewLogic:
 
     def can_reach_region(self, spot: str) -> StardewRule:
         return _Reach(spot, "Region", self.player)
+
+    def can_reach_any_region(self, spots: Iterable[str]) -> StardewRule:
+        return _Or(self.can_reach_region(spot) for spot in spots)
 
     def can_reach_location(self, spot: str) -> StardewRule:
         return _Reach(spot, "Location", self.player)
@@ -973,6 +936,12 @@ class StardewLogic:
             return self.received("Progressive Fishing Rod", number_fishing_rod_required) & skill_rule
 
         return skill_rule
+
+    def can_catch_fish(self, fish: FishItem):
+        region_rule = self.can_reach_any_region(fish.locations)
+        season_rule = self.received(fish.seasons)
+        difficulty_rule = self.can_fish(fish.difficulty)
+        return region_rule & season_rule & difficulty_rule
 
     def can_cook(self) -> StardewRule:
         return self.has_house(1) or self.has_skill_level("Foraging", 9)
@@ -1097,11 +1066,11 @@ class StardewLogic:
 
     def can_complete_bundle(self, bundle_requirements: list[BundleItem], number_required: int) -> StardewRule:
         item_rules = []
-        for item in bundle_requirements:
-            if item.id == -1:
-                return self.can_spend_money(item.amount)
+        for bundle_item in bundle_requirements:
+            if bundle_item.item.item_id == -1:
+                return self.can_spend_money(bundle_item.amount)
             else:
-                item_rules.append(item.name)
+                item_rules.append(bundle_item.item.name)
         return self.has(item_rules, number_required)
 
     def can_complete_community_center(self) -> StardewRule:

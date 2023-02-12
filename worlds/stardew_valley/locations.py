@@ -398,6 +398,10 @@ traveling_merchant_locations = [
     LocationData(963, "Forest", "Traveling Merchant Saturday Item 3"),
 ]
 
+fish_locations = [
+    LocationData(1001, "Mountain", "Fish: Carp"),
+]
+
 events_locations = [
     LocationData(None, "Stardew Valley", "Succeed Grandpa's Evaluation"),
     LocationData(None, "Community Center", "Complete Community Center"),

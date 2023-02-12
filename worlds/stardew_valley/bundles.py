@@ -91,7 +91,7 @@ class Bundle:
 
     def change_number_required(self, difference: int):
         self.number_required = min(len(self.requirements), max(1, self.number_required + difference))
-        if len(self.requirements) == 1 and self.requirements[0].id == -1:
+        if len(self.requirements) == 1 and self.requirements[0].item.item_id == -1:
             one_fifth = self.requirements[0].amount / 5
             new_amount = int(self.requirements[0].amount + (difference * one_fifth))
             self.requirements[0] = BundleItem.money_bundle(new_amount)
@@ -142,8 +142,7 @@ class Bundle:
         parts = string_objects.split(" ")
         for index in range(0, len(parts), 3):
             item_id = int(parts[index])
-            bundle_item = BundleItem(all_bundle_items_by_id[item_id].name,
-                                     item_id,
+            bundle_item = BundleItem(all_bundle_items_by_id[item_id].item,
                                      int(parts[index + 1]),
                                      int(parts[index + 2]))
             bundle_items.append(bundle_item)
