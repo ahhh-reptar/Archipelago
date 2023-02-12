@@ -1,6 +1,10 @@
+import random
+import sys
+
 import pytest
 
-from ..regions import stardew_valley_regions, mandatory_connections
+from .. import StardewOptions, options
+from ..regions import stardew_valley_regions, mandatory_connections, randomize_connections, RandomizationFlag
 
 connections_by_name = {connection.name for connection in mandatory_connections}
 regions_by_name = {region.name for region in stardew_valley_regions}
@@ -15,3 +19,18 @@ def test_region_exits_lead_somewhere(region):
 @pytest.mark.parametrize("connection", mandatory_connections, ids=[connection.name for connection in mandatory_connections])
 def test_region_exits_lead_somewhere(connection):
     assert connection.destination in regions_by_name, f"{connection.name} is leading to {connection.destination} but it does not exist."
+
+
+def test_pelican_town_entrance_randomization():
+    seed = random.randrange(sys.maxsize)
+    rand = random.Random(seed)
+    world_options = StardewOptions({options.EntranceRandomization.internal_name: options.EntranceRandomization.option_pelican_town})
+
+    _, randomized_connections = randomize_connections(rand, world_options)
+
+    for connection in mandatory_connections:
+        if RandomizationFlag.PELICAN_TOWN in connection.flag:
+            assert connection.name in randomized_connections, f"Connection {connection.name} should be randomized but it is not in the output. Seed = {seed}"
+            assert connection.reverse in randomized_connections, f"Connection {connection.reverse} should be randomized but it is not in the output. Seed = {seed}"
+
+    assert len(set(randomized_connections.values())) == len(randomized_connections.values()), f"Connections are duplicated in randomization. Seed = {seed}"

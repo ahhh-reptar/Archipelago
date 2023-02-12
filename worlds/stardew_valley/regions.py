@@ -267,10 +267,17 @@ def randomize_connections(random: Random, world_options: StardewOptions) -> Tupl
     connections_to_randomize = []
     if world_options[options.EntranceRandomization] == options.EntranceRandomization.option_pelican_town:
         connections_to_randomize = [connection for connection in mandatory_connections if RandomizationFlag.PELICAN_TOWN in connection.flag]
+    random.shuffle(connections_to_randomize)
 
+    destination_pool = list(connections_to_randomize)
+    random.shuffle(destination_pool)
+
+    randomized_connections = []
     randomized_data = {}
     for connection in connections_to_randomize:
-        randomized_data[connection.name] = connection.name
-        randomized_data[connection.reverse] = connection.reverse
+        destination = destination_pool.pop()
+        randomized_connections.append(ConnectionData(connection.name, destination.destination, destination.reverse))
+        randomized_data[connection.name] = destination.name
+        randomized_data[destination.reverse] = connection.reverse
 
     return mandatory_connections, randomized_data
