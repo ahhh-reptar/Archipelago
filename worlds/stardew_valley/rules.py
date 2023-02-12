@@ -5,6 +5,7 @@ from BaseClasses import MultiWorld
 from worlds.generic import Rules as MultiWorldRules
 from . import options, locations
 from .bundles import Bundle
+from .locations import LocationTags
 from .logic import StardewLogic, _And, season_per_skill_level, tool_prices, week_days
 
 help_wanted_per_season = {
@@ -88,31 +89,31 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: options.Stard
                                  logic.can_complete_bundle(bundle.requirements, bundle.number_required).simplify())
     MultiWorldRules.add_rule(multi_world.get_location("Complete Crafts Room", player),
                              _And(logic.can_reach_location(bundle.name)
-                                  for bundle in locations.crafts_room_bundle).simplify())
+                                  for bundle in locations.locations_by_tag[LocationTags.CRAFTS_ROOM_BUNDLE]).simplify())
     MultiWorldRules.add_rule(multi_world.get_location("Complete Pantry", player),
                              _And(logic.can_reach_location(bundle.name)
-                                  for bundle in locations.pantry_bundles).simplify())
+                                  for bundle in locations.locations_by_tag[LocationTags.PANTRY_BUNDLE]).simplify())
     MultiWorldRules.add_rule(multi_world.get_location("Complete Fish Tank", player),
                              _And(logic.can_reach_location(bundle.name)
-                                  for bundle in locations.fish_tank_bundles).simplify())
+                                  for bundle in locations.locations_by_tag[LocationTags.FISH_TANK_BUNDLE]).simplify())
     MultiWorldRules.add_rule(multi_world.get_location("Complete Boiler Room", player),
                              _And(logic.can_reach_location(bundle.name)
-                                  for bundle in locations.boiler_room_bundles).simplify())
+                                  for bundle in locations.locations_by_tag[LocationTags.BOILER_ROOM_BUNDLE]).simplify())
     MultiWorldRules.add_rule(multi_world.get_location("Complete Bulletin Board", player),
                              _And(logic.can_reach_location(bundle.name)
-                                  for bundle in locations.bulletin_board_bundles).simplify())
+                                  for bundle in locations.locations_by_tag[LocationTags.BULLETIN_BOARD_BUNDLE]).simplify())
     MultiWorldRules.add_rule(multi_world.get_location("Complete Vault", player),
                              _And(logic.can_reach_location(bundle.name)
-                                  for bundle in locations.vault_bundles).simplify())
+                                  for bundle in locations.locations_by_tag[LocationTags.VAULT_BUNDLE]).simplify())
 
     # Buildings
     if world_options[options.BuildingProgression] != options.BuildingProgression.option_vanilla:
-        for building in locations.buildings:
+        for building in locations.locations_by_tag[LocationTags.BUILDING_BLUEPRINT]:
             MultiWorldRules.set_rule(multi_world.get_location(building.name, player),
                                      logic.building_rules[building.name.removesuffix(" Blueprint")].simplify())
 
     # Story Quests
-    for quest in locations.story_quests:
+    for quest in locations.locations_by_tag[LocationTags.QUEST]:
         MultiWorldRules.set_rule(multi_world.get_location(quest.name, player),
                                  logic.quest_rules[quest.name].simplify())
 
