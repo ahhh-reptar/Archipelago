@@ -70,7 +70,7 @@ class StardewValleyWorld(World):
             region.exits = [Entrance(self.player, exit_name, region) for exit_name in exits]
             return region
 
-        world_regions = create_regions(create_region)
+        world_regions = create_regions(create_region, self.options)
         self.multiworld.regions.extend(world_regions)
 
         def add_location(name: str, code: Optional[int], region: str):
