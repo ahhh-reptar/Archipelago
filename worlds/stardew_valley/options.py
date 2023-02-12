@@ -247,7 +247,7 @@ class Fishsanity(Choice):
     """
     internal_name = "fishsanity"
     display_name = "Fishsanity"
-    default = 3
+    default = 0
     option_none = 0
     option_legendaries = 1
     option_special = 2
