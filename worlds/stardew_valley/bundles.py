@@ -81,7 +81,7 @@ class Bundle:
         str_rewards = str_rewards.strip()
         str_requirements = ""
         for requirement in self.requirements:
-            str_requirements += f" {requirement.id} {requirement.amount} {requirement.quality}"
+            str_requirements += f" {requirement.item.item_id} {requirement.amount} {requirement.quality}"
         str_requirements = str_requirements.strip()
         value = f"{self.name}/{str_rewards}/{str_requirements}/{self.color}/{self.number_required}"
         return key, value

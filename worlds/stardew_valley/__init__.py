@@ -79,7 +79,7 @@ class StardewValleyWorld(World):
             location.access_rule = lambda _: True
             region.locations.append(location)
 
-        create_locations(add_location, self.options)
+        create_locations(add_location, self.options, self.multiworld.random)
 
     def create_items(self):
         locations_count = len([location
@@ -154,6 +154,7 @@ class StardewValleyWorld(World):
             "building_progression": self.options[options.BuildingProgression],
             "arcade_machine_progression": self.options[options.ArcadeMachineLocations],
             "help_wanted_locations": self.options[options.HelpWantedLocations],
+            "fishsanity": self.options[options.Fishsanity],
             "death_link": self.options["death_link"],
             "goal": self.options[options.Goal],
             "seed": self.multiworld.slot_seeds[self.player].randrange(1000000000),  # Seed should be max 9 digits

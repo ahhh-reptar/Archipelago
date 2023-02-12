@@ -1,7 +1,9 @@
 from dataclasses import dataclass
+from random import Random
 from typing import Optional, Dict, Protocol
 
 from . import options
+from .fish_data import legendary_fish, special_fish
 
 LOCATION_CODE_OFFSET = 717000
 
@@ -399,7 +401,7 @@ traveling_merchant_locations = [
 ]
 
 fish_locations = [
-    LocationData(1001, "Mountain", "Fish: Carp"),
+    LocationData(1001, "Mountain", "Fishsanity: Carp"),
 ]
 
 events_locations = [
@@ -447,7 +449,21 @@ def extend_help_wanted_quests(randomized_locations: list[LocationData], desired_
             randomized_locations.append(location_table[f"Help Wanted: Gathering {batch + 1}"])
 
 
-def create_locations(location_collector: StardewLocationCollector, world_options: options.StardewOptions):
+def extend_fishsanity_locations(randomized_locations: list[LocationData], fishsanity: int, random: Random):
+    prefix_length = len("Fishsanity: ")
+    if fishsanity == options.Fishsanity.option_none:
+        return
+    elif fishsanity == options.Fishsanity.option_legendaries:
+        randomized_locations.extend(location for location in fish_locations if location[prefix_length:] in (legendary.name for legendary in legendary_fish))
+    elif fishsanity == options.Fishsanity.option_special:
+        randomized_locations.extend(location for location in fish_locations if location[prefix_length:] in (special.name for special in special_fish))
+    elif fishsanity == options.Fishsanity.option_random_selection:
+        randomized_locations.extend(location for location in fish_locations if random.random() < 0.5)
+    elif fishsanity == options.Fishsanity.option_all:
+        randomized_locations.extend(fish_locations)
+
+
+def create_locations(location_collector: StardewLocationCollector, world_options: options.StardewOptions, random: Random):
     randomized_locations = []
 
     randomized_locations.extend(community_center_bundles)
@@ -477,6 +493,7 @@ def create_locations(location_collector: StardewLocationCollector, world_options
 
     randomized_locations.extend(story_quests)
     extend_help_wanted_quests(randomized_locations, world_options[options.HelpWantedLocations])
+    extend_fishsanity_locations(randomized_locations, world_options[options.Fishsanity], random)
     randomized_locations.extend(other_locations)
 
     randomized_locations.extend(traveling_merchant_locations)

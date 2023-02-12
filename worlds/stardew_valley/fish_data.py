@@ -109,6 +109,8 @@ legend = fish("Legend", 163, mountain, spring, 110)
 glacierfish = fish("Glacierfish", 775, forest, winter, 100)
 mutant_carp = fish("Mutant Carp", 682, sewers, all_seasons, 80)
 
+legendary_fish = {crimsonfish, angler, legend, glacierfish, mutant_carp}
+special_fish = {*legendary_fish, blob_fish, lava_eel, octopus, scorpion_carp, ice_pip, super_cucumber, dorado}
 
 all_fish_items_by_name = {fish.name: fish for fish in all_fish_items}
 all_fish_items_by_id = {fish.item_id: fish for fish in all_fish_items}

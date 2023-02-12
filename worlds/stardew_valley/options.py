@@ -238,16 +238,12 @@ class HelpWantedLocations(SpecialRange):
 
 
 class Fishsanity(Choice):
-    """How are the Arcade Machines handled?
-    With Vanilla, the arcade machines are not included in the Archipelago shuffling.
-    With Victories, each Arcade Machine will contain one check on victory, and be otherwise unchanged
-    With Victories Easy, the arcade machines are both made considerably easier to be more accessible for the average
-        player. Junimo Kart will start each level with 6 Extra lives, and Journey of the Prairie King will start with
-        one of each equipment, and the drop rates of coins and powerups is increased.
-    With Full Shuffling, the arcade machines will contain multiple checks each, and different buffs that make the game
-        easier are received in the item pool. Junimo Kart has one check at the end of each level, and 6 extra lives in
-        the item pool. Journey of the Prairie King has one check after each boss, plus one check for each vendor
-        equipment. Every equipment is instead in the item pool, plus 2 starting lives and one drop rate buff.
+    """Locations for catching fish?
+    With None, there are no locations for catching fish
+    With Legendaries, each of the 5 legendary fish are locations that contain items
+    With Special, a curated selection of strong fish are locations that contain items
+    With Random Selection, a random selection of fish are locations that contain items
+    With All, every single fish in the game is a location that contains an item
     """
     internal_name = "fishsanity"
     display_name = "Fishsanity"
@@ -381,6 +377,7 @@ stardew_valley_options: Dict[str, type(Option)] = {
         TheMinesElevatorsProgression,
         ArcadeMachineLocations,
         HelpWantedLocations,
+        Fishsanity,
         NumberOfPlayerBuffs,
         Goal,
         MultipleDaySleepEnabled,
