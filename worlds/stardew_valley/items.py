@@ -22,6 +22,7 @@ world_folder = os.path.dirname(__file__)
 
 class Group(enum.Enum):
     RESOURCE_PACK = enum.auto()
+    FRIENDSHIP_PACK = enum.auto()
     COMMUNITY_REWARD = enum.auto()
     TRASH = enum.auto()
     MINES_FLOOR_10 = enum.auto()
@@ -110,6 +111,11 @@ class FriendshipPackData(ResourcePackData):
     def create_item_name(self, quantity: int) -> str:
         return f"Friendship Bonus ({quantity} <3)"
 
+    def as_item_data(self, counter: itertools.count) -> [ItemData]:
+        item_datas = super().as_item_data(counter)
+        return [ItemData(item.code_without_offset, item.name, item.classification, {Group.FRIENDSHIP_PACK})
+                for item in item_datas]
+
 
 class StardewItemFactory(Protocol):
     def __call__(self, name: Union[str, ItemData]) -> Item:
@@ -139,7 +145,7 @@ def load_resource_pack_csv() -> List[ResourcePackData]:
                                                    int(resource_pack['scaling_factor']),
                                                    ItemClassification[resource_pack["classification"]],
                                                    groups))
-    return resource_packs + [(friendship_pack)]
+    return resource_packs
 
 
 events = [

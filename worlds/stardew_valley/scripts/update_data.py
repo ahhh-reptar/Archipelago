@@ -3,7 +3,7 @@ import itertools
 import os
 from typing import List
 
-from worlds.stardew_valley.items import load_item_csv, Group, ItemData, load_resource_pack_csv
+from worlds.stardew_valley.items import load_item_csv, Group, ItemData, load_resource_pack_csv, friendship_pack
 
 RESOURCE_PACK_CODE_OFFSET = 500
 world_folder = os.path.dirname(__file__)
@@ -32,7 +32,7 @@ if __name__ == '__main__':
                                        and item.code_without_offset is not None) + 1)
     items_to_write = []
     for item in loaded_items:
-        if Group.RESOURCE_PACK in item.groups:
+        if Group.RESOURCE_PACK in item.groups or Group.FRIENDSHIP_PACK in item.groups:
             continue
 
         if item.code_without_offset is None:
@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
         items_to_write.append(item)
 
-    all_resource_packs = load_resource_pack_csv()
+    all_resource_packs = load_resource_pack_csv() + [friendship_pack]
     resource_pack_counter = itertools.count(RESOURCE_PACK_CODE_OFFSET)
     items_to_write.extend(item for resource_pack in all_resource_packs for item in resource_pack.as_item_data(resource_pack_counter))
 
