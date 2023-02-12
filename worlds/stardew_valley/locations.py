@@ -6,7 +6,7 @@ from random import Random
 from typing import Optional, Dict, Protocol, List
 
 from . import options
-from .fish_data import legendary_fish, special_fish
+from .fish_data import legendary_fish, special_fish, all_fish_items
 
 LOCATION_CODE_OFFSET = 717000
 world_folder = os.path.dirname(__file__)
@@ -47,6 +47,7 @@ class LocationTags(enum.Enum):
     JUNIMO_KART = enum.auto()
     HELP_WANTED = enum.auto()
     TRAVELING_MERCHANT = enum.auto()
+    FISHSANITY = enum.auto()
 
 
 @dataclass(frozen=True)
@@ -120,17 +121,17 @@ def extend_help_wanted_quests(randomized_locations: list[LocationData], desired_
 
 
 def extend_fishsanity_locations(randomized_locations: list[LocationData], fishsanity: int, random: Random):
-    prefix_length = len("Fishsanity: ")
+    prefix = "Fishsanity: "
     if fishsanity == options.Fishsanity.option_none:
         return
     elif fishsanity == options.Fishsanity.option_legendaries:
-        randomized_locations.extend(location for location in fish_locations if location[prefix_length:] in (legendary.name for legendary in legendary_fish))
+        randomized_locations.extend(location_table[f"{prefix}{legendary.name}"] for legendary in legendary_fish)
     elif fishsanity == options.Fishsanity.option_special:
-        randomized_locations.extend(location for location in fish_locations if location[prefix_length:] in (special.name for special in special_fish))
+        randomized_locations.extend(location_table[f"{prefix}{special.name}"] for special in special_fish)
     elif fishsanity == options.Fishsanity.option_random_selection:
-        randomized_locations.extend(location for location in fish_locations if random.random() < 0.5)
+        randomized_locations.extend(location_table[f"{prefix}{fish.name}"] for fish in all_fish_items if random.random() < 0.4)
     elif fishsanity == options.Fishsanity.option_all:
-        randomized_locations.extend(fish_locations)
+        randomized_locations.extend(location_table[f"{prefix}{fish.name}"] for fish in all_fish_items)
 
 
 def create_locations(location_collector: StardewLocationCollector, world_options: options.StardewOptions, random: Random):

@@ -25,7 +25,7 @@ help_wanted_per_season = {
 def set_rules(multi_world: MultiWorld, player: int, world_options: options.StardewOptions, logic: StardewLogic,
               current_bundles: Dict[str, Bundle]):
     summer = multi_world.get_location("Summer", player)
-    all_location_names = (location.name for location in multi_world.get_locations(player))
+    all_location_names = list(location.name for location in multi_world.get_locations(player))
 
     for floor in range(5, 120 + 5, 5):
         MultiWorldRules.add_rule(multi_world.get_entrance(f"Dig to The Mines - Floor {floor}", player),
@@ -137,11 +137,11 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: options.Stard
                                  slay_rule.simplify())
 
     fish_prefix = "Fishsanity: "
-    for fish_location in locations.fish_locations:
+    for fish_location in locations.locations_by_tag[LocationTags.FISHSANITY]:
         if fish_location.name in all_location_names:
             fish_name = fish_location.name[len(fish_prefix):]
             MultiWorldRules.set_rule(multi_world.get_location(fish_location.name, player),
-                                     logic.has(fish_name))
+                                     logic.has(fish_name).simplify())
 
     if world_options[options.BuildingProgression] == options.BuildingProgression.option_progressive_early_shipping_bin:
         summer.access_rule = summer.access_rule & logic.received("Shipping Bin")

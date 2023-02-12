@@ -312,4 +312,58 @@ id,region,name,tags
 961,Forest,Traveling Merchant Saturday Item 1,"MANDATORY,TRAVELING_MERCHANT"
 962,Forest,Traveling Merchant Saturday Item 2,"MANDATORY,TRAVELING_MERCHANT"
 963,Forest,Traveling Merchant Saturday Item 3,"MANDATORY,TRAVELING_MERCHANT"
-964,Mountain,Fish: Carp,
+1001,Mountain,Fishsanity: Carp,FISHSANITY
+1002,Beach,Fishsanity: Herring,FISHSANITY
+1003,Forest,Fishsanity: Smallmouth Bass,FISHSANITY
+1004,Beach,Fishsanity: Anchovy,FISHSANITY
+1005,Beach,Fishsanity: Sardine,FISHSANITY
+1006,Forest,Fishsanity: Sunfish,FISHSANITY
+1007,Forest,Fishsanity: Perch,FISHSANITY
+1008,Forest,Fishsanity: Chub,FISHSANITY
+1009,Forest,Fishsanity: Bream,FISHSANITY
+1010,Beach,Fishsanity: Red Snapper,FISHSANITY
+1011,Beach,Fishsanity: Sea Cucumber,FISHSANITY
+1012,Forest,Fishsanity: Rainbow Trout,FISHSANITY
+1013,Forest,Fishsanity: Walleye,FISHSANITY
+1014,Forest,Fishsanity: Shad,FISHSANITY
+1015,Mountain,Fishsanity: Bullhead,FISHSANITY
+1016,Mountain,Fishsanity: Largemouth Bass,FISHSANITY
+1017,Forest,Fishsanity: Salmon,FISHSANITY
+1018,The Mines - Floor 20,Fishsanity: Ghostfish,FISHSANITY
+1019,Beach,Fishsanity: Tilapia,FISHSANITY
+1020,Secret Woods,Fishsanity: Woodskip,FISHSANITY
+1021,Beach,Fishsanity: Flounder,FISHSANITY
+1022,Beach,Fishsanity: Halibut,FISHSANITY
+1023,Ginger Island,Fishsanity: Lionfish,FISHSANITY
+1024,Mutant Bug Lair,Fishsanity: Slimejack,FISHSANITY
+1025,Forest,Fishsanity: Midnight Carp,FISHSANITY
+1026,Beach,Fishsanity: Red Mullet,FISHSANITY
+1027,Forest,Fishsanity: Pike,FISHSANITY
+1028,Forest,Fishsanity: Tiger Trout,FISHSANITY
+1029,Ginger Island,Fishsanity: Blue Discus,FISHSANITY
+1030,Beach,Fishsanity: Albacore,FISHSANITY
+1031,The Desert,Fishsanity: Sandfish,FISHSANITY
+1032,The Mines - Floor 20,Fishsanity: Stonefish,FISHSANITY
+1033,Beach,Fishsanity: Tuna,FISHSANITY
+1034,Beach,Fishsanity: Eel,FISHSANITY
+1035,Forest,Fishsanity: Catfish,FISHSANITY
+1036,Beach,Fishsanity: Squid,FISHSANITY
+1037,Mountain,Fishsanity: Sturgeon,FISHSANITY
+1038,Forest,Fishsanity: Dorado,FISHSANITY
+1039,Beach,Fishsanity: Pufferfish,FISHSANITY
+1040,Witch's Swamp,Fishsanity: Void Salmon,FISHSANITY
+1041,Beach,Fishsanity: Super Cucumber,FISHSANITY
+1042,Ginger Island,Fishsanity: Stringray,FISHSANITY
+1043,The Mines - Floor 60,Fishsanity: Ice Pip,FISHSANITY
+1044,Forest,Fishsanity: Lingcod,FISHSANITY
+1045,The Desert,Fishsanity: Scorpion Carp,FISHSANITY
+1046,The Mines - Floor 100,Fishsanity: Lava Eel,FISHSANITY
+1047,Beach,Fishsanity: Octopus,FISHSANITY
+1048,Beach,Fishsanity: Midnight Squid,FISHSANITY
+1049,Beach,Fishsanity: Spook Fish,FISHSANITY
+1050,Beach,Fishsanity: Blobfish,FISHSANITY
+1051,Beach,Fishsanity: Crimsonfish,FISHSANITY
+1052,Town,Fishsanity: Angler,FISHSANITY
+1053,Mountain,Fishsanity: Legend,FISHSANITY
+1054,Forest,Fishsanity: Glacierfish,FISHSANITY
+1055,Sewers,Fishsanity: Mutant Carp,FISHSANITY

@@ -4,15 +4,16 @@ import os
 from typing import List
 
 from worlds.stardew_valley import LocationData
+from worlds.stardew_valley.fish_data import all_fish_items
 from worlds.stardew_valley.items import load_item_csv, Group, ItemData, load_resource_pack_csv, friendship_pack
-from worlds.stardew_valley.locations import load_location_csv
+from worlds.stardew_valley.locations import load_location_csv, LocationTags
 
 RESOURCE_PACK_CODE_OFFSET = 500
 world_folder = os.path.dirname(__file__)
 
 
 def write_item_csv(items: List[ItemData]):
-    with open(world_folder + "/../data/items.csv", 'w') as file:
+    with open(world_folder + "/../data/items.csv", 'w', newline='') as file:
         writer = csv.DictWriter(file, ['id', 'name', 'classification', 'groups'])
         writer.writeheader()
         for item in items:
@@ -26,7 +27,7 @@ def write_item_csv(items: List[ItemData]):
 
 
 def write_location_csv(locations: List[LocationData]):
-    with open(world_folder + "/../data/locations.csv", 'w') as file:
+    with open(world_folder + "/../data/locations.csv", 'w', newline='') as file:
         write = csv.DictWriter(file, ['id', 'region', 'name', 'tags'])
         write.writeheader()
         for location in locations:
