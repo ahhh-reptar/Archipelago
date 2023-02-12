@@ -118,7 +118,7 @@ class EntranceRandomization(Choice):
     """
     internal_name = "entrance_randomization"
     display_name = "Entrance Randomization"
-    default = 1
+    default = 0
     option_disabled = 0
     option_pelican_town = 1
     option_non_progression = 2

@@ -1,18 +1,17 @@
 import pytest
 
-from . import SVTestBase
-from .. import options
 from ..regions import stardew_valley_regions, mandatory_connections
 
+connections_by_name = {connection.name for connection in mandatory_connections}
+regions_by_name = {region.name for region in stardew_valley_regions}
 
-@pytest.mark.parametrize("region_and_exits", stardew_valley_regions, ids=[region for region, exits in stardew_valley_regions])
-def test_region_exits_lead_somewhere(region_and_exits):
-    connections = dict(mandatory_connections)
-    for region_exit in region_and_exits[1]:
-        assert region_exit in connections
 
-# def test_all_mandatory_connections_lead_somewhere(self):
-#     summer = self.get_item_by_name("Summer")
-#     self.multiworld.state.collect(summer, event=True)
-#     assert not self.world.logic.has("Sturgeon")(self.multiworld.state)
-#     self.remove(summer)
+@pytest.mark.parametrize("region", stardew_valley_regions, ids=[region.name for region in stardew_valley_regions])
+def test_region_exits_lead_somewhere(region):
+    for exit in region.exits:
+        assert exit in connections_by_name, f"{region.name} is leading to {exit} but it does not exist."
+
+
+@pytest.mark.parametrize("connection", mandatory_connections, ids=[connection.name for connection in mandatory_connections])
+def test_region_exits_lead_somewhere(connection):
+    assert connection.destination in regions_by_name, f"{connection.name} is leading to {connection.destination} but it does not exist."
