@@ -5,6 +5,7 @@ from test.general import setup_default_world
 from . import SVTestBase
 from .. import locations, items, location_table, options, StardewValleyWorld
 from ..items import items_by_group, Group
+from ..locations import LocationTags
 
 
 def test_can_generate_world():
@@ -41,7 +42,7 @@ class TestGivenProgressiveBackpack(SVTestBase):
 
     def test_when_generate_world_then_backpack_locations_are_added(self):
         created_locations = {location.name for location in self.multiworld.get_locations(1)}
-        assert all(location.name in created_locations for location in locations.backpack_upgrades)
+        assert all(location.name in created_locations for location in locations.locations_by_tag[LocationTags.BACKPACK])
 
 
 class TestRemixedMineRewards(SVTestBase):
