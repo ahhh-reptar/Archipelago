@@ -4,11 +4,10 @@ import os
 from typing import List
 
 from worlds.stardew_valley import LocationData
-from worlds.stardew_valley.fish_data import all_fish_items
 from worlds.stardew_valley.items import load_item_csv, Group, ItemData, load_resource_pack_csv, friendship_pack
-from worlds.stardew_valley.locations import load_location_csv, LocationTags
+from worlds.stardew_valley.locations import load_location_csv
 
-RESOURCE_PACK_CODE_OFFSET = 500
+RESOURCE_PACK_CODE_OFFSET = 5000
 world_folder = os.path.dirname(__file__)
 
 
@@ -60,7 +59,8 @@ if __name__ == '__main__':
 
     all_resource_packs = load_resource_pack_csv() + [friendship_pack]
     resource_pack_counter = itertools.count(RESOURCE_PACK_CODE_OFFSET)
-    items_to_write.extend(item for resource_pack in all_resource_packs for item in resource_pack.as_item_data(resource_pack_counter))
+    items_to_write.extend(
+        item for resource_pack in all_resource_packs for item in resource_pack.as_item_data(resource_pack_counter))
 
     write_item_csv(items_to_write)
 
@@ -72,7 +72,8 @@ if __name__ == '__main__':
     locations_to_write = []
     for location in loaded_locations:
         if location.code_without_offset is None:
-            locations_to_write.append(LocationData(next(location_counter), location.region, location.name, location.tags))
+            locations_to_write.append(
+                LocationData(next(location_counter), location.region, location.name, location.tags))
             continue
 
         locations_to_write.append(location)
