@@ -15,9 +15,9 @@ def test_can_create_item_of_resource_pack():
     assert item.name == item_name
 
 
-def test_items_table_footprint_is_between_717000_and_720000():
+def test_items_table_footprint_is_between_717000_and_727000():
     item_with_lowest_id = min((item for item in item_table.values() if item.code is not None), key=lambda x: x.code)
     item_with_highest_id = max((item for item in item_table.values() if item.code is not None), key=lambda x: x.code)
 
     assert item_with_lowest_id.code >= 717000
-    assert item_with_highest_id.code < 720000
+    assert item_with_highest_id.code < 727000
