@@ -25,13 +25,15 @@ class Goal(Choice):
     With Community Center, the world will be completed once you complete the Community Center.
     With Grandpa's Evaluation, the world will be completed once 4 candles are lit around Grandpa's Shrine.
     With Bottom of the Mines, the world will be completed once you reach level 120 in the local mineshaft.
-    With Cryptic Note, the world will be completed once you complete the quest "Cryptic Note" where Mr Qi asks you to reach floor 100 in the Skull Cavern"""
+    With Cryptic Note, the world will be completed once you complete the quest "Cryptic Note" where Mr Qi asks you to reach floor 100 in the Skull Cavern
+    With Master Angler, the world will be completed once you have caught every fish in the game. Pairs well with Fishsanity"""
     internal_name = "goal"
     display_name = "Goal"
     option_community_center = 0
     option_grandpa_evaluation = 1
     option_bottom_of_the_mines = 2
     option_cryptic_note = 3
+    option_master_angler = 4
 
     @classmethod
     def get_option_name(cls, value) -> str:
@@ -243,7 +245,7 @@ class Fishsanity(Choice):
     With Legendaries, each of the 5 legendary fish are locations that contain items
     With Special, a curated selection of strong fish are locations that contain items
     With Random Selection, a random selection of fish are locations that contain items
-    With All, every single fish in the game is a location that contains an item
+    With All, every single fish in the game is a location that contains an item. Pairs well with the Master Angler Goal
     """
     internal_name = "fishsanity"
     display_name = "Fishsanity"

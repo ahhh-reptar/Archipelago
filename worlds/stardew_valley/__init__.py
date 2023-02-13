@@ -132,6 +132,10 @@ class StardewValleyWorld(World):
             self.create_event_location(location_table["Complete Quest Cryptic Note"],
                                        self.logic.can_complete_quest("Cryptic Note").simplify(),
                                        "Victory")
+        elif self.options[options.Goal] == options.Goal.option_master_angler:
+            self.create_event_location(location_table["Catch Every Fish"],
+                                       self.logic.can_catch_every_fish().simplify(),
+                                       "Victory")
 
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
 

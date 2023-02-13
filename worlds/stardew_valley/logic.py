@@ -937,16 +937,22 @@ class StardewLogic:
 
         return skill_rule
 
-    def can_catch_fish(self, fish: FishItem):
+    def can_catch_fish(self, fish: FishItem) -> StardewRule:
         region_rule = self.can_reach_any_region(fish.locations)
         season_rule = self.received(fish.seasons)
         difficulty_rule = self.can_fish(fish.difficulty)
         return region_rule & season_rule & difficulty_rule
 
+    def can_catch_every_fish(self) -> StardewRule:
+        rules = [self.has_skill_level("Fishing", 10), self.received("Progressive Fishing Rod", 4)]
+        for fish in all_fish_items:
+            rules.append(self.can_catch_fish(fish))
+        return _And(rules)
+
     def can_cook(self) -> StardewRule:
         return self.has_house(1) or self.has_skill_level("Foraging", 9)
 
-    def can_smelt(self, item: str):
+    def can_smelt(self, item: str) -> StardewRule:
         return self.has("Furnace") & self.has(item)
 
     def can_crab_pot(self) -> StardewRule:

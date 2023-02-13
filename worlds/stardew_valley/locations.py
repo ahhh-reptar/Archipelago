@@ -84,6 +84,7 @@ events_locations = [
     LocationData(None, "Community Center", "Complete Community Center"),
     LocationData(None, "The Mines - Floor 120", "Reach the Bottom of The Mines"),
     LocationData(None, "Skull Cavern", "Complete Quest Cryptic Note"),
+    LocationData(None, "Stardew Valley", "Catch Every Fish"),
     LocationData(None, "Stardew Valley", "Summer"),
     LocationData(None, "Stardew Valley", "Fall"),
     LocationData(None, "Stardew Valley", "Winter"),
