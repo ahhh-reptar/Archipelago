@@ -4,10 +4,10 @@ import enum
 import itertools
 import logging
 import math
-import os
 from collections import OrderedDict
 from dataclasses import dataclass, field
 from functools import cached_property
+from pathlib import Path
 from random import Random
 from typing import Dict, List, Protocol, Union, Set, Optional
 
@@ -17,7 +17,7 @@ from . import options
 ITEM_CODE_OFFSET = 717000
 
 logger = logging.getLogger(__name__)
-world_folder = os.path.dirname(__file__)
+world_folder = Path(__file__).parent
 
 
 class Group(enum.Enum):
@@ -78,7 +78,8 @@ class ResourcePackData:
     groups: frozenset[Group] = frozenset()
 
     def as_item_data(self, counter: itertools.count) -> [ItemData]:
-        return [ItemData(next(counter), self.create_item_name(quantity), self.classification, {Group.RESOURCE_PACK} | self.groups)
+        return [ItemData(next(counter), self.create_item_name(quantity), self.classification,
+                         {Group.RESOURCE_PACK} | self.groups)
                 for quantity in self.scale_quantity.values()]
 
     def create_item_name(self, quantity: int) -> str:
@@ -128,7 +129,7 @@ class StardewItemFactory(Protocol):
 
 def load_item_csv():
     items = []
-    with open(world_folder + "/data/items.csv") as item_csv:
+    with open((world_folder / "data/items.csv").resolve(), "r") as item_csv:
         item_reader = csv.DictReader(item_csv)
         for item in item_reader:
             id = int(item["id"]) if item["id"] else None
@@ -140,7 +141,7 @@ def load_item_csv():
 
 def load_resource_pack_csv() -> List[ResourcePackData]:
     resource_packs = []
-    with open(world_folder + "/data/resource_packs.csv") as file:
+    with open((world_folder / "data/resource_packs.csv").resolve(), "r") as file:
         resource_pack_reader = csv.DictReader(file)
         for resource_pack in resource_pack_reader:
             groups = frozenset(Group[group] for group in resource_pack["groups"].split(",") if group)
@@ -248,7 +249,8 @@ def create_wizard_buildings(item_factory: StardewItemFactory, items: List[Item])
     items.append(item_factory("Gold Clock"))
 
 
-def create_carpenter_buildings(item_factory: StardewItemFactory, world_options: options.StardewOptions, items: List[Item]):
+def create_carpenter_buildings(item_factory: StardewItemFactory, world_options: options.StardewOptions,
+                               items: List[Item]):
     if world_options[options.BuildingProgression] in {options.BuildingProgression.option_progressive,
                                                       options.BuildingProgression.option_progressive_early_shipping_bin}:
         items.append(item_factory("Progressive Coop"))
@@ -284,7 +286,8 @@ def create_stardrops(item_factory: StardewItemFactory, items: List[Item]):
     items.append(item_factory("Stardrop"))  # Old Master Cannoli
 
 
-def create_arcade_machine_items(item_factory: StardewItemFactory, world_options: options.StardewOptions, items: List[Item]):
+def create_arcade_machine_items(item_factory: StardewItemFactory, world_options: options.StardewOptions,
+                                items: List[Item]):
     if world_options[options.ArcadeMachineLocations] == options.ArcadeMachineLocations.option_full_shuffling:
         items.append(item_factory("JotPK: Progressive Boots"))
         items.append(item_factory("JotPK: Progressive Boots"))
@@ -337,7 +340,8 @@ def create_unique_items(item_factory: StardewItemFactory, world_options: options
     create_stardrops(item_factory, items)
     create_arcade_machine_items(item_factory, world_options, items)
     items.append(item_factory(random.choice(items_by_group[Group.GALAXY_WEAPONS])))
-    items.append(item_factory(friendship_pack.create_name_from_multiplier(world_options[options.ResourcePackMultiplier])))
+    items.append(
+        item_factory(friendship_pack.create_name_from_multiplier(world_options[options.ResourcePackMultiplier])))
     create_player_buffs(item_factory, world_options, items)
     create_traveling_merchant_items(item_factory, items)
     return items
