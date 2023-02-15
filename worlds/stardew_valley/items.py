@@ -348,6 +348,8 @@ def create_unique_items(item_factory: StardewItemFactory, world_options: options
         item_factory(friendship_pack.create_name_from_multiplier(world_options[options.ResourcePackMultiplier])))
     create_player_buffs(item_factory, world_options, items)
     create_traveling_merchant_items(item_factory, items)
+    items.append(item_factory("Return Scepter"))
+
     return items
 
 
