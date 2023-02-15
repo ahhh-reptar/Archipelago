@@ -1,15 +1,13 @@
 import csv
 import enum
-import os
 from dataclasses import dataclass
 from random import Random
 from typing import Optional, Dict, Protocol, List
 
-from . import options
+from . import options, data
 from .fish_data import legendary_fish, special_fish, all_fish_items
 
 LOCATION_CODE_OFFSET = 717000
-world_folder = os.path.dirname(__file__)
 
 
 class LocationTags(enum.Enum):
@@ -68,15 +66,17 @@ class StardewLocationCollector(Protocol):
 
 
 def load_location_csv() -> List[LocationData]:
-    locations = []
-    with open(world_folder + "/data/locations.csv") as file:
+    from importlib.resources import files
+
+    with files(data).joinpath("locations.csv").open() as file:
         reader = csv.DictReader(file)
-        for location in reader:
-            locations.append(LocationData(int(location["id"]) if location["id"] else None,
-                                          location["region"],
-                                          location["name"],
-                                          frozenset(LocationTags[group] for group in location["tags"].split(",") if group)))
-    return locations
+        return [LocationData(int(location["id"]) if location["id"] else None,
+                             location["region"],
+                             location["name"],
+                             frozenset(LocationTags[group]
+                                       for group in location["tags"].split(",")
+                                       if group))
+                for location in reader]
 
 
 events_locations = [
@@ -112,7 +112,8 @@ def extend_help_wanted_quests(randomized_locations: list[LocationData], desired_
         batch = i // 7
         index_this_batch = i % 7
         if index_this_batch < 4:
-            randomized_locations.append(location_table[f"Help Wanted: Item Delivery {(batch * 4) + index_this_batch + 1}"])
+            randomized_locations.append(
+                location_table[f"Help Wanted: Item Delivery {(batch * 4) + index_this_batch + 1}"])
         elif index_this_batch == 4:
             randomized_locations.append(location_table[f"Help Wanted: Fishing {batch + 1}"])
         elif index_this_batch == 5:
@@ -130,12 +131,15 @@ def extend_fishsanity_locations(randomized_locations: list[LocationData], fishsa
     elif fishsanity == options.Fishsanity.option_special:
         randomized_locations.extend(location_table[f"{prefix}{special.name}"] for special in special_fish)
     elif fishsanity == options.Fishsanity.option_random_selection:
-        randomized_locations.extend(location_table[f"{prefix}{fish.name}"] for fish in all_fish_items if random.random() < 0.4)
+        randomized_locations.extend(location_table[f"{prefix}{fish.name}"]
+                                    for fish in all_fish_items if random.random() < 0.4)
     elif fishsanity == options.Fishsanity.option_all:
         randomized_locations.extend(location_table[f"{prefix}{fish.name}"] for fish in all_fish_items)
 
 
-def create_locations(location_collector: StardewLocationCollector, world_options: options.StardewOptions, random: Random):
+def create_locations(location_collector: StardewLocationCollector,
+                     world_options: options.StardewOptions,
+                     random: Random):
     randomized_locations = []
 
     randomized_locations.extend(locations_by_tag[LocationTags.MANDATORY])

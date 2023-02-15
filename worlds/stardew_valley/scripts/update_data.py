@@ -12,7 +12,7 @@ script_folder = Path(__file__)
 
 
 def write_item_csv(items: List[ItemData]):
-    with open((script_folder.parent.parent / "data/items.csv").resolve(), 'w', newline='') as file:
+    with open((script_folder.parent.parent / "data/items.csv").resolve(), 'w', newline="") as file:
         writer = csv.DictWriter(file, ['id', 'name', 'classification', 'groups'])
         writer.writeheader()
         for item in items:
@@ -26,7 +26,7 @@ def write_item_csv(items: List[ItemData]):
 
 
 def write_location_csv(locations: List[LocationData]):
-    with open((script_folder.parent.parent / "data/locations.csv").resolve(), 'w', newline='') as file:
+    with open((script_folder.parent.parent / "data/locations.csv").resolve(), 'w', newline="") as file:
         write = csv.DictWriter(file, ['id', 'region', 'name', 'tags'])
         write.writeheader()
         for location in locations:

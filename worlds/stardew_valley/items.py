@@ -12,7 +12,7 @@ from random import Random
 from typing import Dict, List, Protocol, Union, Set, Optional
 
 from BaseClasses import Item, ItemClassification
-from . import options
+from . import options, data
 
 ITEM_CODE_OFFSET = 717000
 
@@ -128,9 +128,11 @@ class StardewItemFactory(Protocol):
 
 
 def load_item_csv():
+    from importlib.resources import files
+
     items = []
-    with open((world_folder / "data/items.csv").resolve(), "r") as item_csv:
-        item_reader = csv.DictReader(item_csv)
+    with files(data).joinpath("items.csv").open() as file:
+        item_reader = csv.DictReader(file)
         for item in item_reader:
             id = int(item["id"]) if item["id"] else None
             classification = ItemClassification[item["classification"]]
@@ -140,8 +142,10 @@ def load_item_csv():
 
 
 def load_resource_pack_csv() -> List[ResourcePackData]:
+    from importlib.resources import files
+
     resource_packs = []
-    with open((world_folder / "data/resource_packs.csv").resolve(), "r") as file:
+    with files(data).joinpath("resource_packs.csv").open() as file:
         resource_pack_reader = csv.DictReader(file)
         for resource_pack in resource_pack_reader:
             groups = frozenset(Group[group] for group in resource_pack["groups"].split(",") if group)
