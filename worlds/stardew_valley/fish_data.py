@@ -109,6 +109,17 @@ legend = fish("Legend", 163, mountain, spring, 110)
 glacierfish = fish("Glacierfish", 775, forest, winter, 100)
 mutant_carp = fish("Mutant Carp", 682, sewers, all_seasons, 80)
 
+crayfish = fish("Crayfish", 716, rivers, all_seasons, -1)
+snail = fish("Snail", 721, rivers, all_seasons, -1)
+periwinkle = fish("Periwinkle", 722, rivers, all_seasons, -1)
+lobster = fish("Lobster", 715, ocean, all_seasons, -1)
+clam = fish("Clam", 372, ocean, all_seasons, -1)
+crab = fish("Crab", 717, ocean, all_seasons, -1)
+cockle = fish("Cockle", 718, ocean, all_seasons, -1)
+mussel = fish("Mussel", 719, ocean, all_seasons, -1)
+shrimp = fish("Shrimp", 720, ocean, all_seasons, -1)
+oyster = fish("Oyster", 723, ocean, all_seasons, -1)
+
 legendary_fish = {crimsonfish, angler, legend, glacierfish, mutant_carp}
 special_fish = {*legendary_fish, blob_fish, lava_eel, octopus, scorpion_carp, ice_pip, super_cucumber, dorado}
 

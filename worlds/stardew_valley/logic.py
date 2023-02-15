@@ -941,6 +941,8 @@ class StardewLogic:
         region_rule = self.can_reach_any_region(fish.locations)
         season_rule = self.received(fish.seasons)
         difficulty_rule = self.can_fish(fish.difficulty)
+        if fish.difficulty == -1:
+            difficulty_rule = self.can_crab_pot()
         return region_rule & season_rule & difficulty_rule
 
     def can_catch_every_fish(self) -> StardewRule:
