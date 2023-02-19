@@ -86,10 +86,6 @@ events_locations = [
     LocationData(None, "The Mines - Floor 120", "Reach the Bottom of The Mines"),
     LocationData(None, "Skull Cavern", "Complete Quest Cryptic Note"),
     LocationData(None, "Stardew Valley", "Catch Every Fish"),
-    LocationData(None, "Stardew Valley", "Summer"),
-    LocationData(None, "Stardew Valley", "Fall"),
-    LocationData(None, "Stardew Valley", "Winter"),
-    LocationData(None, "Stardew Valley", "Year Two"),
 ]
 
 all_locations = load_location_csv() + events_locations

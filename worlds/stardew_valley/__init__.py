@@ -4,7 +4,7 @@ from BaseClasses import Region, Entrance, Location, Item, Tutorial
 from worlds.AutoWorld import World, WebWorld
 from . import rules, logic, options
 from .bundles import get_all_bundles, Bundle
-from .items import item_table, create_items, ItemData, Group
+from .items import item_table, create_items, ItemData, Group, items_by_group
 from .locations import location_table, create_locations, LocationData
 from .logic import StardewLogic, StardewRule, _True, _And
 from .options import stardew_valley_options, StardewOptions, fetch_options
@@ -86,13 +86,15 @@ class StardewValleyWorld(World):
         create_locations(add_location, self.options, self.multiworld.random)
 
     def create_items(self):
-        locations_count = len([location
-                               for location in self.multiworld.get_locations(self.player)
-                               if not location.event])
+        self.precollect_starting_season()
         items_to_exclude = [excluded_items
                             for excluded_items in self.multiworld.precollected_items[self.player]
                             if not item_table[excluded_items.name].has_any_group(Group.RESOURCE_PACK,
                                                                                  Group.FRIENDSHIP_PACK)]
+
+        locations_count = len([location
+                               for location in self.multiworld.get_locations(self.player)
+                               if not location.event])
         created_items = create_items(self.create_item, locations_count + len(items_to_exclude), self.options,
                                      self.multiworld.random)
         self.multiworld.itempool += created_items
@@ -100,7 +102,7 @@ class StardewValleyWorld(World):
         for item in items_to_exclude:
             self.multiworld.itempool.remove(item)
 
-        self.setup_season_events()
+        self.setup_month_events()
         self.setup_victory()
 
     def set_rules(self):
@@ -112,12 +114,34 @@ class StardewValleyWorld(World):
 
         return StardewItem(item.name, item.classification, item.code, self.player)
 
-    def setup_season_events(self):
-        self.multiworld.push_precollected(self.create_item("Spring"))
-        self.create_event_location(location_table["Summer"], self.logic.received("Spring"), "Summer")
-        self.create_event_location(location_table["Fall"], self.logic.received("Summer"), "Fall")
-        self.create_event_location(location_table["Winter"], self.logic.received("Fall"), "Winter")
-        self.create_event_location(location_table["Year Two"], self.logic.received("Winter"), "Year Two")
+    def precollect_starting_season(self) -> Optional[StardewItem]:
+        if self.options[options.SeasonRandomization] == options.SeasonRandomization.option_progressive:
+            return
+
+        season_pool = items_by_group[Group.SEASON]
+
+        if self.options[options.SeasonRandomization] == options.SeasonRandomization.option_disabled:
+            for season in season_pool:
+                self.multiworld.push_precollected(self.create_item(season))
+            return
+
+        if {item for item in self.multiworld.precollected_items[self.player] if item.name in {"Spring", "Summer", "Fall", "Winter"}}:
+            return
+
+        if self.options[options.SeasonRandomization] == options.SeasonRandomization.option_randomized_not_winter:
+            season_pool = [season for season in season_pool if season.name != "Winter"]
+
+        starting_season = self.create_item(self.multiworld.random.choice(season_pool))
+        self.multiworld.push_precollected(starting_season)
+
+    def setup_month_events(self):
+        for i in range(0, 8):
+            month_end = LocationData(None, "Stardew Valley", f"Month End {i + 1}")
+            if i == 0:
+                self.create_event_location(month_end, _True(), "Month End")
+                continue
+
+            self.create_event_location(month_end, self.logic.received("Month End", i).simplify(), "Month End")
 
     def setup_victory(self):
         if self.options[options.Goal] == options.Goal.option_community_center:
@@ -143,12 +167,21 @@ class StardewValleyWorld(World):
 
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
 
-    def create_event_location(self, location_data: LocationData, rule: StardewRule, item: str):
+    def create_event_location(self, location_data: LocationData, rule: StardewRule, item: Optional[str] = None):
+        if item is None:
+            item = location_data.name
+
         region = self.multiworld.get_region(location_data.region, self.player)
         location = StardewLocation(self.player, location_data.name, None, region)
         location.access_rule = rule
         region.locations.append(location)
         location.place_locked_item(self.create_item(item))
+
+    def generate_basic(self):
+        if self.options[options.BuildingProgression] == options.BuildingProgression.option_progressive_early_shipping_bin:
+            self.multiworld.early_items[self.player]["Shipping Bin"] = 1
+        if self.options[options.BackpackProgression] == options.BackpackProgression.option_early_progressive:
+            self.multiworld.early_items[self.player]["Progressive Backpack"] = 1
 
     def get_filler_item_name(self) -> str:
         return "Joja Cola"

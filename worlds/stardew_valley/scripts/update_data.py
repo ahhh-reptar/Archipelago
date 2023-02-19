@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
     item_counter = itertools.count(max(item.code_without_offset
                                        for item in loaded_items
-                                       if Group.RESOURCE_PACK not in item.groups
+                                       if not {Group.RESOURCE_PACK, Group.FRIENDSHIP_PACK}.intersection(item.groups)
                                        and item.code_without_offset is not None) + 1)
     items_to_write = []
     for item in loaded_items:

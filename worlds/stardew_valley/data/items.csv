@@ -50,12 +50,12 @@ id,name,classification,groups
 62,Steel Falchion,progression,"MINES_FLOOR_110,WEAPON"
 63,The Slammer,progression,"MINES_FLOOR_110,WEAPON"
 64,Skull Key,progression,
-65,Progressive Hoe,progression,PROGRESSIVE_TOOLS
-66,Progressive Pickaxe,progression,PROGRESSIVE_TOOLS
-67,Progressive Axe,progression,PROGRESSIVE_TOOLS
-68,Progressive Watering Can,progression,PROGRESSIVE_TOOLS
-69,Progressive Trash Can,progression,PROGRESSIVE_TOOLS
-70,Progressive Fishing Rod,progression,PROGRESSIVE_TOOLS
+65,Progressive Hoe,progression,PROGRESSIVE_TOOL
+66,Progressive Pickaxe,progression,PROGRESSIVE_TOOL
+67,Progressive Axe,progression,PROGRESSIVE_TOOL
+68,Progressive Watering Can,progression,PROGRESSIVE_TOOL
+69,Progressive Trash Can,progression,PROGRESSIVE_TOOL
+70,Progressive Fishing Rod,progression,PROGRESSIVE_TOOL
 71,Golden Scythe,useful,
 72,Progressive Mine Elevator,progression,
 73,Farming Level,progression,SKILL_LEVEL_UP
@@ -78,36 +78,41 @@ id,name,classification,groups
 90,Fish Pond,progression,
 91,Stable,useful,
 92,Slime Hutch,useful,
-93,Shipping Bin,progression,
+93,Shipping Bin,useful,
 94,Beach Bridge,progression,
 95,Adventurer's Guild,progression,
 96,Club Card,progression,
 97,Magnifying Glass,progression,
 98,Bear's Knowledge,progression,
 99,Iridium Snake Milk,progression,
-100,JotPK: Progressive Boots,progression,ARCADE_MACHINE_BUFFS
-101,JotPK: Progressive Gun,progression,ARCADE_MACHINE_BUFFS
-102,JotPK: Progressive Ammo,progression,ARCADE_MACHINE_BUFFS
-103,JotPK: Extra Life,progression,ARCADE_MACHINE_BUFFS
-104,JotPK: Increased Drop Rate,progression,ARCADE_MACHINE_BUFFS
-105,Junimo Kart: Extra Life,progression,ARCADE_MACHINE_BUFFS
-106,Galaxy Sword,progression,"GALAXY_WEAPONS,WEAPON"
-107,Galaxy Dagger,progression,"GALAXY_WEAPONS,WEAPON"
-108,Galaxy Hammer,progression,"GALAXY_WEAPONS,WEAPON"
+100,JotPK: Progressive Boots,progression,ARCADE_MACHINE_BUFF
+101,JotPK: Progressive Gun,progression,ARCADE_MACHINE_BUFF
+102,JotPK: Progressive Ammo,progression,ARCADE_MACHINE_BUFF
+103,JotPK: Extra Life,progression,ARCADE_MACHINE_BUFF
+104,JotPK: Increased Drop Rate,progression,ARCADE_MACHINE_BUFF
+105,Junimo Kart: Extra Life,progression,ARCADE_MACHINE_BUFF
+106,Galaxy Sword,progression,"GALAXY_WEAPON,WEAPON"
+107,Galaxy Dagger,progression,"GALAXY_WEAPON,WEAPON"
+108,Galaxy Hammer,progression,"GALAXY_WEAPON,WEAPON"
 109,Movement Speed Bonus,useful,
 110,Luck Bonus,useful,
 111,Lava Katana,progression,"MINES_FLOOR_110,WEAPON"
 112,Progressive House,progression,
-113,Traveling Merchant: Sunday,progression,
-114,Traveling Merchant: Monday,progression,
-115,Traveling Merchant: Tuesday,progression,
-116,Traveling Merchant: Wednesday,progression,
-117,Traveling Merchant: Thursday,progression,
-118,Traveling Merchant: Friday,progression,
-119,Traveling Merchant: Saturday,progression,
+113,Traveling Merchant: Sunday,progression,TRAVELING_MERCHANT_DAY
+114,Traveling Merchant: Monday,progression,TRAVELING_MERCHANT_DAY
+115,Traveling Merchant: Tuesday,progression,TRAVELING_MERCHANT_DAY
+116,Traveling Merchant: Wednesday,progression,TRAVELING_MERCHANT_DAY
+117,Traveling Merchant: Thursday,progression,TRAVELING_MERCHANT_DAY
+118,Traveling Merchant: Friday,progression,TRAVELING_MERCHANT_DAY
+119,Traveling Merchant: Saturday,progression,TRAVELING_MERCHANT_DAY
 120,Traveling Merchant Stock Size,progression,
 121,Traveling Merchant Discount,progression,
 122,Return Scepter,useful,
+123,Progressive Season,progression,
+124,Spring,progression,SEASON
+125,Summer,progression,SEASON
+126,Fall,progression,SEASON
+127,Winter,progression,SEASON
 5000,Resource Pack: 500 Money,useful,"BASE_RESOURCE,RESOURCE_PACK"
 5001,Resource Pack: 1000 Money,useful,"BASE_RESOURCE,RESOURCE_PACK"
 5002,Resource Pack: 1500 Money,useful,"BASE_RESOURCE,RESOURCE_PACK"

@@ -129,6 +129,23 @@ class EntranceRandomization(Choice):
     # option_chaos = 4
 
 
+class SeasonRandomization(Choice):
+    """Should seasons be randomized?
+    All settings allow you to choose which season you want to play next (from those unlocked) at the end of a season.
+    With Disabled, you will start with Spring and with all seasons unlocked.
+    With Randomized, the seasons will be unlocked randomly through Archipelago items.
+    With Randomized Not Winter, the seasons are randomized, but you're guarantied not to start with winter.
+    With Progressive, you will unlock the seasons in order.
+    """
+    internal_name = "season_randomization"
+    display_name = "Season Randomization"
+    default = 1
+    option_disabled = 0
+    option_randomized = 1
+    option_randomized_not_winter = 2
+    option_progressive = 3
+
+
 class BackpackProgression(Choice):
     """How is the backpack progression handled?
     With Vanilla, you can buy them at Pierre's.
@@ -373,6 +390,7 @@ stardew_valley_options: Dict[str, type(Option)] = {
         BundleRandomization,
         BundlePrice,
         EntranceRandomization,
+        SeasonRandomization,
         BackpackProgression,
         ToolProgression,
         SkillProgression,
@@ -397,7 +415,9 @@ stardew_valley_options["death_link"] = DeathLink
 
 
 def fetch_options(world, player: int) -> StardewOptions:
-    return StardewOptions({option: get_option_value(world, player, option) for option in stardew_valley_options})
+    options = {option: get_option_value(world, player, option) for option in stardew_valley_options}
+    options[HelpWantedLocations.internal_name] = (options[HelpWantedLocations.internal_name] // 7) * 7
+    return StardewOptions(options)
 
 
 def get_option_value(world, player: int, name: str) -> Union[bool, int, str]:

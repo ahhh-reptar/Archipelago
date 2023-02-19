@@ -1,16 +1,22 @@
+from collections import Counter
+
 from . import SVTestBase
 from .. import options
 
 
 class TestProgressiveToolsLogic(SVTestBase):
     options = {
-        options.ToolProgression.internal_name: options.ToolProgression.option_progressive,
+        options.ToolProgression.internal_name: options.ToolProgression.option_progressive
     }
+
+    def setUp(self):
+        super().setUp()
+        self.multiworld.state.prog_items = Counter()
 
     def test_sturgeon(self):
         assert not self.world.logic.has("Sturgeon")(self.multiworld.state)
 
-        summer = self.get_item_by_name("Summer")
+        summer = self.world.create_item("Summer")
         self.multiworld.state.collect(summer, event=True)
         assert not self.world.logic.has("Sturgeon")(self.multiworld.state)
 
@@ -33,7 +39,7 @@ class TestProgressiveToolsLogic(SVTestBase):
         self.remove(summer)
         assert not self.world.logic.has("Sturgeon")(self.multiworld.state)
 
-        winter = self.get_item_by_name("Winter")
+        winter = self.world.create_item("Winter")
         self.multiworld.state.collect(winter, event=True)
         assert self.world.logic.has("Sturgeon")(self.multiworld.state)
 
@@ -46,7 +52,7 @@ class TestProgressiveToolsLogic(SVTestBase):
 
         assert not self.world.logic.can_reach_location("Old Master Cannoli")(self.multiworld.state)
 
-        fall = self.get_item_by_name("Fall")
+        fall = self.world.create_item("Fall")
         self.multiworld.state.collect(fall, event=True)
         assert not self.world.logic.can_reach_location("Old Master Cannoli")(self.multiworld.state)
 
@@ -76,10 +82,6 @@ class TestBundlesLogic(SVTestBase):
     }
 
     def test_vault_2500g_bundle(self):
-        assert not self.world.logic.can_reach_location("2,500g Bundle")(self.multiworld.state)
-
-        summer = self.get_item_by_name("Summer")
-        self.multiworld.state.collect(summer, event=True)
         assert self.world.logic.can_reach_location("2,500g Bundle")(self.multiworld.state)
 
 
@@ -91,15 +93,16 @@ class TestBuildingLogic(SVTestBase):
     def test_coop_blueprint(self):
         assert not self.world.logic.can_reach_location("Coop Blueprint")(self.multiworld.state)
 
-        summer = self.get_item_by_name("Summer")
-        self.multiworld.state.collect(summer, event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Month End"), event=True)
         assert self.world.logic.can_reach_location("Coop Blueprint")(self.multiworld.state)
 
     def test_big_coop_blueprint(self):
         assert not self.world.logic.can_reach_location("Big Coop Blueprint")(self.multiworld.state), \
             f"Rule is {repr(self.multiworld.get_location('Big Coop Blueprint', self.player).access_rule)}"
 
-        self.multiworld.state.collect(self.get_item_by_name("Fall"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Month End"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Month End"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Month End"), event=True)
         assert not self.world.logic.can_reach_location("Big Coop Blueprint")(self.multiworld.state), \
             f"Rule is {repr(self.multiworld.get_location('Big Coop Blueprint', self.player).access_rule)}"
 
@@ -107,10 +110,16 @@ class TestBuildingLogic(SVTestBase):
         assert self.world.logic.can_reach_location("Big Coop Blueprint")(self.multiworld.state), \
             f"Rule is {repr(self.multiworld.get_location('Big Coop Blueprint', self.player).access_rule)}"
 
-    def test_deluxe_big_coop_blueprint(self):
+    def test_deluxe_coop_blueprint(self):
         assert not self.world.logic.can_reach_location("Deluxe Coop Blueprint")(self.multiworld.state)
 
-        self.multiworld.state.collect(self.get_item_by_name("Year Two"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Month End"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Month End"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Month End"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Month End"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Month End"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Month End"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Month End"), event=True)
         assert not self.world.logic.can_reach_location("Deluxe Coop Blueprint")(self.multiworld.state)
 
         self.multiworld.state.collect(self.get_item_by_name("Progressive Coop"), event=True)
@@ -123,7 +132,12 @@ class TestBuildingLogic(SVTestBase):
         assert not self.world.logic.can_reach_location("Big Shed Blueprint")(self.multiworld.state), \
             f"Rule is {repr(self.multiworld.get_location('Big Shed Blueprint', self.player).access_rule)}"
 
-        self.multiworld.state.collect(self.get_item_by_name("Year Two"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Month End"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Month End"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Month End"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Month End"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Month End"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Month End"), event=True)
         assert not self.world.logic.can_reach_location("Big Shed Blueprint")(self.multiworld.state), \
             f"Rule is {repr(self.multiworld.get_location('Big Shed Blueprint', self.player).access_rule)}"
 

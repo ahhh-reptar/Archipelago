@@ -11,6 +11,7 @@ from .game_item import FishItem
 from .items import all_items, Group, item_table
 from .options import StardewOptions
 
+MONEY_PER_MONTH = 15000
 MISSING_ITEM = "THIS ITEM IS MISSING"
 
 tool_materials = {
@@ -27,36 +28,36 @@ tool_prices = {
     "Iridium": 25000
 }
 
-skill_level_per_season = {
-    "Spring": {
+skill_level_per_month_end = {
+    0: {
         "Farming": 2,
         "Fishing": 2,
         "Foraging": 2,
         "Mining": 2,
         "Combat": 2,
     },
-    "Summer": {
+    1: {
         "Farming": 4,
         "Fishing": 4,
         "Foraging": 4,
         "Mining": 4,
         "Combat": 3,
     },
-    "Fall": {
+    2: {
         "Farming": 7,
         "Fishing": 5,
         "Foraging": 5,
         "Mining": 5,
         "Combat": 4,
     },
-    "Winter": {
+    3: {
         "Farming": 7,
         "Fishing": 7,
         "Foraging": 6,
         "Mining": 7,
         "Combat": 5,
     },
-    "Year Two": {
+    4: {
         "Farming": 10,
         "Fishing": 10,
         "Foraging": 10,
@@ -64,8 +65,8 @@ skill_level_per_season = {
         "Combat": 10,
     },
 }
-season_per_skill_level: Dict[Tuple[str, int], str] = {}
-season_per_total_level: Dict[int, str] = {}
+month_end_per_skill_level: Dict[Tuple[str, int], int] = {}
+month_end_per_total_level: Dict[int, int] = {}
 
 
 def initialize_season_per_skill_level():
@@ -76,16 +77,16 @@ def initialize_season_per_skill_level():
         "Mining": 0,
         "Combat": 0,
     }
-    for season, skills in skill_level_per_season.items():
+    for month_end, skills in skill_level_per_month_end.items():
         for skill, expected_level in skills.items():
             for level_up in range(current_level[skill] + 1, expected_level + 1):
                 skill_level = (skill, level_up)
-                if skill_level not in season_per_skill_level:
-                    season_per_skill_level[skill_level] = season
+                if skill_level not in month_end_per_skill_level:
+                    month_end_per_skill_level[skill_level] = month_end
         level_up = 0
         for level_up in range(level_up + 1, sum(skills.values()) + 1):
-            if level_up not in season_per_total_level:
-                season_per_total_level[level_up] = season
+            if level_up not in month_end_per_total_level:
+                month_end_per_total_level[level_up] = month_end
 
 
 initialize_season_per_skill_level()
@@ -397,8 +398,6 @@ class _Received(StardewRule):
             return 2
         if self.item == "Winter":
             return 3
-        if self.item == "Year Two":
-            return 4
         return self.count
 
 
@@ -443,18 +442,28 @@ class _Has(StardewRule):
         return self.other_rules[self.item].simplify()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, repr=False)
 class StardewLogic:
     player: int
     options: StardewOptions
 
     item_rules: Dict[str, StardewRule] = field(default_factory=dict)
+    tree_fruit_rules: Dict[str, StardewRule] = field(default_factory=dict)
     fish_rules: Dict[str, StardewRule] = field(default_factory=dict)
     building_rules: Dict[str, StardewRule] = field(default_factory=dict)
     quest_rules: Dict[str, StardewRule] = field(default_factory=dict)
 
     def __post_init__(self):
         self.fish_rules.update({fish.name: self.can_catch_fish(fish) for fish in all_fish_items})
+
+        self.tree_fruit_rules.update({
+            "Apple": self.received("Month End") & (self.received("Fall") | self.received("Greenhouse")),
+            "Apricot": self.received("Month End") & (self.received("Spring") | self.received("Greenhouse")),
+            "Cherry": self.received("Month End") & (self.received("Spring") | self.received("Greenhouse")),
+            "Orange": self.received("Month End") & (self.received("Summer") | self.received("Greenhouse")),
+            "Peach": self.received("Month End") & (self.received("Summer") | self.received("Greenhouse")),
+            "Pomegranate": self.received("Month End") & (self.received("Fall") | self.received("Greenhouse")),
+        })
 
         self.item_rules.update({
             "Aged Roe": self.has("Preserves Jar") & self.has("Roe"),
@@ -463,10 +472,8 @@ class StardewLogic:
             "Amethyst": self.can_mine_in_the_mines_floor_1_40(),
             "Ancient Drum": self.has("Frozen Geode"),
             "Any Egg": self.has("Chicken Egg") | self.has("Duck Egg"),
-            "Apple": self.received("Fall"),
-            "Apricot": self.received("Year Two"),
             "Aquamarine": self.can_mine_in_the_mines_floor_41_80() | self.can_mine_in_the_skull_cavern(),
-            "Artichoke": self.received("Year Two") & self.received("Fall"),
+            "Artichoke": self.has_year_two() & self.received("Fall"),
             "Bait": self.has_skill_level("Fishing", 2),
             "Bat Wing": self.can_mine_in_the_mines_floor_41_80() | self.can_mine_in_the_skull_cavern(),
             "Battery Pack": self.has("Lightning Rod"),
@@ -493,7 +500,6 @@ class StardewLogic:
                       (self.can_reach_region("The Desert") & self.has("Emerald")),
             "Cheese Cauliflower": self.has(["Cheese", "Cauliflower"]) & self.can_have_relationship("Pam", 3) &
                                   self.can_cook(),
-            "Cherry": self.received("Year Two"),
             "Chicken": self.has_building("Coop"),
             "Chicken Egg": self.has(["Egg", "Egg (Brown)", "Large Egg", "Large Egg (Brown)"], 1),
             "Chowder": self.can_cook() & self.can_have_relationship("Willy", 3) & self.has(["Clam", "Cow Milk"]),
@@ -609,7 +615,7 @@ class StardewLogic:
             "Milk": self.has("Cow"),
             "Miner's Treat": self.can_cook() & self.has_skill_level("Mining", 3) & self.has("Cow Milk") & self.has(
                 "Cave Carrot"),
-            "Morel": self.can_reach_region("Secret Woods") & self.received("Year Two"),
+            "Morel": self.can_reach_region("Secret Woods"),
             "Mussel": _True(),
             "Nautilus Shell": self.received("Winter"),
             "Oak Resin": self.has("Tapper"),
@@ -621,7 +627,6 @@ class StardewLogic:
                           self.received("Rusty Key") |
                           (self.has("Octopus") & self.has_building("Fish Pond")) |
                           self.can_reach_region("Ginger Island"),
-            "Orange": self.received("Summer"),
             "Ostrich": self.has_building("Barn"),
             "Oyster": _True(),
             "Pale Ale": self.has("Keg") & self.has("Hops"),
@@ -630,7 +635,6 @@ class StardewLogic:
             "Parsnip": self.received("Spring"),
             "Parsnip Soup": self.can_cook() & self.can_have_relationship("Caroline", 3) & self.has(
                 "Parsnip") & self.has("Cow Milk"),
-            "Peach": self.received("Summer"),
             "Pepper Poppers": self.can_cook() & self.has("Cheese") & self.has(
                 "Hot Pepper") & self.can_have_relationship("Shane", 3),
             "Periwinkle": self.can_crab_pot(),
@@ -638,11 +642,10 @@ class StardewLogic:
             "Pig": self.has_building("Deluxe Barn"),
             "Pine Tar": self.has("Tapper"),
             "Pizza": self.can_spend_money(600),
-            "Pomegranate": self.received("Fall"),
             "Poppy": self.received("Summer"),
             "Potato": self.received("Spring"),
             "Preserves Jar": self.has_skill_level("Farming", 4),
-            "Prismatic Shard": self.received("Year Two"),
+            "Prismatic Shard": self.has_year_two(),
             "Pumpkin": self.received("Fall"),
             "Purple Mushroom": self.can_mine_in_the_mines_floor_81_120() | self.can_mine_in_the_skull_cavern(),
             "Quartz": self.can_mine_in_the_mines_floor_1_40(),
@@ -653,7 +656,7 @@ class StardewLogic:
             "Rain Totem": self.has_skill_level("Foraging", 9),
             "Recycling Machine": self.has_skill_level("Fishing", 4) & self.has("Wood") &
                                  self.has("Stone") & self.has("Iron Bar"),
-            "Red Cabbage": self.received("Year Two"),
+            "Red Cabbage": self.has_year_two() & self.received("Summer"),
             "Red Mushroom": self.can_reach_region("Secret Woods") & (self.received("Summer") | self.received("Fall")),
             "Refined Quartz": self.has("Quartz") | self.has("Fire Quartz") |
                               (self.has("Recycling Machine") & (self.has("Broken CD") | self.has("Broken Glasses"))),
@@ -700,9 +703,9 @@ class StardewLogic:
             "Triple Shot Espresso": (self.has("Hot Java Ring") |
                                      (self.can_cook() & self.can_spend_money(5000) & self.has("Coffee"))),
             "Truffle Oil": self.has("Truffle") & self.has("Oil Maker"),
-            "Truffle": self.has("Pig") & self.received("Year Two"),
+            "Truffle": self.has("Pig") & self.has_spring_summer_or_fall(),
             "Tulip": self.received("Spring"),
-            "Unmilled Rice": self.received("Year Two"),
+            "Unmilled Rice": self.received("Spring") & self.has_year_two(),
             "Void Essence": self.can_mine_in_the_mines_floor_81_120() | self.can_mine_in_the_skull_cavern(),
             "Wheat": self.received("Summer") | self.received("Fall"),
             "White Algae": self.can_fish() & self.can_mine_in_the_mines_floor_1_40(),
@@ -717,6 +720,7 @@ class StardewLogic:
             "Hay": self.has_building("Silo"),
         })
         self.item_rules.update(self.fish_rules)
+        self.item_rules.update(self.tree_fruit_rules)
 
         self.building_rules.update({
             "Barn": self.can_spend_money(6000) & self.has(["Wood", "Stone"]),
@@ -771,23 +775,22 @@ class StardewLogic:
             "Strange Note": self.received("Magnifying Glass") & self.can_reach_region("Secret Woods") & self.has(
                 "Maple Syrup"),
             "Cryptic Note": self.received("Magnifying Glass") & self.can_mine_perfectly_in_the_skull_cavern(),
-            "Fresh Fruit": self.received("Year Two") & self.has("Apricot"),
-            "Aquatic Research": self.received("Year Two") & self.has("Pufferfish"),
-            "A Soldier's Star": self.received("Year Two") & self.has("Starfruit"),
-            "Mayor's Need": self.received("Year Two") & self.has("Truffle Oil"),
-            "Wanted: Lobster": self.received("Year Two") & self.has("Lobster"),
-            "Pam Needs Juice": self.received("Year Two") & self.has("Battery Pack"),
-            "Fish Casserole": self.received("Year Two") & self.can_have_relationship("Jodi", 4) & self.has(
-                "Largemouth Bass"),
-            "Catch A Squid": self.received("Year Two") & self.has("Squid"),
-            "Fish Stew": self.received("Year Two") & self.has("Albacore"),
-            "Pierre's Notice": self.received("Year Two") & self.has("Sashimi"),
-            "Clint's Attempt": self.received("Year Two") & self.has("Amethyst"),
-            "A Favor For Clint": self.received("Year Two") & self.has("Iron Bar"),
-            "Staff Of Power": self.received("Year Two") & self.has("Iridium Bar"),
-            "Granny's Gift": self.received("Year Two") & self.has("Leek"),
-            "Exotic Spirits": self.received("Year Two") & self.has("Coconut"),
-            "Catch a Lingcod": self.received("Year Two") & self.has("Lingcod"),
+            "Fresh Fruit": self.has("Apricot"),
+            "Aquatic Research": self.has("Pufferfish"),
+            "A Soldier's Star": self.can_have_relationship("Kent") & self.has("Starfruit"),
+            "Mayor's Need": self.has("Truffle Oil"),
+            "Wanted: Lobster": self.has("Lobster"),
+            "Pam Needs Juice": self.has("Battery Pack"),
+            "Fish Casserole": self.can_have_relationship("Jodi", 4) & self.has("Largemouth Bass"),
+            "Catch A Squid": self.has("Squid"),
+            "Fish Stew": self.has("Albacore"),
+            "Pierre's Notice": self.has("Sashimi"),
+            "Clint's Attempt": self.has("Amethyst"),
+            "A Favor For Clint": self.has("Iron Bar"),
+            "Staff Of Power": self.has("Iridium Bar"),
+            "Granny's Gift": self.has("Leek"),
+            "Exotic Spirits": self.has("Coconut"),
+            "Catch a Lingcod": self.has("Lingcod"),
         })
 
     def has(self, items: Union[str, (Iterable[str], Sized)], count: Optional[int] = None) -> StardewRule:
@@ -809,6 +812,9 @@ class StardewLogic:
         if count is None:
             return _And(self.received(item) for item in items)
 
+        if count == 0:
+            return _True()
+
         if count == 1:
             return _Or(self.received(item) for item in items)
 
@@ -827,26 +833,10 @@ class StardewLogic:
         return _Reach(spot, "Entrance", self.player)
 
     def can_have_earned_total_money(self, amount: int) -> StardewRule:
-        if amount <= 10000:
-            return self.received("Spring")
-        elif amount <= 30000:
-            return self.received("Summer")
-        elif amount <= 60000:
-            return self.received("Fall")
-        elif amount <= 70000:
-            return self.received("Winter")
-        return self.received("Year Two")
+        return self.received("Month End", min(8, amount // MONEY_PER_MONTH))
 
     def can_spend_money(self, amount: int) -> StardewRule:
-        if amount <= 2000:
-            return self.received("Spring")
-        elif amount <= 8000:
-            return self.received("Summer")
-        elif amount <= 15000:
-            return self.received("Fall")
-        elif amount <= 18000:
-            return self.received("Winter")
-        return self.received("Year Two")
+        return self.received("Month End", min(8, amount // (MONEY_PER_MONTH // 5)))
 
     def has_tool(self, tool: str, material: str = "Basic") -> StardewRule:
         if material == "Basic":
@@ -867,7 +857,7 @@ class StardewLogic:
         if skill == "Fishing" and self.options[options.ToolProgression] == options.ToolProgression.option_progressive:
             return self.can_get_fishing_xp()
 
-        return self.received(season_per_skill_level[(skill, level)])
+        return self.received("Month End", month_end_per_skill_level[(skill, level)])
 
     def has_total_skill_level(self, level: int) -> StardewRule:
         if level == 0:
@@ -879,9 +869,9 @@ class StardewLogic:
             return self.received(skills_items, count=level)
 
         if level > 40 and self.options[options.ToolProgression] == options.ToolProgression.option_progressive:
-            return self.received(season_per_total_level[level]) & self.can_get_fishing_xp()
+            return self.received("Month End", month_end_per_total_level[level]) & self.can_get_fishing_xp()
 
-        return self.received(season_per_total_level[level])
+        return self.received("Month End", month_end_per_total_level[level])
 
     def has_building(self, building: str) -> StardewRule:
         if not self.options[options.BuildingProgression] == options.BuildingProgression.option_vanilla:
@@ -1054,7 +1044,7 @@ class StardewLogic:
     def can_get_married(self) -> StardewRule:
         return self.can_reach_region("Tide Pools") & self.can_have_relationship("Bachelor", 10) & self.has_house(1)
 
-    def can_have_relationship(self, npc: str, hearts: int) -> StardewRule:
+    def can_have_relationship(self, npc: str, hearts: int = 0) -> StardewRule:
         if npc == "Leo":
             return self.can_reach_region("Ginger Island")
 
@@ -1062,15 +1052,15 @@ class StardewLogic:
             return self.can_reach_region("The Desert")
 
         if npc == "Kent":
-            return self.received("Year Two")
+            return self.has_year_two()
 
         if hearts <= 3:
-            return self.received("Spring")
+            return _True()
         if hearts <= 6:
-            return self.received("Summer")
+            return self.received("Month End", 1)
         if hearts <= 9:
-            return self.received("Fall")
-        return self.received("Winter")
+            return self.received("Month End", 2)
+        return self.received("Month End", 3)
 
     def can_complete_bundle(self, bundle_requirements: List[BundleItem], number_required: int) -> StardewRule:
         item_rules = []
@@ -1139,5 +1129,11 @@ class StardewLogic:
 
     def has_galaxy_weapon(self) -> StardewRule:
         return (self.received(item.name for item in all_items
-                              if Group.WEAPON in item.groups and Group.GALAXY_WEAPONS in item.groups) &
+                              if Group.WEAPON in item.groups and Group.GALAXY_WEAPON in item.groups) &
                 self.received("Adventurer's Guild"))
+
+    def has_year_two(self) -> StardewRule:
+        return self.received("Month End", 4)
+
+    def has_spring_summer_or_fall(self) -> StardewRule:
+        return self.received("Spring") | self.received("Summer") | self.received("Fall")

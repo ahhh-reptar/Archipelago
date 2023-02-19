@@ -6,25 +6,11 @@ from worlds.generic import Rules as MultiWorldRules
 from . import options, locations
 from .bundles import Bundle
 from .locations import LocationTags
-from .logic import StardewLogic, _And, season_per_skill_level, tool_prices, week_days
-
-help_wanted_per_season = {
-    1: "Spring",
-    2: "Summer",
-    3: "Fall",
-    4: "Winter",
-    5: "Year Two",
-    6: "Year Two",
-    7: "Year Two",
-    8: "Year Two",
-    9: "Year Two",
-    10: "Year Two",
-}
+from .logic import StardewLogic, _And, month_end_per_skill_level, tool_prices, week_days
 
 
 def set_rules(multi_world: MultiWorld, player: int, world_options: options.StardewOptions, logic: StardewLogic,
               current_bundles: Dict[str, Bundle]):
-    summer = multi_world.get_location("Summer", player)
     all_location_names = list(location.name for location in multi_world.get_locations(player))
 
     for floor in range(5, 120 + 5, 5):
@@ -68,19 +54,19 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: options.Stard
     if world_options[options.SkillProgression] != options.SkillProgression.option_vanilla:
         for i in range(1, 11):
             MultiWorldRules.set_rule(multi_world.get_location(f"Level {i} Farming", player),
-                                     (logic.received(season_per_skill_level["Farming", i])).simplify())
+                                     (logic.received("Month End", month_end_per_skill_level["Farming", i])).simplify())
             MultiWorldRules.set_rule(multi_world.get_location(f"Level {i} Fishing", player),
                                      (logic.can_get_fishing_xp() &
-                                      logic.received(season_per_skill_level["Fishing", i])).simplify())
+                                      logic.received("Month End", month_end_per_skill_level["Fishing", i])).simplify())
             MultiWorldRules.add_rule(multi_world.get_location(f"Level {i} Foraging", player),
-                                     logic.received(season_per_skill_level["Foraging", i]).simplify())
+                                     logic.received("Month End", month_end_per_skill_level["Foraging", i]).simplify())
             if i >= 6:
                 MultiWorldRules.add_rule(multi_world.get_location(f"Level {i} Foraging", player),
                                          logic.has_tool("Axe", "Iron").simplify())
             MultiWorldRules.set_rule(multi_world.get_location(f"Level {i} Mining", player),
-                                     logic.received(season_per_skill_level["Mining", i]).simplify())
+                                     logic.received("Month End", month_end_per_skill_level["Mining", i]).simplify())
             MultiWorldRules.set_rule(multi_world.get_location(f"Level {i} Combat", player),
-                                     (logic.received(season_per_skill_level["Combat", i]) &
+                                     (logic.received("Month End", month_end_per_skill_level["Combat", i]) &
                                       logic.has_any_weapon()).simplify())
 
     # Bundles
@@ -122,7 +108,7 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: options.Stard
     for i in range(1, desired_number_help_wanted + 1):
         prefix = "Help Wanted:"
         delivery = "Item Delivery"
-        rule = logic.received(help_wanted_per_season[min(5, i)])
+        rule = logic.received("Month End", i - 1)
         fishing_rule = rule & logic.can_fish()
         slay_rule = rule & logic.has_any_weapon()
         for j in range(i, i + 4):
@@ -143,20 +129,12 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: options.Stard
             MultiWorldRules.set_rule(multi_world.get_location(fish_location.name, player),
                                      logic.has(fish_name).simplify())
 
-    if world_options[options.BuildingProgression] == options.BuildingProgression.option_progressive_early_shipping_bin:
-        summer.access_rule = summer.access_rule & logic.received("Shipping Bin")
-
     # Backpacks
     if world_options[options.BackpackProgression] != options.BackpackProgression.option_vanilla:
         MultiWorldRules.add_rule(multi_world.get_location("Large Pack", player),
                                  logic.can_spend_money(2000).simplify())
         MultiWorldRules.add_rule(multi_world.get_location("Deluxe Pack", player),
                                  logic.can_spend_money(10000).simplify())
-
-    if world_options[options.BackpackProgression] == options.BackpackProgression.option_early_progressive:
-        summer.access_rule = summer.access_rule & logic.received("Progressive Backpack")
-        MultiWorldRules.add_rule(multi_world.get_location("Winter", player),
-                                 logic.received("Progressive Backpack", 2).simplify())
 
     MultiWorldRules.add_rule(multi_world.get_location("Old Master Cannoli", player),
                              logic.has("Sweet Gem Berry").simplify())
