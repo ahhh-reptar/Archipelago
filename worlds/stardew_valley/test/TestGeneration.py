@@ -33,7 +33,7 @@ class TestBaseItemGeneration(SVTestBase):
 
 
 class TestGivenProgressiveBackpack(SVTestBase):
-    options = {options.BackpackProgression.internal_name: options.BackpackProgression.option_early_progressive}
+    options = {options.BackpackProgression.internal_name: options.BackpackProgression.option_progressive}
 
     def test_when_generate_world_then_two_progressive_backpack_are_added(self):
         assert self.multiworld.itempool.count(self.world.create_item("Progressive Backpack")) == 2

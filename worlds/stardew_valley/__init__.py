@@ -178,10 +178,28 @@ class StardewValleyWorld(World):
         location.place_locked_item(self.create_item(item))
 
     def generate_basic(self):
+        # Need to manually place the early items because the fill algo sweep
+        self.place_early_items()
+
+    def place_early_items(self):
+        """
+        We have to place the early items ourselves, as the Fill algorithm sweeps all event when calculating the early location. This causes an issue where
+        location only locked behind event are considered early, which they are not really...
+        """
+        base_state = self.multiworld.state.copy()
+        unfilled_locations = sorted(self.multiworld.get_unfilled_locations(self.player))
+        early_locations = [location for location in unfilled_locations if location.can_reach(base_state)]
+        self.multiworld.random.shuffle(early_locations)
         if self.options[options.BuildingProgression] == options.BuildingProgression.option_progressive_early_shipping_bin:
-            self.multiworld.early_items[self.player]["Shipping Bin"] = 1
+            location = early_locations.pop()
+            item = self.create_item("Shipping Bin")
+            location.place_locked_item(item)
+            self.multiworld.itempool.remove(item)
         if self.options[options.BackpackProgression] == options.BackpackProgression.option_early_progressive:
-            self.multiworld.early_items[self.player]["Progressive Backpack"] = 1
+            location = early_locations.pop()
+            item = self.create_item("Progressive Backpack")
+            location.place_locked_item(item)
+            self.multiworld.itempool.remove(item)
 
     def get_filler_item_name(self) -> str:
         return "Joja Cola"

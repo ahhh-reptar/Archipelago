@@ -150,8 +150,7 @@ class BackpackProgression(Choice):
     """How is the backpack progression handled?
     With Vanilla, you can buy them at Pierre's.
     With Progressive, you will randomly find Progressive Backpack to upgrade.
-    With Early Progressive, you can expect you first Backpack before the second season, and the third before the forth
-        season.
+    With Early Progressive, you can expect you first Backpack in your world in sphere 1.
     """
     internal_name = "backpack_progression"
     display_name = "Backpack Progression"
@@ -206,7 +205,7 @@ class BuildingProgression(Choice):
     With Progressive, you will receive the buildings and will be able to build the first one of each building for free,
         once it is received. If you want more of the same building, it will cost the vanilla price.
         This option INCLUDES the shipping bin as a building you need to receive.
-    With Progressive early shipping bin, you can expect to receive the shipping bin before the end of the first season.
+    With Progressive early shipping bin, you can expect the shipping bin to be in your world in sphere 1.
     """
     internal_name = "building_progression"
     display_name = "Building Progression"
