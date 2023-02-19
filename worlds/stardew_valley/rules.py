@@ -87,7 +87,8 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: options.Stard
                                   for bundle in locations.locations_by_tag[LocationTags.BOILER_ROOM_BUNDLE]).simplify())
     MultiWorldRules.add_rule(multi_world.get_location("Complete Bulletin Board", player),
                              _And(logic.can_reach_location(bundle.name)
-                                  for bundle in locations.locations_by_tag[LocationTags.BULLETIN_BOARD_BUNDLE]).simplify())
+                                  for bundle
+                                  in locations.locations_by_tag[LocationTags.BULLETIN_BOARD_BUNDLE]).simplify())
     MultiWorldRules.add_rule(multi_world.get_location("Complete Vault", player),
                              _And(logic.can_reach_location(bundle.name)
                                   for bundle in locations.locations_by_tag[LocationTags.VAULT_BUNDLE]).simplify())
@@ -131,10 +132,10 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: options.Stard
 
     # Backpacks
     if world_options[options.BackpackProgression] != options.BackpackProgression.option_vanilla:
-        MultiWorldRules.add_rule(multi_world.get_location("Large Pack", player),
+        MultiWorldRules.set_rule(multi_world.get_location("Large Pack", player),
                                  logic.can_spend_money(2000).simplify())
-        MultiWorldRules.add_rule(multi_world.get_location("Deluxe Pack", player),
-                                 logic.can_spend_money(10000).simplify())
+        MultiWorldRules.set_rule(multi_world.get_location("Deluxe Pack", player),
+                                 (logic.can_spend_money(10000) & logic.received("Progressive Backpack")).simplify())
 
     MultiWorldRules.add_rule(multi_world.get_location("Old Master Cannoli", player),
                              logic.has("Sweet Gem Berry").simplify())
