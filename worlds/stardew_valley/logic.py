@@ -449,6 +449,7 @@ class StardewLogic:
 
     item_rules: Dict[str, StardewRule] = field(default_factory=dict)
     tree_fruit_rules: Dict[str, StardewRule] = field(default_factory=dict)
+    crops_rules: Dict[str, StardewRule] = field(default_factory=dict)
     fish_rules: Dict[str, StardewRule] = field(default_factory=dict)
     building_rules: Dict[str, StardewRule] = field(default_factory=dict)
     quest_rules: Dict[str, StardewRule] = field(default_factory=dict)
@@ -465,33 +466,66 @@ class StardewLogic:
             "Pomegranate": self.received("Month End") & (self.received("Fall") | self.received("Greenhouse")),
         })
 
+        self.crops_rules.update({
+            "Amaranth": self.received("Fall"),
+            "Artichoke": self.has_year_two() & self.received("Fall"),
+            "Beet": self.received("Fall") & self.can_reach_region("The Desert"),
+            "Blue Jazz": self.received("Spring"),
+            "Blueberry": self.received("Summer"),
+            "Bok Choy": self.received("Fall"),
+            "Cauliflower": self.received("Spring"),
+            "Coffee Bean": (self.received("Spring") | self.received("Summer")) &
+                           (self.can_mine_in_the_mines_floor_41_80() | _True()),  # Travelling merchant
+            "Corn": self.received("Summer") | self.received("Fall"),
+            "Cranberries": self.received("Fall"),
+            "Eggplant": self.received("Fall"),
+            "Fairy Rose": self.received("Fall"),
+            "Garlic": self.received("Spring") & self.has_year_two(),
+            "Grape": self.received("Summer") | self.has("Fall"),
+            "Green Bean": self.received("Spring"),
+            "Hops": self.received("Summer"),
+            "Hot Pepper": self.received("Summer"),
+            "Kale": self.received("Spring"),
+            "Melon": self.received("Summer"),
+            "Parsnip": self.received("Spring"),
+            "Poppy": self.received("Summer"),
+            "Potato": self.received("Spring"),
+            "Pumpkin": self.received("Fall"),
+            "Radish": self.received("Summer"),
+            "Red Cabbage": self.has_year_two() & self.received("Summer"),
+            "Rhubarb": self.received("Spring") & self.can_reach_region("The Desert"),
+            "Starfruit": (self.received("Summer") | self.received("Greenhouse")) & self.can_reach_region("The Desert"),
+            "Strawberry": self.received("Spring"),
+            "Summer Spangle": self.received("Summer"),
+            "Sunflower": self.received("Summer") | self.received("Fall"),
+            "Sweet Gem Berry": (self.received("Fall") | self.received("Greenhouse")) & self.has_traveling_merchant(),
+            "Tomato": self.received("Summer"),
+            "Tulip": self.received("Spring"),
+            "Unmilled Rice": self.received("Spring") & self.has_year_two(),
+            "Wheat": self.received("Summer") | self.received("Fall"),
+            "Yam": self.received("Fall"),
+        })
+
         self.item_rules.update({
             "Aged Roe": self.has("Preserves Jar") & self.has("Roe"),
             "Algae Soup": self.can_cook() & self.has("Green Algae") & self.can_have_relationship("Clint", 3),
-            "Amaranth": self.received("Fall"),
             "Amethyst": self.can_mine_in_the_mines_floor_1_40(),
             "Ancient Drum": self.has("Frozen Geode"),
             "Any Egg": self.has("Chicken Egg") | self.has("Duck Egg"),
             "Aquamarine": self.can_mine_in_the_mines_floor_41_80() | self.can_mine_in_the_skull_cavern(),
-            "Artichoke": self.has_year_two() & self.received("Fall"),
             "Bait": self.has_skill_level("Fishing", 2),
             "Bat Wing": self.can_mine_in_the_mines_floor_41_80() | self.can_mine_in_the_skull_cavern(),
             "Battery Pack": self.has("Lightning Rod"),
             "Bee House": self.has_skill_level("Farming", 3) & self.has("Iron Bar") & self.has("Maple Syrup"),
             "Beer": (self.has("Keg") & self.has("Wheat")) | self.can_spend_money(400),
-            "Beet": self.received("Fall") & self.can_reach_region("The Desert"),
             "Blackberry": self.received("Fall"),
-            "Blue Jazz": self.received("Spring"),
-            "Blueberry": self.received("Summer"),
             "Blueberry Tart": self.has("Blueberry") & self.has("Any Egg") & self.can_have_relationship("Pierre", 3),
-            "Bok Choy": self.received("Fall"),
             "Bouquet": self.can_have_relationship("Any", 8),
             "Bread": self.can_spend_money(120) | (self.can_spend_money(100) & self.can_cook()),
             "Broken CD": self.can_crab_pot(),
             "Broken Glasses": self.can_crab_pot(),
             "Bug Meat": self.can_mine_in_the_mines_floor_1_40(),
             "Cactus Fruit": self.can_reach_region("The Desert"),
-            "Cauliflower": self.received("Spring"),
             "Cave Carrot": self.has_mine_elevator_to_floor(10),
             "Caviar": self.has("Preserves Jar") & self.has("Sturgeon Roe"),
             "Chanterelle": self.received("Fall") & self.can_reach_region("Secret Woods"),
@@ -512,20 +546,17 @@ class StardewLogic:
             "Coconut": self.can_reach_region("The Desert"),
             "Coffee": (self.has("Keg") & self.has("Coffee Bean")) | self.has("Coffee Maker") |
                       self.can_spend_money(300) | self.has("Hot Java Ring"),
-            "Coffee Bean": (self.received("Spring") | self.received("Summer")) &
-                           (self.can_mine_in_the_mines_floor_41_80() | _True()),  # Travelling merchant
+
             "Coffee Maker": _False(),
             "Common Mushroom": self.received("Fall") |
                                (self.received("Spring") & self.can_reach_region("Secret Woods")),
             "Copper Bar": self.can_smelt("Copper Ore"),
             "Copper Ore": self.can_mine_in_the_mines_floor_1_40() | self.can_mine_in_the_skull_cavern(),
             "Coral": self.can_reach_region("Tide Pools") | self.received("Summer"),
-            "Corn": self.received("Summer") | self.received("Fall"),
             "Cow": self.has_building("Barn"),
             "Cow Milk": self.has("Milk") | self.has("Large Milk"),
             "Crab": self.can_crab_pot(),
             "Crab Pot": self.has_skill_level("Fishing", 3),
-            "Cranberries": self.received("Fall"),
             "Crayfish": self.can_crab_pot(),
             "Crocus": self.received("Winter"),
             "Crystal Fruit": self.received("Winter"),
@@ -546,10 +577,8 @@ class StardewLogic:
             "Earth Crystal": self.can_mine_in_the_mines_floor_1_40(),
             "Egg": self.has("Chicken"),
             "Egg (Brown)": self.has("Chicken"),
-            "Eggplant": self.received("Fall"),
             "Elvish Jewelry": self.can_fish() & self.can_reach_region("Forest"),
             "Emerald": self.can_mine_in_the_mines_floor_81_120() | self.can_mine_in_the_skull_cavern(),
-            "Fairy Rose": self.received("Fall"),
             "Farmer's Lunch": self.can_cook() & self.has_skill_level("Farming", 3) & self.has("Omelet") & self.has(
                 "Parsnip"),
             "Fiber": _True(),
@@ -567,9 +596,7 @@ class StardewLogic:
             "Goat": self.has_building("Big Barn"),
             "Gold Bar": self.can_smelt("Gold Ore"),
             "Gold Ore": self.can_mine_in_the_mines_floor_81_120() | self.can_mine_in_the_skull_cavern(),
-            "Grape": self.received("Summer"),
             "Green Algae": self.can_fish(),
-            "Green Bean": self.received("Spring"),
             "Hardwood": self.has_tool("Axe", "Copper"),
             "Hashbrowns": self.can_cook() & self.can_spend_money(50) & self.has("Potato"),
             "Hazelnut": self.received("Fall"),
@@ -577,9 +604,7 @@ class StardewLogic:
             "Honey": self.can_reach_region("The Desert") |
                      (self.has("Bee House") &
                       (self.received("Spring") | self.received("Summer") | self.received("Fall"))),
-            "Hops": self.received("Summer"),
             "Hot Java Ring": self.can_reach_region("Ginger Island"),
-            "Hot Pepper": self.received("Summer"),
             "Iridium Bar": self.can_smelt("Iridium Ore"),
             "Iridium Ore": self.can_mine_in_the_skull_cavern(),
             "Iron Bar": self.can_smelt("Iron Ore"),
@@ -595,7 +620,6 @@ class StardewLogic:
             "Junimo Kart Medium Buff": self.has_junimo_kart_power_level(4),
             "Junimo Kart Big Buff": self.has_junimo_kart_power_level(6),
             "Junimo Kart Max Buff": self.has_junimo_kart_power_level(8),
-            "Kale": self.received("Spring"),
             "Keg": self.has_skill_level("Farming", 8) & self.has("Iron Bar") & self.has("Copper Bar") & self.has(
                 "Oak Resin"),
             "Large Egg": self.has("Chicken"),
@@ -611,7 +635,6 @@ class StardewLogic:
             "Maki Roll": self.can_cook() & self.can_fish(),
             "Maple Syrup": self.has("Tapper"),
             "Mead": self.has("Keg") & self.has("Honey"),
-            "Melon": self.received("Summer"),
             "Milk": self.has("Cow"),
             "Miner's Treat": self.can_cook() & self.has_skill_level("Mining", 3) & self.has("Cow Milk") & self.has(
                 "Cave Carrot"),
@@ -632,7 +655,6 @@ class StardewLogic:
             "Pale Ale": self.has("Keg") & self.has("Hops"),
             "Pale Broth": self.can_cook() & self.can_have_relationship("Marnie", 3) & self.has("White Algae"),
             "Pancakes": self.can_cook() & self.can_spend_money(100) & self.has("Any Egg"),
-            "Parsnip": self.received("Spring"),
             "Parsnip Soup": self.can_cook() & self.can_have_relationship("Caroline", 3) & self.has(
                 "Parsnip") & self.has("Cow Milk"),
             "Pepper Poppers": self.can_cook() & self.has("Cheese") & self.has(
@@ -642,25 +664,19 @@ class StardewLogic:
             "Pig": self.has_building("Deluxe Barn"),
             "Pine Tar": self.has("Tapper"),
             "Pizza": self.can_spend_money(600),
-            "Poppy": self.received("Summer"),
-            "Potato": self.received("Spring"),
             "Preserves Jar": self.has_skill_level("Farming", 4),
             "Prismatic Shard": self.has_year_two(),
-            "Pumpkin": self.received("Fall"),
             "Purple Mushroom": self.can_mine_in_the_mines_floor_81_120() | self.can_mine_in_the_skull_cavern(),
             "Quartz": self.can_mine_in_the_mines_floor_1_40(),
             "Rabbit": self.has_building("Deluxe Coop"),
             "Rabbit's Foot": self.has("Rabbit"),
-            "Radish": self.received("Summer"),
             "Rainbow Shell": self.received("Summer"),
             "Rain Totem": self.has_skill_level("Foraging", 9),
             "Recycling Machine": self.has_skill_level("Fishing", 4) & self.has("Wood") &
                                  self.has("Stone") & self.has("Iron Bar"),
-            "Red Cabbage": self.has_year_two() & self.received("Summer"),
             "Red Mushroom": self.can_reach_region("Secret Woods") & (self.received("Summer") | self.received("Fall")),
             "Refined Quartz": self.has("Quartz") | self.has("Fire Quartz") |
                               (self.has("Recycling Machine") & (self.has("Broken CD") | self.has("Broken Glasses"))),
-            "Rhubarb": self.received("Spring") & self.can_reach_region("The Desert"),
             "Roe": self.can_fish() & self.has_building("Fish Pond"),
             "Roots Platter": self.can_cook() & self.has_skill_level("Combat", 3) &
                              self.has("Cave Carrot") & self.has("Winter Root"),
@@ -685,18 +701,12 @@ class StardewLogic:
             "Spice Berry": self.received("Summer"),
             "Spring Onion": self.received("Spring"),
             "Staircase": self.has_skill_level("Mining", 2),
-            "Starfruit": (self.received("Summer") | self.received("Greenhouse")) & self.can_reach_region("The Desert"),
             "Stone": self.has_tool("Pickaxe"),
-            "Strawberry": self.received("Spring"),
             "Sturgeon Roe": self.has("Sturgeon") & self.has_building("Fish Pond"),
-            "Summer Spangle": self.received("Summer"),
-            "Sunflower": self.received("Summer") | self.received("Fall"),
             "Survival Burger": self.can_cook() & self.has_skill_level("Foraging", 2) &
                                self.has(["Bread", "Cave Carrot", "Eggplant"]),
-            "Sweet Gem Berry": (self.received("Fall") | self.received("Greenhouse")) & self.has_traveling_merchant(),
             "Sweet Pea": self.received("Summer"),
             "Tapper": self.has_skill_level("Foraging", 3),
-            "Tomato": self.received("Summer"),
             "Topaz": self.can_mine_in_the_mines_floor_1_40(),
             "Tortilla": self.can_cook() & self.can_spend_money(100) & self.has("Corn"),
             "Trash": self.can_crab_pot(),
@@ -704,10 +714,7 @@ class StardewLogic:
                                      (self.can_cook() & self.can_spend_money(5000) & self.has("Coffee"))),
             "Truffle Oil": self.has("Truffle") & self.has("Oil Maker"),
             "Truffle": self.has("Pig") & self.has_spring_summer_or_fall(),
-            "Tulip": self.received("Spring"),
-            "Unmilled Rice": self.received("Spring") & self.has_year_two(),
             "Void Essence": self.can_mine_in_the_mines_floor_81_120() | self.can_mine_in_the_skull_cavern(),
-            "Wheat": self.received("Summer") | self.received("Fall"),
             "White Algae": self.can_fish() & self.can_mine_in_the_mines_floor_1_40(),
             "Wild Horseradish": self.received("Spring"),
             "Wild Plum": self.received("Fall"),
@@ -716,11 +723,11 @@ class StardewLogic:
             "Winter Root": self.received("Winter"),
             "Wood": self.has_tool("Axe"),
             "Wool": self.has("Rabbit") | self.has("Sheep"),
-            "Yam": self.received("Fall"),
             "Hay": self.has_building("Silo"),
         })
         self.item_rules.update(self.fish_rules)
         self.item_rules.update(self.tree_fruit_rules)
+        self.item_rules.update(self.crops_rules)
 
         self.building_rules.update({
             "Barn": self.can_spend_money(6000) & self.has(["Wood", "Stone"]),
