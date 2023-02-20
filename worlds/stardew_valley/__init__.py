@@ -6,7 +6,7 @@ from . import rules, logic, options
 from .bundles import get_all_bundles, Bundle
 from .items import item_table, create_items, ItemData, Group, items_by_group
 from .locations import location_table, create_locations, LocationData
-from .logic import StardewLogic, StardewRule, _True, _And
+from .logic import StardewLogic, StardewRule, True_
 from .options import stardew_valley_options, StardewOptions, fetch_options
 from .regions import create_regions
 from .rules import set_rules
@@ -140,7 +140,7 @@ class StardewValleyWorld(World):
         for i in range(0, 8):
             month_end = LocationData(None, "Stardew Valley", f"Month End {i + 1}")
             if i == 0:
-                self.create_event_location(month_end, _True(), "Month End")
+                self.create_event_location(month_end, True_(), "Month End")
                 continue
 
             self.create_event_location(month_end, self.logic.received("Month End", i).simplify(), "Month End")

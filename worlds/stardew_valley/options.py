@@ -25,8 +25,11 @@ class Goal(Choice):
     With Community Center, the world will be completed once you complete the Community Center.
     With Grandpa's Evaluation, the world will be completed once 4 candles are lit around Grandpa's Shrine.
     With Bottom of the Mines, the world will be completed once you reach level 120 in the local mineshaft.
-    With Cryptic Note, the world will be completed once you complete the quest "Cryptic Note" where Mr Qi asks you to reach floor 100 in the Skull Cavern
-    With Master Angler, the world will be completed once you have caught every fish in the game. Pairs well with Fishsanity"""
+    With Cryptic Note, the world will be completed once you complete the quest "Cryptic Note" where Mr Qi asks you to
+        reach floor 100 in the Skull Cavern.
+    With Master Angler, the world will be completed once you have caught every fish in the game. Pairs well with
+        Fishsanity.
+    """
     internal_name = "goal"
     display_name = "Goal"
     option_community_center = 0
@@ -144,6 +147,20 @@ class SeasonRandomization(Choice):
     option_randomized = 1
     option_randomized_not_winter = 2
     option_progressive = 3
+
+
+class SeedRandomization(Choice):
+    """Should seeds be randomized?
+    Pierre now sells a random amount of seasonal seeds and Joja sells them without season requirements, but only in
+        huge packs.
+    With Disabled, all the seeds will be unlocked from the start.
+    With Randomized, you will start with 10 seeds unlocked, the remaining are Archipelago items.
+    """
+    internal_name = "seed_randomization"
+    display_name = "Seed Randomization"
+    default = 1
+    option_disabled = 0
+    option_randomized = 1
 
 
 class BackpackProgression(Choice):
@@ -390,6 +407,7 @@ stardew_valley_options: Dict[str, type(Option)] = {
         BundlePrice,
         EntranceRandomization,
         SeasonRandomization,
+        SeedRandomization,
         BackpackProgression,
         ToolProgression,
         SkillProgression,

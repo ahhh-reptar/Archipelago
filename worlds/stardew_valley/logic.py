@@ -1,18 +1,17 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Dict, Union, Optional, Iterable, Sized, Tuple, List
+from dataclasses import field, dataclass
+from typing import Optional, Sized, Tuple, Dict, Union, Iterable, List
 
-from BaseClasses import CollectionState, ItemClassification
 from . import options
 from .bundle_data import BundleItem
 from .fish_data import all_fish_items
 from .game_item import FishItem
-from .items import all_items, Group, item_table
+from .items import all_items, Group
 from .options import StardewOptions
+from .stardew_rule import False_, Reach, Or, True_, Received, Count, And, Has, TotalReceived, StardewRule
 
 MONEY_PER_MONTH = 15000
-MISSING_ITEM = "THIS ITEM IS MISSING"
 
 tool_materials = {
     "Copper": 1,
@@ -93,355 +92,6 @@ initialize_season_per_skill_level()
 week_days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
 
-class StardewRule:
-    def __call__(self, state: CollectionState) -> bool:
-        raise NotImplementedError
-
-    def __or__(self, other) -> StardewRule:
-        if isinstance(other, _Or):
-            return _Or(self, *other.rules)
-
-        return _Or(self, other)
-
-    def __and__(self, other) -> StardewRule:
-        if isinstance(other, _And):
-            return _And(other.rules.union({self}))
-
-        return _And(self, other)
-
-    def get_difficulty(self):
-        raise NotImplementedError
-
-    def simplify(self) -> StardewRule:
-        return self
-
-
-class _True(StardewRule):
-
-    def __new__(cls, _cache=[]):  # noqa
-        if not _cache:
-            _cache.append(super(_True, cls).__new__(cls))
-        return _cache[0]
-
-    def __call__(self, state: CollectionState) -> bool:
-        return True
-
-    def __or__(self, other) -> StardewRule:
-        return self
-
-    def __and__(self, other) -> StardewRule:
-        return other
-
-    def __repr__(self):
-        return "True"
-
-    def get_difficulty(self):
-        return 0
-
-
-class _False(StardewRule):
-
-    def __new__(cls, _cache=[]):  # noqa
-        if not _cache:
-            _cache.append(super(_False, cls).__new__(cls))
-        return _cache[0]
-
-    def __call__(self, state: CollectionState) -> bool:
-        return False
-
-    def __or__(self, other) -> StardewRule:
-        return other
-
-    def __and__(self, other) -> StardewRule:
-        return self
-
-    def __repr__(self):
-        return "False"
-
-    def get_difficulty(self):
-        return 999999999
-
-
-class _Or(StardewRule):
-    rules: frozenset[StardewRule]
-
-    def __init__(self, rule: Union[StardewRule, Iterable[StardewRule]], *rules: StardewRule):
-        rules_list = set()
-        if isinstance(rule, Iterable):
-            rules_list.update(rule)
-        else:
-            rules_list.add(rule)
-
-        if rules is not None:
-            rules_list.update(rules)
-
-        assert rules_list, "Can't create a Or conditions without rules"
-
-        new_rules = set()
-        for rule in rules_list:
-            if isinstance(rule, _Or):
-                new_rules.update(rule.rules)
-            else:
-                new_rules.add(rule)
-        rules_list = new_rules
-
-        self.rules = frozenset(rules_list)
-
-    def __call__(self, state: CollectionState) -> bool:
-        return any(rule(state) for rule in self.rules)
-
-    def __repr__(self):
-        return f"({' | '.join(repr(rule) for rule in self.rules)})"
-
-    def __or__(self, other):
-        if isinstance(other, _True):
-            return other
-        if isinstance(other, _False):
-            return self
-        if isinstance(other, _Or):
-            return _Or(self.rules.union(other.rules))
-
-        return _Or(self.rules.union({other}))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and other.rules == self.rules
-
-    def __hash__(self):
-        return hash(self.rules)
-
-    def get_difficulty(self):
-        return min(rule.get_difficulty() for rule in self.rules)
-
-    def simplify(self) -> StardewRule:
-        if any(isinstance(rule, _True) for rule in self.rules):
-            return _True()
-
-        simplified_rules = {rule.simplify() for rule in self.rules}
-        simplified_rules = {rule for rule in simplified_rules if rule is not _False()}
-
-        if not simplified_rules:
-            return _False()
-
-        if len(simplified_rules) == 1:
-            return next(iter(simplified_rules))
-
-        return _Or(simplified_rules)
-
-
-class _And(StardewRule):
-    rules: frozenset[StardewRule]
-
-    def __init__(self, rule: Union[StardewRule, Iterable[StardewRule]], *rules: StardewRule):
-        rules_list = set()
-        if isinstance(rule, Iterable):
-            rules_list.update(rule)
-        else:
-            rules_list.add(rule)
-
-        if rules is not None:
-            rules_list.update(rules)
-
-        assert rules_list, "Can't create a And conditions without rules"
-
-        new_rules = set()
-        for rule in rules_list:
-            if isinstance(rule, _And):
-                new_rules.update(rule.rules)
-            else:
-                new_rules.add(rule)
-        rules_list = new_rules
-
-        self.rules = frozenset(rules_list)
-
-    def __call__(self, state: CollectionState) -> bool:
-        return all(rule(state) for rule in self.rules)
-
-    def __repr__(self):
-        return f"({' & '.join(repr(rule) for rule in self.rules)})"
-
-    def __and__(self, other):
-        if isinstance(other, _True):
-            return self
-        if isinstance(other, _False):
-            return other
-        if isinstance(other, _And):
-            return _And(self.rules.union(other.rules))
-
-        return _And(self.rules.union({other}))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and other.rules == self.rules
-
-    def __hash__(self):
-        return hash(self.rules)
-
-    def get_difficulty(self):
-        return max(rule.get_difficulty() for rule in self.rules)
-
-    def simplify(self) -> StardewRule:
-        if any(isinstance(rule, _False) for rule in self.rules):
-            return _False()
-
-        simplified_rules = {rule.simplify() for rule in self.rules}
-        simplified_rules = {rule for rule in simplified_rules if rule is not _True()}
-
-        if not simplified_rules:
-            return _True()
-
-        if len(simplified_rules) == 1:
-            return next(iter(simplified_rules))
-
-        return _And(simplified_rules)
-
-
-class _Count(StardewRule):
-    count: int
-    rules: List[StardewRule]
-
-    def __init__(self, count: int, rule: Union[StardewRule, Iterable[StardewRule]], *rules: StardewRule):
-        rules_list = []
-        if isinstance(rule, Iterable):
-            rules_list.extend(rule)
-        else:
-            rules_list.append(rule)
-
-        if rules is not None:
-            rules_list.extend(rules)
-
-        assert rules_list, "Can't create a Count conditions without rules"
-        assert len(rules_list) >= count, "Count need at least as many rules at the count"
-
-        self.rules = rules_list
-        self.count = count
-
-    def __call__(self, state: CollectionState) -> bool:
-        c = 0
-        for r in self.rules:
-            if r(state):
-                c += 1
-            if c >= self.count:
-                return True
-        return False
-
-    def __repr__(self):
-        return f"Received {self.count} {repr(self.rules)}"
-
-    def get_difficulty(self):
-        rules_sorted_by_difficulty = sorted(self.rules, key=lambda x: x.get_difficulty())
-        easiest_n_rules = rules_sorted_by_difficulty[0:self.count]
-        return max(rule.get_difficulty() for rule in easiest_n_rules)
-
-    def simplify(self):
-        return _Count(self.count, [rule.simplify() for rule in self.rules])
-
-
-class _TotalReceived(StardewRule):
-    count: int
-    items: Iterable[str]
-    player: int
-
-    def __init__(self, count: int, items: Union[str, Iterable[str]], player: int):
-        items_list = []
-        if isinstance(items, Iterable):
-            items_list.extend(items)
-        else:
-            items_list.append(items)
-
-        assert items_list, "Can't create a Total Received conditions without items"
-        for item in items_list:
-            assert item_table[item].classification & ItemClassification.progression, \
-                "Item has to be progression to be used in logic"
-
-        self.player = player
-        self.items = items_list
-        self.count = count
-
-    def __call__(self, state: CollectionState) -> bool:
-        c = 0
-        for item in self.items:
-            c += state.count(item, self.player)
-            if c >= self.count:
-                return True
-        return False
-
-    def __repr__(self):
-        return f"Received {self.count} {self.items}"
-
-    def get_difficulty(self):
-        return self.count
-
-
-@dataclass(frozen=True)
-class _Received(StardewRule):
-    item: str
-    player: int
-    count: int
-
-    def __post_init__(self):
-        assert item_table[self.item].classification & ItemClassification.progression, \
-            "Item has to be progression to be used in logic"
-
-    def __call__(self, state: CollectionState) -> bool:
-        return state.has(self.item, self.player, self.count)
-
-    def __repr__(self):
-        if self.count == 1:
-            return f"Received {self.item}"
-        return f"Received {self.count} {self.item}"
-
-    def get_difficulty(self):
-        if self.item == "Spring":
-            return 0
-        if self.item == "Summer":
-            return 1
-        if self.item == "Fall":
-            return 2
-        if self.item == "Winter":
-            return 3
-        return self.count
-
-
-@dataclass(frozen=True)
-class _Reach(StardewRule):
-    spot: str
-    resolution_hint: str
-    player: int
-
-    def __call__(self, state: CollectionState) -> bool:
-        return state.can_reach(self.spot, self.resolution_hint, self.player)
-
-    def __repr__(self):
-        return f"Reach {self.resolution_hint} {self.spot}"
-
-    def get_difficulty(self):
-        return 1
-
-
-@dataclass(frozen=True)
-class _Has(StardewRule):
-    item: str
-    # For sure there is a better way than just passing all the rules everytime
-    other_rules: Dict[str, StardewRule]
-
-    def __call__(self, state: CollectionState) -> bool:
-        if isinstance(self.item, str):
-            return self.other_rules[self.item](state)
-
-    def __repr__(self):
-        if not self.item in self.other_rules:
-            return f"Has {self.item} -> {MISSING_ITEM}"
-        return f"Has {self.item} -> {repr(self.other_rules[self.item])}"
-
-    def get_difficulty(self):
-        return self.other_rules[self.item].get_difficulty() + 1
-
-    def __hash__(self):
-        return hash(self.item)
-
-    def simplify(self) -> StardewRule:
-        return self.other_rules[self.item].simplify()
-
-
 @dataclass(frozen=True, repr=False)
 class StardewLogic:
     player: int
@@ -475,13 +125,13 @@ class StardewLogic:
             "Bok Choy": self.received("Fall"),
             "Cauliflower": self.received("Spring"),
             "Coffee Bean": (self.received("Spring") | self.received("Summer")) &
-                           (self.can_mine_in_the_mines_floor_41_80() | _True()),  # Travelling merchant
+                           (self.can_mine_in_the_mines_floor_41_80() | self.has_traveling_merchant()),
             "Corn": self.received("Summer") | self.received("Fall"),
             "Cranberries": self.received("Fall"),
             "Eggplant": self.received("Fall"),
             "Fairy Rose": self.received("Fall"),
             "Garlic": self.received("Spring") & self.has_year_two(),
-            "Grape": self.received("Summer") | self.has("Fall"),
+            "Grape": self.received("Summer") | self.received("Fall"),
             "Green Bean": self.received("Spring"),
             "Hops": self.received("Summer"),
             "Hot Pepper": self.received("Summer"),
@@ -537,17 +187,16 @@ class StardewLogic:
             "Chicken": self.has_building("Coop"),
             "Chicken Egg": self.has(["Egg", "Egg (Brown)", "Large Egg", "Large Egg (Brown)"], 1),
             "Chowder": self.can_cook() & self.can_have_relationship("Willy", 3) & self.has(["Clam", "Cow Milk"]),
-            "Clam": _True(),
-            "Clay": _True(),
+            "Clam": True_(),
+            "Clay": True_(),
             "Cloth": (self.has("Wool") & self.has("Loom")) |
                      (self.can_reach_region("The Desert") & self.has("Aquamarine")),
-            "Coal": _True(),
-            "Cockle": _True(),
+            "Coal": True_(),
+            "Cockle": True_(),
             "Coconut": self.can_reach_region("The Desert"),
             "Coffee": (self.has("Keg") & self.has("Coffee Bean")) | self.has("Coffee Maker") |
                       self.can_spend_money(300) | self.has("Hot Java Ring"),
-
-            "Coffee Maker": _False(),
+            "Coffee Maker": False_(),
             "Common Mushroom": self.received("Fall") |
                                (self.received("Spring") & self.can_reach_region("Secret Woods")),
             "Copper Bar": self.can_smelt("Copper Ore"),
@@ -581,7 +230,7 @@ class StardewLogic:
             "Emerald": self.can_mine_in_the_mines_floor_81_120() | self.can_mine_in_the_skull_cavern(),
             "Farmer's Lunch": self.can_cook() & self.has_skill_level("Farming", 3) & self.has("Omelet") & self.has(
                 "Parsnip"),
-            "Fiber": _True(),
+            "Fiber": True_(),
             "Fiddlehead Fern": self.can_reach_region("Secret Woods") & self.received("Summer"),
             "Fire Quartz": self.can_mine_in_the_mines_floor_81_120(),
             "Fried Egg": self.can_cook() & self.has("Any Egg"),
@@ -639,7 +288,7 @@ class StardewLogic:
             "Miner's Treat": self.can_cook() & self.has_skill_level("Mining", 3) & self.has("Cow Milk") & self.has(
                 "Cave Carrot"),
             "Morel": self.can_reach_region("Secret Woods"),
-            "Mussel": _True(),
+            "Mussel": True_(),
             "Nautilus Shell": self.received("Winter"),
             "Oak Resin": self.has("Tapper"),
             "Oil Maker": self.has_skill_level("Farming", 8) & self.has("Hardwood") & self.has("Gold Bar"),
@@ -651,7 +300,7 @@ class StardewLogic:
                           (self.has("Octopus") & self.has_building("Fish Pond")) |
                           self.can_reach_region("Ginger Island"),
             "Ostrich": self.has_building("Barn"),
-            "Oyster": _True(),
+            "Oyster": True_(),
             "Pale Ale": self.has("Keg") & self.has("Hops"),
             "Pale Broth": self.can_cook() & self.can_have_relationship("Marnie", 3) & self.has("White Algae"),
             "Pancakes": self.can_cook() & self.can_spend_money(100) & self.has("Any Egg"),
@@ -751,7 +400,7 @@ class StardewLogic:
         })
 
         self.quest_rules.update({
-            "Introductions": _True(),
+            "Introductions": True_(),
             "How To Win Friends": self.can_complete_quest("Introductions"),
             "Getting Started": self.received("Spring") & self.has_tool("Hoe") & self.has_tool("Watering Can"),
             "To The Beach": self.received("Spring"),
@@ -802,42 +451,42 @@ class StardewLogic:
 
     def has(self, items: Union[str, (Iterable[str], Sized)], count: Optional[int] = None) -> StardewRule:
         if isinstance(items, str):
-            return _Has(items, self.item_rules)
+            return Has(items, self.item_rules)
 
         if count is None or count == len(items):
-            return _And(self.has(item) for item in items)
+            return And(self.has(item) for item in items)
 
         if count == 1:
-            return _Or(self.has(item) for item in items)
+            return Or(self.has(item) for item in items)
 
-        return _Count(count, (self.has(item) for item in items))
+        return Count(count, (self.has(item) for item in items))
 
     def received(self, items: Union[str, Iterable[str]], count: Optional[int] = 1) -> StardewRule:
+        if count == 0:
+            return True_()
+
         if isinstance(items, str):
-            return _Received(items, self.player, count)
+            return Received(items, self.player, count)
 
         if count is None:
-            return _And(self.received(item) for item in items)
-
-        if count == 0:
-            return _True()
+            return And(self.received(item) for item in items)
 
         if count == 1:
-            return _Or(self.received(item) for item in items)
+            return Or(self.received(item) for item in items)
 
-        return _TotalReceived(count, items, self.player)
+        return TotalReceived(count, items, self.player)
 
     def can_reach_region(self, spot: str) -> StardewRule:
-        return _Reach(spot, "Region", self.player)
+        return Reach(spot, "Region", self.player)
 
     def can_reach_any_region(self, spots: Iterable[str]) -> StardewRule:
-        return _Or(self.can_reach_region(spot) for spot in spots)
+        return Or(self.can_reach_region(spot) for spot in spots)
 
     def can_reach_location(self, spot: str) -> StardewRule:
-        return _Reach(spot, "Location", self.player)
+        return Reach(spot, "Location", self.player)
 
     def can_reach_entrance(self, spot: str) -> StardewRule:
-        return _Reach(spot, "Entrance", self.player)
+        return Reach(spot, "Entrance", self.player)
 
     def can_have_earned_total_money(self, amount: int) -> StardewRule:
         return self.received("Month End", min(8, amount // MONEY_PER_MONTH))
@@ -847,7 +496,7 @@ class StardewLogic:
 
     def has_tool(self, tool: str, material: str = "Basic") -> StardewRule:
         if material == "Basic":
-            return _True()
+            return True_()
 
         if self.options[options.ToolProgression] == options.ToolProgression.option_progressive:
             return self.received(f"Progressive {tool}", count=tool_materials[material])
@@ -856,7 +505,7 @@ class StardewLogic:
 
     def has_skill_level(self, skill: str, level: int) -> StardewRule:
         if level == 0:
-            return _True()
+            return True_()
 
         if self.options[options.SkillProgression] == options.SkillProgression.option_progressive:
             return self.received(f"{skill} Level", count=level)
@@ -868,7 +517,7 @@ class StardewLogic:
 
     def has_total_skill_level(self, level: int) -> StardewRule:
         if level == 0:
-            return _True()
+            return True_()
 
         if self.options[options.SkillProgression] == options.SkillProgression.option_progressive:
             skills_items = ["Farming Level", "Mining Level", "Foraging Level",
@@ -893,29 +542,29 @@ class StardewLogic:
                 building = " ".join(["Progressive", *building.split(" ")[1:]])
             return self.received(f"{building}", count)
 
-        return _Has(building, self.building_rules)
+        return Has(building, self.building_rules)
 
     def has_house(self, upgrade_level: int) -> StardewRule:
         if upgrade_level < 1:
-            return _True()
+            return True_()
 
         if upgrade_level > 3:
-            return _False()
+            return False_()
 
         if not self.options[options.BuildingProgression] == options.BuildingProgression.option_vanilla:
             return self.received(f"Progressive House", upgrade_level)
 
         if upgrade_level == 1:
-            return _Has("Kitchen", self.building_rules)
+            return Has("Kitchen", self.building_rules)
 
         if upgrade_level == 2:
-            return _Has("Kids Room", self.building_rules)
+            return Has("Kids Room", self.building_rules)
 
         # if upgrade_level == 3:
-        return _Has("Cellar", self.building_rules)
+        return Has("Cellar", self.building_rules)
 
     def can_complete_quest(self, quest: str) -> StardewRule:
-        return _Has(quest, self.quest_rules)
+        return Has(quest, self.quest_rules)
 
     def can_get_fishing_xp(self) -> StardewRule:
         if self.options[options.SkillProgression] == options.SkillProgression.option_progressive:
@@ -946,7 +595,7 @@ class StardewLogic:
         rules = [self.has_skill_level("Fishing", 10), self.received("Progressive Fishing Rod", 4)]
         for fish in all_fish_items:
             rules.append(self.can_catch_fish(fish))
-        return _And(rules)
+        return And(rules)
 
     def can_cook(self) -> StardewRule:
         return self.has_house(1) or self.has_skill_level("Foraging", 9)
@@ -958,7 +607,7 @@ class StardewLogic:
         if self.options[options.SkillProgression] == options.SkillProgression.option_progressive:
             return self.has("Crab Pot")
 
-        return _True()
+        return True_()
 
     def can_do_panning(self) -> StardewRule:
         return self.received("Glittering Boulder Removed")
@@ -1002,7 +651,7 @@ class StardewLogic:
         if self.options[options.SkillProgression] == options.SkillProgression.option_progressive:
             combat_tier = min(10, max(0, tier * 2))
             rules.append(self.has_skill_level("Combat", combat_tier))
-        return _And(rules)
+        return And(rules)
 
     def can_progress_easily_in_the_mines_from_floor(self, floor: int) -> StardewRule:
         tier = int(floor / 40) + 1
@@ -1014,7 +663,7 @@ class StardewLogic:
         if self.options[options.SkillProgression] == options.SkillProgression.option_progressive:
             combat_tier = min(10, max(0, tier * 2))
             rules.append(self.has_skill_level("Combat", combat_tier))
-        return _And(rules)
+        return And(rules)
 
     def has_mine_elevator_to_floor(self, floor: int) -> StardewRule:
         if (self.options[options.TheMinesElevatorsProgression] ==
@@ -1022,7 +671,7 @@ class StardewLogic:
                 self.options[options.TheMinesElevatorsProgression] ==
                 options.TheMinesElevatorsProgression.option_progressive_from_previous_floor):
             return self.received("Progressive Mine Elevator", count=int(floor / 5))
-        return _True()
+        return True_()
 
     def can_mine_to_floor(self, floor: int) -> StardewRule:
         previous_elevator = max(floor - 5, 0)
@@ -1034,14 +683,14 @@ class StardewLogic:
 
     def has_jotpk_power_level(self, power_level: int) -> StardewRule:
         if self.options[options.ArcadeMachineLocations] != options.ArcadeMachineLocations.option_full_shuffling:
-            return _True()
+            return True_()
         jotpk_buffs = ["JotPK: Progressive Boots", "JotPK: Progressive Gun",
                        "JotPK: Progressive Ammo", "JotPK: Extra Life", "JotPK: Increased Drop Rate"]
         return self.received(jotpk_buffs, power_level)
 
     def has_junimo_kart_power_level(self, power_level: int) -> StardewRule:
         if self.options[options.ArcadeMachineLocations] != options.ArcadeMachineLocations.option_full_shuffling:
-            return _True()
+            return True_()
         return self.received("Junimo Kart: Extra Life", power_level)
 
     def has_traveling_merchant(self, tier: int = 1):
@@ -1062,7 +711,7 @@ class StardewLogic:
             return self.has_year_two()
 
         if hearts <= 3:
-            return _True()
+            return True_()
         if hearts <= 6:
             return self.received("Month End", 1)
         if hearts <= 9:
@@ -1110,7 +759,7 @@ class StardewLogic:
                                self.received("Skull Key"),  # Skull Key obtained
                                # Rusty key not expected
                                ]
-        return _Count(12, rules_worth_a_point)
+        return Count(12, rules_worth_a_point)
 
     def has_any_weapon(self) -> StardewRule:
         return self.has_decent_weapon() | self.received(item.name for item in all_items if Group.WEAPON in item.groups)
