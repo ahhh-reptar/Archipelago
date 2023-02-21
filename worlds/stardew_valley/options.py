@@ -1,12 +1,12 @@
 from dataclasses import dataclass
-from typing import Dict, Union, Protocol, runtime_checkable
+from typing import Dict, Union, Protocol, runtime_checkable, ClassVar
 
 from Options import Option, Range, DeathLink, SpecialRange, Toggle, Choice
 
 
 @runtime_checkable
 class StardewOption(Protocol):
-    internal_name: str
+    internal_name: ClassVar[str]
 
 
 @dataclass
@@ -398,35 +398,33 @@ class GiftTax(SpecialRange):
     }
 
 
-stardew_valley_options: Dict[str, type(Option)] = {
-    option.internal_name: option
-    for option in [
-        StartingMoney,
-        ResourcePackMultiplier,
-        BundleRandomization,
-        BundlePrice,
-        EntranceRandomization,
-        SeasonRandomization,
-        SeedRandomization,
-        BackpackProgression,
-        ToolProgression,
-        SkillProgression,
-        BuildingProgression,
-        TheMinesElevatorsProgression,
-        ArcadeMachineLocations,
-        HelpWantedLocations,
-        Fishsanity,
-        NumberOfPlayerBuffs,
-        Goal,
-        MultipleDaySleepEnabled,
-        MultipleDaySleepCost,
-        ExperienceMultiplier,
-        DebrisMultiplier,
-        QuickStart,
-        Gifting,
-        GiftTax,
-    ]
-}
+stardew_valley_option_classes = [
+    StartingMoney,
+    ResourcePackMultiplier,
+    BundleRandomization,
+    BundlePrice,
+    EntranceRandomization,
+    SeasonRandomization,
+    SeedRandomization,
+    BackpackProgression,
+    ToolProgression,
+    SkillProgression,
+    BuildingProgression,
+    TheMinesElevatorsProgression,
+    ArcadeMachineLocations,
+    HelpWantedLocations,
+    Fishsanity,
+    NumberOfPlayerBuffs,
+    Goal,
+    MultipleDaySleepEnabled,
+    MultipleDaySleepCost,
+    ExperienceMultiplier,
+    DebrisMultiplier,
+    QuickStart,
+    Gifting,
+    GiftTax,
+]
+stardew_valley_options: Dict[str, type(Option)] = {option.internal_name: option for option in stardew_valley_option_classes}
 default_options = {option.internal_name: option.default for option in stardew_valley_options.values()}
 stardew_valley_options["death_link"] = DeathLink
 

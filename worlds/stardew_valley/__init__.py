@@ -101,7 +101,8 @@ class StardewValleyWorld(World):
         self.multiworld.itempool += created_items
 
         for item in items_to_exclude:
-            self.multiworld.itempool.remove(item)
+            if item in self.multiworld.itempool:
+                self.multiworld.itempool.remove(item)
 
         self.setup_early_items()
         self.setup_month_events()
@@ -118,8 +119,8 @@ class StardewValleyWorld(World):
                 self.multiworld.push_precollected(self.create_item(season))
             return
 
-        if {item for item in self.multiworld.precollected_items[self.player] if
-            item.name in {"Spring", "Summer", "Fall", "Winter"}}:
+        if [item for item in self.multiworld.precollected_items[self.player]
+            if item.name in {season.name for season in items_by_group[Group.SEASON]}]:
             return
 
         if self.options[options.SeasonRandomization] == options.SeasonRandomization.option_randomized_not_winter:

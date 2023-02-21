@@ -1,6 +1,5 @@
 from BaseClasses import ItemClassification
-from test.general import setup_solo_multiworld
-from . import SVTestBase
+from . import SVTestBase, setup_solo_multiworld
 from .. import locations, items, location_table, options, StardewValleyWorld
 from ..items import items_by_group, Group
 from ..locations import LocationTags
