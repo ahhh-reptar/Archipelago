@@ -29,6 +29,8 @@ class Goal(Choice):
         reach floor 100 in the Skull Cavern.
     With Master Angler, the world will be completed once you have caught every fish in the game. Pairs well with
         Fishsanity.
+    With Complete Collection, the world will be completed once you have completed the museum by donating every possible item. Pairs well with
+        Museumsanity.
     """
     internal_name = "goal"
     display_name = "Goal"
@@ -37,6 +39,7 @@ class Goal(Choice):
     option_bottom_of_the_mines = 2
     option_cryptic_note = 3
     option_master_angler = 4
+    option_complete_collection = 5
 
     @classmethod
     def get_option_name(cls, value) -> str:
@@ -289,6 +292,22 @@ class Fishsanity(Choice):
     option_special = 2
     option_random_selection = 3
     option_all = 4
+
+
+class Museumsanity(Choice):
+    """Locations for museum donation?
+    With None, there are no locations for donating artifacts and minerals to the museum
+    With Milestones, the donation milestones from the vanilla game will contain AP checks
+    With Random Selection, a random selection of minerals and artifacts are locations that contain items
+    With All, every single donation will be an AP check
+    """
+    internal_name = "museumsanity"
+    display_name = "Museumsanity"
+    default = 1
+    option_none = 0
+    option_milestones = 1
+    option_random_selection = 2
+    option_all = 3
 
 
 class NumberOfPlayerBuffs(Range):

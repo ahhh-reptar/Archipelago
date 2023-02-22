@@ -167,6 +167,10 @@ class StardewValleyWorld(World):
             self.create_event_location(location_table["Catch Every Fish"],
                                        self.logic.can_catch_every_fish().simplify(),
                                        "Victory")
+        elif self.options[options.Goal] == options.Goal.option_complete_collection:
+            self.create_event_location(location_table["Complete the Museum Collection"],
+                                       self.logic.can_complete_museum().simplify(),
+                                       "Victory")
 
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
 

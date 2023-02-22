@@ -22,3 +22,15 @@ class FishItem(GameItem):
         return f"{self.name} [{self.item_id}] (Locations: {self.locations} |" \
                f" Seasons: {self.seasons} |" \
                f" Difficulty: {self.difficulty}) "
+
+
+@dataclass(frozen=True)
+class MuseumItem(GameItem):
+    locations: FrozenSet[str]
+    geodes: FrozenSet[str]
+    monsters: FrozenSet[str]
+
+    def __repr__(self):
+        return f"{self.name} [{self.item_id}] (Locations: {self.locations} |" \
+               f" Geodes: {self.geodes} |" \
+               f" Monsters: {self.monsters}) "

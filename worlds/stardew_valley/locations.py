@@ -6,6 +6,7 @@ from typing import Optional, Dict, Protocol, List, FrozenSet
 
 from . import options, data
 from .fish_data import legendary_fish, special_fish, all_fish_items
+from .minerals_data import all_museum_items
 
 LOCATION_CODE_OFFSET = 717000
 
@@ -46,6 +47,8 @@ class LocationTags(enum.Enum):
     HELP_WANTED = enum.auto()
     TRAVELING_MERCHANT = enum.auto()
     FISHSANITY = enum.auto()
+    MUSEUM_MILESTONES = enum.auto()
+    MUSEUM_DONATIONS = enum.auto()
 
 
 @dataclass(frozen=True)
@@ -86,6 +89,7 @@ events_locations = [
     LocationData(None, "The Mines - Floor 120", "Reach the Bottom of The Mines"),
     LocationData(None, "Skull Cavern", "Complete Quest Cryptic Note"),
     LocationData(None, "Stardew Valley", "Catch Every Fish"),
+    LocationData(None, "Stardew Valley", "Complete the Museum Collection"),
 ]
 
 all_locations = load_location_csv() + events_locations
@@ -134,6 +138,19 @@ def extend_fishsanity_locations(randomized_locations: List[LocationData], fishsa
         randomized_locations.extend(location_table[f"{prefix}{fish.name}"] for fish in all_fish_items)
 
 
+def extend_museumsanity_locations(randomized_locations: List[LocationData], museumsanity: int, random: Random):
+    prefix = "Museumsanity: "
+    if museumsanity == options.Museumsanity.option_none:
+        return
+    elif museumsanity == options.Museumsanity.option_milestones:
+        randomized_locations.extend(locations_by_tag[LocationTags.MUSEUM_MILESTONES])
+    elif museumsanity == options.Museumsanity.option_random_selection:
+        randomized_locations.extend(location_table[f"{prefix}{museum_item.name}"]
+                                    for museum_item in all_museum_items if random.random() < 0.4)
+    elif museumsanity == options.Museumsanity.option_all:
+        randomized_locations.extend(location_table[f"{prefix}{museum_item.name}"] for museum_item in all_museum_items)
+
+
 def create_locations(location_collector: StardewLocationCollector,
                      world_options: options.StardewOptions,
                      random: Random):
@@ -164,6 +181,7 @@ def create_locations(location_collector: StardewLocationCollector,
 
     extend_help_wanted_quests(randomized_locations, world_options[options.HelpWantedLocations])
     extend_fishsanity_locations(randomized_locations, world_options[options.Fishsanity], random)
+    extend_museumsanity_locations(randomized_locations, world_options[options.Museumsanity], random)
 
     for location_data in randomized_locations:
         location_collector(location_data.name, location_data.code, location_data.region)

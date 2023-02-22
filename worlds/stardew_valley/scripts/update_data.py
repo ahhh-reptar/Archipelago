@@ -5,7 +5,8 @@ from typing import List
 
 from worlds.stardew_valley import LocationData
 from worlds.stardew_valley.items import load_item_csv, Group, ItemData, load_resource_pack_csv, friendship_pack
-from worlds.stardew_valley.locations import load_location_csv
+from worlds.stardew_valley.locations import load_location_csv, LocationTags
+from worlds.stardew_valley.minerals_data import all_museum_items
 
 RESOURCE_PACK_CODE_OFFSET = 5000
 script_folder = Path(__file__)
@@ -77,5 +78,10 @@ if __name__ == '__main__':
             continue
 
         locations_to_write.append(location)
+
+    counter = 1200
+    for museum_item in all_museum_items:
+        counter += 1
+        locations_to_write.append(LocationData(counter, list(museum_item.locations)[0], f"Museumsanity: {museum_item.name}", frozenset({LocationTags.MUSEUM_DONATIONS})))
 
     write_location_csv(locations_to_write)

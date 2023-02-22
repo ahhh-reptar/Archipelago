@@ -377,3 +377,127 @@ id,region,name,tags
 1063,Beach,Fishsanity: Mussel,FISHSANITY
 1064,Beach,Fishsanity: Shrimp,FISHSANITY
 1065,Beach,Fishsanity: Oyster,FISHSANITY
+1100,Stardew Valley,Museumsanity: 5 Donations,MUSEUM_MILESTONES
+1101,Stardew Valley,Museumsanity: 10 Donations,MUSEUM_MILESTONES
+1102,Stardew Valley,Museumsanity: 15 Donations,MUSEUM_MILESTONES
+1103,Stardew Valley,Museumsanity: 20 Donations,MUSEUM_MILESTONES
+1104,Stardew Valley,Museumsanity: 25 Donations,MUSEUM_MILESTONES
+1105,Stardew Valley,Museumsanity: 30 Donations,MUSEUM_MILESTONES
+1106,Stardew Valley,Museumsanity: 35 Donations,MUSEUM_MILESTONES
+1107,Stardew Valley,Museumsanity: 40 Donations,MUSEUM_MILESTONES
+1108,Stardew Valley,Museumsanity: 50 Donations,MUSEUM_MILESTONES
+1109,Stardew Valley,Museumsanity: 60 Donations,MUSEUM_MILESTONES
+1110,Stardew Valley,Museumsanity: 70 Donations,MUSEUM_MILESTONES
+1111,Stardew Valley,Museumsanity: 80 Donations,MUSEUM_MILESTONES
+1112,Stardew Valley,Museumsanity: 90 Donations,MUSEUM_MILESTONES
+1113,Stardew Valley,Museumsanity: 95 Donations,MUSEUM_MILESTONES
+1114,Stardew Valley,Museumsanity: 11 Minerals,MUSEUM_MILESTONES
+1115,Stardew Valley,Museumsanity: 21 Minerals,MUSEUM_MILESTONES
+1116,Stardew Valley,Museumsanity: 31 Minerals,MUSEUM_MILESTONES
+1117,Stardew Valley,Museumsanity: 41 Minerals,MUSEUM_MILESTONES
+1118,Stardew Valley,Museumsanity: 50 Minerals,MUSEUM_MILESTONES
+1119,Stardew Valley,Museumsanity: 3 Artifacts,MUSEUM_MILESTONES
+1120,Stardew Valley,Museumsanity: 6 Artifacts,MUSEUM_MILESTONES
+1121,Stardew Valley,Museumsanity: 9 Artifacts,MUSEUM_MILESTONES
+1122,Stardew Valley,Museumsanity: 11 Artifacts,MUSEUM_MILESTONES
+1123,Stardew Valley,Museumsanity: 15 Artifacts,MUSEUM_MILESTONES
+1124,Stardew Valley,Museumsanity: 20 Artifacts,MUSEUM_MILESTONES
+1125,Stardew Valley,Museumsanity: Dwarf Scrolls,MUSEUM_MILESTONES
+1126,Stardew Valley,Museumsanity: Skeleton Front,MUSEUM_MILESTONES
+1127,Stardew Valley,Museumsanity: Skeleton Middle,MUSEUM_MILESTONES
+1128,Stardew Valley,Museumsanity: Skeleton Back,MUSEUM_MILESTONES
+1201,The Mines - Floor 20,Museumsanity: Dwarf Scroll I,MUSEUM_DONATIONS
+1202,The Mines - Floor 20,Museumsanity: Dwarf Scroll II,MUSEUM_DONATIONS
+1203,The Mines - Floor 60,Museumsanity: Dwarf Scroll III,MUSEUM_DONATIONS
+1204,The Mines - Floor 100,Museumsanity: Dwarf Scroll IV,MUSEUM_DONATIONS
+1205,Town,Museumsanity: Chipped Amphora,MUSEUM_DONATIONS
+1206,Forest,Museumsanity: Arrowhead,MUSEUM_DONATIONS
+1207,Forest,Museumsanity: Ancient Doll,MUSEUM_DONATIONS
+1208,Forest,Museumsanity: Elvish Jewelry,MUSEUM_DONATIONS
+1209,Forest,Museumsanity: Chewing Stick,MUSEUM_DONATIONS
+1210,Forest,Museumsanity: Ornamental Fan,MUSEUM_DONATIONS
+1211,Mountain,Museumsanity: Dinosaur Egg,MUSEUM_DONATIONS
+1212,Stardew Valley,Museumsanity: Rare Disc,MUSEUM_DONATIONS
+1213,Forest,Museumsanity: Ancient Sword,MUSEUM_DONATIONS
+1214,Town,Museumsanity: Rusty Spoon,MUSEUM_DONATIONS
+1215,Farm,Museumsanity: Rusty Spur,MUSEUM_DONATIONS
+1216,Mountain,Museumsanity: Rusty Cog,MUSEUM_DONATIONS
+1217,Farm,Museumsanity: Chicken Statue,MUSEUM_DONATIONS
+1218,Forest,Museumsanity: Ancient Seed,"MUSEUM_DONATIONS,MUSEUM_MILESTONES"
+1219,Forest,Museumsanity: Prehistoric Tool,MUSEUM_DONATIONS
+1220,Beach,Museumsanity: Dried Starfish,MUSEUM_DONATIONS
+1221,Beach,Museumsanity: Anchor,MUSEUM_DONATIONS
+1222,Beach,Museumsanity: Glass Shards,MUSEUM_DONATIONS
+1223,Forest,Museumsanity: Bone Flute,MUSEUM_DONATIONS
+1224,Forest,Museumsanity: Prehistoric Handaxe,MUSEUM_DONATIONS
+1225,The Mines - Floor 20,Museumsanity: Dwarvish Helm,MUSEUM_DONATIONS
+1226,The Mines - Floor 60,Museumsanity: Dwarf Gadget,MUSEUM_DONATIONS
+1227,Forest,Museumsanity: Ancient Drum,MUSEUM_DONATIONS
+1228,The Desert,Museumsanity: Golden Mask,MUSEUM_DONATIONS
+1229,The Desert,Museumsanity: Golden Relic,MUSEUM_DONATIONS
+1230,Town,Museumsanity: Strange Doll (Green),MUSEUM_DONATIONS
+1231,The Desert,Museumsanity: Strange Doll,MUSEUM_DONATIONS
+1232,Forest,Museumsanity: Prehistoric Scapula,MUSEUM_DONATIONS
+1233,Forest,Museumsanity: Prehistoric Tibia,MUSEUM_DONATIONS
+1234,Ginger Island,Museumsanity: Prehistoric Skull,MUSEUM_DONATIONS
+1235,Ginger Island,Museumsanity: Skeletal Hand,MUSEUM_DONATIONS
+1236,Ginger Island,Museumsanity: Prehistoric Rib,MUSEUM_DONATIONS
+1237,Ginger Island,Museumsanity: Prehistoric Vertebra,MUSEUM_DONATIONS
+1238,Ginger Island,Museumsanity: Skeletal Tail,MUSEUM_DONATIONS
+1239,Ginger Island,Museumsanity: Nautilus Fossil,MUSEUM_DONATIONS
+1240,Forest,Museumsanity: Amphibian Fossil,MUSEUM_DONATIONS
+1241,Forest,Museumsanity: Palm Fossil,MUSEUM_DONATIONS
+1242,Forest,Museumsanity: Trilobite,MUSEUM_DONATIONS
+1243,The Mines - Floor 20,Museumsanity: Quartz,MUSEUM_DONATIONS
+1244,The Mines - Floor 100,Museumsanity: Fire Quartz,MUSEUM_DONATIONS
+1245,The Mines - Floor 60,Museumsanity: Frozen Tear,MUSEUM_DONATIONS
+1246,The Mines - Floor 20,Museumsanity: Earth Crystal,MUSEUM_DONATIONS
+1247,The Mines - Floor 100,Museumsanity: Emerald,MUSEUM_DONATIONS
+1248,The Mines - Floor 60,Museumsanity: Aquamarine,MUSEUM_DONATIONS
+1249,The Mines - Floor 100,Museumsanity: Ruby,MUSEUM_DONATIONS
+1250,The Mines - Floor 20,Museumsanity: Amethyst,MUSEUM_DONATIONS
+1251,The Mines - Floor 20,Museumsanity: Topaz,MUSEUM_DONATIONS
+1252,The Mines - Floor 60,Museumsanity: Jade,MUSEUM_DONATIONS
+1253,The Mines - Floor 60,Museumsanity: Diamond,MUSEUM_DONATIONS
+1254,Perfect Skull Cavern,Museumsanity: Prismatic Shard,MUSEUM_DONATIONS
+1255,Town,Museumsanity: Alamite,MUSEUM_DONATIONS
+1256,Town,Museumsanity: Bixite,MUSEUM_DONATIONS
+1257,Town,Museumsanity: Baryte,MUSEUM_DONATIONS
+1258,Town,Museumsanity: Aerinite,MUSEUM_DONATIONS
+1259,Town,Museumsanity: Calcite,MUSEUM_DONATIONS
+1260,Town,Museumsanity: Dolomite,MUSEUM_DONATIONS
+1261,Town,Museumsanity: Esperite,MUSEUM_DONATIONS
+1262,Town,Museumsanity: Fluorapatite,MUSEUM_DONATIONS
+1263,Town,Museumsanity: Geminite,MUSEUM_DONATIONS
+1264,Town,Museumsanity: Helvite,MUSEUM_DONATIONS
+1265,Town,Museumsanity: Jamborite,MUSEUM_DONATIONS
+1266,Town,Museumsanity: Jagoite,MUSEUM_DONATIONS
+1267,Town,Museumsanity: Kyanite,MUSEUM_DONATIONS
+1268,Town,Museumsanity: Lunarite,MUSEUM_DONATIONS
+1269,Town,Museumsanity: Malachite,MUSEUM_DONATIONS
+1270,Town,Museumsanity: Neptunite,MUSEUM_DONATIONS
+1271,Town,Museumsanity: Lemon Stone,MUSEUM_DONATIONS
+1272,Town,Museumsanity: Nekoite,MUSEUM_DONATIONS
+1273,Town,Museumsanity: Orpiment,MUSEUM_DONATIONS
+1274,Town,Museumsanity: Petrified Slime,MUSEUM_DONATIONS
+1275,Town,Museumsanity: Thunder Egg,MUSEUM_DONATIONS
+1276,Town,Museumsanity: Pyrite,MUSEUM_DONATIONS
+1277,Town,Museumsanity: Ocean Stone,MUSEUM_DONATIONS
+1278,Town,Museumsanity: Ghost Crystal,MUSEUM_DONATIONS
+1279,Town,Museumsanity: Tigerseye,MUSEUM_DONATIONS
+1280,Town,Museumsanity: Jasper,MUSEUM_DONATIONS
+1281,Town,Museumsanity: Opal,MUSEUM_DONATIONS
+1282,Town,Museumsanity: Fire Opal,MUSEUM_DONATIONS
+1283,Town,Museumsanity: Celestine,MUSEUM_DONATIONS
+1284,Town,Museumsanity: Marble,MUSEUM_DONATIONS
+1285,Town,Museumsanity: Sandstone,MUSEUM_DONATIONS
+1286,Town,Museumsanity: Granite,MUSEUM_DONATIONS
+1287,Town,Museumsanity: Basalt,MUSEUM_DONATIONS
+1288,Town,Museumsanity: Limestone,MUSEUM_DONATIONS
+1289,Town,Museumsanity: Soapstone,MUSEUM_DONATIONS
+1290,Town,Museumsanity: Hematite,MUSEUM_DONATIONS
+1291,Town,Museumsanity: Mudstone,MUSEUM_DONATIONS
+1292,Town,Museumsanity: Obsidian,MUSEUM_DONATIONS
+1293,Town,Museumsanity: Slate,MUSEUM_DONATIONS
+1294,Town,Museumsanity: Fairy Stone,MUSEUM_DONATIONS
+1295,Town,Museumsanity: Star Shards,MUSEUM_DONATIONS

@@ -6,8 +6,9 @@ from typing import Optional, Sized, Tuple, Dict, Union, Iterable, List
 from . import options
 from .bundle_data import BundleItem
 from .fish_data import all_fish_items
-from .game_item import FishItem
+from .game_item import FishItem, MuseumItem
 from .items import all_items, Group
+from .minerals_data import all_museum_items
 from .options import StardewOptions
 from .stardew_rule import False_, Reach, Or, True_, Received, Count, And, Has, TotalReceived, StardewRule
 
@@ -101,11 +102,13 @@ class StardewLogic:
     tree_fruit_rules: Dict[str, StardewRule] = field(default_factory=dict)
     crops_rules: Dict[str, StardewRule] = field(default_factory=dict)
     fish_rules: Dict[str, StardewRule] = field(default_factory=dict)
+    museum_rules: Dict[str, StardewRule] = field(default_factory=dict)
     building_rules: Dict[str, StardewRule] = field(default_factory=dict)
     quest_rules: Dict[str, StardewRule] = field(default_factory=dict)
 
     def __post_init__(self):
         self.fish_rules.update({fish.name: self.can_catch_fish(fish) for fish in all_fish_items})
+        self.museum_rules.update({donation.name: self.can_find_museum_item(donation) for donation in all_museum_items})
 
         self.tree_fruit_rules.update({
             "Apple": self.received("Month End") & (self.received("Fall") | self.received("Greenhouse")),
@@ -159,10 +162,8 @@ class StardewLogic:
         self.item_rules.update({
             "Aged Roe": self.has("Preserves Jar") & self.has("Roe"),
             "Algae Soup": self.can_cook() & self.has("Green Algae") & self.can_have_relationship("Clint", 3),
-            "Amethyst": self.can_mine_in_the_mines_floor_1_40(),
-            "Ancient Drum": self.has("Frozen Geode"),
             "Any Egg": self.has("Chicken Egg") | self.has("Duck Egg"),
-            "Aquamarine": self.can_mine_in_the_mines_floor_41_80() | self.can_mine_in_the_skull_cavern(),
+            "Artifact Trove": self.has("Omni Geode") & self.can_reach_region("The Desert"),
             "Bait": self.has_skill_level("Fishing", 2),
             "Bat Wing": self.can_mine_in_the_mines_floor_41_80() | self.can_mine_in_the_skull_cavern(),
             "Battery Pack": self.has("Lightning Rod"),
@@ -219,25 +220,17 @@ class StardewLogic:
             "Duck Egg": self.has("Duck"),
             "Duck Feather": self.has("Duck"),
             "Duck": self.has_building("Big Coop"),
-            "Dwarf Scroll I": self.can_mine_in_the_mines_floor_1_40(),
-            "Dwarf Scroll II": self.can_mine_in_the_mines_floor_1_40(),
-            "Dwarf Scroll III": self.can_mine_in_the_mines_floor_1_40(),
-            "Dwarf Scroll IV": self.can_mine_in_the_mines_floor_81_120(),
-            "Earth Crystal": self.can_mine_in_the_mines_floor_1_40(),
             "Egg": self.has("Chicken"),
             "Egg (Brown)": self.has("Chicken"),
-            "Elvish Jewelry": self.can_fish() & self.can_reach_region("Forest"),
-            "Emerald": self.can_mine_in_the_mines_floor_81_120() | self.can_mine_in_the_skull_cavern(),
             "Farmer's Lunch": self.can_cook() & self.has_skill_level("Farming", 3) & self.has("Omelet") & self.has(
                 "Parsnip"),
             "Fiber": True_(),
             "Fiddlehead Fern": self.can_reach_region("Secret Woods") & self.received("Summer"),
-            "Fire Quartz": self.can_mine_in_the_mines_floor_81_120(),
+            "Fishing Chest": self.can_fish_chests(),
             "Fried Egg": self.can_cook() & self.has("Any Egg"),
             "Fried Mushroom": self.can_cook() & self.can_have_relationship("Demetrius", 3) & self.has(
                 "Morel") & self.has("Common Mushroom"),
             "Frozen Geode": self.can_mine_in_the_mines_floor_41_80(),
-            "Frozen Tear": self.can_mine_in_the_mines_floor_41_80(),
             "Furnace": self.has("Stone") & self.has("Copper Ore"),
             "Geode": self.can_mine_in_the_mines_floor_1_40(),
             "Goat Cheese": self.has("Goat Milk") & self.has("Cheese Press"),
@@ -258,7 +251,6 @@ class StardewLogic:
             "Iridium Ore": self.can_mine_in_the_skull_cavern(),
             "Iron Bar": self.can_smelt("Iron Ore"),
             "Iron Ore": self.can_mine_in_the_mines_floor_41_80() | self.can_mine_in_the_skull_cavern(),
-            "Jade": self.can_mine_in_the_mines_floor_41_80(),
             "Jelly": self.has("Preserves Jar"),
             "JotPK Small Buff": self.has_jotpk_power_level(2),
             "JotPK Medium Buff": self.has_jotpk_power_level(4),
@@ -314,9 +306,7 @@ class StardewLogic:
             "Pine Tar": self.has("Tapper"),
             "Pizza": self.can_spend_money(600),
             "Preserves Jar": self.has_skill_level("Farming", 4),
-            "Prismatic Shard": self.has_year_two(),
             "Purple Mushroom": self.can_mine_in_the_mines_floor_81_120() | self.can_mine_in_the_skull_cavern(),
-            "Quartz": self.can_mine_in_the_mines_floor_1_40(),
             "Rabbit": self.has_building("Deluxe Coop"),
             "Rabbit's Foot": self.has("Rabbit"),
             "Rainbow Shell": self.received("Summer"),
@@ -324,12 +314,11 @@ class StardewLogic:
             "Recycling Machine": self.has_skill_level("Fishing", 4) & self.has("Wood") &
                                  self.has("Stone") & self.has("Iron Bar"),
             "Red Mushroom": self.can_reach_region("Secret Woods") & (self.received("Summer") | self.received("Fall")),
-            "Refined Quartz": self.has("Quartz") | self.has("Fire Quartz") |
+            "Refined Quartz": self.can_smelt("Quartz") | self.can_smelt("Fire Quartz") |
                               (self.has("Recycling Machine") & (self.has("Broken CD") | self.has("Broken Glasses"))),
             "Roe": self.can_fish() & self.has_building("Fish Pond"),
             "Roots Platter": self.can_cook() & self.has_skill_level("Combat", 3) &
                              self.has("Cave Carrot") & self.has("Winter Root"),
-            "Ruby": self.can_mine_in_the_mines_floor_81_120() | self.can_do_panning(),
             "Salad": self.can_spend_money(220) | (
                     self.can_cook() & self.can_have_relationship("Emily", 3) & self.has("Leek") & self.has(
                 "Dandelion")),
@@ -339,6 +328,7 @@ class StardewLogic:
             "Sashimi": self.can_fish() & self.can_cook() & self.can_have_relationship("Linus", 3),
             "Sea Urchin": self.can_reach_region("Tide Pools") | self.received("Summer"),
             "Seaweed": self.can_fish() | self.can_reach_region("Tide Pools"),
+            "Secret Note": self.received("Magnifying Glass"),
             "Sheep": self.has_building("Deluxe Barn"),
             "Shrimp": self.can_crab_pot(),
             "Slime": self.can_mine_in_the_mines_floor_1_40(),
@@ -356,7 +346,6 @@ class StardewLogic:
                                self.has(["Bread", "Cave Carrot", "Eggplant"]),
             "Sweet Pea": self.received("Summer"),
             "Tapper": self.has_skill_level("Foraging", 3),
-            "Topaz": self.can_mine_in_the_mines_floor_1_40(),
             "Tortilla": self.can_cook() & self.can_spend_money(100) & self.has("Corn"),
             "Trash": self.can_crab_pot(),
             "Triple Shot Espresso": (self.has("Hot Java Ring") |
@@ -375,6 +364,7 @@ class StardewLogic:
             "Hay": self.has_building("Silo"),
         })
         self.item_rules.update(self.fish_rules)
+        self.item_rules.update(self.museum_rules)
         self.item_rules.update(self.tree_fruit_rules)
         self.item_rules.update(self.crops_rules)
 
@@ -453,6 +443,9 @@ class StardewLogic:
         if isinstance(items, str):
             return Has(items, self.item_rules)
 
+        if len(items) == 0:
+            return True_()
+
         if count is None or count == len(items):
             return And(self.has(item) for item in items)
 
@@ -481,6 +474,9 @@ class StardewLogic:
 
     def can_reach_any_region(self, spots: Iterable[str]) -> StardewRule:
         return Or(self.can_reach_region(spot) for spot in spots)
+
+    def can_reach_all_regions(self, spots: Iterable[str]) -> StardewRule:
+        return And(self.can_reach_region(spot) for spot in spots)
 
     def can_reach_location(self, spot: str) -> StardewRule:
         return Reach(spot, "Location", self.player)
@@ -572,6 +568,11 @@ class StardewLogic:
 
         return self.can_fish()
 
+    def has_max_fishing_rod(self) -> StardewRule:
+        if self.options[options.ToolProgression] == options.ToolProgression.option_progressive:
+            return self.received("Progressive Fishing Rod", 4)
+        return self.can_get_fishing_xp()
+
     def can_fish(self, difficulty: int = 0) -> StardewRule:
         skill_required = max(0, int((difficulty / 10) - 1))
         if difficulty <= 40:
@@ -582,6 +583,14 @@ class StardewLogic:
             return self.received("Progressive Fishing Rod", number_fishing_rod_required) & skill_rule
 
         return skill_rule
+
+    def has_max_fishing(self) -> StardewRule:
+        skill_rule = self.has_skill_level("Fishing", 10)
+        return self.has_max_fishing_rod() & skill_rule
+
+    def can_fish_chests(self) -> StardewRule:
+        skill_rule = self.has_skill_level("Fishing", 4)
+        return self.has_max_fishing_rod() & skill_rule
 
     def can_catch_fish(self, fish: FishItem) -> StardewRule:
         region_rule = self.can_reach_any_region(fish.locations)
@@ -793,3 +802,18 @@ class StardewLogic:
 
     def has_spring_summer_or_fall(self) -> StardewRule:
         return self.received("Spring") | self.received("Summer") | self.received("Fall")
+
+    def can_find_museum_item(self, item: MuseumItem) -> StardewRule:
+        region_rule = self.can_reach_all_regions(item.locations)
+        geodes_rule = self.has(item.geodes)
+        # monster_rule = self.can_farm_monster(item.monsters)
+        # extra_rule = True_()
+        if "Perfect Skull Cavern" in item.locations:
+            region_rule = self.can_mine_perfectly_in_the_skull_cavern()
+        return region_rule & geodes_rule # & monster_rule & extra_rule
+
+    def can_complete_museum(self) -> StardewRule:
+        rules = [self.can_mine_perfectly_in_the_skull_cavern()]
+        for donation in all_museum_items:
+            rules.append(self.can_find_museum_item(donation))
+        return And(rules)

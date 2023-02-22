@@ -7,6 +7,8 @@ from . import options, locations
 from .bundles import Bundle
 from .locations import LocationTags
 from .logic import StardewLogic, And, month_end_per_skill_level, tool_prices, week_days
+from .minerals_data import all_museum_items, all_mineral_items, all_artifact_items, dwarf_scrolls, skeleton_front, \
+    skeleton_middle, skeleton_back
 
 
 def set_rules(multi_world: MultiWorld, player: int, world_options: options.StardewOptions, logic: StardewLogic,
@@ -123,6 +125,20 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: options.Stard
         MultiWorldRules.set_rule(multi_world.get_location(f"{prefix} Slay Monsters {i}", player),
                                  slay_rule.simplify())
 
+    set_fishsanity_rules(all_location_names, logic, multi_world, player)
+    set_museumsanity_rules(all_location_names, logic, multi_world, player, world_options)
+    set_backpack_rules(logic, multi_world, player, world_options)
+
+    MultiWorldRules.add_rule(multi_world.get_location("Old Master Cannoli", player),
+                             logic.has("Sweet Gem Berry").simplify())
+    MultiWorldRules.add_rule(multi_world.get_location("Galaxy Sword Shrine", player),
+                             logic.has("Prismatic Shard").simplify())
+
+    set_traveling_merchant_rules(logic, multi_world, player)
+    set_arcade_machine_rules(logic, multi_world, player, world_options)
+
+
+def set_fishsanity_rules(all_location_names: list[str], logic: StardewLogic, multi_world: MultiWorld, player: int):
     fish_prefix = "Fishsanity: "
     for fish_location in locations.locations_by_tag[LocationTags.FISHSANITY]:
         if fish_location.name in all_location_names:
@@ -130,19 +146,55 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: options.Stard
             MultiWorldRules.set_rule(multi_world.get_location(fish_location.name, player),
                                      logic.has(fish_name).simplify())
 
-    # Backpacks
+
+def set_museumsanity_rules(all_location_names: list[str], logic: StardewLogic, multi_world: MultiWorld, player: int, world_options):
+    museum_prefix = "Museumsanity: "
+    if world_options[options.Museumsanity] == options.Museumsanity.option_milestones:
+        for museum_milestone in locations.locations_by_tag[LocationTags.MUSEUM_MILESTONES]:
+            set_museum_milestone_rule(logic, multi_world, museum_milestone, museum_prefix, player)
+    elif world_options[options.Museumsanity] != options.Museumsanity.option_none:
+        for museum_location in locations.locations_by_tag[LocationTags.MUSEUM_DONATIONS]:
+            if museum_location.name in all_location_names:
+                donation_name = museum_location.name[len(museum_prefix):]
+                MultiWorldRules.set_rule(multi_world.get_location(museum_location.name, player),
+                                         logic.has(donation_name).simplify())
+
+
+def set_museum_milestone_rule(logic: StardewLogic, multi_world: MultiWorld, museum_milestone, museum_prefix: str, player: int):
+    milestone_name = museum_milestone.name[len(museum_prefix):]
+    donations_suffix = " Donations"
+    minerals_suffix = " Minerals"
+    artifacts_suffix = " Artifacts"
+    rule = None
+    if milestone_name.endswith(donations_suffix):
+        num = int(milestone_name[:len(donations_suffix)])
+        rule = logic.has([item.name for item in all_museum_items], num)
+    elif milestone_name.endswith(minerals_suffix):
+        num = int(milestone_name[:len(minerals_suffix)])
+        rule = logic.has([item.name for item in all_mineral_items], num)
+    elif milestone_name.endswith(artifacts_suffix):
+        num = int(milestone_name[:len(artifacts_suffix)])
+        rule = logic.has([item.name for item in all_artifact_items], num)
+    elif milestone_name == "Dwarf Scrolls":
+        rule = logic.has([item.name for item in dwarf_scrolls])
+    elif milestone_name == "Skeleton Front":
+        rule = logic.has([item.name for item in skeleton_front])
+    elif milestone_name == "Skeleton Middle":
+        rule = logic.has([item.name for item in skeleton_middle])
+    elif milestone_name == "Skeleton Back":
+        rule = logic.has([item.name for item in skeleton_back])
+    MultiWorldRules.set_rule(multi_world.get_location(museum_milestone.name, player), rule.simplify())
+
+
+def set_backpack_rules(logic: StardewLogic, multi_world: MultiWorld, player: int, world_options):
     if world_options[options.BackpackProgression] != options.BackpackProgression.option_vanilla:
         MultiWorldRules.set_rule(multi_world.get_location("Large Pack", player),
                                  logic.can_spend_money(2000).simplify())
         MultiWorldRules.set_rule(multi_world.get_location("Deluxe Pack", player),
                                  (logic.can_spend_money(10000) & logic.received("Progressive Backpack")).simplify())
 
-    MultiWorldRules.add_rule(multi_world.get_location("Old Master Cannoli", player),
-                             logic.has("Sweet Gem Berry").simplify())
-    MultiWorldRules.add_rule(multi_world.get_location("Galaxy Sword Shrine", player),
-                             logic.has("Prismatic Shard").simplify())
 
-    # Traveling Merchant
+def set_traveling_merchant_rules(logic: StardewLogic, multi_world: MultiWorld, player: int):
     for day in week_days:
         item_for_day = f"Traveling Merchant: {day}"
         for i in range(1, 4):
@@ -150,6 +202,8 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: options.Stard
             MultiWorldRules.set_rule(multi_world.get_location(location_name, player),
                                      logic.received(item_for_day))
 
+
+def set_arcade_machine_rules(logic: StardewLogic, multi_world: MultiWorld, player: int, world_options):
     if world_options[options.ArcadeMachineLocations] == options.ArcadeMachineLocations.option_full_shuffling:
         MultiWorldRules.add_rule(multi_world.get_entrance("Play Junimo Kart", player),
                                  (logic.received("Skull Key") & logic.has("Junimo Kart Small Buff")).simplify())
