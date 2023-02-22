@@ -433,6 +433,7 @@ stardew_valley_option_classes = [
     ArcadeMachineLocations,
     HelpWantedLocations,
     Fishsanity,
+    Museumsanity,
     NumberOfPlayerBuffs,
     Goal,
     MultipleDaySleepEnabled,
