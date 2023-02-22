@@ -149,18 +149,18 @@ class SeasonRandomization(Choice):
     option_progressive = 3
 
 
-class SeedSanity(Choice):
+class SeedShuffle(Choice):
     """Should seeds be randomized?
     Pierre now sells a random amount of seasonal seeds and Joja sells them without season requirements, but only in
         huge packs.
     With Disabled, all the seeds will be unlocked from the start.
-    With Randomized, you will start with 10 seeds unlocked, the remaining are Archipelago items.
+    With Randomized, the seeds will be unlocked as Archipelago items
     """
-    internal_name = "seed_randomization"
-    display_name = "Seed Randomization"
+    internal_name = "seed_shuffle"
+    display_name = "Seed Shuffle"
     default = 1
     option_disabled = 0
-    option_randomized = 1
+    option_shuffled = 1
 
 
 class BackpackProgression(Choice):
@@ -405,7 +405,7 @@ stardew_valley_option_classes = [
     BundlePrice,
     EntranceRandomization,
     SeasonRandomization,
-    SeedSanity,
+    SeedShuffle,
     BackpackProgression,
     ToolProgression,
     SkillProgression,
