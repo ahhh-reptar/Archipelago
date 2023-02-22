@@ -14,22 +14,26 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: options.Stard
     all_location_names = list(location.name for location in multi_world.get_locations(player))
 
     for floor in range(5, 120 + 5, 5):
-        MultiWorldRules.add_rule(multi_world.get_entrance(f"Dig to The Mines - Floor {floor}", player),
+        MultiWorldRules.set_rule(multi_world.get_entrance(f"Dig to The Mines - Floor {floor}", player),
                                  logic.can_mine_to_floor(floor).simplify())
 
-    MultiWorldRules.add_rule(multi_world.get_entrance("Enter Quarry", player),
+    MultiWorldRules.set_rule(multi_world.get_entrance("Enter Quarry", player),
                              logic.received("Bridge Repair").simplify())
-    MultiWorldRules.add_rule(multi_world.get_entrance("Enter Secret Woods", player),
+    MultiWorldRules.set_rule(multi_world.get_entrance("Enter Secret Woods", player),
                              logic.has_tool("Axe", "Iron").simplify())
-    MultiWorldRules.add_rule(multi_world.get_entrance("Take Bus to Desert", player),
+    MultiWorldRules.set_rule(multi_world.get_entrance("Take Bus to Desert", player),
                              logic.received("Bus Repair").simplify())
-    MultiWorldRules.add_rule(multi_world.get_entrance("Enter Skull Cavern", player),
+    MultiWorldRules.set_rule(multi_world.get_entrance("Enter Skull Cavern", player),
                              logic.received("Skull Key").simplify())
 
-    MultiWorldRules.add_rule(multi_world.get_entrance("Use Desert Obelisk", player),
+    MultiWorldRules.set_rule(multi_world.get_entrance("Use Desert Obelisk", player),
                              logic.received("Desert Obelisk").simplify())
-    MultiWorldRules.add_rule(multi_world.get_entrance("Use Island Obelisk", player),
+    MultiWorldRules.set_rule(multi_world.get_entrance("Use Island Obelisk", player),
                              logic.received("Island Obelisk").simplify())
+    MultiWorldRules.set_rule(multi_world.get_entrance("Talk to Traveling Merchant", player),
+                             logic.has_traveling_merchant())
+    MultiWorldRules.set_rule(multi_world.get_entrance("Enter Greenhouse", player),
+                             logic.received("Greenhouse"))
 
     # Those checks do not exist if ToolProgression is vanilla
     if world_options[options.ToolProgression] != options.ToolProgression.option_vanilla:
@@ -137,9 +141,9 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: options.Stard
         MultiWorldRules.set_rule(multi_world.get_location("Deluxe Pack", player),
                                  (logic.can_spend_money(10000) & logic.received("Progressive Backpack")).simplify())
 
-    MultiWorldRules.add_rule(multi_world.get_location("Old Master Cannoli", player),
+    MultiWorldRules.set_rule(multi_world.get_location("Old Master Cannoli", player),
                              logic.has("Sweet Gem Berry").simplify())
-    MultiWorldRules.add_rule(multi_world.get_location("Galaxy Sword Shrine", player),
+    MultiWorldRules.set_rule(multi_world.get_location("Galaxy Sword Shrine", player),
                              logic.has("Prismatic Shard").simplify())
 
     # Traveling Merchant

@@ -4,8 +4,8 @@ from dataclasses import dataclass
 from random import Random
 from typing import Optional, Dict, Protocol, List, FrozenSet
 
+from worlds.stardew_valley.data.fish_data import legendary_fish, special_fish, all_fish_items
 from . import options, data
-from .fish_data import legendary_fish, special_fish, all_fish_items
 
 LOCATION_CODE_OFFSET = 717000
 

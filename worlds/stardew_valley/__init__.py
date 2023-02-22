@@ -239,7 +239,6 @@ class StardewValleyWorld(World):
         for option in excluded_options:
             slot_data.pop(option.internal_name)
         slot_data.update({
-            "arcade_machine_progression": self.options[options.ArcadeMachineLocations],
             "seed": self.multiworld.per_slot_randoms[self.player].randrange(1000000000),  # Seed should be max 9 digits
             "randomized_entrances": self.randomized_entrances,
             "modified_bundles": modified_bundles,

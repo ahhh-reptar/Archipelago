@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from dataclasses import field, dataclass
-from typing import Optional, Sized, Tuple, Dict, Union, Iterable, List
+from dataclasses import dataclass, field
+from typing import Dict, Union, Optional, Iterable, Sized, Tuple, List
 
+from worlds.stardew_valley.data.bundle_data import BundleItem
+from worlds.stardew_valley.data.fish_data import all_fish_items
 from . import options
-from .bundle_data import BundleItem
-from .fish_data import all_fish_items
+from .data import all_purchasable_seeds, SeedData, all_crops, CropData
 from .game_item import FishItem
 from .items import all_items, Group
 from .options import StardewOptions
@@ -99,6 +100,7 @@ class StardewLogic:
 
     item_rules: Dict[str, StardewRule] = field(default_factory=dict)
     tree_fruit_rules: Dict[str, StardewRule] = field(default_factory=dict)
+    seed_rules: Dict[str, StardewRule] = field(default_factory=dict)
     crops_rules: Dict[str, StardewRule] = field(default_factory=dict)
     fish_rules: Dict[str, StardewRule] = field(default_factory=dict)
     building_rules: Dict[str, StardewRule] = field(default_factory=dict)
@@ -108,52 +110,19 @@ class StardewLogic:
         self.fish_rules.update({fish.name: self.can_catch_fish(fish) for fish in all_fish_items})
 
         self.tree_fruit_rules.update({
-            "Apple": self.received("Month End") & (self.received("Fall") | self.received("Greenhouse")),
-            "Apricot": self.received("Month End") & (self.received("Spring") | self.received("Greenhouse")),
-            "Cherry": self.received("Month End") & (self.received("Spring") | self.received("Greenhouse")),
-            "Orange": self.received("Month End") & (self.received("Summer") | self.received("Greenhouse")),
-            "Peach": self.received("Month End") & (self.received("Summer") | self.received("Greenhouse")),
-            "Pomegranate": self.received("Month End") & (self.received("Fall") | self.received("Greenhouse")),
+            "Apple": self.received("Month End") & (self.received("Fall") | self.can_reach_region("Greenhouse")),
+            "Apricot": self.received("Month End") & (self.received("Spring") | self.can_reach_region("Greenhouse")),
+            "Cherry": self.received("Month End") & (self.received("Spring") | self.can_reach_region("Greenhouse")),
+            "Orange": self.received("Month End") & (self.received("Summer") | self.can_reach_region("Greenhouse")),
+            "Peach": self.received("Month End") & (self.received("Summer") | self.can_reach_region("Greenhouse")),
+            "Pomegranate": self.received("Month End") & (self.received("Fall") | self.can_reach_region("Greenhouse")),
         })
 
+        self.seed_rules.update({seed.name: self.can_buy_seed(seed) for seed in all_purchasable_seeds})
+        self.crops_rules.update({crop.name: self.can_grow_crop(crop) for crop in all_crops})
         self.crops_rules.update({
-            "Amaranth": self.received("Fall"),
-            "Artichoke": self.has_year_two() & self.received("Fall"),
-            "Beet": self.received("Fall") & self.can_reach_region("The Desert"),
-            "Blue Jazz": self.received("Spring"),
-            "Blueberry": self.received("Summer"),
-            "Bok Choy": self.received("Fall"),
-            "Cauliflower": self.received("Spring"),
-            "Coffee Bean": (self.received("Spring") | self.received("Summer")) &
-                           (self.can_mine_in_the_mines_floor_41_80() | self.has_traveling_merchant()),
-            "Corn": self.received("Summer") | self.received("Fall"),
-            "Cranberries": self.received("Fall"),
-            "Eggplant": self.received("Fall"),
-            "Fairy Rose": self.received("Fall"),
-            "Garlic": self.received("Spring") & self.has_year_two(),
-            "Grape": self.received("Summer") | self.received("Fall"),
-            "Green Bean": self.received("Spring"),
-            "Hops": self.received("Summer"),
-            "Hot Pepper": self.received("Summer"),
-            "Kale": self.received("Spring"),
-            "Melon": self.received("Summer"),
-            "Parsnip": self.received("Spring"),
-            "Poppy": self.received("Summer"),
-            "Potato": self.received("Spring"),
-            "Pumpkin": self.received("Fall"),
-            "Radish": self.received("Summer"),
-            "Red Cabbage": self.has_year_two() & self.received("Summer"),
-            "Rhubarb": self.received("Spring") & self.can_reach_region("The Desert"),
-            "Starfruit": (self.received("Summer") | self.received("Greenhouse")) & self.can_reach_region("The Desert"),
-            "Strawberry": self.received("Spring"),
-            "Summer Spangle": self.received("Summer"),
-            "Sunflower": self.received("Summer") | self.received("Fall"),
-            "Sweet Gem Berry": (self.received("Fall") | self.received("Greenhouse")) & self.has_traveling_merchant(),
-            "Tomato": self.received("Summer"),
-            "Tulip": self.received("Spring"),
-            "Unmilled Rice": self.received("Spring") & self.has_year_two(),
-            "Wheat": self.received("Summer") | self.received("Fall"),
-            "Yam": self.received("Fall"),
+            "Coffee Bean": (self.received("Spring") | self.received("Summer")) & self.has_traveling_merchant(),
+
         })
 
         self.item_rules.update({
@@ -376,6 +345,7 @@ class StardewLogic:
         })
         self.item_rules.update(self.fish_rules)
         self.item_rules.update(self.tree_fruit_rules)
+        self.item_rules.update(self.seed_rules)
         self.item_rules.update(self.crops_rules)
 
         self.building_rules.update({
@@ -462,7 +432,7 @@ class StardewLogic:
         return Count(count, (self.has(item) for item in items))
 
     def received(self, items: Union[str, Iterable[str]], count: Optional[int] = 1) -> StardewRule:
-        if count == 0:
+        if count == 0 or not items:
             return True_()
 
         if isinstance(items, str):
@@ -582,6 +552,19 @@ class StardewLogic:
             return self.received("Progressive Fishing Rod", number_fishing_rod_required) & skill_rule
 
         return skill_rule
+
+    def can_buy_seed(self, seed: SeedData):
+        season_rule = self.received(seed.seasons)
+        region_rule = self.can_reach_any_region(seed.regions)
+        year_rule = self.has_year_two() if seed.year == 2 else True_()
+        return season_rule & region_rule & year_rule
+
+    def can_grow_crop(self, crop: CropData):
+        season_rule = self.received(crop.farm_growth_seasons)
+        seed_rule = self.has(crop.seed.name)
+        farm_rule = self.can_reach_region("Farm") & season_rule
+        region_rule = farm_rule | self.can_reach_region("Greenhouse")
+        return seed_rule & region_rule
 
     def can_catch_fish(self, fish: FishItem) -> StardewRule:
         region_rule = self.can_reach_any_region(fish.locations)

@@ -113,6 +113,40 @@ id,name,classification,groups
 125,Summer,progression,SEASON
 126,Fall,progression,SEASON
 127,Winter,progression,SEASON
+128,Amaranth Seeds,progression,SEED
+129,Artichoke Seeds,progression,SEED
+130,Beet Seeds,progression,SEED
+131,Blue Jazz Seeds,progression,SEED
+132,Blueberry Seeds,progression,SEED
+133,Bok Choy Seeds,progression,SEED
+134,Cauliflower Seeds,progression,SEED
+135,Corn Seeds,progression,SEED
+136,Cranberries Seeds,progression,SEED
+137,Eggplant Seeds,progression,SEED
+138,Fairy Seeds,progression,SEED
+139,Garlic Seeds,progression,SEED
+140,Grape Starter,progression,SEED
+141,Bean Starter,progression,SEED
+142,Hops Starter,progression,SEED
+143,Hot Pepper Seeds,progression,SEED
+144,Kale Seeds,progression,SEED
+145,Melon Seeds,progression,SEED
+146,Parsnip Seeds,progression,SEED
+147,Poppy Seeds,progression,SEED
+148,Potato Seeds,progression,SEED
+149,Pumpkin Seeds,progression,SEED
+150,Radish Seeds,progression,SEED
+151,Red Cabbage Seeds,progression,SEED
+152,Rhubarb Seeds,progression,SEED
+153,Starfruit Seeds,progression,SEED
+154,Strawberry Seeds,progression,SEED
+155,Spangle Seeds,progression,SEED
+156,Sunflower Seeds,progression,SEED
+157,Tomato Seeds,progression,SEED
+158,Tulip Bulb,progression,SEED
+159,Rice Shoot,progression,SEED
+160,Wheat Seeds,progression,SEED
+161,Yam Seeds,progression,SEED
 5000,Resource Pack: 500 Money,useful,"BASE_RESOURCE,RESOURCE_PACK"
 5001,Resource Pack: 1000 Money,useful,"BASE_RESOURCE,RESOURCE_PACK"
 5002,Resource Pack: 1500 Money,useful,"BASE_RESOURCE,RESOURCE_PACK"
