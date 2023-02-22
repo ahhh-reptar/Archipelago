@@ -51,6 +51,7 @@ class Group(enum.Enum):
     FISHING_RESOURCE = enum.auto()
     SEASON = enum.auto()
     TRAVELING_MERCHANT_DAY = enum.auto()
+    MUSEUM = enum.auto()
 
 
 @dataclass(frozen=True)
@@ -220,6 +221,7 @@ def create_unique_items(item_factory: StardewItemFactory, world_options: Stardew
     items.append(item_factory("Beach Bridge"))
     create_special_quest_rewards(item_factory, items)
     create_stardrops(item_factory, items)
+    create_museum_items(item_factory, world_options, items)
     create_arcade_machine_items(item_factory, world_options, items)
     items.append(item_factory(random.choice(items_by_group[Group.GALAXY_WEAPON])))
     items.append(
@@ -314,6 +316,13 @@ def create_special_quest_rewards(item_factory: StardewItemFactory, items: List[I
 
 def create_stardrops(item_factory: StardewItemFactory, items: List[Item]):
     items.append(item_factory("Stardrop"))  # The Mines level 100
+    items.append(item_factory("Stardrop"))  # Old Master Cannoli
+
+
+def create_museum_items(item_factory: StardewItemFactory, world_options: StardewOptions, items: List[Item]):
+    if world_options[options.Museumsanity] == options.Museumsanity.option_none:
+        return
+    items.extend([item_factory(item) for item in items_by_group[Group.MUSEUM]])
     items.append(item_factory("Stardrop"))  # Old Master Cannoli
 
 
