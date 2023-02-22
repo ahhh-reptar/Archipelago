@@ -89,9 +89,9 @@ def mineral(name: str, item_id: int, locations: Set[str], geodes: Set[str], mons
 
 
 def museum_item(name: str, item_id: int, locations: frozenset[str], geodes: frozenset[str], monsters: frozenset[str]) -> MuseumItem:
-    museum_item = MuseumItem(name, item_id, frozenset(locations), frozenset(geodes), frozenset(monsters))
-    all_museum_items.append(museum_item)
-    return museum_item
+    item = MuseumItem(name, item_id, frozenset(locations), frozenset(geodes), frozenset(monsters))
+    all_museum_items.append(item)
+    return item
 
 
 dwarf_scroll_i = artifact("Dwarf Scroll I", 96, mines_20, none, unlikely)
