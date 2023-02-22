@@ -81,7 +81,7 @@ class False_(StardewRule):  # noqa
 
 
 class Or(StardewRule):
-    rules: frozenset[StardewRule]
+    rules: FrozenSet[StardewRule]
 
     def __init__(self, rule: Union[StardewRule, Iterable[StardewRule]], *rules: StardewRule):
         rules_list = set()
@@ -147,7 +147,7 @@ class Or(StardewRule):
 
 
 class And(StardewRule):
-    rules: frozenset[StardewRule]
+    rules: FrozenSet[StardewRule]
 
     def __init__(self, rule: Union[StardewRule, Iterable[StardewRule]], *rules: StardewRule):
         rules_list = set()
