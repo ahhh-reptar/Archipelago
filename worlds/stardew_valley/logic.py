@@ -9,7 +9,7 @@ from . import options
 from .data import all_purchasable_seeds, SeedData, all_crops, CropData
 from .game_item import FishItem, MuseumItem
 from .items import all_items, Group
-from .minerals_data import all_museum_items
+from worlds.stardew_valley.data.minerals_data import all_museum_items
 from .options import StardewOptions
 from .stardew_rule import False_, Reach, Or, True_, Received, Count, And, Has, TotalReceived, StardewRule
 

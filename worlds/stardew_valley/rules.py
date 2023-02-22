@@ -7,7 +7,7 @@ from . import options, locations
 from .bundles import Bundle
 from .locations import LocationTags
 from .logic import StardewLogic, And, month_end_per_skill_level, tool_prices, week_days
-from .minerals_data import all_museum_items, all_mineral_items, all_artifact_items, dwarf_scrolls, skeleton_front, \
+from worlds.stardew_valley.data.minerals_data import all_museum_items, all_mineral_items, all_artifact_items, dwarf_scrolls, skeleton_front, \
     skeleton_middle, skeleton_back
 
 

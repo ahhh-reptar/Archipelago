@@ -1,6 +1,6 @@
 from typing import Set, List, Dict, Any
 
-from .game_item import MuseumItem
+from worlds.stardew_valley.game_item import MuseumItem
 
 none = set({})
 stardew = {"Stardew Valley"}
