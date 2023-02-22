@@ -233,27 +233,16 @@ class StardewValleyWorld(World):
             key, value = self.modified_bundles[bundle_key].to_pair()
             modified_bundles[key] = value
 
-        return {
-            "starting_money": self.options[options.StartingMoney],
-            "entrance_randomization": self.options[options.EntranceRandomization],
-            "backpack_progression": self.options[options.BackpackProgression],
-            "tool_progression": self.options[options.ToolProgression],
-            "elevator_progression": self.options[options.TheMinesElevatorsProgression],
-            "skill_progression": self.options[options.SkillProgression],
-            "building_progression": self.options[options.BuildingProgression],
+        excluded_options = [options.ResourcePackMultiplier, options.BundleRandomization, options.BundlePrice,
+                            options.NumberOfPlayerBuffs]
+        slot_data = dict(self.options.options)
+        for option in excluded_options:
+            slot_data.pop(option.internal_name)
+        slot_data.update({
             "arcade_machine_progression": self.options[options.ArcadeMachineLocations],
-            "help_wanted_locations": self.options[options.HelpWantedLocations],
-            "fishsanity": self.options[options.Fishsanity],
-            "death_link": self.options["death_link"],
-            "goal": self.options[options.Goal],
             "seed": self.multiworld.per_slot_randoms[self.player].randrange(1000000000),  # Seed should be max 9 digits
-            "multiple_day_sleep_enabled": self.options[options.MultipleDaySleepEnabled],
-            "multiple_day_sleep_cost": self.options[options.MultipleDaySleepCost],
-            "experience_multiplier": self.options[options.ExperienceMultiplier],
-            "debris_multiplier": self.options[options.DebrisMultiplier],
-            "quick_start": self.options[options.QuickStart],
-            "gifting": self.options[options.Gifting],
-            "gift_tax": self.options[options.GiftTax],
+            "randomized_entrances": self.randomized_entrances,
             "modified_bundles": modified_bundles,
-            "randomized_entrances": self.randomized_entrances
-        }
+        })
+
+        return slot_data

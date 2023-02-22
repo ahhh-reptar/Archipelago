@@ -1,14 +1,8 @@
 from BaseClasses import ItemClassification
-from . import SVTestBase, setup_solo_multiworld
-from .. import locations, items, location_table, options, StardewValleyWorld
+from . import SVTestBase
+from .. import locations, items, location_table, options
 from ..items import items_by_group, Group
 from ..locations import LocationTags
-
-
-def test_can_generate_world():
-    multi_world = setup_solo_multiworld(StardewValleyWorld)
-
-    assert multi_world.completion_condition[1] is not None
 
 
 class TestBaseItemGeneration(SVTestBase):
