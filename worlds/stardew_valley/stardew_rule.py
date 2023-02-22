@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Iterable, Dict, List, Union
+from typing import Iterable, Dict, List, Union, FrozenSet
 
 from BaseClasses import CollectionState, ItemClassification
 from .items import item_table
