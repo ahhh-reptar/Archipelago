@@ -79,9 +79,4 @@ if __name__ == '__main__':
 
         locations_to_write.append(location)
 
-    counter = 1200
-    for museum_item in all_museum_items:
-        counter += 1
-        locations_to_write.append(LocationData(counter, list(museum_item.locations)[0], f"Museumsanity: {museum_item.name}", frozenset({LocationTags.MUSEUM_DONATIONS})))
-
     write_location_csv(locations_to_write)
