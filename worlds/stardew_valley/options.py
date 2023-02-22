@@ -149,7 +149,7 @@ class SeasonRandomization(Choice):
     option_progressive = 3
 
 
-class SeedRandomization(Choice):
+class SeedSanity(Choice):
     """Should seeds be randomized?
     Pierre now sells a random amount of seasonal seeds and Joja sells them without season requirements, but only in
         huge packs.
@@ -405,7 +405,7 @@ stardew_valley_option_classes = [
     BundlePrice,
     EntranceRandomization,
     SeasonRandomization,
-    SeedRandomization,
+    SeedSanity,
     BackpackProgression,
     ToolProgression,
     SkillProgression,
