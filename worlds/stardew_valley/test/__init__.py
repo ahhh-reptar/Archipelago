@@ -14,7 +14,7 @@ class SVTestBase(WorldTestBase):
 
     def world_setup(self, *args, **kwargs):
         super().world_setup(*args, **kwargs)
-        self.world = self.multiworld.worlds[self.player]
+        self.world = self.multiworld.worlds[self.player]  # noqa
 
 
 pre_generated_worlds = {}

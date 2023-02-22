@@ -49,6 +49,7 @@ class TestProgressiveToolsLogic(SVTestBase):
     def test_old_master_cannoli(self):
         self.multiworld.state.collect(self.get_item_by_name("Progressive Axe"), event=True)
         self.multiworld.state.collect(self.get_item_by_name("Progressive Axe"), event=True)
+        self.multiworld.state.collect(self.get_item_by_name("Summer"), event=True)
 
         assert not self.world.logic.can_reach_location("Old Master Cannoli")(self.multiworld.state)
 

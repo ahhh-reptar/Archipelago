@@ -1,4 +1,4 @@
-from ..bundle_data import all_bundle_items
+from worlds.stardew_valley.data.bundle_data import all_bundle_items
 
 
 def test_all_bundle_items_have_3_parts():
@@ -11,4 +11,3 @@ def test_all_bundle_items_have_3_parts():
         assert amount > 0
         quality = bundle_item.quality
         assert quality >= 0
-
