@@ -1,17 +1,19 @@
 import itertools
-from typing import Dict
+from typing import Dict, List
 
 from BaseClasses import MultiWorld
 from worlds.generic import Rules as MultiWorldRules
+from worlds.stardew_valley.data.minerals_data import all_museum_items, all_mineral_items, all_artifact_items, \
+    dwarf_scrolls, skeleton_front, \
+    skeleton_middle, skeleton_back
 from . import options, locations
 from .bundles import Bundle
 from .locations import LocationTags
 from .logic import StardewLogic, And, month_end_per_skill_level, tool_prices, week_days
-from worlds.stardew_valley.data.minerals_data import all_museum_items, all_mineral_items, all_artifact_items, dwarf_scrolls, skeleton_front, \
-    skeleton_middle, skeleton_back
+from .options import StardewOptions
 
 
-def set_rules(multi_world: MultiWorld, player: int, world_options: options.StardewOptions, logic: StardewLogic,
+def set_rules(multi_world: MultiWorld, player: int, world_options: StardewOptions, logic: StardewLogic,
               current_bundles: Dict[str, Bundle]):
     all_location_names = list(location.name for location in multi_world.get_locations(player))
 
@@ -142,7 +144,7 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: options.Stard
     set_arcade_machine_rules(logic, multi_world, player, world_options)
 
 
-def set_fishsanity_rules(all_location_names: list[str], logic: StardewLogic, multi_world: MultiWorld, player: int):
+def set_fishsanity_rules(all_location_names: List[str], logic: StardewLogic, multi_world: MultiWorld, player: int):
     fish_prefix = "Fishsanity: "
     for fish_location in locations.locations_by_tag[LocationTags.FISHSANITY]:
         if fish_location.name in all_location_names:
@@ -151,7 +153,8 @@ def set_fishsanity_rules(all_location_names: list[str], logic: StardewLogic, mul
                                      logic.has(fish_name).simplify())
 
 
-def set_museumsanity_rules(all_location_names: list[str], logic: StardewLogic, multi_world: MultiWorld, player: int, world_options):
+def set_museumsanity_rules(all_location_names: List[str], logic: StardewLogic, multi_world: MultiWorld, player: int,
+                           world_options: StardewOptions):
     museum_prefix = "Museumsanity: "
     if world_options[options.Museumsanity] == options.Museumsanity.option_milestones:
         for museum_milestone in locations.locations_by_tag[LocationTags.MUSEUM_MILESTONES]:
@@ -164,7 +167,8 @@ def set_museumsanity_rules(all_location_names: list[str], logic: StardewLogic, m
                                          logic.has(donation_name).simplify())
 
 
-def set_museum_milestone_rule(logic: StardewLogic, multi_world: MultiWorld, museum_milestone, museum_prefix: str, player: int):
+def set_museum_milestone_rule(logic: StardewLogic, multi_world: MultiWorld, museum_milestone, museum_prefix: str,
+                              player: int):
     milestone_name = museum_milestone.name[len(museum_prefix):]
     donations_suffix = " Donations"
     minerals_suffix = " Minerals"

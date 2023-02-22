@@ -1,4 +1,4 @@
-from typing import Set, List, Dict, Any
+from typing import Set, List, FrozenSet
 
 from worlds.stardew_valley.game_item import MuseumItem
 
@@ -76,19 +76,22 @@ all_mineral_items: List[MuseumItem] = []
 all_museum_items: List[MuseumItem] = []
 
 
-def artifact(name: str, item_id: int, locations: Set[str], geodes: Set[str], monsters: Set[str] = frozenset()) -> MuseumItem:
+def artifact(name: str, item_id: int, locations: Set[str], geodes: Set[str],
+             monsters: Set[str] = frozenset()) -> MuseumItem:
     artifact_item = museum_item(name, item_id, frozenset(locations), frozenset(geodes), frozenset(monsters))
     all_artifact_items.append(artifact_item)
     return artifact_item
 
 
-def mineral(name: str, item_id: int, locations: Set[str], geodes: Set[str], monsters: Set[str] = frozenset()) -> MuseumItem:
+def mineral(name: str, item_id: int, locations: Set[str], geodes: Set[str],
+            monsters: Set[str] = frozenset()) -> MuseumItem:
     mineral_item = museum_item(name, item_id, frozenset(locations), frozenset(geodes), frozenset(monsters))
     all_mineral_items.append(mineral_item)
     return mineral_item
 
 
-def museum_item(name: str, item_id: int, locations: frozenset[str], geodes: frozenset[str], monsters: frozenset[str]) -> MuseumItem:
+def museum_item(name: str, item_id: int, locations: FrozenSet[str], geodes: FrozenSet[str],
+                monsters: FrozenSet[str]) -> MuseumItem:
     item = MuseumItem(name, item_id, frozenset(locations), frozenset(geodes), frozenset(monsters))
     all_museum_items.append(item)
     return item
