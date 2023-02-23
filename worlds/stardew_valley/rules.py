@@ -209,9 +209,9 @@ def set_museum_milestone_rule(logic: StardewLogic, multi_world: MultiWorld, muse
     MultiWorldRules.set_rule(multi_world.get_location(museum_milestone.name, player), rule.simplify())
 
 
-def get_museum_item_count_rule(logic, donations_suffix, milestone_name, accepted_items):
+def get_museum_item_count_rule(logic, suffix, milestone_name, accepted_items):
     metal_detector = "Traveling Merchant Metal Detector"
-    num = int(milestone_name[:milestone_name.index(donations_suffix)])
+    num = int(milestone_name[:milestone_name.index(suffix)])
     required_detectors = (num - 1) * 5 // len(accepted_items)
     rule = logic.has([item.name for item in accepted_items], num) & logic.received(metal_detector, required_detectors)
     return rule

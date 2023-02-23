@@ -322,8 +322,8 @@ def create_stardrops(item_factory: StardewItemFactory, items: List[Item]):
 def create_museum_items(item_factory: StardewItemFactory, world_options: StardewOptions, items: List[Item]):
     if world_options[options.Museumsanity] == options.Museumsanity.option_none:
         return
-    items.extend(item_factory(item) for item in ["Magic Rock Candy"] * 8)
-    items.extend(item_factory(item) for item in ["Ancient Seeds"] * 8)
+    items.extend(item_factory(item) for item in ["Magic Rock Candy"] * 5)
+    items.extend(item_factory(item) for item in ["Ancient Seeds"] * 5)
     items.extend(item_factory(item) for item in ["Traveling Merchant Metal Detector"] * 4)
     items.append(item_factory("Ancient Seed Recipe"))
     items.append(item_factory("Stardrop"))
