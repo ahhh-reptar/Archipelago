@@ -29,6 +29,8 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: StardewOption
                              logic.received("Bus Repair").simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance("Enter Skull Cavern", player),
                              logic.received("Skull Key").simplify())
+    MultiWorldRules.set_rule(multi_world.get_entrance("Mine to Skull Cavern Floor 100", player),
+                             logic.can_mine_perfectly_in_the_skull_cavern().simplify())
 
     MultiWorldRules.set_rule(multi_world.get_entrance("Use Desert Obelisk", player),
                              logic.received("Desert Obelisk").simplify())
@@ -175,13 +177,13 @@ def set_museum_milestone_rule(logic: StardewLogic, multi_world: MultiWorld, muse
     artifacts_suffix = " Artifacts"
     rule = None
     if milestone_name.endswith(donations_suffix):
-        num = int(milestone_name[:len(donations_suffix)])
+        num = int(milestone_name[:milestone_name.index(donations_suffix)])
         rule = logic.has([item.name for item in all_museum_items], num)
     elif milestone_name.endswith(minerals_suffix):
-        num = int(milestone_name[:len(minerals_suffix)])
+        num = int(milestone_name[:milestone_name.index(minerals_suffix)])
         rule = logic.has([item.name for item in all_mineral_items], num)
     elif milestone_name.endswith(artifacts_suffix):
-        num = int(milestone_name[:len(artifacts_suffix)])
+        num = int(milestone_name[:milestone_name.index(artifacts_suffix)])
         rule = logic.has([item.name for item in all_artifact_items], num)
     elif milestone_name == "Dwarf Scrolls":
         rule = logic.has([item.name for item in dwarf_scrolls])
@@ -191,6 +193,8 @@ def set_museum_milestone_rule(logic: StardewLogic, multi_world: MultiWorld, muse
         rule = logic.has([item.name for item in skeleton_middle])
     elif milestone_name == "Skeleton Back":
         rule = logic.has([item.name for item in skeleton_back])
+    if rule is None:
+        return
     MultiWorldRules.set_rule(multi_world.get_location(museum_milestone.name, player), rule.simplify())
 
 

@@ -322,8 +322,10 @@ def create_stardrops(item_factory: StardewItemFactory, items: List[Item]):
 def create_museum_items(item_factory: StardewItemFactory, world_options: StardewOptions, items: List[Item]):
     if world_options[options.Museumsanity] == options.Museumsanity.option_none:
         return
-    items.extend([item_factory(item) for item in items_by_group[Group.MUSEUM]])
-    items.append(item_factory("Stardrop"))  # Old Master Cannoli
+    items.extend(item_factory(item) for item in ["Magic Rock Candy"] * 8)
+    items.extend(item_factory(item) for item in ["Ancient Seeds"] * 8)
+    items.append(item_factory("Ancient Seed Recipe"))
+    items.append(item_factory("Stardrop"))
 
 
 def create_arcade_machine_items(item_factory: StardewItemFactory, world_options: StardewOptions,

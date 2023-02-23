@@ -390,7 +390,7 @@ class StardewLogic:
             "A Winter Mystery": self.received("Winter"),
             "Strange Note": self.received("Magnifying Glass") & self.can_reach_region("Secret Woods") & self.has(
                 "Maple Syrup"),
-            "Cryptic Note": self.received("Magnifying Glass") & self.can_mine_perfectly_in_the_skull_cavern(),
+            "Cryptic Note": self.received("Magnifying Glass") & self.can_reach_region("Skull Cavern Floor 100"),
             "Fresh Fruit": self.has("Apricot"),
             "Aquatic Research": self.has("Pufferfish"),
             "A Soldier's Star": self.can_have_relationship("Kent") & self.has("Starfruit"),
@@ -791,8 +791,6 @@ class StardewLogic:
         geodes_rule = self.has(item.geodes)
         # monster_rule = self.can_farm_monster(item.monsters)
         # extra_rule = True_()
-        if "Perfect Skull Cavern" in item.locations:
-            region_rule = self.can_mine_perfectly_in_the_skull_cavern()
         return region_rule & geodes_rule # & monster_rule & extra_rule
 
     def can_complete_museum(self) -> StardewRule:
