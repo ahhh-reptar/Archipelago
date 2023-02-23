@@ -325,7 +325,7 @@ def create_museum_items(item_factory: StardewItemFactory, world_options: Stardew
     items.extend(item_factory(item) for item in ["Magic Rock Candy"] * 5)
     items.extend(item_factory(item) for item in ["Ancient Seeds"] * 5)
     items.extend(item_factory(item) for item in ["Traveling Merchant Metal Detector"] * 4)
-    items.append(item_factory("Ancient Seed Recipe"))
+    items.append(item_factory("Ancient Seeds Recipe"))
     items.append(item_factory("Stardrop"))
 
 
