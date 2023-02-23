@@ -150,6 +150,7 @@ id,name,classification,groups
 162,Magic Rock Candy,useful,MUSEUM
 163,Ancient Seed Recipe,progression,MUSEUM
 164,Ancient Seeds,useful,MUSEUM
+165,Traveling Merchant Metal Detector,progression,MUSEUM
 5000,Resource Pack: 500 Money,useful,"BASE_RESOURCE,RESOURCE_PACK"
 5001,Resource Pack: 1000 Money,useful,"BASE_RESOURCE,RESOURCE_PACK"
 5002,Resource Pack: 1500 Money,useful,"BASE_RESOURCE,RESOURCE_PACK"

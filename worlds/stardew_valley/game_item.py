@@ -29,6 +29,7 @@ class MuseumItem(GameItem):
     locations: FrozenSet[str]
     geodes: FrozenSet[str]
     monsters: FrozenSet[str]
+    difficulty: float
 
     def __repr__(self):
         return f"{self.name} [{self.item_id}] (Locations: {self.locations} |" \

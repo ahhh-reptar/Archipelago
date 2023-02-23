@@ -76,74 +76,86 @@ all_mineral_items: List[MuseumItem] = []
 all_museum_items: List[MuseumItem] = []
 
 
-def artifact(name: str, item_id: int, locations: Set[str], geodes: Set[str],
+def artifact(name: str, item_id: int, difficulty: float, locations: Set[str], geodes: Set[str],
              monsters: Set[str] = frozenset()) -> MuseumItem:
-    artifact_item = museum_item(name, item_id, frozenset(locations), frozenset(geodes), frozenset(monsters))
+    artifact_item = museum_item(name, item_id, difficulty, frozenset(locations), frozenset(geodes), frozenset(monsters))
     all_artifact_items.append(artifact_item)
     return artifact_item
 
 
 def mineral(name: str, item_id: int, locations: Set[str], geodes: Set[str],
-            monsters: Set[str] = frozenset()) -> MuseumItem:
-    mineral_item = museum_item(name, item_id, frozenset(locations), frozenset(geodes), frozenset(monsters))
+            monsters: Set[str] = frozenset(), difficulty: float = -1) -> MuseumItem:
+
+    if difficulty == -1:
+        difficulty = 0
+        if "Geode" in geodes:
+            difficulty += 1.0 / 32.0
+        if "Frozen Geode" in geodes:
+            difficulty += 1.0 / 30.0
+        if "Magma Geode" in geodes:
+            difficulty += 1.0 / 26.0
+        if "Omni Geode" in geodes:
+            difficulty += 31.0 / 2750.0
+
+    mineral_item = museum_item(name, item_id, difficulty, frozenset(locations), frozenset(geodes), frozenset(monsters))
     all_mineral_items.append(mineral_item)
     return mineral_item
 
 
-def museum_item(name: str, item_id: int, locations: FrozenSet[str], geodes: FrozenSet[str],
+def museum_item(name: str, item_id: int, difficulty: float, locations: FrozenSet[str], geodes: FrozenSet[str],
                 monsters: FrozenSet[str]) -> MuseumItem:
-    item = MuseumItem(name, item_id, frozenset(locations), frozenset(geodes), frozenset(monsters))
+    item = MuseumItem(name, item_id, frozenset(locations), frozenset(geodes), frozenset(monsters), difficulty)
     all_museum_items.append(item)
     return item
 
 
-dwarf_scroll_i = artifact("Dwarf Scroll I", 96, mines_20, none, unlikely)
-dwarf_scroll_ii = artifact("Dwarf Scroll II", 97, mines_20, none, unlikely)
-dwarf_scroll_iii = artifact("Dwarf Scroll III", 98, mines_60, none, blue_slime)
-dwarf_scroll_iv = artifact("Dwarf Scroll IV", 99, mines_100, none)
-chipped_amphora = artifact("Chipped Amphora", 100, town, trove)
-arrowhead = artifact("Arrowhead", 101, mountain_forest_bus, trove)
-ancient_doll = artifact("Ancient Doll", 103, mountain_forest_bus, trove_fishing)
-elvish_jewelry = artifact("Elvish Jewelry", 104, forest, trove_fishing)
-chewing_stick = artifact("Chewing Stick", 105, mountain_forest_town, trove_fishing)
-ornamental_fan = artifact("Ornamental Fan", 106, beach_forest_town, trove_fishing)
-dinosaur_egg = artifact("Dinosaur Egg", 107, mountain_skull_cavern, fishing, pepper_rex)
-rare_disc = artifact("Rare Disc", 108, stardew, trove_fishing, unlikely)
-ancient_sword = artifact("Ancient Sword", 109, forest_mountain, trove_fishing)
-rusty_spoon = artifact("Rusty Spoon", 110, town, trove_fishing)
-rusty_spur = artifact("Rusty Spur", 111, farm, trove_fishing)
-rusty_cog = artifact("Rusty Cog", 112, mountain, trove_fishing)
-chicken_statue = artifact("Chicken Statue", 113, farm, trove_fishing)
-ancient_seed = artifact("Ancient Seed", 114, forest_mountain, trove_fishing, unlikely)
-prehistoric_tool = artifact("Prehistoric Tool", 115, mountain_forest_bus, trove_fishing)
-dried_starfish = artifact("Dried Starfish", 116, beach, trove_fishing)
-anchor = artifact("Anchor", 117, beach, trove_fishing)
-glass_shards = artifact("Glass Shards", 118, beach, trove_fishing)
-bone_flute = artifact("Bone Flute", 119, mountain_forest_town, trove_fishing)
-prehistoric_handaxe = artifact("Prehistoric Handaxe", 120, mountain_forest_bus, trove)
-dwarvish_helm = artifact("Dwarvish Helm", 121, mines_20, geode_omni_trove)
-dwarf_gadget = artifact("Dwarf Gadget", 122, mines_60, magma_omni_trove)
-ancient_drum = artifact("Ancient Drum", 123, bus_forest_town, frozen_omni_trove)
-golden_mask = artifact("Golden Mask", 124, desert, trove)
-golden_relic = artifact("Golden Relic", 125, desert, trove)
-strange_doll_green = artifact("Strange Doll (Green)", 126, town, secret_note)
-strange_doll = artifact("Strange Doll", 127, desert, secret_note)
-prehistoric_scapula = artifact("Prehistoric Scapula", 579, bone_forest_town, none)
-prehistoric_tibia = artifact("Prehistoric Tibia", 580, bone_forest_railroad, none)
-prehistoric_skull = artifact("Prehistoric Skull", 581, bone_mountain, none)
-skeletal_hand = artifact("Skeletal Hand", 582, bone_backwoods_beach, none)
-prehistoric_rib = artifact("Prehistoric Rib", 583, bone_farm_town, none, pepper_rex)
-prehistoric_vertebra = artifact("Prehistoric Vertebra", 584, bone_bus, none, pepper_rex)
-skeletal_tail = artifact("Skeletal Tail", 585, bone_mines, fishing)
-nautilus_fossil = artifact("Nautilus Fossil", 586, bone_beach, fishing)
-amphibian_fossil = artifact("Amphibian Fossil", 587, bone_forest_mountain, fishing)
-palm_fossil = artifact("Palm Fossil", 588, bone_desert_forest_beach, none)
-trilobite = artifact("Trilobite", 589, bone_beach_forest_mountain, none)
+dwarf_scroll_i = artifact("Dwarf Scroll I", 96, 5.6, mines_20, none, unlikely)
+dwarf_scroll_ii = artifact("Dwarf Scroll II", 97, 3, mines_20, none, unlikely)
+dwarf_scroll_iii = artifact("Dwarf Scroll III", 98, 7.5, mines_60, none, blue_slime)
+dwarf_scroll_iv = artifact("Dwarf Scroll IV", 99, 4, mines_100, none)
+chipped_amphora = artifact("Chipped Amphora", 100, 6.7, town, trove)
+arrowhead = artifact("Arrowhead", 101, 8.5, mountain_forest_bus, trove)
+ancient_doll = artifact("Ancient Doll", 103, 13.1, mountain_forest_bus, trove_fishing)
+elvish_jewelry = artifact("Elvish Jewelry", 104, 5.3, forest, trove_fishing)
+chewing_stick = artifact("Chewing Stick", 105, 10.3, mountain_forest_town, trove_fishing)
+ornamental_fan = artifact("Ornamental Fan", 106, 7.4, beach_forest_town, trove_fishing)
+dinosaur_egg = artifact("Dinosaur Egg", 107, 11.4, mountain_skull_cavern, fishing, pepper_rex)
+rare_disc = artifact("Rare Disc", 108, 5.6, stardew, trove_fishing, unlikely)
+ancient_sword = artifact("Ancient Sword", 109, 5.8, forest_mountain, trove_fishing)
+rusty_spoon = artifact("Rusty Spoon", 110, 9.6, town, trove_fishing)
+rusty_spur = artifact("Rusty Spur", 111, 15.6, farm, trove_fishing)
+rusty_cog = artifact("Rusty Cog", 112, 9.6, mountain, trove_fishing)
+chicken_statue = artifact("Chicken Statue", 113, 13.5, farm, trove_fishing)
+ancient_seed = artifact("Ancient Seed", 114, 8.4, forest_mountain, trove_fishing, unlikely)
+prehistoric_tool = artifact("Prehistoric Tool", 115, 11.1, mountain_forest_bus, trove_fishing)
+dried_starfish = artifact("Dried Starfish", 116, 12.5, beach, trove_fishing)
+anchor = artifact("Anchor", 117, 8.5, beach, trove_fishing)
+glass_shards = artifact("Glass Shards", 118, 11.5, beach, trove_fishing)
+bone_flute = artifact("Bone Flute", 119, 6.3, mountain_forest_town, trove_fishing)
+prehistoric_handaxe = artifact("Prehistoric Handaxe", 120, 13.7, mountain_forest_bus, trove)
+dwarvish_helm = artifact("Dwarvish Helm", 121, 8.7, mines_20, geode_omni_trove)
+dwarf_gadget = artifact("Dwarf Gadget", 122, 9.7, mines_60, magma_omni_trove)
+ancient_drum = artifact("Ancient Drum", 123, 9.5, bus_forest_town, frozen_omni_trove)
+golden_mask = artifact("Golden Mask", 124, 6.7, desert, trove)
+golden_relic = artifact("Golden Relic", 125, 9.7, desert, trove)
+strange_doll_green = artifact("Strange Doll (Green)", 126, 10, town, secret_note)
+strange_doll = artifact("Strange Doll", 127, 10, desert, secret_note)
+prehistoric_scapula = artifact("Prehistoric Scapula", 579, 6.2, bone_forest_town, none)
+prehistoric_tibia = artifact("Prehistoric Tibia", 580, 16.6, bone_forest_railroad, none)
+prehistoric_skull = artifact("Prehistoric Skull", 581, 3.9, bone_mountain, none)
+skeletal_hand = artifact("Skeletal Hand", 582, 7.9, bone_backwoods_beach, none)
+prehistoric_rib = artifact("Prehistoric Rib", 583, 15, bone_farm_town, none, pepper_rex)
+prehistoric_vertebra = artifact("Prehistoric Vertebra", 584, 12.7, bone_bus, none, pepper_rex)
+skeletal_tail = artifact("Skeletal Tail", 585, 5.1, bone_mines, fishing)
+nautilus_fossil = artifact("Nautilus Fossil", 586, 6.9, bone_beach, fishing)
+amphibian_fossil = artifact("Amphibian Fossil", 587, 6.3, bone_forest_mountain, fishing)
+palm_fossil = artifact("Palm Fossil", 588, 10.2, bone_desert_forest_beach, none)
+trilobite = artifact("Trilobite", 589, 7.4, bone_beach_forest_mountain, none)
 
 quartz = mineral("Quartz", 80, mines_20, none, stone_golem)
-fire_quartz = mineral("Fire Quartz", 82, mines_100, magma_omni_fishing)
-frozen_tear = mineral("Frozen Tear", 84, mines_60, frozen_omni_fishing, unlikely)
-earth_crystal = mineral("Earth Crystal", 86, mines_20, geode_omni_fishing, duggy)
+fire_quartz = mineral("Fire Quartz", 82, mines_100, magma_omni_fishing, none, 1.0/12.0)
+frozen_tear = mineral("Frozen Tear", 84, mines_60, frozen_omni_fishing, unlikely, 1.0/12.0)
+earth_crystal = mineral("Earth Crystal", 86, mines_20, geode_omni_fishing, duggy, 1.0/12.0)
 emerald = mineral("Emerald", 60, mines_100, fishing)
 aquamarine = mineral("Aquamarine", 62, mines_60, fishing)
 ruby = mineral("Ruby", 64, mines_100, fishing)
