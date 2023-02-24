@@ -310,6 +310,24 @@ class Museumsanity(Choice):
     option_all = 3
 
 
+class Friendsanity(Choice):
+    """Locations for friendships?
+    With None, there are no locations for befriending villagers
+    With Bachelors, each heart of a bachelor is a check
+    With Starting NPCs, each heart for npcs that are immediately available is a check
+    With All, every heart with every NPC is a check, including Leo, Kent, Sandy, etc
+    With All With Marriage, marriage candidates must also be dated and married up to 14 hearts.
+    """
+    internal_name = "friendsanity"
+    display_name = "Friendsanity"
+    default = 0
+    option_none = 0
+    option_bachelors = 1
+    option_starting_npcs = 2
+    option_all = 3
+    option_all_with_marriage = 4
+
+
 class NumberOfPlayerBuffs(Range):
     """Number of buffs to the player of each type that exist as items in the pool.
     Buffs include movement speed (+25% multiplier, stacks additively)
@@ -350,6 +368,26 @@ class ExperienceMultiplier(SpecialRange):
     A higher setting means more experience."""
     internal_name = "experience_multiplier"
     display_name = "Experience Multiplier"
+    range_start = 25
+    range_end = 400
+    # step = 25
+    default = 200
+
+    special_range_names = {
+        "half": 50,
+        "vanilla": 100,
+        "double": 200,
+        "triple": 300,
+        "quadruple": 400,
+    }
+
+
+class FriendshipMultiplier(SpecialRange):
+    """How fast do you want to befriend villagers.
+    A lower setting mean less friendship per action.
+    A higher setting means more friendship per action."""
+    internal_name = "friendship_multiplier"
+    display_name = "Friendship Multiplier"
     range_start = 25
     range_end = 400
     # step = 25
@@ -434,11 +472,13 @@ stardew_valley_option_classes = [
     HelpWantedLocations,
     Fishsanity,
     Museumsanity,
+    Friendsanity,
     NumberOfPlayerBuffs,
     Goal,
     MultipleDaySleepEnabled,
     MultipleDaySleepCost,
     ExperienceMultiplier,
+    FriendshipMultiplier,
     DebrisMultiplier,
     QuickStart,
     Gifting,

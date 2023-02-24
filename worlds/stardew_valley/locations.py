@@ -49,6 +49,7 @@ class LocationTags(enum.Enum):
     FISHSANITY = enum.auto()
     MUSEUM_MILESTONES = enum.auto()
     MUSEUM_DONATIONS = enum.auto()
+    FRIENDSANITY = enum.auto()
 
 
 @dataclass(frozen=True)
