@@ -771,7 +771,7 @@ class StardewLogic:
         return self.can_reach_region("Tide Pools") & self.has_relationship("Bachelor", 10) & self.has_house(1)
 
     def can_have_two_children(self) -> StardewRule:
-        return self.can_get_married() & self.has_house(2) & self.has_relationship("Bachelor", 14)
+        return self.can_get_married() & self.has_house(2) & self.has_relationship("Bachelor", 12)
 
     def has_relationship(self, npc: str, hearts: int = 1) -> StardewRule:
         if hearts <= 0:
@@ -797,8 +797,8 @@ class StardewLogic:
             return self.can_earn_relationship(npc, hearts)
         if self.options[options.Friendsanity] == options.Friendsanity.option_starting_npcs and not villager.available:
             return self.can_earn_relationship(npc, hearts)
-        if self.options[options.Friendsanity] == options.Friendsanity.option_all and villager.bachelor and hearts > 8:
-            return self.can_earn_relationship(npc, hearts)
+        if self.options[options.Friendsanity] != options.Friendsanity.option_all_with_marriage and villager.bachelor and hearts > 8:
+            return self.received(f"{villager.name}: 1 <3", 8) & self.can_earn_relationship(npc, hearts)
         return self.received(f"{villager.name}: 1 <3", hearts)
 
     def can_meet(self, npc: str) -> StardewRule:
@@ -938,6 +938,7 @@ class StardewLogic:
         return self.received(season)
 
     def has_lived_months(self, number: int) -> StardewRule:
+        number = max(0, min(number, 8))
         return self.received("Month End", number)
 
     def has_rusty_key(self) -> StardewRule:
