@@ -31,6 +31,7 @@ class Goal(Choice):
         Fishsanity.
     With Complete Collection, the world will be completed once you have completed the museum by donating every possible item. Pairs well with
         Museumsanity.
+    With Happily Ever After, you must get married and have two kids. Pairs well with Friendsanity.
     """
     internal_name = "goal"
     display_name = "Goal"
@@ -40,6 +41,7 @@ class Goal(Choice):
     option_cryptic_note = 3
     option_master_angler = 4
     option_complete_collection = 5
+    option_happily_ever_after = 6
 
     @classmethod
     def get_option_name(cls, value) -> str:
@@ -316,16 +318,17 @@ class Friendsanity(Choice):
     With Bachelors, each heart of a bachelor is a check
     With Starting NPCs, each heart for npcs that are immediately available is a check
     With All, every heart with every NPC is a check, including Leo, Kent, Sandy, etc
-    With All With Marriage, marriage candidates must also be dated and married up to 14 hearts.
+    With All With Marriage, marriage candidates must also be dated, married, and raised up to 14 hearts.
     """
     internal_name = "friendsanity"
     display_name = "Friendsanity"
     default = 0
     option_none = 0
-    option_bachelors = 1
-    option_starting_npcs = 2
-    option_all = 3
-    option_all_with_marriage = 4
+    # option_marry_one_person = 1
+    option_bachelors = 2
+    option_starting_npcs = 3
+    option_all = 4
+    option_all_with_marriage = 5
 
 
 class NumberOfPlayerBuffs(Range):

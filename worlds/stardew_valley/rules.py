@@ -25,6 +25,10 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: StardewOption
                              logic.received("Bridge Repair").simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance("Enter Secret Woods", player),
                              logic.has_tool("Axe", "Iron").simplify())
+    MultiWorldRules.set_rule(multi_world.get_entrance("Forest to Sewers", player),
+                             logic.has_rusty_key().simplify())
+    MultiWorldRules.set_rule(multi_world.get_entrance("Town to Sewers", player),
+                             logic.has_rusty_key().simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance("Take Bus to Desert", player),
                              logic.received("Bus Repair").simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance("Enter Skull Cavern", player),
@@ -81,8 +85,10 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: StardewOption
 
     # Bundles
     for bundle in current_bundles.values():
-        MultiWorldRules.set_rule(multi_world.get_location(bundle.get_name_with_bundle(), player),
-                                 logic.can_complete_bundle(bundle.requirements, bundle.number_required).simplify())
+        location = multi_world.get_location(bundle.get_name_with_bundle(), player)
+        rules = logic.can_complete_bundle(bundle.requirements, bundle.number_required)
+        simplified_rules = rules.simplify()
+        MultiWorldRules.set_rule(location, simplified_rules)
     MultiWorldRules.add_rule(multi_world.get_location("Complete Crafts Room", player),
                              And(logic.can_reach_location(bundle.name)
                                  for bundle in locations.locations_by_tag[LocationTags.CRAFTS_ROOM_BUNDLE]).simplify())
@@ -135,6 +141,7 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: StardewOption
 
     set_fishsanity_rules(all_location_names, logic, multi_world, player)
     set_museumsanity_rules(all_location_names, logic, multi_world, player, world_options)
+    set_friendsanity_rules(all_location_names, logic, multi_world, player)
     set_backpack_rules(logic, multi_world, player, world_options)
 
     MultiWorldRules.set_rule(multi_world.get_location("Old Master Cannoli", player),
@@ -252,3 +259,18 @@ def set_arcade_machine_rules(logic: StardewLogic, multi_world: MultiWorld, playe
                                  logic.has("JotPK Big Buff").simplify())
         MultiWorldRules.add_rule(multi_world.get_location("Journey of the Prairie King Victory", player),
                                  logic.has("JotPK Max Buff").simplify())
+
+
+def set_friendsanity_rules(all_location_names: List[str], logic: StardewLogic, multi_world: MultiWorld, player: int):
+    friend_prefix = "Friendsanity: "
+    friend_suffix = " <3"
+    for friend_location in locations.locations_by_tag[LocationTags.FRIENDSANITY]:
+        if not friend_location.name in all_location_names:
+            continue
+        friend_location_without_prefix = friend_location.name[len(friend_prefix):]
+        friend_location_trimmed = friend_location_without_prefix[:friend_location_without_prefix.index(friend_suffix)]
+        parts = friend_location_trimmed.split(" ")
+        friend_name = parts[0]
+        num_hearts = int(parts[1])
+        MultiWorldRules.set_rule(multi_world.get_location(friend_location.name, player),
+                                 logic.can_earn_relationship(friend_name, num_hearts).simplify())

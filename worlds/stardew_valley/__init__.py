@@ -171,6 +171,10 @@ class StardewValleyWorld(World):
             self.create_event_location(location_table["Complete the Museum Collection"],
                                        self.logic.can_complete_museum().simplify(),
                                        "Victory")
+        elif self.options[options.Goal] == options.Goal.option_full_house:
+            self.create_event_location(location_table["Full House"],
+                                       self.logic.can_have_two_children().simplify(),
+                                       "Victory")
 
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
 

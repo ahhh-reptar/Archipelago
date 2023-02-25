@@ -14,6 +14,7 @@ from typing import Dict, List, Protocol, Union, Set, Optional, FrozenSet
 
 from BaseClasses import Item, ItemClassification
 from . import options, data
+from .data.villagers_data import all_villagers
 from .options import StardewOptions
 
 ITEM_CODE_OFFSET = 717000
@@ -52,6 +53,7 @@ class Group(enum.Enum):
     SEASON = enum.auto()
     TRAVELING_MERCHANT_DAY = enum.auto()
     MUSEUM = enum.auto()
+    FRIENDSANITY = enum.auto()
 
 
 @dataclass(frozen=True)
@@ -193,7 +195,8 @@ initialize_item_table()
 initialize_groups()
 
 
-def create_items(item_factory: StardewItemFactory, locations_count: int, world_options: StardewOptions, random: Random) -> List[Item]:
+def create_items(item_factory: StardewItemFactory, locations_count: int, world_options: StardewOptions,
+                 random: Random) -> List[Item]:
     items = create_unique_items(item_factory, world_options, random)
     assert len(items) <= locations_count, \
         "There should be at least as many locations as there are mandatory items"
@@ -230,6 +233,7 @@ def create_unique_items(item_factory: StardewItemFactory, world_options: Stardew
     items.extend(create_traveling_merchant_items(item_factory))
     items.append(item_factory("Return Scepter"))
     items.extend(create_seasons(item_factory, world_options))
+    create_friendsanity_items(item_factory, world_options, items)
 
     return items
 
@@ -327,6 +331,29 @@ def create_museum_items(item_factory: StardewItemFactory, world_options: Stardew
     items.extend(item_factory(item) for item in ["Traveling Merchant Metal Detector"] * 4)
     items.append(item_factory("Ancient Seeds Recipe"))
     items.append(item_factory("Stardrop"))
+    items.append(item_factory("Rusty Key"))
+
+
+def create_friendsanity_items(item_factory: StardewItemFactory, world_options: StardewOptions, items: List[Item]):
+    if world_options[options.Friendsanity] == options.Friendsanity.option_none:
+        return
+    exclude_non_bachelors = world_options[options.Friendsanity] == options.Friendsanity.option_bachelors
+    exclude_locked_villagers = world_options[options.Friendsanity] == options.Friendsanity.option_starting_npcs or \
+                               world_options[options.Friendsanity] == options.Friendsanity.option_bachelors
+    exclude_post_marriage_hearts = world_options[options.Friendsanity] != options.Friendsanity.option_all_with_marriage
+    for villager in all_villagers:
+        if not villager.available and exclude_locked_villagers:
+            continue
+        if not villager.bachelor and exclude_non_bachelors:
+            continue
+        for heart in range(1, 15):
+            if villager.bachelor and exclude_post_marriage_hearts and heart > 8:
+                continue
+            if villager.bachelor or heart < 11:
+                items.append(item_factory(f"{villager.name}: 1 <3"))
+    if not exclude_non_bachelors:
+        for heart in range(1, 6):
+            items.append(item_factory(f"Pet: 1 <3"))
 
 
 def create_arcade_machine_items(item_factory: StardewItemFactory, world_options: StardewOptions,
@@ -371,7 +398,8 @@ def create_seasons(item_factory: StardewItemFactory, world_options: StardewOptio
     return [item_factory(item) for item in items_by_group[Group.SEASON]]
 
 
-def fill_with_resource_packs(item_factory: StardewItemFactory, world_options: StardewOptions, random: Random, required_resource_pack: int) -> List[Item]:
+def fill_with_resource_packs(item_factory: StardewItemFactory, world_options: StardewOptions, random: Random,
+                             required_resource_pack: int) -> List[Item]:
     resource_pack_multiplier = world_options[options.ResourcePackMultiplier]
 
     if resource_pack_multiplier == 0:
