@@ -187,7 +187,7 @@ wizard_loves = purple_mushroom | solar_essence | super_cucumber | void_essence
 all_villagers: List[Villager] = []
 
 
-def villager(name: str, bachelor: bool, locations: set[str], birthday: str, gifts: set[str],
+def villager(name: str, bachelor: bool, locations: Set[str], birthday: str, gifts: Set[str],
              available: bool) -> Villager:
     npc = Villager(name, bachelor, frozenset(locations), birthday, frozenset(gifts), available)
     all_villagers.append(npc)
