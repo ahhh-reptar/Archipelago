@@ -31,7 +31,7 @@ class Goal(Choice):
         Fishsanity.
     With Complete Collection, the world will be completed once you have completed the museum by donating every possible item. Pairs well with
         Museumsanity.
-    With Happily Ever After, you must get married and have two kids. Pairs well with Friendsanity.
+    With Full House, you must get married and have two kids. Pairs well with Friendsanity.
     """
     internal_name = "goal"
     display_name = "Goal"
@@ -41,7 +41,7 @@ class Goal(Choice):
     option_cryptic_note = 3
     option_master_angler = 4
     option_complete_collection = 5
-    option_happily_ever_after = 6
+    option_full_house = 6
 
     @classmethod
     def get_option_name(cls, value) -> str:
