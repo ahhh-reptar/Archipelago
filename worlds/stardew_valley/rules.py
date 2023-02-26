@@ -21,6 +21,8 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: StardewOption
         MultiWorldRules.set_rule(multi_world.get_entrance(f"Dig to The Mines - Floor {floor}", player),
                                  logic.can_mine_to_floor(floor).simplify())
 
+    MultiWorldRules.set_rule(multi_world.get_entrance("Enter Tide Pools", player),
+                             logic.received("Beach Bridge").simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance("Enter Quarry", player),
                              logic.received("Bridge Repair").simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance("Enter Secret Woods", player),
