@@ -115,13 +115,18 @@ class TestLocationGeneration(SVTestBase):
 
 class TestLocationAndItemCount(SVTestBase):
     options = {
+        options.SeasonRandomization.internal_name: options.SeasonRandomization.option_randomized,
+        options.SeedShuffle.internal_name: options.SeedShuffle.option_shuffled,
         options.BackpackProgression.internal_name: options.BackpackProgression.option_vanilla,
         options.ToolProgression.internal_name: options.ToolProgression.option_vanilla,
-        options.TheMinesElevatorsProgression.internal_name: options.TheMinesElevatorsProgression.option_vanilla,
         options.SkillProgression.internal_name: options.SkillProgression.option_vanilla,
         options.BuildingProgression.internal_name: options.BuildingProgression.option_vanilla,
+        options.TheMinesElevatorsProgression.internal_name: options.TheMinesElevatorsProgression.option_vanilla,
         options.ArcadeMachineLocations.internal_name: options.ArcadeMachineLocations.option_disabled,
         options.HelpWantedLocations.internal_name: 0,
+        options.Fishsanity.internal_name: options.Fishsanity.option_none,
+        options.Museumsanity.internal_name: options.Museumsanity.option_none,
+        options.Friendsanity.internal_name: options.Museumsanity.option_none,
         options.NumberOfPlayerBuffs.internal_name: 12,
     }
 
@@ -147,7 +152,8 @@ class TestFriendsanityBachelors(SVTestBase):
     options = {
         options.Friendsanity.internal_name: options.Friendsanity.option_bachelors,
     }
-    bachelors = {"Harvey", "Elliott", "Sam", "Alex", "Shane", "Sebastian", "Emily", "Haley", "Leah", "Abigail", "Penny", "Maru"}
+    bachelors = {"Harvey", "Elliott", "Sam", "Alex", "Shane", "Sebastian", "Emily", "Haley", "Leah", "Abigail", "Penny",
+                 "Maru"}
 
     def test_friendsanity_only_bachelor_items(self):
         suffix = ": 1 <3"

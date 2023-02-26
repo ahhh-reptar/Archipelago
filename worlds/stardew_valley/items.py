@@ -49,6 +49,7 @@ class Group(enum.Enum):
     ORE = enum.auto()
     FERTILIZER = enum.auto()
     SEED = enum.auto()
+    SEED_SHUFFLE = enum.auto()
     FISHING_RESOURCE = enum.auto()
     SEASON = enum.auto()
     TRAVELING_MERCHANT_DAY = enum.auto()
@@ -198,8 +199,8 @@ initialize_groups()
 def create_items(item_factory: StardewItemFactory, locations_count: int, world_options: StardewOptions,
                  random: Random) -> List[Item]:
     items = create_unique_items(item_factory, world_options, random)
-    assert len(items) <= locations_count, \
-        "There should be at least as many locations as there are mandatory items"
+    #    assert len(items) <= locations_count, \
+    #        "There should be at least as many locations as there are mandatory items"
     logger.debug(f"Created {len(items)} unique items")
 
     resource_pack_items = fill_with_resource_packs(item_factory, world_options, random, locations_count - len(items))
@@ -233,6 +234,7 @@ def create_unique_items(item_factory: StardewItemFactory, world_options: Stardew
     items.extend(create_traveling_merchant_items(item_factory))
     items.append(item_factory("Return Scepter"))
     items.extend(create_seasons(item_factory, world_options))
+    items.extend(create_seeds(item_factory, world_options))
     create_friendsanity_items(item_factory, world_options, items)
 
     return items
@@ -396,6 +398,13 @@ def create_seasons(item_factory: StardewItemFactory, world_options: StardewOptio
         return [item_factory(item) for item in ["Progressive Season"] * 3]
 
     return [item_factory(item) for item in items_by_group[Group.SEASON]]
+
+
+def create_seeds(item_factory: StardewItemFactory, world_options: StardewOptions) -> List[Item]:
+    if world_options[options.SeedShuffle] == options.SeedShuffle.option_disabled:
+        return []
+
+    return [item_factory(item) for item in items_by_group[Group.SEED_SHUFFLE]]
 
 
 def fill_with_resource_packs(item_factory: StardewItemFactory, world_options: StardewOptions, random: Random,

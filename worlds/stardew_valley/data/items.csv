@@ -113,41 +113,41 @@ id,name,classification,groups
 125,Summer,progression,SEASON
 126,Fall,progression,SEASON
 127,Winter,progression,SEASON
-128,Amaranth Seeds,progression,SEED
-129,Artichoke Seeds,progression,SEED
-130,Beet Seeds,progression,SEED
-131,Jazz Seeds,progression,SEED
-132,Blueberry Seeds,progression,SEED
-133,Bok Choy Seeds,progression,SEED
-134,Cauliflower Seeds,progression,SEED
-135,Corn Seeds,progression,SEED
-136,Cranberry Seeds,progression,SEED
-137,Eggplant Seeds,progression,SEED
-138,Fairy Seeds,progression,SEED
-139,Garlic Seeds,progression,SEED
-140,Grape Starter,progression,SEED
-141,Bean Starter,progression,SEED
-142,Hops Starter,progression,SEED
-143,Pepper Seeds,progression,SEED
-144,Kale Seeds,progression,SEED
-145,Melon Seeds,progression,SEED
-146,Parsnip Seeds,progression,SEED
-147,Poppy Seeds,progression,SEED
-148,Potato Seeds,progression,SEED
-149,Pumpkin Seeds,progression,SEED
-150,Radish Seeds,progression,SEED
-151,Red Cabbage Seeds,progression,SEED
-152,Rhubarb Seeds,progression,SEED
-153,Starfruit Seeds,progression,SEED
-154,Strawberry Seeds,progression,SEED
-155,Spangle Seeds,progression,SEED
-156,Sunflower Seeds,progression,SEED
-157,Tomato Seeds,progression,SEED
-158,Tulip Bulb,progression,SEED
-159,Rice Shoot,progression,SEED
-160,Wheat Seeds,progression,SEED
-161,Yam Seeds,progression,SEED
-162,Cactus Seeds,progression,SEED
+128,Amaranth Seeds,progression,SEED_SHUFFLE
+129,Artichoke Seeds,progression,SEED_SHUFFLE
+130,Beet Seeds,progression,SEED_SHUFFLE
+131,Jazz Seeds,progression,SEED_SHUFFLE
+132,Blueberry Seeds,progression,SEED_SHUFFLE
+133,Bok Choy Seeds,progression,SEED_SHUFFLE
+134,Cauliflower Seeds,progression,SEED_SHUFFLE
+135,Corn Seeds,progression,SEED_SHUFFLE
+136,Cranberry Seeds,progression,SEED_SHUFFLE
+137,Eggplant Seeds,progression,SEED_SHUFFLE
+138,Fairy Seeds,progression,SEED_SHUFFLE
+139,Garlic Seeds,progression,SEED_SHUFFLE
+140,Grape Starter,progression,SEED_SHUFFLE
+141,Bean Starter,progression,SEED_SHUFFLE
+142,Hops Starter,progression,SEED_SHUFFLE
+143,Pepper Seeds,progression,SEED_SHUFFLE
+144,Kale Seeds,progression,SEED_SHUFFLE
+145,Melon Seeds,progression,SEED_SHUFFLE
+146,Parsnip Seeds,progression,SEED_SHUFFLE
+147,Poppy Seeds,progression,SEED_SHUFFLE
+148,Potato Seeds,progression,SEED_SHUFFLE
+149,Pumpkin Seeds,progression,SEED_SHUFFLE
+150,Radish Seeds,progression,SEED_SHUFFLE
+151,Red Cabbage Seeds,progression,SEED_SHUFFLE
+152,Rhubarb Seeds,progression,SEED_SHUFFLE
+153,Starfruit Seeds,progression,SEED_SHUFFLE
+154,Strawberry Seeds,progression,SEED_SHUFFLE
+155,Spangle Seeds,progression,SEED_SHUFFLE
+156,Sunflower Seeds,progression,SEED_SHUFFLE
+157,Tomato Seeds,progression,SEED_SHUFFLE
+158,Tulip Bulb,progression,SEED_SHUFFLE
+159,Rice Shoot,progression,SEED_SHUFFLE
+160,Wheat Seeds,progression,SEED_SHUFFLE
+161,Yam Seeds,progression,SEED_SHUFFLE
+162,Cactus Seeds,progression,SEED_SHUFFLE
 163,Magic Rock Candy,useful,MUSEUM
 164,Ancient Seeds Recipe,progression,MUSEUM
 165,Ancient Seeds,useful,MUSEUM

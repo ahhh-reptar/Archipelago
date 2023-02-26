@@ -71,7 +71,7 @@ class TestProgressiveToolsLogic(SVTestBase):
 
         friday = self.world.create_item("Traveling Merchant: Friday")
         self.multiworld.state.collect(friday, event=True)
-        assert self.world.logic.can_reach_location("Old Master Cannoli")(self.multiworld.state)
+        assert self.multiworld.get_location("Old Master Cannoli", 1).access_rule(self.multiworld.state)
 
         self.remove(green_house)
         assert not self.world.logic.can_reach_location("Old Master Cannoli")(self.multiworld.state)
