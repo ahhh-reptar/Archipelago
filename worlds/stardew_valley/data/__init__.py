@@ -9,7 +9,6 @@ class SeedData:
     name: str
     seasons: List[str]
     regions: List[str]
-    year: int
 
 
 @dataclass(frozen=True)
@@ -34,8 +33,7 @@ def load_crop_csv():
                                       [season for season in item["seed_seasons"].split(",")]
                                       if item["seed_seasons"] else [],
                                       [region for region in item["seed_regions"].split(",")]
-                                      if item["seed_regions"] else [],
-                                      int(item["seed_year"])))
+                                      if item["seed_regions"] else []))
                 crops.append(CropData(item["crop"],
                                       [season for season in item["farm_growth_seasons"].split(",")]
                                       if item["farm_growth_seasons"] else [],

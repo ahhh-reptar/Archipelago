@@ -647,8 +647,7 @@ class StardewLogic:
             item_rule = self.received(seed.name)
         season_rule = self.received(seed.seasons)
         region_rule = self.can_reach_any_region(seed.regions)
-        # year_rule = self.has_year_two() if seed.year == 2 else True_()
-        return season_rule & region_rule & item_rule  # & year_rule
+        return season_rule & region_rule & item_rule
 
     def can_grow_crop(self, crop: CropData):
         season_rule = self.received(crop.farm_growth_seasons)
