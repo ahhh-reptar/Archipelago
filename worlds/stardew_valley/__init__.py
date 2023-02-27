@@ -53,6 +53,7 @@ class StardewValleyWorld(World):
     location_name_to_id = {name: data.code for name, data in location_table.items()}
 
     data_version = 0
+    required_client_version = (0, 3, 9)
 
     options: StardewOptions
     logic: StardewLogic
@@ -250,6 +251,7 @@ class StardewValleyWorld(World):
             "seed": self.multiworld.per_slot_randoms[self.player].randrange(1000000000),  # Seed should be max 9 digits
             "randomized_entrances": self.randomized_entrances,
             "modified_bundles": modified_bundles,
+            "client_version": "3.0.0",
         })
 
         return slot_data
