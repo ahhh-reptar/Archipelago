@@ -2,7 +2,7 @@ import itertools
 
 import pytest
 
-from BaseClasses import ItemClassification
+from BaseClasses import ItemClassification, MultiWorld
 from Options import SpecialRange
 from worlds.stardew_valley import StardewItem
 from . import setup_solo_multiworld
@@ -13,24 +13,33 @@ SEASONS = {"Spring", "Summer", "Fall", "Winter"}
 TOOLS = {"Hoe", "Pickaxe", "Axe", "Watering Can", "Trash Can", "Fishing Rod"}
 
 
+def assert_can_win(multi_world: MultiWorld):
+    for item in multi_world.get_items():
+        multi_world.state.collect(item)
+
+    assert multi_world.find_item("Victory", 1).can_reach(multi_world.state)
+
+
 @pytest.mark.parametrize("option, value", [(option, value)
                                            for option in stardew_valley_option_classes
                                            if issubclass(option, SpecialRange)
                                            for value in option.special_range_names])
-def test_given_special_range_when_generate_then_can_generate(option: (SpecialRange, StardewOption), value):
+def test_given_special_range_when_generate_then_can_win(option: (SpecialRange, StardewOption), value):
     multi_world = setup_solo_multiworld({option.internal_name: option.special_range_names[value]})
 
     assert StardewItem("Victory", ItemClassification.progression, None, 1) in multi_world.get_items()
+    assert_can_win(multi_world)
 
 
 @pytest.mark.parametrize("option, value", [(option, value)
                                            for option in stardew_valley_option_classes
                                            if option.options
                                            for value in option.options])
-def test_given_choice_when_generate_then_can_generate(option, value):
+def test_given_choice_when_generate_then_can_win(option, value):
     multi_world = setup_solo_multiworld({option.internal_name: option.options[value]})
 
     assert StardewItem("Victory", ItemClassification.progression, None, 1) in multi_world.get_items()
+    assert_can_win(multi_world)
 
 
 class TestGoal:
