@@ -35,6 +35,7 @@ class Goal(Choice):
     """
     internal_name = "goal"
     display_name = "Goal"
+    default = 0
     option_community_center = 0
     option_grandpa_evaluation = 1
     option_bottom_of_the_mines = 2

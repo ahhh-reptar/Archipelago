@@ -645,12 +645,12 @@ class StardewLogic:
             item_rule = True_()
         else:
             item_rule = self.received(seed.name)
-        season_rule = self.received(seed.seasons)
+        season_rule = self.has_any_season(seed.seasons)
         region_rule = self.can_reach_any_region(seed.regions)
         return season_rule & region_rule & item_rule
 
     def can_grow_crop(self, crop: CropData):
-        season_rule = self.received(crop.farm_growth_seasons)
+        season_rule = self.has_any_season(crop.farm_growth_seasons)
         seed_rule = self.has(crop.seed.name)
         farm_rule = self.can_reach_region("Farm") & season_rule
         region_rule = farm_rule | self.can_reach_region("Greenhouse")
@@ -666,7 +666,7 @@ class StardewLogic:
 
     def can_catch_fish(self, fish: FishItem) -> StardewRule:
         region_rule = self.can_reach_any_region(fish.locations)
-        season_rule = self.received(fish.seasons)
+        season_rule = self.has_any_season(fish.seasons)
         difficulty_rule = self.can_fish(fish.difficulty)
         if fish.difficulty == -1:
             difficulty_rule = self.can_crab_pot()
@@ -948,6 +948,16 @@ class StardewLogic:
                 return True_()
             return self.has_lived_months(1)
         return self.received(season)
+
+    def has_any_season(self, seasons: Iterable[str]):
+        if not seasons:
+            return True_()
+        return Or([self.has_season(season) for season in seasons])
+
+    def has_all_seasons(self, seasons: Iterable[str]):
+        if not seasons:
+            return True_()
+        return And([self.has_season(season) for season in seasons])
 
     def has_lived_months(self, number: int) -> StardewRule:
         number = max(0, min(number, 8))

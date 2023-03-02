@@ -6,7 +6,8 @@ from .. import options
 
 class TestProgressiveToolsLogic(SVTestBase):
     options = {
-        options.ToolProgression.internal_name: options.ToolProgression.option_progressive
+        options.ToolProgression.internal_name: options.ToolProgression.option_progressive,
+        options.SeasonRandomization.internal_name: options.SeasonRandomization.option_randomized,
     }
 
     def setUp(self):
