@@ -42,6 +42,17 @@ def test_given_choice_when_generate_then_can_win(option, value):
     assert_can_win(multi_world)
 
 
+@pytest.mark.parametrize("option_combination",
+                         [{options.Goal.internal_name: options.Goal.option_master_angler,
+                           options.ToolProgression.internal_name: options.ToolProgression.option_vanilla}],
+                         ids=["Master Angler + Vanilla tools"])
+def test_given_option_combination_when_generate_then_can_win(option_combination):
+    multi_world = setup_solo_multiworld(option_combination)
+
+    assert StardewItem("Victory", ItemClassification.progression, None, 1) in multi_world.get_items()
+    assert_can_win(multi_world)
+
+
 class TestGoal:
     @pytest.mark.parametrize("goal,location", [("community_center", "Complete Community Center"),
                                                ("grandpa_evaluation", "Succeed Grandpa's Evaluation"),
