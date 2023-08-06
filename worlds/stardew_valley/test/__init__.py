@@ -72,6 +72,7 @@ class SVTestBase(WorldTestBase):
             HelpWantedLocations.internal_name: 56,
             Fishsanity.internal_name: Fishsanity.option_all,
             Museumsanity.internal_name: Museumsanity.option_all,
+            Monstersanity.internal_name: Monstersanity.option_progressive_goals,
             Friendsanity.internal_name: Friendsanity.option_all_with_marriage,
             FriendsanityHeartSize.internal_name: 1,
             NumberOfMovementBuffs.internal_name: 12,
