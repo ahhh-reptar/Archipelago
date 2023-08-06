@@ -1,5 +1,4 @@
-from .. import True_
-from ..logic import Received, Has, False_, And, Or
+from ..stardew_rule import Received, Has, False_, And, Or, True_
 
 
 def test_simplify_true_in_and():

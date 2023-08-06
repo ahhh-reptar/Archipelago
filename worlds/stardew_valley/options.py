@@ -347,37 +347,6 @@ class Museumsanity(Choice):
     option_all = 3
 
 
-class Friendsanity(Choice):
-    """Locations for friendships?
-    None: There are no checks for befriending villagers
-    Bachelors: Each heart of a bachelor is a check
-    Starting NPCs: Each heart for npcs that are immediately available is a check
-    All: Every heart with every NPC is a check, including Leo, Kent, Sandy, etc
-    All With Marriage: Marriage candidates must also be dated, married, and befriended up to 14 hearts.
-    """
-    internal_name = "friendsanity"
-    display_name = "Friendsanity"
-    default = 0
-    option_none = 0
-    # option_marry_one_person = 1
-    option_bachelors = 2
-    option_starting_npcs = 3
-    option_all = 4
-    option_all_with_marriage = 5
-
-
-# Conditional Setting - Friendsanity not None
-class FriendsanityHeartSize(Range):
-    """If using friendsanity, how many hearts are received per item, and how many hearts must be earned to send a check
-    A higher value will lead to fewer heart items in the item pool, reducing bloat"""
-    internal_name = "friendsanity_heart_size"
-    display_name = "Friendsanity Heart Size"
-    range_start = 1
-    range_end = 8
-    default = 4
-    # step = 1
-
-
 class Monstersanity(Choice):
     """Locations for slaying monsters?
     None: There are no checks for slaying monsters
@@ -430,6 +399,37 @@ class Shipsanity(Choice):
     option_quality_full_shipment_with_fish = 8
     option_everything = 9
     option_quality_everything = 10
+
+
+class Friendsanity(Choice):
+    """Locations for friendships?
+    None: There are no checks for befriending villagers
+    Bachelors: Each heart of a bachelor is a check
+    Starting NPCs: Each heart for npcs that are immediately available is a check
+    All: Every heart with every NPC is a check, including Leo, Kent, Sandy, etc
+    All With Marriage: Marriage candidates must also be dated, married, and befriended up to 14 hearts.
+    """
+    internal_name = "friendsanity"
+    display_name = "Friendsanity"
+    default = 0
+    option_none = 0
+    # option_marry_one_person = 1
+    option_bachelors = 2
+    option_starting_npcs = 3
+    option_all = 4
+    option_all_with_marriage = 5
+
+
+# Conditional Setting - Friendsanity not None
+class FriendsanityHeartSize(Range):
+    """If using friendsanity, how many hearts are received per item, and how many hearts must be earned to send a check
+    A higher value will lead to fewer heart items in the item pool, reducing bloat"""
+    internal_name = "friendsanity_heart_size"
+    display_name = "Friendsanity Heart Size"
+    range_start = 1
+    range_end = 8
+    default = 4
+    # step = 1
 
 
 class NumberOfMovementBuffs(Range):
@@ -608,6 +608,8 @@ class StardewValleyOptions(PerGameCommonOptions):
     help_wanted_locations: HelpWantedLocations
     fishsanity: Fishsanity
     museumsanity: Museumsanity
+    Monstersanity,
+    Shipsanity,
     friendsanity: Friendsanity
     friendsanity_heart_size: FriendsanityHeartSize
     number_of_movement_buffs: NumberOfMovementBuffs
