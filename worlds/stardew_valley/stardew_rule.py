@@ -8,6 +8,11 @@ from .items import item_table
 
 MISSING_ITEM = "THIS ITEM IS MISSING"
 
+should_do_complex_flatten_init = False
+should_do_simple_flatten_init = True
+should_do_complex_flatten_simplify = False
+should_do_simple_flatten_simplify = False
+
 
 class StardewRule:
     def __call__(self, state: CollectionState) -> bool:
@@ -95,15 +100,41 @@ class Or(StardewRule):
 
         assert rules_list, "Can't create a Or conditions without rules"
 
+        if should_do_complex_flatten_init:
+            flattened_rules = self.flatten_rules(rules_list)
+            while len(flattened_rules) != len(rules_list):
+                rules_list = flattened_rules
+                flattened_rules = self.flatten_rules(rules_list)
+            rules_list = flattened_rules
+        elif should_do_simple_flatten_init:
+            new_rules = set()
+            for rule in rules_list:
+                if isinstance(rule, Or):
+                    new_rules.update(rule.rules)
+                else:
+                    new_rules.add(rule)
+            rules_list = new_rules
+
+        self.rules = frozenset(rules_list)
+
+    def flatten_rules(self, rules_list):
         new_rules = set()
+        min_received_rules = {}
         for rule in rules_list:
             if isinstance(rule, Or):
                 new_rules.update(rule.rules)
+            elif isinstance(rule, Received):
+                if rule.item not in min_received_rules:
+                    min_received_rules[rule.item] = rule.count
+                if rule.count > min_received_rules[rule.item]:
+                    continue
+                if rule.count < min_received_rules[rule.item]:
+                    new_rules = set([new_rule for new_rule in new_rules if not isinstance(new_rule, Received) or new_rule.item is not rule.item])
+                    min_received_rules[rule.item] = rule.count
+                new_rules.add(rule)
             else:
                 new_rules.add(rule)
-        rules_list = new_rules
-
-        self.rules = frozenset(rules_list)
+        return new_rules
 
     def __call__(self, state: CollectionState) -> bool:
         return any(rule(state) for rule in self.rules)
@@ -143,6 +174,24 @@ class Or(StardewRule):
         if len(simplified_rules) == 1:
             return next(iter(simplified_rules))
 
+        if any(isinstance(rule, True_) for rule in self.rules):
+            return True_()
+
+        if should_do_complex_flatten_simplify:
+            flattened_rules = self.flatten_rules(simplified_rules)
+            while len(flattened_rules) != len(simplified_rules):
+                simplified_rules = flattened_rules
+                flattened_rules = self.flatten_rules(simplified_rules)
+            simplified_rules = flattened_rules
+        elif should_do_simple_flatten_simplify:
+            new_rules = set()
+            for rule in simplified_rules:
+                if isinstance(rule, Or):
+                    new_rules.update(rule.rules)
+                else:
+                    new_rules.add(rule)
+            simplified_rules = new_rules
+
         return Or(simplified_rules)
 
 
@@ -162,15 +211,41 @@ class And(StardewRule):
         if len(rules_list) < 1:
             rules_list.add(True_())
 
+        if should_do_complex_flatten_init:
+            flattened_rules = self.flatten_rules(rules_list)
+            while len(flattened_rules) != len(rules_list):
+                rules_list = flattened_rules
+                flattened_rules = self.flatten_rules(rules_list)
+            rules_list = flattened_rules
+        elif should_do_simple_flatten_init:
+            new_rules = set()
+            for rule in rules_list:
+                if isinstance(rule, And):
+                    new_rules.update(rule.rules)
+                else:
+                    new_rules.add(rule)
+            rules_list = new_rules
+
+        self.rules = frozenset(rules_list)
+
+    def flatten_rules(self, rules_list):
         new_rules = set()
+        max_received_rules = {}
         for rule in rules_list:
             if isinstance(rule, And):
                 new_rules.update(rule.rules)
+            elif isinstance(rule, Received):
+                if rule.item not in max_received_rules:
+                    max_received_rules[rule.item] = rule.count
+                if rule.count < max_received_rules[rule.item]:
+                    continue
+                if rule.count > max_received_rules[rule.item]:
+                    new_rules = set([new_rule for new_rule in new_rules if not isinstance(new_rule, Received) or new_rule.item is not rule.item])
+                    max_received_rules[rule.item] = rule.count
+                new_rules.add(rule)
             else:
                 new_rules.add(rule)
-        rules_list = new_rules
-
-        self.rules = frozenset(rules_list)
+        return new_rules
 
     def __call__(self, state: CollectionState) -> bool:
         result = all(rule(state) for rule in self.rules)
@@ -210,6 +285,24 @@ class And(StardewRule):
 
         if len(simplified_rules) == 1:
             return next(iter(simplified_rules))
+
+        if should_do_complex_flatten_simplify:
+            flattened_rules = self.flatten_rules(simplified_rules)
+            while len(flattened_rules) != len(simplified_rules):
+                simplified_rules = flattened_rules
+                flattened_rules = self.flatten_rules(simplified_rules)
+            simplified_rules = flattened_rules
+        elif should_do_simple_flatten_simplify:
+            new_rules = set()
+            for rule in simplified_rules:
+                if isinstance(rule, And):
+                    new_rules.update(rule.rules)
+                else:
+                    new_rules.add(rule)
+            simplified_rules = new_rules
+
+        if any(isinstance(rule, False_) for rule in self.rules):
+            return False_()
 
         return And(simplified_rules)
 
@@ -270,7 +363,7 @@ class TotalReceived(StardewRule):
         assert items_list, "Can't create a Total Received conditions without items"
         for item in items_list:
             assert item_table[item].classification & ItemClassification.progression, \
-                "Item has to be progression to be used in logic"
+                f"Item [{item_table[item].name}] has to be progression to be used in logic"
 
         self.player = player
         self.items = items_list
