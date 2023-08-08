@@ -173,7 +173,8 @@ class And(StardewRule):
         self.rules = frozenset(rules_list)
 
     def __call__(self, state: CollectionState) -> bool:
-        return all(rule(state) for rule in self.rules)
+        result = all(rule(state) for rule in self.rules)
+        return result
 
     def __repr__(self):
         return f"({' & '.join(repr(rule) for rule in self.rules)})"

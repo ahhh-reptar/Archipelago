@@ -33,32 +33,42 @@ from .strings.wallet_item_names import Wallet
 def set_rules(multi_world: MultiWorld, player: int, world_options: StardewOptions, logic: StardewLogic,
               current_bundles: Dict[str, Bundle]):
     all_location_names = list(location.name for location in multi_world.get_locations(player))
-
+    # 22.756 - 23.789
     set_entrance_rules(logic, multi_world, player, world_options)
-
+    # 34.761 - 35.568
     set_ginger_island_rules(logic, multi_world, player, world_options)
+    # 36.281 - 38.453
 
     set_tool_rules(logic, multi_world, player, world_options)
+    # 36.980 - 37.228
+
     set_skills_rules(logic, multi_world, player, world_options)
     set_bundle_rules(current_bundles, logic, multi_world, player)
     set_building_rules(logic, multi_world, player, world_options)
     set_cropsanity_rules(all_location_names, logic, multi_world, player, world_options)
     set_story_quests_rules(all_location_names, logic, multi_world, player, world_options)
+    # 1min09 - 1min14
+
     set_special_order_rules(all_location_names, logic, multi_world, player, world_options)
     set_help_wanted_quests_rules(logic, multi_world, player, world_options)
     set_fishsanity_rules(all_location_names, logic, multi_world, player)
     set_museumsanity_rules(all_location_names, logic, multi_world, player, world_options)
+    # 1min34 - 1min46
+
     set_friendsanity_rules(all_location_names, logic, multi_world, player)
     set_backpack_rules(logic, multi_world, player, world_options)
     set_festival_rules(all_location_names, logic, multi_world, player)
-
     set_monstersanity_rules(all_location_names, logic, multi_world, player, world_options)
-
     set_isolated_locations_rules(logic, multi_world, player)
     set_traveling_merchant_rules(logic, multi_world, player)
     set_arcade_machine_rules(logic, multi_world, player, world_options)
+
     set_deepwoods_rules(logic, multi_world, player, world_options)
     set_magic_spell_rules(logic, multi_world, player, world_options)
+    # 1min52 - 1min53 # These times are for TestOptions
+    # 1min36 - 1min38 # After the combat not duplicating a bunch of stuff
+    # 1min28 - 1min30 # with the caching of combat rules
+    # 1min25 - 1min26 # after caching seasons
 
 
 def set_isolated_locations_rules(logic: StardewLogic, multi_world, player):
