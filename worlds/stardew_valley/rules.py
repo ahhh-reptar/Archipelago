@@ -743,10 +743,10 @@ def set_magic_spell_rules(logic: StardewLogic, multi_world: MultiWorld, player: 
     MultiWorldRules.add_rule(multi_world.get_location("Analyze: Fireball", player),
                              (logic.has("Fire Quartz") & logic.mod.magic.can_use_altar()).simplify())
     MultiWorldRules.add_rule(multi_world.get_location("Analyze: Frostbite", player),
-                             (logic.mine.can_mine_to_floor(70) & logic.skill.can_fish(85) & logic.mod.magic.can_use_altar()).simplify())
+                             (logic.mine.can_mine_to_floor(70) & logic.skill.can_fish([], 85) & logic.mod.magic.can_use_altar()).simplify())
     MultiWorldRules.add_rule(multi_world.get_location("Analyze All Elemental School Locations", player),
                              (logic.region.can_reach(Region.mines) & logic.has("Fire Quartz")
-                              & logic.region.can_reach(Region.mines_floor_70) & logic.skill.can_fish(85) &
+                              & logic.region.can_reach(Region.mines_floor_70) & logic.skill.can_fish([], 85) &
                               logic.mod.magic.can_use_altar()).simplify())
     MultiWorldRules.add_rule(multi_world.get_location("Analyze: Lantern", player),
                              logic.mod.magic.can_use_altar().simplify())
@@ -775,7 +775,7 @@ def set_magic_spell_rules(logic: StardewLogic, multi_world: MultiWorld, player: 
                               logic.has("Coffee") & logic.has("Life Elixir")
                               & logic.ability.can_mine_perfectly() & logic.has("Earth Crystal") &
                               logic.region.can_reach(Region.mines) &
-                              logic.has("Fire Quartz") & logic.skill.can_fish(85) &
+                              logic.has("Fire Quartz") & logic.skill.can_fish([], 85) &
                               logic.region.can_reach(Region.witch_hut) &
                               logic.region.can_reach(Region.mines_floor_100) &
                               logic.region.can_reach(Region.farm) & logic.time.has_lived_months(12) &

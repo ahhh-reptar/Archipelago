@@ -1,0 +1,72 @@
+{
+    ".NetUsedVersions": {
+        "Stardew Valley:5.0.5.0:NET6_0": true
+    },
+    "GiftBoxes;0": {
+        "1": {
+            "IsOpen": true,
+            "Owner": "Receiver",
+            "Game": "Stardew Valley",
+            "AcceptsAnyGift": true,
+            "DesiredTraits": []
+        },
+        "2": {
+            "IsOpen": false,
+            "Owner": null,
+            "Game": null,
+            "AcceptsAnyGift": false,
+            "DesiredTraits": null
+        }
+    },
+    "GiftBox;0;1": {
+        "1991ec4b-2651-4260-83c6-beda93367d79": {
+            "ID": "1991ec4b-2651-4260-83c6-beda93367d79",
+            "Item": {
+                "Name": "Test Gift",
+                "Amount": 4,
+                "Value": 89
+            },
+            "Traits": [{
+                    "Trait": "Cure",
+                    "Strength": 1.041461893842305,
+                    "Duration": 1.6159837802946493
+                }
+            ],
+            "SenderName": "Sender",
+            "ReceiverName": "Receiver",
+            "SenderTeam": 0,
+            "ReceiverTeam": 0,
+            "IsRefund": false,
+            "GiftValue": 356
+        },
+        "e088f212-82fe-4f74-8f50-408aec3bd4b1": {
+            "ID": "e088f212-82fe-4f74-8f50-408aec3bd4b1",
+            "Item": {
+                "Name": "Test Gift",
+                "Amount": 3,
+                "Value": 94
+            },
+            "Traits": [{
+                    "Trait": "Speed",
+                    "Strength": 1.7378801040993446,
+                    "Duration": 0.8347555291069464
+                }, {
+                    "Trait": "Cure",
+                    "Strength": 1.4948671103896887,
+                    "Duration": 0.9290282888938804
+                }, {
+                    "Trait": "Life",
+                    "Strength": 0.1490333323129608,
+                    "Duration": 1.1709254203228865
+                }
+            ],
+            "SenderName": "Sender",
+            "ReceiverName": "Receiver",
+            "SenderTeam": 0,
+            "ReceiverTeam": 0,
+            "IsRefund": false,
+            "GiftValue": 282
+        }
+    },
+    "GiftBox;0;2": {}
+}
