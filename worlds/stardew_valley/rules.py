@@ -58,6 +58,7 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: StardewOption
     set_backpack_rules(logic, multi_world, player, world_options)
     set_festival_rules(all_location_names, logic, multi_world, player)
     set_monstersanity_rules(all_location_names, logic, multi_world, player, world_options)
+    set_shipsanity_rules(all_location_names, logic, multi_world, player, world_options)
     set_isolated_locations_rules(logic, multi_world, player)
     set_traveling_merchant_rules(logic, multi_world, player)
     set_arcade_machine_rules(logic, multi_world, player, world_options)
@@ -632,6 +633,20 @@ def set_monstersanity_category_rules(all_location_names: List[str], logic: Stard
         else:
             rule = logic.combat.can_kill_all_monsters(all_monsters_by_category[monster_category]) & logic.time.has_lived_max_months()
         MultiWorldRules.set_rule(location, rule.simplify())
+
+
+def set_shipsanity_rules(all_location_names: List[str], logic: StardewLogic, multi_world, player, world_options):
+    shipsanity_option = world_options[options.Shipsanity]
+    if shipsanity_option == options.Monstersanity.option_none:
+        return
+
+    shipsanity_prefix = "Shipsanity: "
+    for location in locations.locations_by_tag[LocationTags.SHIPSANITY]:
+        if location.name not in all_location_names:
+            continue
+        item_to_ship = location.name[len(shipsanity_prefix):]
+        MultiWorldRules.set_rule(multi_world.get_location(location.name, player),
+                                 logic.can_ship(item_to_ship))
 
 
 def set_traveling_merchant_rules(logic: StardewLogic, multi_world: MultiWorld, player: int):
