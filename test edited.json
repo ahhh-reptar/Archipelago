@@ -1,0 +1,55 @@
+{
+    ".NetUsedVersions": {
+        "Stardew Valley:5.0.5.0:NET6_0": true
+    },
+    "GiftBox;ReceiverName": [{
+            "ID": "65ffdda5-b955-4711-9e62-a9627d2f24e1",
+            "Item": {
+                "Name": "Coffee",
+                "Amount": 4,
+                "Value": 9000
+            },
+            "Traits": [{
+                    "Trait": "Drink",
+                    "Strength": 1,
+                    "Duration": 1
+                }, {
+                    "Trait": "Speed",
+                    "Strength": 1,
+                    "Duration": 2
+                }
+            ],
+            "Sender": "SenderName",
+            "Receiver": "ReceiverName",
+            "IsRefund": false,
+            "GiftValue": 36000
+        }, {
+            "ID": "45703834-0906-45df-a1f2-88a728a79f17",
+            "Item": {
+                "Name": "Burn",
+                "Amount": 1,
+                "Value": 40
+            },
+            "Traits": [{
+                    "Trait": "Trap",
+                    "Strength": 1,
+                    "Duration": 1
+                }, {
+                    "Trait": "Damage",
+                    "Strength": 5,
+                    "Duration": 2
+                }, {
+                    "Trait": "Fire",
+                    "Strength": 5,
+                    "Duration": 1
+                }
+            ],
+            "Sender": "SenderName",
+            "Receiver": "ReceiverName",
+            "IsRefund": false,
+            "GiftValue": 40
+        }
+    ],
+    "GiftBox;SenderName": []
+	"GiftBox;PlayerWithGiftingTurnedOffName": null
+}
