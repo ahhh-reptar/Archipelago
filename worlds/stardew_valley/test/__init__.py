@@ -54,7 +54,8 @@ class SVTestBase(WorldTestBase):
         }
         return min_max_options
 
-    def allsanity_options_without_mods(self):
+    @staticmethod
+    def allsanity_options_without_mods():
         allsanity = {
             Goal.internal_name: Goal.option_perfection,
             BundleRandomization.internal_name: BundleRandomization.option_shuffled,
