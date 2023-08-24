@@ -58,7 +58,7 @@ class SVTestBase(WorldTestBase):
     def allsanity_options_without_mods():
         allsanity = {
             Goal.internal_name: Goal.option_perfection,
-            BundleRandomization.internal_name: BundleRandomization.option_shuffled,
+            BundleRandomization.internal_name: BundleRandomization.option_thematic,
             BundlePrice.internal_name: BundlePrice.option_expensive,
             SeasonRandomization.internal_name: SeasonRandomization.option_randomized,
             Cropsanity.internal_name: Cropsanity.option_shuffled,
@@ -74,6 +74,7 @@ class SVTestBase(WorldTestBase):
             Fishsanity.internal_name: Fishsanity.option_all,
             Museumsanity.internal_name: Museumsanity.option_all,
             Monstersanity.internal_name: Monstersanity.option_progressive_goals,
+            Shipsanity.internal_name: Shipsanity.option_everything,
             Friendsanity.internal_name: Friendsanity.option_all_with_marriage,
             FriendsanityHeartSize.internal_name: 1,
             NumberOfMovementBuffs.internal_name: 12,

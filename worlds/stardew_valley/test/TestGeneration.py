@@ -236,7 +236,8 @@ class TestProgressiveElevator(SVTestBase):
         last_elevator = self.get_item_by_name("Progressive Mine Elevator")
         self.collect(items_for_115)
 
-        self.assertTrue(self.multiworld.get_region("The Mines - Floor 115", self.player).can_reach(self.multiworld.state))
+        can_reach = self.multiworld.get_region("The Mines - Floor 115", self.player).can_reach(self.multiworld.state)
+        self.assertTrue(can_reach)
         self.assertFalse(self.multiworld.get_region("The Mines - Floor 120", self.player).can_reach(self.multiworld.state))
 
         self.collect(last_elevator)
@@ -251,7 +252,8 @@ class TestProgressiveElevator(SVTestBase):
         items_for_120 = self.generate_items_for_extra_mine_levels("Progressive Sword")
         self.collect(items_for_115)
 
-        self.assertTrue(self.multiworld.get_region("The Mines - Floor 115", self.player).can_reach(self.multiworld.state))
+        can_reach = self.multiworld.get_region("The Mines - Floor 115", self.player).can_reach(self.multiworld.state)
+        self.assertTrue(can_reach)
         self.assertFalse(self.multiworld.get_region("The Mines - Floor 120", self.player).can_reach(self.multiworld.state))
 
         self.collect(items_for_120)
@@ -266,7 +268,8 @@ class TestProgressiveElevator(SVTestBase):
         items_for_120 = self.generate_items_for_extra_mine_levels("Progressive Dagger")
         self.collect(items_for_115)
 
-        self.assertTrue(self.multiworld.get_region("The Mines - Floor 115", self.player).can_reach(self.multiworld.state))
+        can_reach = self.multiworld.get_region("The Mines - Floor 115", self.player).can_reach(self.multiworld.state)
+        self.assertTrue(can_reach)
         self.assertFalse(self.multiworld.get_region("The Mines - Floor 120", self.player).can_reach(self.multiworld.state))
 
         self.collect(items_for_120)
