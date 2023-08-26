@@ -192,12 +192,18 @@ class BackpackProgression(Choice):
 class ToolProgression(Choice):
     """How is the tool progression handled?
     Vanilla: Clint will upgrade your tools with ore.
-    Progressive: You will randomly find Progressive Tool upgrades."""
+    Progressive: You will randomly find Progressive Tool upgrades.
+    Cheap: Tool Upgrades will cost half as much
+    Very Cheap: Tool Upgrades will cost 1/5th as much"""
     internal_name = "tool_progression"
     display_name = "Tool Progression"
     default = 1
     option_vanilla = 0
     option_progressive = 1
+    option_vanilla_cheap = 2
+    option_vanilla_very_cheap = 3
+    option_progressive_cheap = 4
+    option_progressive_very_cheap = 5
 
 
 class ElevatorProgression(Choice):
@@ -233,6 +239,8 @@ class BuildingProgression(Choice):
     Progressive: You will receive the buildings and will be able to build the first one of each type for free,
         once it is received. If you want more of the same building, it will cost the vanilla price.
     Progressive early shipping bin: You can expect your shipping bin in sphere 1.
+    Cheap: Buildings will cost as much
+    Very Cheap: Buildings will cost 1/5th as much
     """
     internal_name = "building_progression"
     display_name = "Building Progression"
@@ -240,6 +248,12 @@ class BuildingProgression(Choice):
     option_vanilla = 0
     option_progressive = 1
     option_progressive_early_shipping_bin = 2
+    option_vanilla_cheap = 3
+    option_vanilla_very_cheap = 4
+    option_progressive_cheap = 5
+    option_progressive_very_cheap = 6
+    option_progressive_early_shipping_bin_cheap = 7
+    option_progressive_early_shipping_bin_very_cheap = 8
 
 
 class FestivalLocations(Choice):
