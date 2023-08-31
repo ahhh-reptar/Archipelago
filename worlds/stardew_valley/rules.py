@@ -87,32 +87,36 @@ def set_isolated_locations_rules(logic: StardewLogic, multi_world, player):
 
 
 def set_tool_rules(logic: StardewLogic, multi_world, player, world_options):
-    if world_options[options.ToolProgression] != options.ToolProgression.option_vanilla:
-        MultiWorldRules.add_rule(multi_world.get_location("Purchase Fiberglass Rod", player),
-                                 (logic.skill.has_level(Skill.fishing, 2) & logic.money.can_spend(1800)).simplify())
-        MultiWorldRules.add_rule(multi_world.get_location("Purchase Iridium Rod", player),
-                                 (logic.skill.has_level(Skill.fishing, 6) & logic.money.can_spend(7500)).simplify())
+    if world_options[options.ToolProgression] & options.ToolProgression.option_vanilla:
+        return
 
-        materials = [None, "Copper", "Iron", "Gold", "Iridium"]
-        tool = [Tool.hoe, Tool.pickaxe, Tool.axe, Tool.watering_can, Tool.watering_can, Tool.trash_can]
-        for (previous, material), tool in itertools.product(zip(materials[:4], materials[1:]), tool):
-            if previous is None:
-                MultiWorldRules.add_rule(multi_world.get_location(f"{material} {tool} Upgrade", player),
-                                         (logic.has(f"{material} Ore") &
-                                          logic.money.can_spend(tool_upgrade_prices[material])).simplify())
-            else:
-                MultiWorldRules.add_rule(multi_world.get_location(f"{material} {tool} Upgrade", player),
-                                         (logic.has(f"{material} Ore") & logic.tool.has_tool(tool, previous) &
-                                          logic.money.can_spend(tool_upgrade_prices[material])).simplify())
+    MultiWorldRules.add_rule(multi_world.get_location("Purchase Fiberglass Rod", player),
+                             (logic.skill.has_level(Skill.fishing, 2) & logic.money.can_spend(1800)).simplify())
+    MultiWorldRules.add_rule(multi_world.get_location("Purchase Iridium Rod", player),
+                             (logic.skill.has_level(Skill.fishing, 6) & logic.money.can_spend(7500)).simplify())
+
+    materials = [None, "Copper", "Iron", "Gold", "Iridium"]
+    tool = [Tool.hoe, Tool.pickaxe, Tool.axe, Tool.watering_can, Tool.watering_can, Tool.trash_can]
+    for (previous, material), tool in itertools.product(zip(materials[:4], materials[1:]), tool):
+        if previous is None:
+            MultiWorldRules.add_rule(multi_world.get_location(f"{material} {tool} Upgrade", player),
+                                     (logic.has(f"{material} Ore") &
+                                      logic.money.can_spend(tool_upgrade_prices[material])).simplify())
+        else:
+            MultiWorldRules.add_rule(multi_world.get_location(f"{material} {tool} Upgrade", player),
+                                     (logic.has(f"{material} Ore") & logic.tool.has_tool(tool, previous) &
+                                      logic.money.can_spend(tool_upgrade_prices[material])).simplify())
 
 
 def set_building_rules(logic: StardewLogic, multi_world, player, world_options):
-    if world_options[options.BuildingProgression] != options.BuildingProgression.option_vanilla:
-        for building in locations.locations_by_tag[LocationTags.BUILDING_BLUEPRINT]:
-            if building.mod_name is not None and building.mod_name not in world_options[options.Mods]:
-                continue
-            MultiWorldRules.set_rule(multi_world.get_location(building.name, player),
-                                     logic.buildings.building_rules[building.name.replace(" Blueprint", "")].simplify())
+    if world_options[options.BuildingProgression] & options.BuildingProgression.option_vanilla:
+        return
+
+    for building in locations.locations_by_tag[LocationTags.BUILDING_BLUEPRINT]:
+        if building.mod_name is not None and building.mod_name not in world_options[options.Mods]:
+            continue
+        MultiWorldRules.set_rule(multi_world.get_location(building.name, player),
+                                 logic.buildings.building_rules[building.name.replace(" Blueprint", "")].simplify())
 
 
 def set_bundle_rules(current_bundles, logic: StardewLogic, multi_world, player):
