@@ -87,7 +87,7 @@ def set_isolated_locations_rules(logic: StardewLogic, multi_world, player):
 
 
 def set_tool_rules(logic: StardewLogic, multi_world, player, world_options):
-    if world_options[options.ToolProgression] & options.ToolProgression.option_vanilla:
+    if not world_options[options.ToolProgression] & options.ToolProgression.option_progressive:
         return
 
     MultiWorldRules.add_rule(multi_world.get_location("Purchase Fiberglass Rod", player),
@@ -109,7 +109,7 @@ def set_tool_rules(logic: StardewLogic, multi_world, player, world_options):
 
 
 def set_building_rules(logic: StardewLogic, multi_world, player, world_options):
-    if world_options[options.BuildingProgression] & options.BuildingProgression.option_vanilla:
+    if not world_options[options.BuildingProgression] & options.BuildingProgression.option_progressive:
         return
 
     for building in locations.locations_by_tag[LocationTags.BUILDING_BLUEPRINT]:
