@@ -58,6 +58,7 @@ class TestBaseItemGeneration(SVTestBase):
         options.SeasonRandomization.internal_name: options.SeasonRandomization.option_progressive,
         options.SpecialOrderLocations.internal_name: options.SpecialOrderLocations.option_board_qi,
         options.Shipsanity.internal_name: options.Shipsanity.option_everything,
+        options.Chefsanity.internal_name: options.Chefsanity.option_all,
         options.Mods.internal_name: mod_list
     }
 
@@ -82,6 +83,7 @@ class TestNoGingerIslandModItemGeneration(SVTestBase):
         options.SeasonRandomization.internal_name: options.SeasonRandomization.option_progressive,
         options.ExcludeGingerIsland.internal_name: options.ExcludeGingerIsland.option_true,
         options.Shipsanity.internal_name: options.Shipsanity.option_everything,
+        options.Chefsanity.internal_name: options.Chefsanity.option_all,
         options.Mods.internal_name: mod_list
     }
 

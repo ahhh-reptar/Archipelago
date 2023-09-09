@@ -143,6 +143,7 @@ class Region:
     dangerous_mines_100 = "Dangerous Mines - Floor 100"
     kitchen = "Kitchen"
     shipping = "Shipping"
+    queen_of_sauce = "The Queen of Sauce"
 
 
 class DeepWoodsRegion:
