@@ -389,130 +389,130 @@ id,region,name,tags,mod_name
 1068,Beach,Fishsanity: Legend II,"FISHSANITY,GINGER_ISLAND,REQUIRES_QI_ORDERS",
 1069,Beach,Fishsanity: Ms. Angler,"FISHSANITY,GINGER_ISLAND,REQUIRES_QI_ORDERS",
 1070,Beach,Fishsanity: Radioactive Carp,"FISHSANITY,GINGER_ISLAND,REQUIRES_QI_ORDERS",
-1100,Stardew Valley,Museumsanity: 5 Donations,MUSEUM_MILESTONES,
-1101,Stardew Valley,Museumsanity: 10 Donations,MUSEUM_MILESTONES,
-1102,Stardew Valley,Museumsanity: 15 Donations,MUSEUM_MILESTONES,
-1103,Stardew Valley,Museumsanity: 20 Donations,MUSEUM_MILESTONES,
-1104,Stardew Valley,Museumsanity: 25 Donations,MUSEUM_MILESTONES,
-1105,Stardew Valley,Museumsanity: 30 Donations,MUSEUM_MILESTONES,
-1106,Stardew Valley,Museumsanity: 35 Donations,MUSEUM_MILESTONES,
-1107,Stardew Valley,Museumsanity: 40 Donations,MUSEUM_MILESTONES,
-1108,Stardew Valley,Museumsanity: 50 Donations,MUSEUM_MILESTONES,
-1109,Stardew Valley,Museumsanity: 60 Donations,MUSEUM_MILESTONES,
-1110,Stardew Valley,Museumsanity: 70 Donations,MUSEUM_MILESTONES,
-1111,Stardew Valley,Museumsanity: 80 Donations,MUSEUM_MILESTONES,
-1112,Stardew Valley,Museumsanity: 90 Donations,MUSEUM_MILESTONES,
-1113,Stardew Valley,Museumsanity: 95 Donations,MUSEUM_MILESTONES,
-1114,Stardew Valley,Museumsanity: 11 Minerals,MUSEUM_MILESTONES,
-1115,Stardew Valley,Museumsanity: 21 Minerals,MUSEUM_MILESTONES,
-1116,Stardew Valley,Museumsanity: 31 Minerals,MUSEUM_MILESTONES,
-1117,Stardew Valley,Museumsanity: 41 Minerals,MUSEUM_MILESTONES,
-1118,Stardew Valley,Museumsanity: 50 Minerals,MUSEUM_MILESTONES,
-1119,Stardew Valley,Museumsanity: 3 Artifacts,MUSEUM_MILESTONES,
-1120,Stardew Valley,Museumsanity: 6 Artifacts,MUSEUM_MILESTONES,
-1121,Stardew Valley,Museumsanity: 9 Artifacts,MUSEUM_MILESTONES,
-1122,Stardew Valley,Museumsanity: 11 Artifacts,MUSEUM_MILESTONES,
-1123,Stardew Valley,Museumsanity: 15 Artifacts,MUSEUM_MILESTONES,
-1124,Stardew Valley,Museumsanity: 20 Artifacts,MUSEUM_MILESTONES,
-1125,Stardew Valley,Museumsanity: Dwarf Scrolls,MUSEUM_MILESTONES,
-1126,Stardew Valley,Museumsanity: Skeleton Front,MUSEUM_MILESTONES,
-1127,Stardew Valley,Museumsanity: Skeleton Middle,MUSEUM_MILESTONES,
-1128,Stardew Valley,Museumsanity: Skeleton Back,MUSEUM_MILESTONES,
-1201,The Mines - Floor 20,Museumsanity: Dwarf Scroll I,MUSEUM_DONATIONS,
-1202,The Mines - Floor 20,Museumsanity: Dwarf Scroll II,MUSEUM_DONATIONS,
-1203,The Mines - Floor 60,Museumsanity: Dwarf Scroll III,MUSEUM_DONATIONS,
-1204,The Mines - Floor 100,Museumsanity: Dwarf Scroll IV,MUSEUM_DONATIONS,
-1205,Town,Museumsanity: Chipped Amphora,MUSEUM_DONATIONS,
-1206,Forest,Museumsanity: Arrowhead,MUSEUM_DONATIONS,
-1207,Forest,Museumsanity: Ancient Doll,MUSEUM_DONATIONS,
-1208,Forest,Museumsanity: Elvish Jewelry,MUSEUM_DONATIONS,
-1209,Forest,Museumsanity: Chewing Stick,MUSEUM_DONATIONS,
-1210,Forest,Museumsanity: Ornamental Fan,MUSEUM_DONATIONS,
-1211,Mountain,Museumsanity: Dinosaur Egg,MUSEUM_DONATIONS,
-1212,Stardew Valley,Museumsanity: Rare Disc,MUSEUM_DONATIONS,
-1213,Forest,Museumsanity: Ancient Sword,MUSEUM_DONATIONS,
-1214,Town,Museumsanity: Rusty Spoon,MUSEUM_DONATIONS,
-1215,Farm,Museumsanity: Rusty Spur,MUSEUM_DONATIONS,
-1216,Mountain,Museumsanity: Rusty Cog,MUSEUM_DONATIONS,
-1217,Farm,Museumsanity: Chicken Statue,MUSEUM_DONATIONS,
-1218,Forest,Museumsanity: Ancient Seed,"MUSEUM_DONATIONS,MUSEUM_MILESTONES",
-1219,Forest,Museumsanity: Prehistoric Tool,MUSEUM_DONATIONS,
-1220,Beach,Museumsanity: Dried Starfish,MUSEUM_DONATIONS,
-1221,Beach,Museumsanity: Anchor,MUSEUM_DONATIONS,
-1222,Beach,Museumsanity: Glass Shards,MUSEUM_DONATIONS,
-1223,Forest,Museumsanity: Bone Flute,MUSEUM_DONATIONS,
-1224,Forest,Museumsanity: Prehistoric Handaxe,MUSEUM_DONATIONS,
-1225,The Mines - Floor 20,Museumsanity: Dwarvish Helm,MUSEUM_DONATIONS,
-1226,The Mines - Floor 60,Museumsanity: Dwarf Gadget,MUSEUM_DONATIONS,
-1227,Forest,Museumsanity: Ancient Drum,MUSEUM_DONATIONS,
-1228,Desert,Museumsanity: Golden Mask,MUSEUM_DONATIONS,
-1229,Desert,Museumsanity: Golden Relic,MUSEUM_DONATIONS,
-1230,Town,Museumsanity: Strange Doll (Green),MUSEUM_DONATIONS,
-1231,Desert,Museumsanity: Strange Doll,MUSEUM_DONATIONS,
-1232,Forest,Museumsanity: Prehistoric Scapula,MUSEUM_DONATIONS,
-1233,Forest,Museumsanity: Prehistoric Tibia,MUSEUM_DONATIONS,
-1234,Dig Site,Museumsanity: Prehistoric Skull,MUSEUM_DONATIONS,
-1235,Dig Site,Museumsanity: Skeletal Hand,MUSEUM_DONATIONS,
-1236,Dig Site,Museumsanity: Prehistoric Rib,MUSEUM_DONATIONS,
-1237,Dig Site,Museumsanity: Prehistoric Vertebra,MUSEUM_DONATIONS,
-1238,Dig Site,Museumsanity: Skeletal Tail,MUSEUM_DONATIONS,
-1239,Dig Site,Museumsanity: Nautilus Fossil,MUSEUM_DONATIONS,
-1240,Forest,Museumsanity: Amphibian Fossil,MUSEUM_DONATIONS,
-1241,Forest,Museumsanity: Palm Fossil,MUSEUM_DONATIONS,
-1242,Forest,Museumsanity: Trilobite,MUSEUM_DONATIONS,
-1243,The Mines - Floor 20,Museumsanity: Quartz,MUSEUM_DONATIONS,
-1244,The Mines - Floor 100,Museumsanity: Fire Quartz,MUSEUM_DONATIONS,
-1245,The Mines - Floor 60,Museumsanity: Frozen Tear,MUSEUM_DONATIONS,
-1246,The Mines - Floor 20,Museumsanity: Earth Crystal,MUSEUM_DONATIONS,
-1247,The Mines - Floor 100,Museumsanity: Emerald,MUSEUM_DONATIONS,
-1248,The Mines - Floor 60,Museumsanity: Aquamarine,MUSEUM_DONATIONS,
-1249,The Mines - Floor 100,Museumsanity: Ruby,MUSEUM_DONATIONS,
-1250,The Mines - Floor 20,Museumsanity: Amethyst,MUSEUM_DONATIONS,
-1251,The Mines - Floor 20,Museumsanity: Topaz,MUSEUM_DONATIONS,
-1252,The Mines - Floor 60,Museumsanity: Jade,MUSEUM_DONATIONS,
-1253,The Mines - Floor 60,Museumsanity: Diamond,MUSEUM_DONATIONS,
-1254,Skull Cavern Floor 100,Museumsanity: Prismatic Shard,MUSEUM_DONATIONS,
-1255,Town,Museumsanity: Alamite,MUSEUM_DONATIONS,
-1256,Town,Museumsanity: Bixite,MUSEUM_DONATIONS,
-1257,Town,Museumsanity: Baryte,MUSEUM_DONATIONS,
-1258,Town,Museumsanity: Aerinite,MUSEUM_DONATIONS,
-1259,Town,Museumsanity: Calcite,MUSEUM_DONATIONS,
-1260,Town,Museumsanity: Dolomite,MUSEUM_DONATIONS,
-1261,Town,Museumsanity: Esperite,MUSEUM_DONATIONS,
-1262,Town,Museumsanity: Fluorapatite,MUSEUM_DONATIONS,
-1263,Town,Museumsanity: Geminite,MUSEUM_DONATIONS,
-1264,Town,Museumsanity: Helvite,MUSEUM_DONATIONS,
-1265,Town,Museumsanity: Jamborite,MUSEUM_DONATIONS,
-1266,Town,Museumsanity: Jagoite,MUSEUM_DONATIONS,
-1267,Town,Museumsanity: Kyanite,MUSEUM_DONATIONS,
-1268,Town,Museumsanity: Lunarite,MUSEUM_DONATIONS,
-1269,Town,Museumsanity: Malachite,MUSEUM_DONATIONS,
-1270,Town,Museumsanity: Neptunite,MUSEUM_DONATIONS,
-1271,Town,Museumsanity: Lemon Stone,MUSEUM_DONATIONS,
-1272,Town,Museumsanity: Nekoite,MUSEUM_DONATIONS,
-1273,Town,Museumsanity: Orpiment,MUSEUM_DONATIONS,
-1274,Town,Museumsanity: Petrified Slime,MUSEUM_DONATIONS,
-1275,Town,Museumsanity: Thunder Egg,MUSEUM_DONATIONS,
-1276,Town,Museumsanity: Pyrite,MUSEUM_DONATIONS,
-1277,Town,Museumsanity: Ocean Stone,MUSEUM_DONATIONS,
-1278,Town,Museumsanity: Ghost Crystal,MUSEUM_DONATIONS,
-1279,Town,Museumsanity: Tigerseye,MUSEUM_DONATIONS,
-1280,Town,Museumsanity: Jasper,MUSEUM_DONATIONS,
-1281,Town,Museumsanity: Opal,MUSEUM_DONATIONS,
-1282,Town,Museumsanity: Fire Opal,MUSEUM_DONATIONS,
-1283,Town,Museumsanity: Celestine,MUSEUM_DONATIONS,
-1284,Town,Museumsanity: Marble,MUSEUM_DONATIONS,
-1285,Town,Museumsanity: Sandstone,MUSEUM_DONATIONS,
-1286,Town,Museumsanity: Granite,MUSEUM_DONATIONS,
-1287,Town,Museumsanity: Basalt,MUSEUM_DONATIONS,
-1288,Town,Museumsanity: Limestone,MUSEUM_DONATIONS,
-1289,Town,Museumsanity: Soapstone,MUSEUM_DONATIONS,
-1290,Town,Museumsanity: Hematite,MUSEUM_DONATIONS,
-1291,Town,Museumsanity: Mudstone,MUSEUM_DONATIONS,
-1292,Town,Museumsanity: Obsidian,MUSEUM_DONATIONS,
-1293,Town,Museumsanity: Slate,MUSEUM_DONATIONS,
-1294,Town,Museumsanity: Fairy Stone,MUSEUM_DONATIONS,
-1295,Town,Museumsanity: Star Shards,MUSEUM_DONATIONS,
+1100,Museum,Museumsanity: 5 Donations,MUSEUM_MILESTONES,
+1101,Museum,Museumsanity: 10 Donations,MUSEUM_MILESTONES,
+1102,Museum,Museumsanity: 15 Donations,MUSEUM_MILESTONES,
+1103,Museum,Museumsanity: 20 Donations,MUSEUM_MILESTONES,
+1104,Museum,Museumsanity: 25 Donations,MUSEUM_MILESTONES,
+1105,Museum,Museumsanity: 30 Donations,MUSEUM_MILESTONES,
+1106,Museum,Museumsanity: 35 Donations,MUSEUM_MILESTONES,
+1107,Museum,Museumsanity: 40 Donations,MUSEUM_MILESTONES,
+1108,Museum,Museumsanity: 50 Donations,MUSEUM_MILESTONES,
+1109,Museum,Museumsanity: 60 Donations,MUSEUM_MILESTONES,
+1110,Museum,Museumsanity: 70 Donations,MUSEUM_MILESTONES,
+1111,Museum,Museumsanity: 80 Donations,MUSEUM_MILESTONES,
+1112,Museum,Museumsanity: 90 Donations,MUSEUM_MILESTONES,
+1113,Museum,Museumsanity: 95 Donations,MUSEUM_MILESTONES,
+1114,Museum,Museumsanity: 11 Minerals,MUSEUM_MILESTONES,
+1115,Museum,Museumsanity: 21 Minerals,MUSEUM_MILESTONES,
+1116,Museum,Museumsanity: 31 Minerals,MUSEUM_MILESTONES,
+1117,Museum,Museumsanity: 41 Minerals,MUSEUM_MILESTONES,
+1118,Museum,Museumsanity: 50 Minerals,MUSEUM_MILESTONES,
+1119,Museum,Museumsanity: 3 Artifacts,MUSEUM_MILESTONES,
+1120,Museum,Museumsanity: 6 Artifacts,MUSEUM_MILESTONES,
+1121,Museum,Museumsanity: 9 Artifacts,MUSEUM_MILESTONES,
+1122,Museum,Museumsanity: 11 Artifacts,MUSEUM_MILESTONES,
+1123,Museum,Museumsanity: 15 Artifacts,MUSEUM_MILESTONES,
+1124,Museum,Museumsanity: 20 Artifacts,MUSEUM_MILESTONES,
+1125,Museum,Museumsanity: Dwarf Scrolls,MUSEUM_MILESTONES,
+1126,Museum,Museumsanity: Skeleton Front,MUSEUM_MILESTONES,
+1127,Museum,Museumsanity: Skeleton Middle,MUSEUM_MILESTONES,
+1128,Museum,Museumsanity: Skeleton Back,MUSEUM_MILESTONES,
+1201,Museum,Museumsanity: Dwarf Scroll I,MUSEUM_DONATIONS,
+1202,Museum,Museumsanity: Dwarf Scroll II,MUSEUM_DONATIONS,
+1203,Museum,Museumsanity: Dwarf Scroll III,MUSEUM_DONATIONS,
+1204,Museum,Museumsanity: Dwarf Scroll IV,MUSEUM_DONATIONS,
+1205,Museum,Museumsanity: Chipped Amphora,MUSEUM_DONATIONS,
+1206,Museum,Museumsanity: Arrowhead,MUSEUM_DONATIONS,
+1207,Museum,Museumsanity: Ancient Doll,MUSEUM_DONATIONS,
+1208,Museum,Museumsanity: Elvish Jewelry,MUSEUM_DONATIONS,
+1209,Museum,Museumsanity: Chewing Stick,MUSEUM_DONATIONS,
+1210,Museum,Museumsanity: Ornamental Fan,MUSEUM_DONATIONS,
+1211,Museum,Museumsanity: Dinosaur Egg,MUSEUM_DONATIONS,
+1212,Museum,Museumsanity: Rare Disc,MUSEUM_DONATIONS,
+1213,Museum,Museumsanity: Ancient Sword,MUSEUM_DONATIONS,
+1214,Museum,Museumsanity: Rusty Spoon,MUSEUM_DONATIONS,
+1215,Museum,Museumsanity: Rusty Spur,MUSEUM_DONATIONS,
+1216,Museum,Museumsanity: Rusty Cog,MUSEUM_DONATIONS,
+1217,Museum,Museumsanity: Chicken Statue,MUSEUM_DONATIONS,
+1218,Museum,Museumsanity: Ancient Seed,"MUSEUM_DONATIONS,MUSEUM_MILESTONES",
+1219,Museum,Museumsanity: Prehistoric Tool,MUSEUM_DONATIONS,
+1220,Museum,Museumsanity: Dried Starfish,MUSEUM_DONATIONS,
+1221,Museum,Museumsanity: Anchor,MUSEUM_DONATIONS,
+1222,Museum,Museumsanity: Glass Shards,MUSEUM_DONATIONS,
+1223,Museum,Museumsanity: Bone Flute,MUSEUM_DONATIONS,
+1224,Museum,Museumsanity: Prehistoric Handaxe,MUSEUM_DONATIONS,
+1225,Museum,Museumsanity: Dwarvish Helm,MUSEUM_DONATIONS,
+1226,Museum,Museumsanity: Dwarf Gadget,MUSEUM_DONATIONS,
+1227,Museum,Museumsanity: Ancient Drum,MUSEUM_DONATIONS,
+1228,Museum,Museumsanity: Golden Mask,MUSEUM_DONATIONS,
+1229,Museum,Museumsanity: Golden Relic,MUSEUM_DONATIONS,
+1230,Museum,Museumsanity: Strange Doll (Green),MUSEUM_DONATIONS,
+1231,Museum,Museumsanity: Strange Doll,MUSEUM_DONATIONS,
+1232,Museum,Museumsanity: Prehistoric Scapula,MUSEUM_DONATIONS,
+1233,Museum,Museumsanity: Prehistoric Tibia,MUSEUM_DONATIONS,
+1234,Museum,Museumsanity: Prehistoric Skull,MUSEUM_DONATIONS,
+1235,Museum,Museumsanity: Skeletal Hand,MUSEUM_DONATIONS,
+1236,Museum,Museumsanity: Prehistoric Rib,MUSEUM_DONATIONS,
+1237,Museum,Museumsanity: Prehistoric Vertebra,MUSEUM_DONATIONS,
+1238,Museum,Museumsanity: Skeletal Tail,MUSEUM_DONATIONS,
+1239,Museum,Museumsanity: Nautilus Fossil,MUSEUM_DONATIONS,
+1240,Museum,Museumsanity: Amphibian Fossil,MUSEUM_DONATIONS,
+1241,Museum,Museumsanity: Palm Fossil,MUSEUM_DONATIONS,
+1242,Museum,Museumsanity: Trilobite,MUSEUM_DONATIONS,
+1243,Museum,Museumsanity: Quartz,MUSEUM_DONATIONS,
+1244,Museum,Museumsanity: Fire Quartz,MUSEUM_DONATIONS,
+1245,Museum,Museumsanity: Frozen Tear,MUSEUM_DONATIONS,
+1246,Museum,Museumsanity: Earth Crystal,MUSEUM_DONATIONS,
+1247,Museum,Museumsanity: Emerald,MUSEUM_DONATIONS,
+1248,Museum,Museumsanity: Aquamarine,MUSEUM_DONATIONS,
+1249,Museum,Museumsanity: Ruby,MUSEUM_DONATIONS,
+1250,Museum,Museumsanity: Amethyst,MUSEUM_DONATIONS,
+1251,Museum,Museumsanity: Topaz,MUSEUM_DONATIONS,
+1252,Museum,Museumsanity: Jade,MUSEUM_DONATIONS,
+1253,Museum,Museumsanity: Diamond,MUSEUM_DONATIONS,
+1254,Museum,Museumsanity: Prismatic Shard,MUSEUM_DONATIONS,
+1255,Museum,Museumsanity: Alamite,MUSEUM_DONATIONS,
+1256,Museum,Museumsanity: Bixite,MUSEUM_DONATIONS,
+1257,Museum,Museumsanity: Baryte,MUSEUM_DONATIONS,
+1258,Museum,Museumsanity: Aerinite,MUSEUM_DONATIONS,
+1259,Museum,Museumsanity: Calcite,MUSEUM_DONATIONS,
+1260,Museum,Museumsanity: Dolomite,MUSEUM_DONATIONS,
+1261,Museum,Museumsanity: Esperite,MUSEUM_DONATIONS,
+1262,Museum,Museumsanity: Fluorapatite,MUSEUM_DONATIONS,
+1263,Museum,Museumsanity: Geminite,MUSEUM_DONATIONS,
+1264,Museum,Museumsanity: Helvite,MUSEUM_DONATIONS,
+1265,Museum,Museumsanity: Jamborite,MUSEUM_DONATIONS,
+1266,Museum,Museumsanity: Jagoite,MUSEUM_DONATIONS,
+1267,Museum,Museumsanity: Kyanite,MUSEUM_DONATIONS,
+1268,Museum,Museumsanity: Lunarite,MUSEUM_DONATIONS,
+1269,Museum,Museumsanity: Malachite,MUSEUM_DONATIONS,
+1270,Museum,Museumsanity: Neptunite,MUSEUM_DONATIONS,
+1271,Museum,Museumsanity: Lemon Stone,MUSEUM_DONATIONS,
+1272,Museum,Museumsanity: Nekoite,MUSEUM_DONATIONS,
+1273,Museum,Museumsanity: Orpiment,MUSEUM_DONATIONS,
+1274,Museum,Museumsanity: Petrified Slime,MUSEUM_DONATIONS,
+1275,Museum,Museumsanity: Thunder Egg,MUSEUM_DONATIONS,
+1276,Museum,Museumsanity: Pyrite,MUSEUM_DONATIONS,
+1277,Museum,Museumsanity: Ocean Stone,MUSEUM_DONATIONS,
+1278,Museum,Museumsanity: Ghost Crystal,MUSEUM_DONATIONS,
+1279,Museum,Museumsanity: Tigerseye,MUSEUM_DONATIONS,
+1280,Museum,Museumsanity: Jasper,MUSEUM_DONATIONS,
+1281,Museum,Museumsanity: Opal,MUSEUM_DONATIONS,
+1282,Museum,Museumsanity: Fire Opal,MUSEUM_DONATIONS,
+1283,Museum,Museumsanity: Celestine,MUSEUM_DONATIONS,
+1284,Museum,Museumsanity: Marble,MUSEUM_DONATIONS,
+1285,Museum,Museumsanity: Sandstone,MUSEUM_DONATIONS,
+1286,Museum,Museumsanity: Granite,MUSEUM_DONATIONS,
+1287,Museum,Museumsanity: Basalt,MUSEUM_DONATIONS,
+1288,Museum,Museumsanity: Limestone,MUSEUM_DONATIONS,
+1289,Museum,Museumsanity: Soapstone,MUSEUM_DONATIONS,
+1290,Museum,Museumsanity: Hematite,MUSEUM_DONATIONS,
+1291,Museum,Museumsanity: Mudstone,MUSEUM_DONATIONS,
+1292,Museum,Museumsanity: Obsidian,MUSEUM_DONATIONS,
+1293,Museum,Museumsanity: Slate,MUSEUM_DONATIONS,
+1294,Museum,Museumsanity: Fairy Stone,MUSEUM_DONATIONS,
+1295,Museum,Museumsanity: Star Shards,MUSEUM_DONATIONS,
 1301,Town,Friendsanity: Alex 1 <3,FRIENDSANITY,
 1302,Town,Friendsanity: Alex 2 <3,FRIENDSANITY,
 1303,Town,Friendsanity: Alex 3 <3,FRIENDSANITY,
@@ -1702,6 +1702,85 @@ id,region,name,tags,mod_name
 3125,Adventurer's Guild,Monster Eradication: Royal Serpent,"GINGER_ISLAND,REQUIRES_QI_ORDERS,MONSTERSANITY,MONSTERSANITY_MONSTER",
 3126,Adventurer's Guild,Monster Eradication: Magma Sprite,"GINGER_ISLAND,MONSTERSANITY,MONSTERSANITY_MONSTER",
 3127,Adventurer's Guild,Monster Eradication: Magma Sparker,"GINGER_ISLAND,MONSTERSANITY,MONSTERSANITY_MONSTER",
+3201,Kitchen,Cook Algae Soup,"COOKSANITY"
+3202,Kitchen,Cook Artichoke Dip,"COOKSANITY,COOKSANITY_QOS"
+3203,Kitchen,Cook Autumn's Bounty,"COOKSANITY"
+3204,Kitchen,Cook Baked Fish,"COOKSANITY,COOKSANITY_QOS"
+3205,Kitchen,Cook Banana Pudding,"COOKSANITY,GINGER_ISLAND"
+3206,Kitchen,Cook Bean Hotpot,"COOKSANITY"
+3207,Kitchen,Cook Blackberry Cobbler,"COOKSANITY,COOKSANITY_QOS"
+3208,Kitchen,Cook Blueberry Tart,"COOKSANITY"
+3209,Kitchen,Cook Bread,"COOKSANITY,COOKSANITY_QOS"
+3210,Kitchen,Cook Bruschetta,"COOKSANITY,COOKSANITY_QOS"
+3211,Kitchen,Cook Carp Surprise,"COOKSANITY,COOKSANITY_QOS"
+3212,Kitchen,Cook Cheese Cauliflower,"COOKSANITY"
+3213,Kitchen,Cook Chocolate Cake,"COOKSANITY,COOKSANITY_QOS"
+3214,Kitchen,Cook Chowder,"COOKSANITY"
+3215,Kitchen,Cook Coleslaw,"COOKSANITY,COOKSANITY_QOS"
+3216,Kitchen,Cook Complete Breakfast,"COOKSANITY,COOKSANITY_QOS"
+3217,Kitchen,Cook Cookie,"COOKSANITY"
+3218,Kitchen,Cook Crab Cakes,"COOKSANITY,COOKSANITY_QOS"
+3219,Kitchen,Cook Cranberry Candy,"COOKSANITY,COOKSANITY_QOS"
+3220,Kitchen,Cook Cranberry Sauce,"COOKSANITY"
+3221,Kitchen,Cook Crispy Bass,"COOKSANITY"
+3222,Kitchen,Cook Dish O' The Sea,"COOKSANITY"
+3223,Kitchen,Cook Eggplant Parmesan,"COOKSANITY"
+3224,Kitchen,Cook Escargot,"COOKSANITY"
+3225,Kitchen,Cook Farmer's Lunch,"COOKSANITY"
+3226,Kitchen,Cook Fiddlehead Risotto,"COOKSANITY,COOKSANITY_QOS"
+3227,Kitchen,Cook Fish Stew,"COOKSANITY"
+3228,Kitchen,Cook Fish Taco,"COOKSANITY"
+3229,Kitchen,Cook Fried Calamari,"COOKSANITY"
+3230,Kitchen,Cook Fried Eel,"COOKSANITY"
+3231,Kitchen,Cook Fried Egg,"COOKSANITY"
+3232,Kitchen,Cook Fried Mushroom,"COOKSANITY"
+3233,Kitchen,Cook Fruit Salad,"COOKSANITY,COOKSANITY_QOS"
+3234,Kitchen,Cook Ginger Ale,"COOKSANITY,GINGER_ISLAND"
+3235,Kitchen,Cook Glazed Yams,"COOKSANITY,COOKSANITY_QOS"
+3236,Kitchen,Cook Hashbrowns,"COOKSANITY,COOKSANITY_QOS"
+3237,Kitchen,Cook Ice Cream,"COOKSANITY"
+3238,Kitchen,Cook Lobster Bisque,"COOKSANITY,COOKSANITY_QOS"
+3239,Kitchen,Cook Lucky Lunch,"COOKSANITY,COOKSANITY_QOS"
+3240,Kitchen,Cook Maki Roll,"COOKSANITY,COOKSANITY_QOS"
+3241,Kitchen,Cook Mango Sticky Rice,"COOKSANITY,GINGER_ISLAND"
+3242,Kitchen,Cook Maple Bar,"COOKSANITY,COOKSANITY_QOS"
+3243,Kitchen,Cook Miner's Treat,"COOKSANITY"
+3244,Kitchen,Cook Omelet,"COOKSANITY,COOKSANITY_QOS"
+3245,Kitchen,Cook Pale Broth,"COOKSANITY"
+3246,Kitchen,Cook Pancakes,"COOKSANITY,COOKSANITY_QOS"
+3247,Kitchen,Cook Parsnip Soup,"COOKSANITY"
+3248,Kitchen,Cook Pepper Poppers,"COOKSANITY"
+3249,Kitchen,Cook Pink Cake,"COOKSANITY,COOKSANITY_QOS"
+3250,Kitchen,Cook Pizza,"COOKSANITY,COOKSANITY_QOS"
+3251,Kitchen,Cook Plum Pudding,"COOKSANITY,COOKSANITY_QOS"
+3252,Kitchen,Cook Poi,"COOKSANITY,GINGER_ISLAND"
+3253,Kitchen,Cook Poppyseed Muffin,"COOKSANITY,COOKSANITY_QOS"
+3254,Kitchen,Cook Pumpkin Pie,"COOKSANITY,COOKSANITY_QOS"
+3255,Kitchen,Cook Pumpkin Soup,"COOKSANITY"
+3256,Kitchen,Cook Radish Salad,"COOKSANITY,COOKSANITY_QOS"
+3257,Kitchen,Cook Red Plate,"COOKSANITY"
+3258,Kitchen,Cook Rhubarb Pie,"COOKSANITY"
+3259,Kitchen,Cook Rice Pudding,"COOKSANITY"
+3260,Kitchen,Cook Roasted Hazelnuts,"COOKSANITY,COOKSANITY_QOS"
+3261,Kitchen,Cook Roots Platter,"COOKSANITY"
+3262,Kitchen,Cook Salad,"COOKSANITY"
+3263,Kitchen,Cook Salmon Dinner,"COOKSANITY"
+3264,Kitchen,Cook Sashimi,"COOKSANITY"
+3265,Kitchen,Cook Seafoam Pudding,"COOKSANITY"
+3266,Kitchen,Cook Shrimp Cocktail,"COOKSANITY,COOKSANITY_QOS"
+3267,Kitchen,Cook Spaghetti,"COOKSANITY"
+3268,Kitchen,Cook Spicy Eel,"COOKSANITY"
+3269,Kitchen,Cook Squid Ink Ravioli,"COOKSANITY"
+3270,Kitchen,Cook Stir Fry,"COOKSANITY,COOKSANITY_QOS"
+3271,Kitchen,Cook Stuffing,"COOKSANITY"
+3272,Kitchen,Cook Super Meal,"COOKSANITY"
+3273,Kitchen,Cook Survival Burger,"COOKSANITY"
+3274,Kitchen,Cook Tom Kha Soup,"COOKSANITY"
+3275,Kitchen,Cook Tortilla,"COOKSANITY,COOKSANITY_QOS"
+3276,Kitchen,Cook Triple Shot Espresso,"COOKSANITY"
+3277,Kitchen,Cook Tropical Curry,"COOKSANITY,GINGER_ISLAND"
+3278,Kitchen,Cook Trout Soup,"COOKSANITY,COOKSANITY_QOS"
+3279,Kitchen,Cook Vegetable Medley,"COOKSANITY"
 5001,Stardew Valley,Level 1 Luck,"LUCK_LEVEL,SKILL_LEVEL",Luck Skill
 5002,Stardew Valley,Level 2 Luck,"LUCK_LEVEL,SKILL_LEVEL",Luck Skill
 5003,Stardew Valley,Level 3 Luck,"LUCK_LEVEL,SKILL_LEVEL",Luck Skill

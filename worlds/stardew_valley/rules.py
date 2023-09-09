@@ -233,26 +233,10 @@ def set_entrance_rules(logic: StardewLogic, multi_world, player, world_options: 
                                  logic.mine.can_mine_to_skull_cavern_floor(floor).simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.talk_to_mines_dwarf, player),
                              logic.wallet.can_speak_dwarf() & logic.tool.has_tool(Tool.pickaxe, ToolMaterial.iron))
-
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.use_desert_obelisk, player),
-                             logic.can_use_obelisk(Transportation.desert_obelisk).simplify())
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.use_island_obelisk, player),
-                             logic.can_use_obelisk(Transportation.island_obelisk).simplify())
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.use_farm_obelisk, player),
-                             logic.can_use_obelisk(Transportation.farm_obelisk).simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.buy_from_traveling_merchant, player),
                              logic.has_traveling_merchant())
 
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_greenhouse, player),
-                             logic.received("Greenhouse"))
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_coop, player),
-                             logic.buildings.has_building(Building.coop))
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_barn, player),
-                             logic.buildings.has_building(Building.barn))
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_shed, player),
-                             logic.buildings.has_building(Building.shed))
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_slime_hutch, player),
-                             logic.buildings.has_building(Building.slime_hutch))
+    set_farm_buildings_entrance_rules(logic, multi_world, player)
 
     MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.mountain_to_adventurer_guild, player),
                              logic.received("Adventurer's Guild"))
@@ -266,25 +250,33 @@ def set_entrance_rules(logic: StardewLogic, multi_world, player, world_options: 
                              ((logic.wallet.has_rusty_key() & logic.region.can_reach(Region.railroad) &
                                logic.relationship.can_meet(NPC.krobus) | logic.mod.magic.can_blink()).simplify()))
 
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_harvey_room, player),
-                             logic.relationship.has_hearts(NPC.harvey, 2))
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.mountain_to_maru_room, player),
-                             logic.relationship.has_hearts(NPC.maru, 2))
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_sebastian_room, player),
-                             (logic.relationship.has_hearts(NPC.sebastian, 2) | logic.mod.magic.can_blink()).simplify())
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.forest_to_leah_cottage, player),
-                             logic.relationship.has_hearts(NPC.leah, 2))
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_elliott_house, player),
-                             logic.relationship.has_hearts(NPC.elliott, 2))
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_sunroom, player),
-                             logic.relationship.has_hearts(NPC.caroline, 2))
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_wizard_basement, player),
-                             logic.relationship.has_hearts(NPC.wizard, 4))
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.mountain_to_leo_treehouse, player),
-                             logic.received("Treehouse"))
+    set_bedroom_entrance_rules(logic, multi_world, player, world_options)
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.island_cooking, player), logic.cooking.can_cook_in_kitchen().simplify())
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.shipping, player), logic.shipping.can_use_shipping_bin().simplify())
+
+
+def set_farm_buildings_entrance_rules(logic, multi_world, player):
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.use_desert_obelisk, player), logic.can_use_obelisk(Transportation.desert_obelisk).simplify())
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.use_island_obelisk, player), logic.can_use_obelisk(Transportation.island_obelisk).simplify())
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.use_farm_obelisk, player), logic.can_use_obelisk(Transportation.farm_obelisk).simplify())
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_greenhouse, player), logic.received("Greenhouse"))
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_coop, player), logic.buildings.has_building(Building.coop))
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_barn, player), logic.buildings.has_building(Building.barn))
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_shed, player), logic.buildings.has_building(Building.shed))
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_slime_hutch, player), logic.buildings.has_building(Building.slime_hutch))
+
+
+def set_bedroom_entrance_rules(logic, multi_world, player, world_options):
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_harvey_room, player), logic.relationship.has_hearts(NPC.harvey, 2))
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.mountain_to_maru_room, player), logic.relationship.has_hearts(NPC.maru, 2))
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_sebastian_room, player), (logic.relationship.has_hearts(NPC.sebastian, 2) | logic.mod.magic.can_blink()).simplify())
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.forest_to_leah_cottage, player), logic.relationship.has_hearts(NPC.leah, 2))
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_elliott_house, player), logic.relationship.has_hearts(NPC.elliott, 2))
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_sunroom, player), logic.relationship.has_hearts(NPC.caroline, 2))
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_wizard_basement, player), logic.relationship.has_hearts(NPC.wizard, 4))
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.mountain_to_leo_treehouse, player), logic.received("Treehouse"))
     if ModNames.alec in world_options[options.Mods]:
-        MultiWorldRules.set_rule(multi_world.get_entrance(AlecEntrance.petshop_to_bedroom, player),
-                                 (logic.relationship.has_hearts(ModNPC.alec, 2) | logic.mod.magic.can_blink()).simplify())
+        MultiWorldRules.set_rule(multi_world.get_entrance(AlecEntrance.petshop_to_bedroom, player), (logic.relationship.has_hearts(ModNPC.alec, 2) | logic.mod.magic.can_blink()).simplify())
 
 
 def set_ginger_island_rules(logic: StardewLogic, multi_world, player, world_options: StardewOptions):

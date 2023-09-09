@@ -141,6 +141,8 @@ class Region:
     dangerous_mines_20 = "Dangerous Mines - Floor 20"
     dangerous_mines_60 = "Dangerous Mines - Floor 60"
     dangerous_mines_100 = "Dangerous Mines - Floor 100"
+    kitchen = "Kitchen"
+    shipping = "Shipping"
 
 
 class DeepWoodsRegion:

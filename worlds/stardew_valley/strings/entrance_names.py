@@ -176,6 +176,9 @@ class Entrance:
     parrot_express_jungle_to_docks = "Parrot Express Jungle to Docks"
     parrot_express_dig_site_to_docks = "Parrot Express Dig Site to Docks"
     parrot_express_volcano_to_docks = "Parrot Express Volcano to Docks"
+    farmhouse_cooking = "Farmhouse Cooking"
+    island_cooking = "Island Cooking"
+    shipping = "Use Shipping Bin"
 
 # Skull Cavern Elevator
 
