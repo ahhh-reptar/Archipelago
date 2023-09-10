@@ -118,6 +118,8 @@ class SVTestBase(WorldTestBase):
             Museumsanity.internal_name: Museumsanity.option_all,
             Monstersanity.internal_name: Monstersanity.option_progressive_goals,
             Shipsanity.internal_name: Shipsanity.option_everything,
+            Cooksanity.internal_name: Cooksanity.option_all,
+            Chefsanity.internal_name: Chefsanity.option_all,
             Friendsanity.internal_name: Friendsanity.option_all_with_marriage,
             FriendsanityHeartSize.internal_name: 1,
             NumberOfMovementBuffs.internal_name: 12,
