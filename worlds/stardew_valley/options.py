@@ -450,6 +450,18 @@ class Chefsanity(Choice):
     option_all = 0b1111  # 15
 
 
+class Craftsanity(Choice):
+    """Checks for crafting items?
+    If enabled, all recipes purchased in shops will be checks as well.
+    Recipes obtained from other sources will depend on related archipelago settings
+    """
+    internal_name = "craftsanity"
+    display_name = "Craftsanity"
+    default = 0
+    option_none = 0
+    option_all = 1
+
+
 class Friendsanity(Choice):
     """Locations for friendships?
     None: There are no checks for befriending villagers
@@ -661,6 +673,7 @@ class StardewValleyOptions(PerGameCommonOptions):
     Shipsanity,
     Cooksanity,
     Chefsanity,
+    Craftsanity,
     friendsanity: Friendsanity
     friendsanity_heart_size: FriendsanityHeartSize
     number_of_movement_buffs: NumberOfMovementBuffs

@@ -5,6 +5,7 @@ from BaseClasses import MultiWorld
 from worlds.generic import Rules as MultiWorldRules
 from . import options, locations
 from .bundles import Bundle
+from .data.craftable_data import all_crafting_recipes_by_name
 from .data.monster_data import all_monsters_by_category, all_monsters_by_name
 from .data.recipe_data import all_cooking_recipes_by_name
 from .logic.logic import StardewLogic
@@ -24,6 +25,7 @@ from .strings.calendar_names import Weekday
 from worlds.stardew_valley.strings.craftable_names import Bomb
 from .strings.material_names import Material
 from .strings.metal_names import MetalBar
+from .strings.season_names import Season
 from .strings.skill_names import ModSkill, Skill
 from .strings.tool_names import Tool, ToolMaterial
 from .strings.tv_channel_names import Channel
@@ -63,6 +65,7 @@ def set_rules(multi_world: MultiWorld, player: int, world_options: StardewOption
     set_shipsanity_rules(all_location_names, logic, multi_world, player, world_options)
     set_cooksanity_rules(all_location_names, logic, multi_world, player, world_options)
     set_chefsanity_rules(all_location_names, logic, multi_world, player, world_options)
+    set_craftsanity_rules(all_location_names, logic, multi_world, player, world_options)
     set_isolated_locations_rules(logic, multi_world, player)
     set_traveling_merchant_rules(logic, multi_world, player)
     set_arcade_machine_rules(logic, multi_world, player, world_options)
@@ -253,8 +256,11 @@ def set_entrance_rules(logic: StardewLogic, multi_world, player, world_options: 
     MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_mutant_bug_lair, player),
                              ((logic.wallet.has_rusty_key() & logic.region.can_reach(Region.railroad) &
                                logic.relationship.can_meet(NPC.krobus) | logic.mod.magic.can_blink()).simplify()))
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_casino, player),
+                             logic.received("Club Card"))
 
     set_bedroom_entrance_rules(logic, multi_world, player, world_options)
+    set_festival_entrance_rules(logic, multi_world, player)
     MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.farmhouse_cooking, player), logic.cooking.can_cook_in_kitchen().simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.shipping, player), logic.shipping.can_use_shipping_bin().simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.watch_queen_of_sauce, player), logic.action.can_watch(Channel.queen_of_sauce).simplify())
@@ -282,6 +288,21 @@ def set_bedroom_entrance_rules(logic, multi_world, player, world_options):
     MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.mountain_to_leo_treehouse, player), logic.received("Treehouse"))
     if ModNames.alec in world_options[options.Mods]:
         MultiWorldRules.set_rule(multi_world.get_entrance(AlecEntrance.petshop_to_bedroom, player), (logic.relationship.has_hearts(ModNPC.alec, 2) | logic.mod.magic.can_blink()).simplify())
+
+
+def set_festival_entrance_rules(logic, multi_world, player):
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.attend_egg_festival, player), logic.season.has(Season.spring))
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.attend_flower_dance, player), logic.season.has(Season.spring))
+
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.attend_luau, player), logic.season.has(Season.summer))
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.attend_moonlight_jellies, player), logic.season.has(Season.summer))
+
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.attend_fair, player), logic.season.has(Season.fall))
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.attend_spirit_eve, player), logic.season.has(Season.fall))
+
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.attend_festival_of_ice, player), logic.season.has(Season.winter))
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.attend_night_market, player), logic.season.has(Season.winter))
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.attend_winter_star, player), logic.season.has(Season.winter))
 
 
 def set_ginger_island_rules(logic: StardewLogic, multi_world, player, world_options: StardewOptions):
@@ -589,9 +610,10 @@ def set_monstersanity_monster_rules(all_location_names: List[str], logic: Starde
         if location_name not in all_location_names:
             continue
         location = multi_world.get_location(location_name, player)
-        rule = logic.combat.can_kill_monster(all_monsters_by_name[monster_name])
         if monstersanity_option == options.Monstersanity.option_split_goals:
-            rule = rule & logic.time.has_lived_max_months()
+            rule = logic.monster.can_kill_max(all_monsters_by_name[monster_name])
+        else:
+            rule = logic.monster.can_kill(all_monsters_by_name[monster_name])
         MultiWorldRules.set_rule(location, rule.simplify())
 
 
@@ -616,9 +638,9 @@ def set_monstersanity_progressive_category_rule(all_location_names: List[str], l
         return
     location = multi_world.get_location(location_name, player)
     if goal_index < 3:
-        rule = logic.combat.can_kill_any_monster(all_monsters_by_category[monster_category]) & logic.time.has_lived_months((goal_index + 1) * 2)
+        rule = logic.monster.can_kill_any(all_monsters_by_category[monster_category], goal_index + 1)
     else:
-        rule = logic.combat.can_kill_all_monsters(all_monsters_by_category[monster_category]) & logic.time.has_lived_months(goal_index * 3)
+        rule = logic.monster.can_kill_all(all_monsters_by_category[monster_category], goal_index * 2)
     MultiWorldRules.set_rule(location, rule.simplify())
 
 
@@ -637,9 +659,9 @@ def set_monstersanity_category_rules(all_location_names: List[str], logic: Stard
             continue
         location = multi_world.get_location(location_name, player)
         if monstersanity_option == options.Monstersanity.option_one_per_category:
-            rule = logic.combat.can_kill_any_monster(all_monsters_by_category[monster_category])
+            rule = logic.monster.can_kill_any(all_monsters_by_category[monster_category])
         else:
-            rule = logic.combat.can_kill_all_monsters(all_monsters_by_category[monster_category]) & logic.time.has_lived_max_months()
+            rule = logic.monster.can_kill_all(all_monsters_by_category[monster_category], 8)
         MultiWorldRules.set_rule(location, rule.simplify())
 
 
@@ -684,6 +706,27 @@ def set_chefsanity_rules(all_location_names: List[str], logic: StardewLogic, mul
         recipe = all_cooking_recipes_by_name[recipe_name]
         learn_rule = logic.cooking.can_learn_recipe(recipe.source)
         MultiWorldRules.set_rule(multi_world.get_location(location.name, player), learn_rule)
+
+
+def set_craftsanity_rules(all_location_names: List[str], logic: StardewLogic, multi_world, player, world_options):
+    craftsanity_option = world_options[options.Craftsanity]
+    if craftsanity_option == options.Craftsanity.option_none:
+        return
+
+    craft_prefix = "Craft "
+    craft_suffix = " Recipe"
+    for location in locations.locations_by_tag[LocationTags.CRAFTSANITY]:
+        if location.name not in all_location_names:
+            continue
+        if location.name.endswith(craft_suffix):
+            recipe_name = location.name[:-len(craft_suffix)]
+            recipe = all_crafting_recipes_by_name[recipe_name]
+            craft_rule = logic.crafting.can_learn_recipe(recipe)
+        else:
+            recipe_name = location.name[len(craft_prefix):]
+            recipe = all_crafting_recipes_by_name[recipe_name]
+            craft_rule = logic.crafting.can_craft(recipe)
+        MultiWorldRules.set_rule(multi_world.get_location(location.name, player), craft_rule)
 
 
 def set_traveling_merchant_rules(logic: StardewLogic, multi_world: MultiWorld, player: int):

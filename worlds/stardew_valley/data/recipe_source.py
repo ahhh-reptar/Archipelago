@@ -77,3 +77,10 @@ class ShopTradeSource(ShopSource):
     def __init__(self, region: str, currency: str, price: int):
         super().__init__(region, price)
         self.currency = currency
+
+
+class SpecialOrderSource(RecipeSource):
+    special_order: str
+
+    def __init__(self, special_order: str):
+        self.special_order = special_order

@@ -144,6 +144,15 @@ class Region:
     kitchen = "Kitchen"
     shipping = "Shipping"
     queen_of_sauce = "The Queen of Sauce"
+    egg_festival = "Egg Festival"
+    flower_dance = "Flower Dance"
+    luau = "Luau"
+    moonlight_jellies = "Dance of the Moonlight Jellies"
+    fair = "Stardew Valley Fair"
+    spirit_eve = "Spirit's Eve"
+    festival_of_ice = "Festival of Ice"
+    night_market = "Night Market"
+    winter_star = "Feast of the Winter Star"
 
 
 class DeepWoodsRegion:
