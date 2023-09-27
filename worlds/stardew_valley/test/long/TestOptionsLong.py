@@ -38,3 +38,13 @@ class TestGenerateDynamicOptions(SVTestBase):
                                        option2.internal_name: option2_choices[key2]}
                             multiworld = setup_solo_multiworld(choices)
                             basic_checks(self, multiworld)
+
+
+class TestDynamicOptionDebug(SVTestBase):
+    options = {
+        "goal": "full_shipment",
+        "museumsanity": "none"
+    }
+
+    def test_option_pair_debug(self):
+        basic_checks(self, self.multiworld)
