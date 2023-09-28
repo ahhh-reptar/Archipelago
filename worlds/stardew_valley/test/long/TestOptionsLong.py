@@ -42,8 +42,8 @@ class TestGenerateDynamicOptions(SVTestBase):
 
 class TestDynamicOptionDebug(SVTestBase):
     options = {
-        "goal": "full_shipment",
-        "museumsanity": "none"
+        "goal": "gourmet_chef",
+        "friendsanity": "bachelors"
     }
 
     def test_option_pair_debug(self):
