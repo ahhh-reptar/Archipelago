@@ -11,7 +11,8 @@ from ... import items, Group, ItemClassification
 from ...regions import RandomizationFlag, create_final_connections, randomize_connections, create_final_regions
 from ...items import item_table, items_by_group
 from ...locations import location_table
-from ...options import Mods, EntranceRandomization, Friendsanity, SeasonRandomization, SpecialOrderLocations, ExcludeGingerIsland, TrapItems
+from ...options import Mods, EntranceRandomization, Friendsanity, SeasonRandomization, SpecialOrderLocations, ExcludeGingerIsland, TrapItems, Chefsanity, \
+    Shipsanity, Craftsanity
 
 all_mods = frozenset({ModNames.deepwoods, ModNames.tractor, ModNames.big_backpack,
                       ModNames.luck_skill, ModNames.magic, ModNames.socializing_skill, ModNames.archaeology,
@@ -54,13 +55,13 @@ class TestGenerateModsOptions(SVTestBase):
 
 class TestBaseItemGeneration(SVTestBase):
     options = {
-        options.Friendsanity.internal_name: options.Friendsanity.option_all_with_marriage,
-        options.SeasonRandomization.internal_name: options.SeasonRandomization.option_progressive,
-        options.SpecialOrderLocations.internal_name: options.SpecialOrderLocations.option_board_qi,
-        options.Shipsanity.internal_name: options.Shipsanity.option_everything,
-        options.Chefsanity.internal_name: options.Chefsanity.option_all,
-        options.Craftsanity.internal_name: options.Craftsanity.option_all,
-        options.Mods.internal_name: mod_list
+        Friendsanity.internal_name: Friendsanity.option_all_with_marriage,
+        SeasonRandomization.internal_name: SeasonRandomization.option_progressive,
+        SpecialOrderLocations.internal_name: SpecialOrderLocations.option_board_qi,
+        Shipsanity.internal_name: Shipsanity.option_everything,
+        Chefsanity.internal_name: Chefsanity.option_all,
+        Craftsanity.internal_name: Craftsanity.option_all,
+        Mods.internal_name: all_mods
     }
 
     def test_all_progression_items_are_added_to_the_pool(self):
@@ -80,13 +81,13 @@ class TestBaseItemGeneration(SVTestBase):
 
 class TestNoGingerIslandModItemGeneration(SVTestBase):
     options = {
-        options.Friendsanity.internal_name: options.Friendsanity.option_all_with_marriage,
-        options.SeasonRandomization.internal_name: options.SeasonRandomization.option_progressive,
-        options.ExcludeGingerIsland.internal_name: options.ExcludeGingerIsland.option_true,
-        options.Shipsanity.internal_name: options.Shipsanity.option_everything,
-        options.Chefsanity.internal_name: options.Chefsanity.option_all,
-        options.Craftsanity.internal_name: options.Craftsanity.option_all,
-        options.Mods.internal_name: mod_list
+        Friendsanity.internal_name: Friendsanity.option_all_with_marriage,
+        SeasonRandomization.internal_name: SeasonRandomization.option_progressive,
+        ExcludeGingerIsland.internal_name: ExcludeGingerIsland.option_true,
+        Shipsanity.internal_name: Shipsanity.option_everything,
+        Chefsanity.internal_name: Chefsanity.option_all,
+        Craftsanity.internal_name: Craftsanity.option_all,
+        Mods.internal_name: all_mods
     }
 
     def test_all_progression_items_except_island_are_added_to_the_pool(self):

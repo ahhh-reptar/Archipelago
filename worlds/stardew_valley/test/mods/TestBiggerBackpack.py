@@ -1,11 +1,11 @@
 from .. import SVTestBase
-from ... import options
 from ...mods.mod_data import ModNames
+from ...options import Mods, BackpackProgression
 
 
 class TestBiggerBackpackVanilla(SVTestBase):
-    options = {options.BackpackProgression.internal_name: options.BackpackProgression.option_vanilla,
-               options.Mods.internal_name: ModNames.big_backpack}
+    options = {BackpackProgression.internal_name: BackpackProgression.option_vanilla,
+               Mods.internal_name: ModNames.big_backpack}
 
     def test_no_backpack_in_pool(self):
         item_names = {item.name for item in self.multiworld.get_items()}
@@ -19,8 +19,8 @@ class TestBiggerBackpackVanilla(SVTestBase):
 
 
 class TestBiggerBackpackProgressive(SVTestBase):
-    options = {options.BackpackProgression.internal_name: options.BackpackProgression.option_progressive,
-               options.Mods.internal_name: ModNames.big_backpack}
+    options = {BackpackProgression.internal_name: BackpackProgression.option_progressive,
+               Mods.internal_name: ModNames.big_backpack}
 
     def test_backpack_is_in_pool_3_times(self):
         item_names = [item.name for item in self.multiworld.get_items()]
@@ -34,8 +34,8 @@ class TestBiggerBackpackProgressive(SVTestBase):
 
 
 class TestBiggerBackpackEarlyProgressive(SVTestBase):
-    options = {options.BackpackProgression.internal_name: options.BackpackProgression.option_early_progressive,
-               options.Mods.internal_name: ModNames.big_backpack}
+    options = {BackpackProgression.internal_name: BackpackProgression.option_early_progressive,
+               Mods.internal_name: ModNames.big_backpack}
 
     def test_backpack_is_in_pool_3_times(self):
         item_names = [item.name for item in self.multiworld.get_items()]
