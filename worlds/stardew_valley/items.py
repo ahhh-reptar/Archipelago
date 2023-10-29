@@ -9,6 +9,7 @@ from typing import Dict, List, Protocol, Union, Set, Optional
 from BaseClasses import Item, ItemClassification
 from . import data
 from .data.villagers_data import all_villagers
+from .event_items import item_event_names
 from .mods.mod_data import ModNames
 from .options import StardewValleyOptions, TrapItems, FestivalLocations, ExcludeGingerIsland, SpecialOrderLocations, SeasonRandomization, Cropsanity, Friendsanity, Museumsanity, \
     Fishsanity, BuildingProgression, SkillProgression, ToolProgression, ElevatorProgression, BackpackProgression, ArcadeMachineLocations
@@ -116,6 +117,7 @@ events = [
     ItemData(None, "Victory", ItemClassification.progression),
     ItemData(None, "Month End", ItemClassification.progression),
 ]
+events.extend([ItemData(None, f"Has {event_item}", ItemClassification.progression) for event_item in item_event_names])
 
 all_items: List[ItemData] = load_item_csv() + events
 item_table: Dict[str, ItemData] = {}
@@ -140,6 +142,7 @@ initialize_groups()
 
 def create_items(item_factory: StardewItemFactory, locations_count: int, items_to_exclude: List[Item],
                  options: StardewValleyOptions, random: Random) -> List[Item]:
+
     items = []
     unique_items = create_unique_items(item_factory, options, random)
 

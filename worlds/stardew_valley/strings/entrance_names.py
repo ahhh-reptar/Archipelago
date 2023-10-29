@@ -1,3 +1,4 @@
+
 def dig_to_mines_floor(floor: int) -> str:
     return f"Dig to The Mines - Floor {floor}"
 

@@ -68,11 +68,13 @@ class CookingRecipe:
     meal: str
     ingredients: Dict[str, int]
     source: RecipeSource
+    requires_island: bool
 
-    def __init__(self, meal: str, ingredients: Dict[str, int], source: RecipeSource):
+    def __init__(self, meal: str, ingredients: Dict[str, int], source: RecipeSource, requires_island: bool = False):
         self.meal = meal
         self.ingredients = ingredients
         self.source = source
+        self.requires_island = requires_island
 
     def __repr__(self):
         return f"{self.meal} (Source: {self.source} |" \
@@ -92,9 +94,9 @@ def skill_recipe(name: str, skill: str, level: int, ingredients: Dict[str, int])
     return create_recipe(name, ingredients, source)
 
 
-def shop_recipe(name: str, region: str, price: int, ingredients: Dict[str, int]) -> CookingRecipe:
+def shop_recipe(name: str, region: str, price: int, ingredients: Dict[str, int], requires_island: bool = False) -> CookingRecipe:
     source = ShopSource(region, price)
-    return create_recipe(name, ingredients, source)
+    return create_recipe(name, ingredients, source, requires_island)
 
 
 def queen_of_sauce_recipe(name: str, year: int, season: str, day: int, ingredients: Dict[str, int]) -> CookingRecipe:
@@ -107,8 +109,8 @@ def starter_recipe(name: str, ingredients: Dict[str, int]) -> CookingRecipe:
     return create_recipe(name, ingredients, source)
 
 
-def create_recipe(name: str, ingredients: Dict[str, int], source: RecipeSource) -> CookingRecipe:
-    recipe = CookingRecipe(name, ingredients, source)
+def create_recipe(name: str, ingredients: Dict[str, int], source: RecipeSource, requires_island: bool = False) -> CookingRecipe:
+    recipe = CookingRecipe(name, ingredients, source, requires_island)
     all_cooking_recipes.append(recipe)
     return recipe
 
@@ -179,7 +181,7 @@ tortilla_ingredients = {Vegetable.corn: 1}
 tortilla_qos = queen_of_sauce_recipe(Meal.tortilla, 1, Season.fall, 7, tortilla_ingredients)
 tortilla_saloon = shop_recipe(Meal.tortilla, Region.saloon, 100, tortilla_ingredients)
 triple_shot_espresso = shop_recipe(Beverage.triple_shot_espresso, Region.saloon, 5000, {Beverage.coffee: 3})
-tropical_curry = shop_recipe(Meal.tropical_curry, Region.island_resort, 2000, {Forageable.coconut: 1, Fruit.pineapple: 1, Fruit.hot_pepper: 1})
+tropical_curry = shop_recipe(Meal.tropical_curry, Region.island_resort, 2000, {Forageable.coconut: 1, Fruit.pineapple: 1, Fruit.hot_pepper: 1}, True)
 vegetable_medley = friendship_recipe(Meal.vegetable_medley, NPC.caroline, 7, {Vegetable.tomato: 1, Vegetable.beet: 1})
 
 

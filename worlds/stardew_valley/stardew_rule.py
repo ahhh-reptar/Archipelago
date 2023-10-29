@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Iterable, Dict, List, Union, FrozenSet, Set
+from typing import Iterable, Dict, List, Union, FrozenSet, Set, Tuple
 
 from BaseClasses import CollectionState, ItemClassification
 from .items import item_table
@@ -30,6 +30,11 @@ class StardewRule:
 
     def simplify(self) -> StardewRule:
         return self
+
+    # Returns the region associated with this rule, and the rule without said region, if applicable
+    # If the rule does not contain a region, returns the "Stardew Valley" region, and itself unchanged
+    def get_region(self) -> Tuple[str, StardewRule]:
+        return "Stardew Valley", self
 
 
 class True_(StardewRule):  # noqa
@@ -78,6 +83,9 @@ class False_(StardewRule):  # noqa
 
     def get_difficulty(self):
         return 999999999
+
+    def get_region(self) -> Tuple[str, StardewRule]:
+        return "Menu", self
 
 
 false_ = False_()
@@ -221,6 +229,19 @@ class And(StardewRule):
 
         return And(simplified_rules)
 
+    def get_region(self) -> Tuple[str, StardewRule]:
+        for rule in self.rules:
+            if not isinstance(rule, Reach) or rule.resolution_hint != "Region":
+                continue
+            return rule.spot, And([real_rule for real_rule in self.rules if real_rule != rule])
+        for rule in self.rules:
+            if not isinstance(rule, Has):
+                continue
+            region, _ = rule.get_region()
+            if region != "Stardew Valley":
+                return region, self
+        return "Stardew Valley", self
+
 
 class Count(StardewRule):
     count: int
@@ -346,9 +367,35 @@ class Reach(StardewRule):
     def get_difficulty(self):
         return 1
 
+    def get_region(self) -> Tuple[str, StardewRule]:
+        if self.resolution_hint == "Region":
+            return self.spot, true_
+        return "Stardew Valley", self
+
 
 @dataclass(frozen=True)
 class Has(StardewRule):
+    item: str
+    player: int
+
+    def __post_init__(self):
+        str_representation = f"{self}"
+        assert str_representation in item_table, f"{str_representation} does not exist"
+        assert item_table[str_representation].classification & ItemClassification.progression, \
+            f"Item [{item_table[str_representation].name}] has to be progression to be used in logic"
+
+    def __call__(self, state: CollectionState) -> bool:
+        return state.has(f"{self}", self.player)
+
+    def __repr__(self):
+        return f"Has {self.item}"
+
+    def get_difficulty(self):
+        return 5
+
+
+@dataclass(frozen=True)
+class HasWithRules(StardewRule):
     item: str
     # For sure there is a better way than just passing all the rules everytime
     other_rules: Dict[str, StardewRule]

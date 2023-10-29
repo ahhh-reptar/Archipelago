@@ -22,7 +22,7 @@ from .mods.logic import magic, skills
 from .options import Museumsanity, SeasonRandomization, StardewValleyOptions, BuildingProgression, SkillProgression, ToolProgression, Friendsanity, Cropsanity, \
     ExcludeGingerIsland, ElevatorProgression, ArcadeMachineLocations, FestivalLocations, SpecialOrderLocations
 from .regions import vanilla_regions
-from .stardew_rule import False_, Reach, Or, True_, Received, Count, And, Has, TotalReceived, StardewRule
+from .stardew_rule import False_, Reach, Or, True_, Received, Count, And, Has, TotalReceived, StardewRule, HasWithRules
 from .strings.animal_names import Animal, coop_animals, barn_animals
 from .strings.animal_product_names import AnimalProduct
 from .strings.ap_names.buff_names import Buff
@@ -117,8 +117,8 @@ class StardewLogic:
             Sapling.orange: self.can_buy_sapling(Fruit.orange),
             Sapling.peach: self.can_buy_sapling(Fruit.peach),
             Sapling.pomegranate: self.can_buy_sapling(Fruit.pomegranate),
-            Sapling.banana: self.can_buy_sapling(Fruit.banana),
-            Sapling.mango: self.can_buy_sapling(Fruit.mango),
+            Sapling.banana: self.has_ginger_island() & self.can_buy_sapling(Fruit.banana),
+            Sapling.mango: self.has_ginger_island() & self.can_buy_sapling(Fruit.mango),
         })
 
         self.tree_fruit_rules.update({
@@ -128,8 +128,8 @@ class StardewLogic:
             Fruit.orange: self.can_plant_and_grow_item(Season.summer),
             Fruit.peach: self.can_plant_and_grow_item(Season.summer),
             Fruit.pomegranate: self.can_plant_and_grow_item(Season.fall),
-            Fruit.banana: self.can_plant_and_grow_item(Season.summer),
-            Fruit.mango: self.can_plant_and_grow_item(Season.summer),
+            Fruit.banana: self.has_ginger_island() & self.can_plant_and_grow_item(Season.summer),
+            Fruit.mango: self.has_ginger_island() & self.can_plant_and_grow_item(Season.summer),
         })
 
         for tree_fruit in self.tree_fruit_rules:
@@ -144,6 +144,8 @@ class StardewLogic:
                 Season.summer)) & self.can_buy_seed(crops_by_name[Seed.coffee].seed),
             Fruit.ancient_fruit: (self.received("Ancient Seeds") | self.received("Ancient Seeds Recipe")) &
                              self.can_reach_region(Region.greenhouse) & self.has(Machine.seed_maker),
+            Fruit.pineapple: self.has_ginger_island() & self.crop_rules[Fruit.pineapple],
+            Vegetable.taro_root: self.has_ginger_island() & self.crop_rules[Vegetable.taro_root],
         })
 
         self.item_rules.update({
@@ -213,7 +215,6 @@ class StardewLogic:
             "Energy Tonic": self.can_reach_region(Region.hospital) & self.can_spend_money(1000),
             Material.fiber: True_(),
             Forageable.fiddlehead_fern: self.can_forage(Season.summer, Region.secret_woods),
-            "Magic Rock Candy": self.can_reach_region(Region.desert) & self.has("Prismatic Shard"),
             "Fishing Chest": self.can_fish_chests(),
             Craftable.flute_block: self.has_relationship(NPC.robin, 6) & self.can_reach_region(Region.carpenter) & self.has(Material.wood) & self.has(Ore.copper) & self.has(Material.fiber),
             Geode.frozen: self.can_mine_in_the_mines_floor_41_80(),
@@ -282,9 +283,9 @@ class StardewLogic:
             Machine.oil_maker: self.has_farming_level(8) & self.has(Loot.slime) & self.has(Material.hardwood) & self.has(MetalBar.gold),
             Craftable.oil_of_garlic: (self.has_skill_level(Skill.combat, 6) & self.has(Vegetable.garlic) & self.has(Ingredient.oil)) | (self.can_spend_money_at(Region.mines_dwarf_shop, 3000)),
             Geode.omni: self.can_mine_in_the_mines_floor_41_80() | self.can_reach_region(Region.desert) | self.can_do_panning() | self.received(Wallet.rusty_key) | (self.has(Fish.octopus) & self.has_building(Building.fish_pond)) | self.can_reach_region(Region.volcano_floor_10),
-            Animal.ostrich: self.has_building(Building.barn) & self.has(AnimalProduct.ostrich_egg) & self.has(Machine.ostrich_incubator),
-            AnimalProduct.ostrich_egg: self.can_forage(Generic.any, Region.island_north, True),
-            Machine.ostrich_incubator: self.received("Ostrich Incubator Recipe") & self.has(Fossil.bone_fragment) & self.has(Material.hardwood) & self.has(Material.cinder_shard),
+            Animal.ostrich: self.has_ginger_island() & self.has_building(Building.barn) & self.has(AnimalProduct.ostrich_egg) & self.has(Machine.ostrich_incubator),
+            AnimalProduct.ostrich_egg: self.has_ginger_island() & self.can_forage(Generic.any, Region.island_north, True),
+            Machine.ostrich_incubator: self.has_ginger_island() & self.received("Ostrich Incubator Recipe") & self.has(Fossil.bone_fragment) & self.has(Material.hardwood) & self.has(Material.cinder_shard),
             Fish.oyster: self.can_forage(Generic.any, Region.beach),
             ArtisanGood.pale_ale: self.can_keg(Vegetable.hops),
             Gift.pearl: (self.has(Fish.blobfish) & self.has_building(Building.fish_pond)) | self.can_open_geode(Geode.artifact_trove),
@@ -298,8 +299,8 @@ class StardewLogic:
             Forageable.purple_mushroom: self.can_forage(Generic.any, Region.mines_floor_95) | self.can_forage(Generic.any, Region.skull_cavern_25),
             Animal.rabbit: self.can_buy_animal(Animal.rabbit),
             AnimalProduct.rabbit_foot: self.has_happy_animal(Animal.rabbit),
-            MetalBar.radioactive: self.can_smelt(Ore.radioactive),
-            Ore.radioactive: self.can_mine_perfectly() & self.can_reach_region(Region.qi_walnut_room),
+            MetalBar.radioactive: self.has_ginger_island() & self.can_smelt(Ore.radioactive),
+            Ore.radioactive: self.has_ginger_island() & self.can_reach_region(Region.qi_walnut_room) & self.can_mine_perfectly(),
             Forageable.rainbow_shell: self.can_forage(Season.summer, Region.beach),
             Craftable.rain_totem: self.has_skill_level(Skill.foraging, 9) & self.has(Material.hardwood) & self.has(ArtisanGood.truffle_oil) & self.has(ArtisanGood.pine_tar),
             Machine.recycling_machine: self.has_skill_level(Skill.fishing, 4) & self.has(Material.wood) & self.has(Material.stone) & self.has(MetalBar.iron),
@@ -541,10 +542,11 @@ class StardewLogic:
         })
 
         self.special_order_rules.update(get_modded_special_orders_rules(self, self.options.mods))
+        # print(self.item_rules.keys())
 
     def has(self, items: Union[str, (Iterable[str], Sized)], count: Optional[int] = None) -> StardewRule:
         if isinstance(items, str):
-            return Has(items, self.item_rules)
+            return Has(items, self.player)
 
         if len(items) == 0:
             return True_()
@@ -685,7 +687,7 @@ class StardewLogic:
                 building = " ".join(["Progressive", *building.split(" ")[1:]])
             return self.received(f"{building}", count) & carpenter_rule
 
-        return Has(building, self.building_rules) & carpenter_rule
+        return HasWithRules(building, self.building_rules) & carpenter_rule
 
     def has_house(self, upgrade_level: int) -> StardewRule:
         if upgrade_level < 1:
@@ -698,19 +700,19 @@ class StardewLogic:
             return self.received(f"Progressive House", upgrade_level) & self.can_reach_region(Region.carpenter)
 
         if upgrade_level == 1:
-            return Has(Building.kitchen, self.building_rules)
+            return HasWithRules(Building.kitchen, self.building_rules)
 
         if upgrade_level == 2:
-            return Has(Building.kids_room, self.building_rules)
+            return HasWithRules(Building.kids_room, self.building_rules)
 
         # if upgrade_level == 3:
-        return Has(Building.cellar, self.building_rules)
+        return HasWithRules(Building.cellar, self.building_rules)
 
     def can_complete_quest(self, quest: str) -> StardewRule:
-        return Has(quest, self.quest_rules)
+        return HasWithRules(quest, self.quest_rules)
 
     def can_complete_special_order(self, specialorder: str) -> StardewRule:
-        return Has(specialorder, self.special_order_rules)
+        return HasWithRules(specialorder, self.special_order_rules)
 
     def can_get_farming_xp(self) -> StardewRule:
         crop_rules = []
@@ -772,9 +774,9 @@ class StardewLogic:
         region_rule = self.can_reach_all_regions(seed.regions)
         currency_rule = self.can_spend_money(1000)
         if seed.name == Seed.pineapple:
-            currency_rule = self.has(Forageable.magma_cap)
+            currency_rule = self.has_ginger_island() & self.has(Forageable.magma_cap)
         if seed.name == Seed.taro:
-            currency_rule = self.has(Fossil.bone_fragment)
+            currency_rule = self.has_ginger_island() & self.has(Fossil.bone_fragment)
         return season_rule & region_rule & item_rule & currency_rule
 
     def can_buy_sapling(self, fruit: str) -> StardewRule:
@@ -841,11 +843,12 @@ class StardewLogic:
         if recipe is None:
             return cook_rule
 
+        island_rule = self.has_ginger_island() if recipe.requires_island else True_()
         learn_rule = self.can_learn_recipe(recipe.source)
         ingredients_rule = And([self.has(ingredient) for ingredient in recipe.ingredients])
         number_ingredients = sum(recipe.ingredients[ingredient] for ingredient in recipe.ingredients)
         time_rule = self.has_lived_months(number_ingredients)
-        return cook_rule & learn_rule & ingredients_rule & time_rule
+        return island_rule & cook_rule & learn_rule & ingredients_rule & time_rule
 
     def can_learn_recipe(self, source: RecipeSource) -> StardewRule:
         if isinstance(source, StarterSource):
@@ -869,7 +872,7 @@ class StardewLogic:
         return self.received(channel) & tv_rule
 
     def can_smelt(self, item: str) -> StardewRule:
-        return self.has(Machine.furnace) & self.has(item)
+        return self.has(item) & self.has(Machine.furnace)
 
     def can_do_panning(self, item: str = Generic.any) -> StardewRule:
         return self.received("Glittering Boulder Removed")
@@ -1420,7 +1423,7 @@ class StardewLogic:
         return self.can_fish(60)
 
     def has_any_universal_love(self) -> StardewRule:
-        return self.has(Gift.golden_pumpkin) | self.has("Magic Rock Candy") | self.has(Gift.pearl) | self.has(
+        return self.has(Gift.golden_pumpkin) | self.has(Gift.pearl) | self.has(
             "Prismatic Shard") | self.has(AnimalProduct.rabbit_foot)
 
     def has_jelly(self) -> StardewRule:
@@ -1626,4 +1629,9 @@ class StardewLogic:
         if item == "":
             return shipping_bin_rule
         return shipping_bin_rule & self.has(item)
+
+    def has_ginger_island(self) -> StardewRule:
+        if self.options.exclude_ginger_island == ExcludeGingerIsland.option_true:
+            return False_()
+        return True_()
 
