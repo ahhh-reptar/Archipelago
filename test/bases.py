@@ -305,7 +305,5 @@ class WorldTestBase(unittest.TestCase):
             call_all(self.multiworld, "post_fill")
             self.assertTrue(fulfills_accessibility(), "Collected all locations, but can't beat the game.")
             placed_items = [loc.item for loc in self.multiworld.get_locations() if loc.item and loc.item.code]
-            itempool_len = len(self.multiworld.itempool)
-            placed_items_len = len(placed_items)
-            self.assertLessEqual(itempool_len, placed_items_len,
+            self.assertLessEqual(len(self.multiworld.itempool), len(placed_items),
                                  "Unplaced Items remaining in itempool")

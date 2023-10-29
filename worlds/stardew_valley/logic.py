@@ -22,7 +22,7 @@ from .mods.logic import magic, skills
 from .options import Museumsanity, SeasonRandomization, StardewValleyOptions, BuildingProgression, SkillProgression, ToolProgression, Friendsanity, Cropsanity, \
     ExcludeGingerIsland, ElevatorProgression, ArcadeMachineLocations, FestivalLocations, SpecialOrderLocations
 from .regions import vanilla_regions
-from .stardew_rule import False_, Reach, Or, True_, Received, Count, And, Has, TotalReceived, StardewRule, OldHas
+from .stardew_rule import False_, Reach, Or, True_, Received, Count, And, Has, TotalReceived, StardewRule, HasWithRules
 from .strings.animal_names import Animal, coop_animals, barn_animals
 from .strings.animal_product_names import AnimalProduct
 from .strings.ap_names.buff_names import Buff
@@ -687,7 +687,7 @@ class StardewLogic:
                 building = " ".join(["Progressive", *building.split(" ")[1:]])
             return self.received(f"{building}", count) & carpenter_rule
 
-        return OldHas(building, self.building_rules) & carpenter_rule
+        return HasWithRules(building, self.building_rules) & carpenter_rule
 
     def has_house(self, upgrade_level: int) -> StardewRule:
         if upgrade_level < 1:
@@ -700,19 +700,19 @@ class StardewLogic:
             return self.received(f"Progressive House", upgrade_level) & self.can_reach_region(Region.carpenter)
 
         if upgrade_level == 1:
-            return OldHas(Building.kitchen, self.building_rules)
+            return HasWithRules(Building.kitchen, self.building_rules)
 
         if upgrade_level == 2:
-            return OldHas(Building.kids_room, self.building_rules)
+            return HasWithRules(Building.kids_room, self.building_rules)
 
         # if upgrade_level == 3:
-        return OldHas(Building.cellar, self.building_rules)
+        return HasWithRules(Building.cellar, self.building_rules)
 
     def can_complete_quest(self, quest: str) -> StardewRule:
-        return OldHas(quest, self.quest_rules)
+        return HasWithRules(quest, self.quest_rules)
 
     def can_complete_special_order(self, specialorder: str) -> StardewRule:
-        return OldHas(specialorder, self.special_order_rules)
+        return HasWithRules(specialorder, self.special_order_rules)
 
     def can_get_farming_xp(self) -> StardewRule:
         crop_rules = []

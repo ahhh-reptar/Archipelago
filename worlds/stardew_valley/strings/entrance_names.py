@@ -1,5 +1,3 @@
-from worlds.stardew_valley.strings.region_names import Region
-
 
 def dig_to_mines_floor(floor: int) -> str:
     return f"Dig to The Mines - Floor {floor}"
@@ -66,8 +64,8 @@ class Entrance:
     town_to_clint_blacksmith = "Town to Clint's Blacksmith"
     town_to_museum = "Town to Museum"
     town_to_jojamart = "Town to JojaMart"
-    beach_to_willy_fish_shop = f"Beach to {Region.fish_shop}"
-    fish_shop_to_boat_tunnel = f"{Region.fish_shop} to Boat Tunnel"
+    beach_to_willy_fish_shop = "Beach to Willy's Fish Shop"
+    fish_shop_to_boat_tunnel = "Fish Shop to Boat Tunnel"
     boat_to_ginger_island = "Take the Boat to Ginger Island"
     enter_elliott_house = "Beach to Elliott's House"
     enter_tide_pools = "Beach to Tide Pools"

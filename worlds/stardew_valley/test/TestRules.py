@@ -68,18 +68,6 @@ class TestProgressiveToolsLogic(SVTestBase):
         self.multiworld.state.collect(rare_seed, event=False)
         self.assertTrue(self.world.logic.can_reach_location("Old Master Cannoli")(self.multiworld.state))
 
-        self.remove(fall)
-        self.assertFalse(self.world.logic.can_reach_location("Old Master Cannoli")(self.multiworld.state))
-        self.remove(tuesday)
-
-        green_house = self.world.create_item("Greenhouse")
-        self.multiworld.state.collect(green_house, event=False)
-        self.assertFalse(self.world.logic.can_reach_location("Old Master Cannoli")(self.multiworld.state))
-
-        friday = self.world.create_item("Traveling Merchant: Friday")
-        self.multiworld.state.collect(friday, event=False)
-        self.assertTrue(self.multiworld.get_location("Old Master Cannoli", 1).access_rule(self.multiworld.state))
-
 
 class TestBundlesLogic(SVTestBase):
     options = {

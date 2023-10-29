@@ -85,7 +85,7 @@ class False_(StardewRule):  # noqa
         return 999999999
 
     def get_region(self) -> Tuple[str, StardewRule]:
-        return "", self
+        return "Menu", self
 
 
 false_ = False_()
@@ -379,10 +379,10 @@ class Has(StardewRule):
     player: int
 
     def __post_init__(self):
-        pass
-        # assert self.item in item_table, f"{self.item} does not exist"
-        # assert item_table[self.item].classification & ItemClassification.progression, \
-        #     f"Item [{item_table[self.item].name}] has to be progression to be used in logic"
+        str_representation = f"{self}"
+        assert str_representation in item_table, f"{str_representation} does not exist"
+        assert item_table[str_representation].classification & ItemClassification.progression, \
+            f"Item [{item_table[str_representation].name}] has to be progression to be used in logic"
 
     def __call__(self, state: CollectionState) -> bool:
         return state.has(f"{self}", self.player)
@@ -395,7 +395,7 @@ class Has(StardewRule):
 
 
 @dataclass(frozen=True)
-class OldHas(StardewRule):
+class HasWithRules(StardewRule):
     item: str
     # For sure there is a better way than just passing all the rules everytime
     other_rules: Dict[str, StardewRule]

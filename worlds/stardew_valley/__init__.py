@@ -70,7 +70,6 @@ class StardewValleyWorld(World):
     modified_bundles: Dict[str, Bundle]
     randomized_entrances: Dict[str, str]
     all_progression_items: Set[str]
-    world_regions_data: List[RegionData]
 
     def __init__(self, world: MultiWorld, player: int):
         super().__init__(world, player)
@@ -102,7 +101,7 @@ class StardewValleyWorld(World):
             region.exits = [Entrance(self.player, exit_name, region) for exit_name in exits]
             return region
 
-        world_regions, self.randomized_entrances, self.world_regions_data = create_regions(create_region, self.multiworld.random, self.options)
+        world_regions, self.randomized_entrances = create_regions(create_region, self.multiworld.random, self.options)
 
         def add_location(name: str, code: Optional[int], region: str):
             region = world_regions[region]
@@ -176,14 +175,9 @@ class StardewValleyWorld(World):
             self.create_event_location(month_end, self.logic.received("Month End", i).simplify(), "Month End")
 
     def setup_item_events(self):
-        # exclude_island = self.options.exclude_ginger_island == ExcludeGingerIsland.option_true
-        # island_regions = [region.name for region in self.world_regions_data
-        #                   if region.is_ginger_island]
         for item_name in self.logic.item_rules:
             rule = self.logic.item_rules[item_name]
             region, rule_without_region = rule.get_region()
-            # if exclude_island and region in island_regions:
-            #     continue
             rule_without_region = rule_without_region.simplify()
             if rule_without_region is false_:
                 continue
