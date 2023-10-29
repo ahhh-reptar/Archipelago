@@ -178,10 +178,6 @@ def set_entrance_rules(logic, multiworld, player, world_options: StardewValleyOp
 
     MultiWorldRules.set_rule(multiworld.get_entrance(Entrance.use_desert_obelisk, player),
                              logic.received(Transportation.desert_obelisk).simplify())
-    MultiWorldRules.set_rule(multiworld.get_entrance(Entrance.use_island_obelisk, player),
-                             logic.received(Transportation.island_obelisk).simplify())
-    MultiWorldRules.set_rule(multiworld.get_entrance(Entrance.use_farm_obelisk, player),
-                             logic.received(Transportation.farm_obelisk).simplify())
     MultiWorldRules.set_rule(multiworld.get_entrance(Entrance.buy_from_traveling_merchant, player),
                              logic.has_traveling_merchant())
     MultiWorldRules.set_rule(multiworld.get_entrance(Entrance.enter_greenhouse, player),
@@ -212,17 +208,16 @@ def set_entrance_rules(logic, multiworld, player, world_options: StardewValleyOp
                              logic.has_relationship(NPC.caroline, 2))
     MultiWorldRules.set_rule(multiworld.get_entrance(Entrance.enter_wizard_basement, player),
                              logic.has_relationship(NPC.wizard, 4))
-    MultiWorldRules.set_rule(multiworld.get_entrance(Entrance.mountain_to_leo_treehouse, player),
-                             logic.received("Treehouse"))
     if ModNames.alec in world_options.mods:
         MultiWorldRules.set_rule(multiworld.get_entrance(AlecEntrance.petshop_to_bedroom, player),
                                  (logic.has_relationship(ModNPC.alec, 2) | magic.can_blink(logic)).simplify())
 
 
 def set_ginger_island_rules(logic: StardewLogic, multiworld, player, world_options: StardewValleyOptions):
-    set_island_entrances_rules(logic, multiworld, player)
     if world_options.exclude_ginger_island == ExcludeGingerIsland.option_true:
         return
+
+    set_island_entrances_rules(logic, multiworld, player)
 
     set_boat_repair_rules(logic, multiworld, player)
     set_island_parrot_rules(logic, multiworld, player)
@@ -243,6 +238,12 @@ def set_boat_repair_rules(logic: StardewLogic, multiworld, player):
 
 def set_island_entrances_rules(logic: StardewLogic, multiworld, player):
     boat_repaired = logic.received(Transportation.boat_repair).simplify()
+    MultiWorldRules.set_rule(multiworld.get_entrance(Entrance.use_island_obelisk, player),
+                             logic.received(Transportation.island_obelisk).simplify())
+    MultiWorldRules.set_rule(multiworld.get_entrance(Entrance.use_farm_obelisk, player),
+                             logic.received(Transportation.farm_obelisk).simplify())
+    MultiWorldRules.set_rule(multiworld.get_entrance(Entrance.mountain_to_leo_treehouse, player),
+                             logic.received("Treehouse"))
     MultiWorldRules.set_rule(multiworld.get_entrance(Entrance.fish_shop_to_boat_tunnel, player),
                              boat_repaired)
     MultiWorldRules.set_rule(multiworld.get_entrance(Entrance.boat_to_ginger_island, player),

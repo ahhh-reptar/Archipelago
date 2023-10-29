@@ -4,16 +4,18 @@ from typing import Dict, Any, Iterable, Optional, Union, Set, List
 from BaseClasses import Region, Entrance, Location, Item, Tutorial, CollectionState, ItemClassification, MultiWorld
 from Options import PerGameCommonOptions
 from worlds.AutoWorld import World, WebWorld
+from .logic import StardewLogic, StardewRule, True_, MAX_MONTHS
 from . import rules
 from .bundles import get_all_bundles, Bundle
 from .items import item_table, create_items, ItemData, Group, items_by_group
 from .locations import location_table, create_locations, LocationData
-from .logic import StardewLogic, StardewRule, True_, MAX_MONTHS
 from .options import StardewValleyOptions, SeasonRandomization, Goal, BundleRandomization, BundlePrice, NumberOfLuckBuffs, NumberOfMovementBuffs, \
     BackpackProgression, BuildingProgression, ExcludeGingerIsland
+from .region_classes import RegionData
 from .regions import create_regions
 from .rules import set_rules
 from worlds.generic.Rules import set_rule
+from .stardew_rule import false_
 from .strings.goal_names import Goal as GoalName
 
 client_version = 0
@@ -68,6 +70,7 @@ class StardewValleyWorld(World):
     modified_bundles: Dict[str, Bundle]
     randomized_entrances: Dict[str, str]
     all_progression_items: Set[str]
+    world_regions_data: List[RegionData]
 
     def __init__(self, world: MultiWorld, player: int):
         super().__init__(world, player)
@@ -99,7 +102,7 @@ class StardewValleyWorld(World):
             region.exits = [Entrance(self.player, exit_name, region) for exit_name in exits]
             return region
 
-        world_regions, self.randomized_entrances = create_regions(create_region, self.multiworld.random, self.options)
+        world_regions, self.randomized_entrances, self.world_regions_data = create_regions(create_region, self.multiworld.random, self.options)
 
         def add_location(name: str, code: Optional[int], region: str):
             region = world_regions[region]
@@ -125,13 +128,13 @@ class StardewValleyWorld(World):
                                for location in self.multiworld.get_locations(self.player)
                                if not location.event])
 
-        created_items = create_items(self.create_item, locations_count, items_to_exclude, self.options,
-                                     self.multiworld.random)
+        created_items = create_items(self.create_item, locations_count, items_to_exclude, self.options, self.multiworld.random)
 
         self.multiworld.itempool += created_items
 
         self.setup_early_items()
         self.setup_month_events()
+        self.setup_item_events()
         self.setup_victory()
 
     def precollect_starting_season(self) -> Optional[StardewItem]:
@@ -165,12 +168,28 @@ class StardewValleyWorld(World):
 
     def setup_month_events(self):
         for i in range(0, MAX_MONTHS):
-            month_end = LocationData(None, "Stardew Valley", f"Month End {i + 1}")
+            month_end = LocationData(None, "Farmhouse", f"Month End {i + 1}")
             if i == 0:
                 self.create_event_location(month_end, True_(), "Month End")
                 continue
 
             self.create_event_location(month_end, self.logic.received("Month End", i).simplify(), "Month End")
+
+    def setup_item_events(self):
+        # exclude_island = self.options.exclude_ginger_island == ExcludeGingerIsland.option_true
+        # island_regions = [region.name for region in self.world_regions_data
+        #                   if region.is_ginger_island]
+        for item_name in self.logic.item_rules:
+            rule = self.logic.item_rules[item_name]
+            region, rule_without_region = rule.get_region()
+            # if exclude_island and region in island_regions:
+            #     continue
+            rule_without_region = rule_without_region.simplify()
+            if rule_without_region is false_:
+                continue
+            event_name = f"Has {item_name}"
+            event_location = LocationData(None, region, event_name)
+            self.create_event_location(event_location, rule_without_region.simplify(), event_name)
 
     def setup_victory(self):
         if self.options.goal == Goal.option_community_center:
@@ -221,10 +240,17 @@ class StardewValleyWorld(World):
         return StardewItem(item.name, item.classification, item.code, self.player)
 
     def create_event_location(self, location_data: LocationData, rule: StardewRule, item: Optional[str] = None):
+        if not location_data.region:
+            return
+
         if item is None:
             item = location_data.name
 
-        region = self.multiworld.get_region(location_data.region, self.player)
+        try:
+            region = self.multiworld.get_region(location_data.region, self.player)
+        except KeyError:
+            return
+
         location = StardewLocation(self.player, location_data.name, None, region)
         location.access_rule = rule
         region.locations.append(location)

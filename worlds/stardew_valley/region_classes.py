@@ -20,6 +20,7 @@ class RandomizationFlag(IntFlag):
 class RegionData:
     name: str
     exits: List[str] = field(default_factory=list)
+    is_ginger_island: bool = False
 
     def get_merged_with(self, exits: List[str]):
         merged_exits = []
@@ -44,6 +45,8 @@ class ConnectionData:
     def __post_init__(self):
         if connector_keyword in self.name:
             origin, destination = self.name.split(connector_keyword)
+            if self.origin is None:
+                super().__setattr__("origin", origin)
             if self.reverse is None:
                 super().__setattr__("reverse", f"{destination}{connector_keyword}{origin}")
 
