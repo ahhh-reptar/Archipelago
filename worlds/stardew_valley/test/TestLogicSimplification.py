@@ -8,7 +8,7 @@ def test_simplify_true_in_and():
         "Rock": True_(),
     }
     summer = Received("Summer", 0, 1)
-    assert (Has("Wood", rules) & summer & Has("Rock", rules)).simplify() == summer
+    assert (Has("Wood", 1) & summer & Has("Rock", 1)).simplify() == summer
 
 
 def test_simplify_false_in_or():
@@ -17,7 +17,7 @@ def test_simplify_false_in_or():
         "Rock": False_(),
     }
     summer = Received("Summer", 0, 1)
-    assert (Has("Wood", rules) | summer | Has("Rock", rules)).simplify() == summer
+    assert (Has("Wood", 1) | summer | Has("Rock", 1)).simplify() == summer
 
 
 def test_simplify_and_in_and():
