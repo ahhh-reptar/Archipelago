@@ -4,7 +4,7 @@ from typing import Dict
 
 from BaseClasses import ItemClassification, MultiWorld
 from Options import SpecialRange
-from . import setup_solo_multiworld, SVTestBase, allsanity_options_without_mods
+from . import setup_solo_multiworld, SVTestBase, allsanity_options_without_mods, allsanity_options_with_mods
 from .. import StardewItem, items_by_group, Group, StardewValleyWorld
 from ..locations import locations_by_tag, LocationTags, location_table
 from ..options import ExcludeGingerIsland, ToolProgression, Goal, SeasonRandomization, TrapItems, SpecialOrderLocations, ArcadeMachineLocations
