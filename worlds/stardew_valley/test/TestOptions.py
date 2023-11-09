@@ -4,7 +4,7 @@ from typing import Dict
 
 from BaseClasses import ItemClassification, MultiWorld
 from Options import SpecialRange
-from . import setup_solo_multiworld, SVTestBase
+from . import setup_solo_multiworld, SVTestBase, allsanity_options_without_mods, allsanity_options_with_mods
 from .. import StardewItem, items_by_group, Group, StardewValleyWorld
 from ..locations import locations_by_tag, LocationTags, location_table
 from ..options import ExcludeGingerIsland, ToolProgression, Goal, SeasonRandomization, TrapItems, SpecialOrderLocations, ArcadeMachineLocations
@@ -194,7 +194,7 @@ class TestGenerateAllOptionsWithExcludeGingerIsland(SVTestBase):
 
 class TestTraps(SVTestBase):
     def test_given_no_traps_when_generate_then_no_trap_in_pool(self):
-        world_options = self.allsanity_options_without_mods()
+        world_options = allsanity_options_without_mods()
         world_options.update({TrapItems.internal_name: TrapItems.option_no_traps})
         multi_world = setup_solo_multiworld(world_options)
 
@@ -210,7 +210,7 @@ class TestTraps(SVTestBase):
         for value in trap_option.options:
             if value == "no_traps":
                 continue
-            world_options = self.allsanity_options_with_mods()
+            world_options = allsanity_options_with_mods()
             world_options.update({TrapItems.internal_name: trap_option.options[value]})
             multi_world = setup_solo_multiworld(world_options)
             trap_items = [item_data.name for item_data in items_by_group[Group.TRAP] if Group.DEPRECATED not in item_data.groups and item_data.mod_name is None]
