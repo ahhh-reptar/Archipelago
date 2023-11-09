@@ -19,7 +19,7 @@ all_mods = frozenset({ModNames.deepwoods, ModNames.tractor, ModNames.big_backpac
                       ModNames.cooking_skill, ModNames.binning_skill, ModNames.juna,
                       ModNames.jasper, ModNames.alec, ModNames.yoba, ModNames.eugene,
                       ModNames.wellwick, ModNames.ginger, ModNames.shiko, ModNames.delores,
-                      ModNames.ayeisha, ModNames.riley, ModNames.skull_cavern_elevator})
+                      ModNames.ayeisha, ModNames.riley, ModNames.skull_cavern_elevator, ModNames.sve})
 
 
 def check_stray_mod_items(chosen_mods: Union[List[str], str], tester: SVTestBase, multiworld: MultiWorld):
