@@ -21,3 +21,12 @@ class TreeSeed:
     pine = "Pine Cone"
     mahogany = "Mahogany Seed"
     mushroom = "Mushroom Tree Seed"
+
+
+class SVESeed:
+    stalk_seed = "Stalk Seed"
+    fungus_seed = "Fungus Seed"
+    slime_seed = "Slime Seed"
+    void_seed = "Void Seed"
+    shrub_seed = "Shrub Seed"
+    ancient_fern_seed = "Ancient Fern Seed"

@@ -5,7 +5,7 @@ import sys
 
 from BaseClasses import MultiWorld
 from ...mods.mod_data import ModNames
-from .. import setup_solo_multiworld
+from .. import setup_solo_multiworld, allsanity_options_without_mods
 from ..TestOptions import basic_checks, SVTestBase
 from ... import items, Group, ItemClassification
 from ...regions import RandomizationFlag, create_final_connections, randomize_connections, create_final_regions
@@ -19,7 +19,7 @@ all_mods = frozenset({ModNames.deepwoods, ModNames.tractor, ModNames.big_backpac
                       ModNames.cooking_skill, ModNames.binning_skill, ModNames.juna,
                       ModNames.jasper, ModNames.alec, ModNames.yoba, ModNames.eugene,
                       ModNames.wellwick, ModNames.ginger, ModNames.shiko, ModNames.delores,
-                      ModNames.ayeisha, ModNames.riley, ModNames.skull_cavern_elevator})
+                      ModNames.ayeisha, ModNames.riley, ModNames.skull_cavern_elevator, ModNames.sve})
 
 
 def check_stray_mod_items(chosen_mods: Union[List[str], str], tester: SVTestBase, multiworld: MultiWorld):
@@ -147,7 +147,7 @@ class TestModTraps(SVTestBase):
         for value in TrapItems.options:
             if value == "no_traps":
                 continue
-            world_options = self.allsanity_options_without_mods()
+            world_options = allsanity_options_without_mods()
             world_options.update({TrapItems.internal_name: TrapItems.options[value], Mods: "Magic"})
             multi_world = setup_solo_multiworld(world_options)
             trap_items = [item_data.name for item_data in items_by_group[Group.TRAP] if Group.DEPRECATED not in item_data.groups]

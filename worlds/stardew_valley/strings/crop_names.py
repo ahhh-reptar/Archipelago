@@ -58,3 +58,16 @@ class Vegetable:
     yam = veggie("Yam")
     radish = veggie("Radish")
     taro_root = veggie("Taro Root")
+
+
+class SVEFruit:
+    slime_berry = "Slime Berry"
+    monster_fruit = "Monster Fruit"
+    salal_berry = "Salal Berry"
+
+
+class SVEVegetable:
+    monster_mushroom = "Monster Mushroom"
+    void_root = "Void Root"
+    ancient_fiber = "Ancient Fiber"
+

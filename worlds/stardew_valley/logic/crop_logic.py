@@ -42,4 +42,3 @@ class CropLogic:
 
     def has_island_farm(self) -> StardewRule:
         return self.region.can_reach(Region.island_south)
-

@@ -8,7 +8,7 @@ from typing import Dict, List, Protocol, Union, Set, Optional
 
 from BaseClasses import Item, ItemClassification
 from . import data
-from .data.villagers_data import all_villagers
+from .data.villagers_data import get_villagers_for_mods
 from .mods.mod_data import ModNames
 from .options import StardewValleyOptions, TrapItems, FestivalLocations, ExcludeGingerIsland, SpecialOrderLocations, SeasonRandomization, Cropsanity, \
     Friendsanity, Museumsanity, \
@@ -17,6 +17,7 @@ from .options import StardewValleyOptions, TrapItems, FestivalLocations, Exclude
 from .strings.ap_names.ap_weapon_names import APWeapon
 from .strings.ap_names.buff_names import Buff
 from .strings.ap_names.event_names import Event
+from .strings.villager_names import NPC, ModNPC
 
 ITEM_CODE_OFFSET = 717000
 
@@ -78,7 +79,7 @@ class Group(enum.Enum):
     CRAFTSANITY = enum.auto()
     # Mods
     MAGIC_SPELL = enum.auto()
-
+    MOD_WARP = enum.auto()
 
 @dataclass(frozen=True)
 class ItemData:
@@ -193,7 +194,7 @@ def create_unique_items(item_factory: StardewItemFactory, options: StardewValley
     items.append(item_factory("Beach Bridge"))
     items.append(item_factory("Dark Talisman"))
     create_tv_channels(item_factory, items)
-    create_special_quest_rewards(item_factory, items)
+    create_special_quest_rewards(item_factory, options, items)
     create_stardrops(item_factory, options, items)
     create_museum_items(item_factory, options, items)
     create_arcade_machine_items(item_factory, options, items)
@@ -319,13 +320,15 @@ def create_carpenter_buildings(item_factory: StardewItemFactory, options: Starde
         items.append(item_factory("Tractor Garage"))
 
 
-def create_special_quest_rewards(item_factory: StardewItemFactory, items: List[Item]):
+def create_special_quest_rewards(item_factory: StardewItemFactory, options: StardewValleyOptions, items: List[Item]):
     items.append(item_factory("Adventurer's Guild"))
     items.append(item_factory("Club Card"))
     items.append(item_factory("Magnifying Glass"))
     items.append(item_factory("Bear's Knowledge"))
     items.append(item_factory("Iridium Snake Milk"))
     items.append(item_factory("Fairy Dust Recipe"))
+    if ModNames.sve in options.mods:
+        create_special_quest_rewards_sve(item_factory, options, items)
 
 
 def create_stardrops(item_factory: StardewItemFactory, options: StardewValleyOptions, items: List[Item]):
@@ -351,6 +354,7 @@ def create_museum_items(item_factory: StardewItemFactory, options: StardewValley
 
 
 def create_friendsanity_items(item_factory: StardewItemFactory, options: StardewValleyOptions, items: List[Item], random):
+    island_villagers = [NPC.leo, ModNPC.lance]
     if options.friendsanity == Friendsanity.option_none:
         return
     exclude_non_bachelors = options.friendsanity == Friendsanity.option_bachelors
@@ -360,14 +364,12 @@ def create_friendsanity_items(item_factory: StardewItemFactory, options: Stardew
     exclude_ginger_island = options.exclude_ginger_island == ExcludeGingerIsland.option_true
     mods = options.mods
     heart_size = options.friendsanity_heart_size
-    for villager in all_villagers:
-        if villager.mod_name not in mods and villager.mod_name is not None:
-            continue
+    for villager in get_villagers_for_mods(mods.value):
         if not villager.available and exclude_locked_villagers:
             continue
         if not villager.bachelor and exclude_non_bachelors:
             continue
-        if villager.name == "Leo" and exclude_ginger_island:
+        if villager.name in island_villagers and exclude_ginger_island:
             continue
         heart_cap = 8 if villager.bachelor else 10
         if include_post_marriage_hearts and villager.bachelor:
@@ -548,8 +550,23 @@ def create_filler_festival_rewards(item_factory: StardewItemFactory, options: St
 
 def create_magic_mod_spells(item_factory: StardewItemFactory, options: StardewValleyOptions, items: List[Item]):
     if ModNames.magic not in options.mods:
-        return []
+        return
     items.extend([item_factory(item) for item in items_by_group[Group.MAGIC_SPELL]])
+
+
+def create_special_quest_rewards_sve(item_factory: StardewItemFactory, options: StardewValleyOptions, items: List[Item]):
+    exclude_ginger_island = options.exclude_ginger_island == ExcludeGingerIsland.option_true
+    if ModNames.sve not in options.mods:
+        return
+    items.append(item_factory("Iridium Bomb"))
+    items.append(item_factory("Krobus' Protection"))
+    items.append(item_factory("Kittyfish Spell"))
+    items.extend([item_factory(item) for item in items_by_group[Group.MOD_WARP]])
+    if exclude_ginger_island:
+        return
+    items.append(item_factory("Diamond Wand"))
+    items.append(item_factory("Marlon's Boat Paddle"))
+    items.append(item_factory("Fable Reef Portal"))
 
 
 def create_unique_filler_items(item_factory: StardewItemFactory, options: StardewValleyOptions, random: Random,
@@ -623,11 +640,24 @@ def fill_with_resource_packs_and_traps(item_factory: StardewItemFactory, options
     return items
 
 
+def filter_deprecated_items(options: StardewValleyOptions, items: List[ItemData]) -> List[ItemData]:
+    return [item for item in items if  Group.DEPRECATED not in item.groups]
+
+
+def filter_ginger_island_items(options: StardewValleyOptions, items: List[ItemData]) -> List[ItemData]:
+    include_island = options.exclude_ginger_island == ExcludeGingerIsland.option_false
+    return [item for item in items if include_island or Group.GINGER_ISLAND not in item.groups]
+
+
+def filter_mod_items(options: StardewValleyOptions, items: List[ItemData]) -> List[ItemData]:
+    return [item for item in items if item.mod_name is None or item.mod_name in options.mods]
+
+
 def remove_excluded_items(packs, options):
-    included_packs = [pack for pack in packs if Group.DEPRECATED not in pack.groups]
-    if options.exclude_ginger_island == ExcludeGingerIsland.option_true:
-        included_packs = [pack for pack in included_packs if Group.GINGER_ISLAND not in pack.groups]
-    return included_packs
+    deprecated_filter = filter_deprecated_items(options, packs)
+    ginger_island_filter = filter_ginger_island_items(options, deprecated_filter)
+    mod_filter = filter_mod_items(options, ginger_island_filter)
+    return mod_filter
 
 
 def get_stardrop_classification(options) -> ItemClassification:

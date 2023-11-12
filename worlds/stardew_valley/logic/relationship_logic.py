@@ -10,12 +10,13 @@ from .region_logic import RegionLogic
 from .season_logic import SeasonLogic
 from .time_logic import TimeLogic
 from .. import options
-from ..data.villagers_data import all_villagers_by_name, Villager
+from ..data.villagers_data import all_villagers_by_name, get_villagers_for_mods, Villager
 from ..options import Friendsanity, FriendsanityHeartSize, Mods
 from ..stardew_rule import StardewRule, True_, And, Or, Count
 from ..strings.generic_names import Generic
 from ..strings.gift_names import Gift
-from ..strings.villager_names import NPC
+from ..strings.villager_names import NPC, ModNPC
+from ..strings.region_names import Region
 
 
 class RelationshipLogic:
@@ -122,6 +123,8 @@ class RelationshipLogic:
             rules.append(self.time.has_year_two())
         elif npc == NPC.leo:
             rules.append(self.received("Island West Turtle"))
+        elif npc == ModNPC.lance:
+            rules.append(self.region.can_reach(Region.volcano_floor_10))
 
         return And(rules)
 

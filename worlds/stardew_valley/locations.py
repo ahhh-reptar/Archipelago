@@ -6,11 +6,12 @@ from typing import Optional, Dict, Protocol, List, FrozenSet
 
 from . import data
 from .options import StardewValleyOptions, Craftsanity, Chefsanity, Cooksanity, Shipsanity, Monstersanity
-from .data.fish_data import legendary_fish, special_fish, all_fish
+from .data.fish_data import legendary_fish, special_fish, get_fish_for_mods
 from .data.museum_data import all_museum_items
-from .data.villagers_data import all_villagers
+from .data.villagers_data import get_villagers_for_mods
 from .options import ExcludeGingerIsland, Friendsanity, ArcadeMachineLocations, SpecialOrderLocations, Cropsanity, Fishsanity, Museumsanity, FestivalLocations, SkillProgression, BuildingProgression, ToolProgression, ElevatorProgression, BackpackProgression
 from .strings.goal_names import Goal
+from .strings.villager_names import NPC, ModNPC
 from .strings.region_names import Region
 
 LOCATION_CODE_OFFSET = 717000
@@ -185,6 +186,7 @@ def extend_help_wanted_quests(randomized_locations: List[LocationData], desired_
 def extend_fishsanity_locations(randomized_locations: List[LocationData], options: StardewValleyOptions, random: Random):
     prefix = "Fishsanity: "
     fishsanity = options.fishsanity
+    active_fish = get_fish_for_mods(options.mods.value)
     if fishsanity == Fishsanity.option_none:
         return
     elif fishsanity == Fishsanity.option_legendaries:
@@ -192,19 +194,19 @@ def extend_fishsanity_locations(randomized_locations: List[LocationData], option
     elif fishsanity == Fishsanity.option_special:
         randomized_locations.extend(location_table[f"{prefix}{special.name}"] for special in special_fish)
     elif fishsanity == Fishsanity.option_randomized:
-        fish_locations = [location_table[f"{prefix}{fish.name}"] for fish in all_fish if random.random() < 0.4]
+        fish_locations = [location_table[f"{prefix}{fish.name}"] for fish in active_fish if random.random() < 0.4]
         randomized_locations.extend(filter_disabled_locations(options, fish_locations))
     elif fishsanity == Fishsanity.option_all:
-        fish_locations = [location_table[f"{prefix}{fish.name}"] for fish in all_fish]
+        fish_locations = [location_table[f"{prefix}{fish.name}"] for fish in active_fish]
         randomized_locations.extend(filter_disabled_locations(options, fish_locations))
     elif fishsanity == Fishsanity.option_exclude_legendaries:
-        fish_locations = [location_table[f"{prefix}{fish.name}"] for fish in all_fish if fish not in legendary_fish]
+        fish_locations = [location_table[f"{prefix}{fish.name}"] for fish in active_fish if fish not in legendary_fish]
         randomized_locations.extend(filter_disabled_locations(options, fish_locations))
     elif fishsanity == Fishsanity.option_exclude_hard_fish:
-        fish_locations = [location_table[f"{prefix}{fish.name}"] for fish in all_fish if fish.difficulty < 80]
+        fish_locations = [location_table[f"{prefix}{fish.name}"] for fish in active_fish if fish.difficulty < 80]
         randomized_locations.extend(filter_disabled_locations(options, fish_locations))
     elif options.fishsanity == Fishsanity.option_only_easy_fish:
-        fish_locations = [location_table[f"{prefix}{fish.name}"] for fish in all_fish if fish.difficulty < 50]
+        fish_locations = [location_table[f"{prefix}{fish.name}"] for fish in active_fish if fish.difficulty < 50]
         randomized_locations.extend(filter_disabled_locations(options, fish_locations))
 
 
@@ -222,23 +224,22 @@ def extend_museumsanity_locations(randomized_locations: List[LocationData], opti
 
 
 def extend_friendsanity_locations(randomized_locations: List[LocationData], options: StardewValleyOptions):
+    island_villagers = [NPC.leo, ModNPC.lance]
     if options.friendsanity == Friendsanity.option_none:
         return
 
-    exclude_leo = options.exclude_ginger_island == ExcludeGingerIsland.option_true
+    exclude_ginger_island = options.exclude_ginger_island == ExcludeGingerIsland.option_true
     exclude_non_bachelors = options.friendsanity == Friendsanity.option_bachelors
     exclude_locked_villagers = options.friendsanity == Friendsanity.option_starting_npcs or \
                                options.friendsanity == Friendsanity.option_bachelors
     include_post_marriage_hearts = options.friendsanity == Friendsanity.option_all_with_marriage
     heart_size = options.friendsanity_heart_size
-    for villager in all_villagers:
-        if villager.mod_name not in options.mods and villager.mod_name is not None:
-            continue
+    for villager in get_villagers_for_mods(options.mods.value):
         if not villager.available and exclude_locked_villagers:
             continue
         if not villager.bachelor and exclude_non_bachelors:
             continue
-        if villager.name == "Leo" and exclude_leo:
+        if villager.name in island_villagers and exclude_ginger_island:
             continue
         heart_cap = 8 if villager.bachelor else 10
         if include_post_marriage_hearts and villager.bachelor:
