@@ -96,6 +96,7 @@ class Or(StardewRule):
         self._simplified = False
 
     def __call__(self, state: CollectionState) -> bool:
+        self.simplify()
         return any(rule(state) for rule in self.rules)
 
     def __repr__(self):
@@ -149,6 +150,7 @@ class And(StardewRule):
         self._simplified = False
 
     def __call__(self, state: CollectionState) -> bool:
+        self.simplify()
         result = all(rule(state) for rule in self.rules)
         return result
 
@@ -197,6 +199,7 @@ class And(StardewRule):
 class Count(StardewRule):
     count: int
     rules: List[StardewRule]
+    _simplified: bool
 
     def __init__(self, count: int, rule: Union[StardewRule, Iterable[StardewRule]], *rules: StardewRule):
         rules_list: List[StardewRule]
@@ -214,8 +217,10 @@ class Count(StardewRule):
 
         self.rules = rules_list
         self.count = count
+        self._simplified = False
 
     def __call__(self, state: CollectionState) -> bool:
+        self.simplify()
         c = 0
         for r in self.rules:
             if r(state):
@@ -233,7 +238,13 @@ class Count(StardewRule):
         return max(rule.get_difficulty() for rule in easiest_n_rules)
 
     def simplify(self):
-        return Count(self.count, [rule.simplify() for rule in self.rules])
+        if self._simplified:
+            return self
+
+        simplified_rules = [rule.simplify() for rule in self.rules]
+        self.rules = simplified_rules
+        self._simplified = True
+        return self
 
 
 class TotalReceived(StardewRule):
@@ -311,15 +322,18 @@ class Reach(StardewRule):
         return 1
 
 
-@dataclass(frozen=True)
 class Has(StardewRule):
     item: str
     # For sure there is a better way than just passing all the rules everytime
     other_rules: Dict[str, StardewRule]
 
+    def __init__(self, item: str, other_rules: Dict[str, StardewRule]):
+        self.item = item
+        self.other_rules = other_rules
+
     def __call__(self, state: CollectionState) -> bool:
-        if isinstance(self.item, str):
-            return self.other_rules[self.item](state)
+        self.simplify()
+        return self.other_rules[self.item](state)
 
     def __repr__(self):
         if self.item not in self.other_rules:
@@ -333,6 +347,4 @@ class Has(StardewRule):
         return hash(self.item)
 
     def simplify(self) -> StardewRule:
-        if self.item in self.other_rules:
-            return self.other_rules[self.item].simplify()
-        return self
+        return self.other_rules[self.item].simplify()
