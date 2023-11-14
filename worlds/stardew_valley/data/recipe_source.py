@@ -1,21 +1,28 @@
-from typing import Iterable, Union, List
+from typing import Union, List, Tuple
 
 
 class RecipeSource:
-    pass
+
+    def __repr__(self):
+        return f"RecipeSource"
 
 
 class StarterSource(RecipeSource):
-    pass
+
+    def __repr__(self):
+        return f"StarterSource"
 
 
 class ArchipelagoSource(RecipeSource):
-    ap_item: List[str]
+    ap_item: Tuple[str]
 
     def __init__(self, ap_item: Union[str, List[str]]):
         if isinstance(ap_item, str):
             ap_item = [ap_item]
-        self.ap_item = ap_item
+        self.ap_item = tuple(ap_item)
+
+    def __repr__(self):
+        return f"ArchipelagoSource {self.ap_item}"
 
 
 class LogicSource(RecipeSource):
@@ -23,6 +30,9 @@ class LogicSource(RecipeSource):
 
     def __init__(self, logic_rule: str):
         self.logic_rule = logic_rule
+
+    def __repr__(self):
+        return f"LogicSource {self.logic_rule}"
 
 
 class QueenOfSauceSource(RecipeSource):
@@ -35,6 +45,9 @@ class QueenOfSauceSource(RecipeSource):
         self.season = season
         self.day = day
 
+    def __repr__(self):
+        return f"QueenOfSauceSource at year {self.year} {self.season} {self.day}"
+
 
 class FriendshipSource(RecipeSource):
     friend: str
@@ -44,6 +57,9 @@ class FriendshipSource(RecipeSource):
         self.friend = friend
         self.hearts = hearts
 
+    def __repr__(self):
+        return f"FriendshipSource at {self.friend} {self.hearts} <3"
+
 
 class CutsceneSource(FriendshipSource):
     region: str
@@ -51,6 +67,9 @@ class CutsceneSource(FriendshipSource):
     def __init__(self, region: str, friend: str, hearts: int):
         super().__init__(friend, hearts)
         self.region = region
+
+    def __repr__(self):
+        return f"CutsceneSource at {self.region}"
 
 
 class SkillSource(RecipeSource):
@@ -61,6 +80,9 @@ class SkillSource(RecipeSource):
         self.skill = skill
         self.level = level
 
+    def __repr__(self):
+        return f"SkillSource at level {self.level} {self.skill}"
+
 
 class ShopSource(RecipeSource):
     region: str
@@ -69,6 +91,9 @@ class ShopSource(RecipeSource):
     def __init__(self, region: str, price: int):
         self.region = region
         self.price = price
+
+    def __repr__(self):
+        return f"ShopSource at {self.region} costing {self.price}g"
 
 
 class FestivalShopSource(ShopSource):
@@ -84,9 +109,15 @@ class ShopTradeSource(ShopSource):
         super().__init__(region, price)
         self.currency = currency
 
+    def __repr__(self):
+        return f"ShopTradeSource at {self.region} costing {self.price} {self.currency}"
+
 
 class SpecialOrderSource(RecipeSource):
     special_order: str
 
     def __init__(self, special_order: str):
         self.special_order = special_order
+
+    def __repr__(self):
+        return f"SpecialOrderSource from {self.special_order}"

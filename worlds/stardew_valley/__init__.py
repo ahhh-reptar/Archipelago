@@ -4,18 +4,19 @@ from typing import Dict, Any, Iterable, Optional, Union, Set, List
 from BaseClasses import Region, Entrance, Location, Item, Tutorial, CollectionState, ItemClassification, MultiWorld
 from Options import PerGameCommonOptions
 from worlds.AutoWorld import World, WebWorld
+from worlds.generic.Rules import set_rule
 from . import rules
 from .bundles import get_all_bundles, Bundle
 from .items import item_table, create_items, ItemData, Group, items_by_group
 from .locations import location_table, create_locations, LocationData
+from .logic.bundle_logic import BundleLogic
+from .logic.cached_logic import function_total_times, function_call_numbers
 from .logic.logic import StardewLogic
 from .logic.time_logic import MAX_MONTHS
-from .logic.bundle_logic import BundleLogic
 from .options import StardewValleyOptions, SeasonRandomization, Goal, BundleRandomization, BundlePrice, NumberOfLuckBuffs, NumberOfMovementBuffs, \
     BackpackProgression, BuildingProgression, ExcludeGingerIsland
 from .regions import create_regions
 from .rules import set_rules
-from worlds.generic.Rules import set_rule
 from .stardew_rule import True_, StardewRule
 from .strings.ap_names.event_names import Event
 from .strings.goal_names import Goal as GoalName
@@ -96,7 +97,8 @@ class StardewValleyWorld(World):
             self.options.exclude_ginger_island.value = ExcludeGingerIsland.option_false
             goal_name = self.options.goal.current_key
             player_name = self.multiworld.player_name[self.player]
-            logging.warning(f"Goal '{goal_name}' requires Ginger Island. Exclude Ginger Island setting forced to 'False' for player {self.player} ({player_name})")
+            logging.warning(
+                f"Goal '{goal_name}' requires Ginger Island. Exclude Ginger Island setting forced to 'False' for player {self.player} ({player_name})")
 
     def create_regions(self):
         def create_region(name: str, exits: Iterable[str]) -> Region:
@@ -105,15 +107,15 @@ class StardewValleyWorld(World):
             return region
 
         world_regions, self.randomized_entrances = create_regions(create_region, self.multiworld.random, self.options)
-        self.multiworld.regions.extend(world_regions)
 
         def add_location(name: str, code: Optional[int], region: str):
-            region = self.multiworld.get_region(region, self.player)
+            region = world_regions[region]
             location = StardewLocation(self.player, name, code, region)
             location.access_rule = lambda _: True
             region.locations.append(location)
 
         create_locations(add_location, self.options, self.multiworld.random)
+        self.multiworld.regions.extend(world_regions.values())
 
     def create_items(self):
         self.precollect_starting_season()
@@ -176,7 +178,7 @@ class StardewValleyWorld(World):
                 self.create_event_location(month_end, True_(), Event.month_end)
                 continue
 
-            self.create_event_location(month_end, self.logic.received(Event.month_end, i).simplify(), Event.month_end)
+            self.create_event_location(month_end, self.logic.received(Event.month_end, i), Event.month_end)
 
     def setup_construction_events(self):
         can_construct_buildings = LocationData(None, "Carpenter Shop", Event.can_construct_buildings)
@@ -185,51 +187,51 @@ class StardewValleyWorld(World):
     def setup_victory(self):
         if self.options.goal == Goal.option_community_center:
             self.create_event_location(location_table[GoalName.community_center],
-                                       self.logic.bundle.can_complete_community_center().simplify(),
+                                       self.logic.bundle.can_complete_community_center(),
                                        Event.victory)
         elif self.options.goal == Goal.option_grandpa_evaluation:
             self.create_event_location(location_table[GoalName.grandpa_evaluation],
-                                       self.logic.can_finish_grandpa_evaluation().simplify(),
+                                       self.logic.can_finish_grandpa_evaluation(),
                                        Event.victory)
         elif self.options.goal == Goal.option_bottom_of_the_mines:
             self.create_event_location(location_table[GoalName.bottom_of_the_mines],
-                                       self.logic.mine.can_mine_to_floor(120).simplify(),
+                                       True_(),
                                        Event.victory)
         elif self.options.goal == Goal.option_cryptic_note:
             self.create_event_location(location_table[GoalName.cryptic_note],
-                                       self.logic.quest.can_complete_quest("Cryptic Note").simplify(),
+                                       self.logic.quest.can_complete_quest("Cryptic Note"),
                                        Event.victory)
         elif self.options.goal == Goal.option_master_angler:
             self.create_event_location(location_table[GoalName.master_angler],
-                                       self.logic.can_catch_every_fish().simplify(),
+                                       self.logic.can_catch_every_fish(),
                                        Event.victory)
         elif self.options.goal == Goal.option_complete_collection:
             self.create_event_location(location_table[GoalName.complete_museum],
-                                       self.logic.museum.can_complete_museum().simplify(),
+                                       self.logic.museum.can_complete_museum(),
                                        Event.victory)
         elif self.options.goal == Goal.option_full_house:
             self.create_event_location(location_table[GoalName.full_house],
-                                       (self.logic.relationship.has_children(2) & self.logic.relationship.can_reproduce()).simplify(),
+                                       (self.logic.relationship.has_children(2) & self.logic.relationship.can_reproduce()),
                                        Event.victory)
         elif self.options.goal == Goal.option_greatest_walnut_hunter:
             self.create_event_location(location_table[GoalName.greatest_walnut_hunter],
-                                       self.logic.has_walnut(130).simplify(),
+                                       self.logic.has_walnut(130),
                                        Event.victory)
         elif self.options.goal == options.Goal.option_protector_of_the_valley:
             self.create_event_location(location_table[GoalName.protector_of_the_valley],
-                                       self.logic.can_complete_all_monster_slaying_goals().simplify(),
+                                       self.logic.can_complete_all_monster_slaying_goals(),
                                        Event.victory)
         elif self.options.goal == options.Goal.option_full_shipment:
             self.create_event_location(location_table[GoalName.full_shipment],
-                                       self.logic.shipping.can_ship_everything().simplify(),
+                                       self.logic.shipping.can_ship_everything(),
                                        Event.victory)
         elif self.options.goal == options.Goal.option_gourmet_chef:
             self.create_event_location(location_table[GoalName.gourmet_chef],
-                                       self.logic.cooking.can_cook_everything().simplify(),
+                                       self.logic.cooking.can_cook_everything(),
                                        Event.victory)
         elif self.options.goal == options.Goal.option_perfection:
             self.create_event_location(location_table[GoalName.perfection],
-                                       self.logic.has_everything(self.all_progression_items).simplify(),
+                                       self.logic.has_everything(frozenset(self.all_progression_items)),
                                        Event.victory)
 
         self.multiworld.completion_condition[self.player] = lambda state: state.has(Event.victory, self.player)
@@ -245,7 +247,9 @@ class StardewValleyWorld(World):
             self.all_progression_items.add(item.name)
         return StardewItem(item.name, override_classification, item.code, self.player)
 
-    def create_event_location(self, location_data: LocationData, rule: StardewRule, item: Optional[str] = None):
+    def create_event_location(self, location_data: LocationData, rule: StardewRule = None, item: Optional[str] = None):
+        if rule is None:
+            rule = True_()
         if item is None:
             item = location_data.name
 

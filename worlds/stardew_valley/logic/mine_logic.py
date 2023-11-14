@@ -1,4 +1,7 @@
-from .combat_logic import CombatLogic
+from functools import lru_cache
+
+from .cached_logic import CachedLogic
+from .combat_logic import CombatLogic, CachedRules
 from .received_logic import ReceivedLogic
 from .region_logic import RegionLogic
 from .skill_logic import SkillLogic
@@ -13,8 +16,7 @@ from ..strings.skill_names import Skill
 from ..strings.tool_names import Tool, ToolMaterial
 
 
-class MineLogic:
-    player: int
+class MineLogic(CachedLogic):
     tool_option: ToolProgression
     skill_option: SkillProgression
     elevator_option: ElevatorProgression
@@ -25,9 +27,11 @@ class MineLogic:
     skill: SkillLogic
     mod_elevator: ModElevatorLogic
 
-    def __init__(self, player: int, tool_option: ToolProgression, skill_option: SkillProgression, elevator_option: ElevatorProgression, received: ReceivedLogic, region: RegionLogic,
+    def __init__(self, player: int, cached_rules: CachedRules, tool_option: ToolProgression,
+                 skill_option: SkillProgression, elevator_option: ElevatorProgression, received: ReceivedLogic,
+                 region: RegionLogic,
                  combat: CombatLogic, tool: ToolLogic, skill: SkillLogic):
-        self.player = player
+        super().__init__(player, cached_rules)
         self.tool_option = tool_option
         self.skill_option = skill_option
         self.elevator_option = elevator_option
@@ -65,45 +69,29 @@ class MineLogic:
             return self.combat.can_fight_at_level(Performance.decent)
         return self.combat.can_fight_at_level(Performance.basic)
 
+    @lru_cache(maxsize=None)
     def can_progress_in_the_mines_from_floor(self, floor: int) -> StardewRule:
-        tier = int(floor / 40)
+        tier = floor // 40
         rules = []
         weapon_rule = self.get_weapon_rule_for_floor_tier(tier)
         rules.append(weapon_rule)
         if self.tool_option & ToolProgression.option_progressive:
             rules.append(self.tool.has_tool(Tool.pickaxe, ToolMaterial.tiers[tier]))
         if self.skill_option == options.SkillProgression.option_progressive:
-            combat_tier = min(10, max(0, tier * 2))
-            rules.append(self.skill.has_level(Skill.combat, combat_tier))
-            rules.append(self.skill.has_level(Skill.mining, combat_tier))
-        return And(rules)
+            skill_tier = min(10, max(0, tier * 2))
+            rules.append(self.skill.has_level(Skill.combat, skill_tier))
+            rules.append(self.skill.has_level(Skill.mining, skill_tier))
+        return And(*rules)
 
-    def can_progress_easily_in_the_mines_from_floor(self, floor: int) -> StardewRule:
-        tier = int(floor / 40) + 1
-        rules = []
-        weapon_rule = self.get_weapon_rule_for_floor_tier(tier)
-        rules.append(weapon_rule)
-        if self.tool_option & ToolProgression.option_progressive:
-            rules.append(self.tool.has_tool(Tool.pickaxe, ToolMaterial.tiers[tier]))
-        if self.skill_option == options.SkillProgression.option_progressive:
-            combat_tier = min(10, max(0, tier * 2))
-            rules.append(self.skill.has_level(Skill.combat, combat_tier))
-            rules.append(self.skill.has_level(Skill.mining, combat_tier))
-        return And(rules)
-
+    @lru_cache(maxsize=None)
     def has_mine_elevator_to_floor(self, floor: int) -> StardewRule:
+        if floor < 0:
+            floor = 0
         if self.elevator_option != options.ElevatorProgression.option_vanilla:
-            return self.received("Progressive Mine Elevator", int(floor / 5))
+            return self.received("Progressive Mine Elevator", floor // 5)
         return True_()
 
-    def can_mine_to_floor(self, floor: int) -> StardewRule:
-        previous_elevator = max(floor - 5, 0)
-        previous_previous_elevator = max(floor - 10, 0)
-        return ((self.has_mine_elevator_to_floor(previous_elevator) &
-                 self.can_progress_in_the_mines_from_floor(previous_elevator)) |
-                (self.has_mine_elevator_to_floor(previous_previous_elevator) &
-                 self.can_progress_easily_in_the_mines_from_floor(previous_previous_elevator)))
-
+    @lru_cache(maxsize=None)
     def can_progress_in_the_skull_cavern_from_floor(self, floor: int) -> StardewRule:
         tier = floor // 50
         rules = []
@@ -115,17 +103,4 @@ class MineLogic:
             skill_tier = min(10, max(0, tier * 2 + 6))
             rules.extend({self.skill.has_level(Skill.combat, skill_tier),
                           self.skill.has_level(Skill.mining, skill_tier)})
-        return And(rules)
-
-    def can_progress_easily_in_the_skull_cavern_from_floor(self, floor: int) -> StardewRule:
-        return self.can_progress_in_the_skull_cavern_from_floor(floor + 50)
-
-    def can_mine_to_skull_cavern_floor(self, floor: int) -> StardewRule:
-        previous_elevator = max(floor - 25, 0)
-        previous_previous_elevator = max(floor - 50, 0)
-        has_mine_elevator = self.has_mine_elevator_to_floor(5) # Skull Cavern Elevator menu needs a normal elevator...
-        return ((self.mod_elevator.has_skull_cavern_elevator_to_floor(previous_elevator) &
-                 self.can_progress_in_the_skull_cavern_from_floor(previous_elevator)) |
-                (self.mod_elevator.has_skull_cavern_elevator_to_floor(previous_previous_elevator) &
-                 self.can_progress_easily_in_the_skull_cavern_from_floor(previous_previous_elevator))) & has_mine_elevator
-
+        return And(*rules)

@@ -1,3 +1,4 @@
+from .cached_logic import profile_rule
 from .mine_logic import MineLogic
 from .received_logic import ReceivedLogic
 from .region_logic import RegionLogic

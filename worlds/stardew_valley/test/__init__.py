@@ -1,12 +1,14 @@
 import os
+import unittest
 from argparse import Namespace
-from typing import Dict, FrozenSet, Tuple, Any, ClassVar
+from typing import Dict, FrozenSet, Tuple, Any, ClassVar, Iterable
 
-from BaseClasses import MultiWorld
-from test.TestBase import WorldTestBase
+from BaseClasses import MultiWorld, CollectionState
+from Utils import cache_argsless
+from test.bases import WorldTestBase
 from test.general import gen_steps, setup_solo_multiworld as setup_base_solo_multiworld
 from .. import StardewValleyWorld
-from ..mods.mod_data import ModNames
+from ..mods.mod_data import all_mods
 from worlds.AutoWorld import call_all
 from ..options import Cropsanity, SkillProgression, SpecialOrderLocations, Friendsanity, NumberOfLuckBuffs, SeasonRandomization, ToolProgression, \
     ElevatorProgression, Museumsanity, BackpackProgression, BuildingProgression, ArcadeMachineLocations, HelpWantedLocations, Fishsanity, NumberOfMovementBuffs, \
@@ -14,6 +16,13 @@ from ..options import Cropsanity, SkillProgression, SpecialOrderLocations, Frien
     Cooksanity, Chefsanity, Craftsanity
 
 
+@cache_argsless
+def default_options():
+    default = {}
+    return default
+
+
+@cache_argsless
 def get_minsanity_options():
     minsanity = {
         Goal.internal_name: Goal.option_bottom_of_the_mines,
@@ -48,6 +57,7 @@ def get_minsanity_options():
     return minsanity
 
 
+@cache_argsless
 def minimal_locations_maximal_items():
     min_max_options = {
         Goal.internal_name: Goal.option_bottom_of_the_mines,
@@ -68,6 +78,9 @@ def minimal_locations_maximal_items():
         Museumsanity.internal_name: Museumsanity.option_none,
         Monstersanity.internal_name: Monstersanity.option_none,
         Shipsanity.internal_name: Shipsanity.option_none,
+        Cooksanity.internal_name: Cooksanity.option_none,
+        Chefsanity.internal_name: Chefsanity.option_none,
+        Craftsanity.internal_name: Craftsanity.option_none,
         Friendsanity.internal_name: Friendsanity.option_none,
         FriendsanityHeartSize.internal_name: 8,
         NumberOfMovementBuffs.internal_name: 12,
@@ -79,6 +92,7 @@ def minimal_locations_maximal_items():
     return min_max_options
 
 
+@cache_argsless
 def allsanity_options_without_mods():
     allsanity = {
         Goal.internal_name: Goal.option_perfection,
@@ -112,34 +126,41 @@ def allsanity_options_without_mods():
     return allsanity
 
 
+@cache_argsless
 def allsanity_options_with_mods():
     allsanity = {}
     allsanity.update(allsanity_options_without_mods())
-    all_mods = (
-        ModNames.deepwoods, ModNames.tractor, ModNames.big_backpack,
-        ModNames.luck_skill, ModNames.magic, ModNames.socializing_skill, ModNames.archaeology,
-        ModNames.cooking_skill, ModNames.binning_skill, ModNames.juna,
-        ModNames.jasper, ModNames.alec, ModNames.yoba, ModNames.eugene,
-        ModNames.wellwick, ModNames.ginger, ModNames.shiko, ModNames.delores,
-        ModNames.ayeisha, ModNames.riley, ModNames.skull_cavern_elevator,
-        ModNames.sve
-    )
     allsanity.update({Mods.internal_name: all_mods})
     return allsanity
 
 
-class SVTestBase(WorldTestBase):
+class SVTestCase(unittest.TestCase):
     game = "Stardew Valley"
     world: StardewValleyWorld
     player: ClassVar[int] = 1
+    """Set to False to not skip some 'extra' tests"""
+    skip_extra_tests: bool = True
+    """Set to False to run tests that take long"""
     skip_long_tests: bool = True
+    """Set to False to run tests that take long"""
+    skip_performance_tests: bool = True
+
     options = get_minsanity_options()
 
-    def world_setup(self, *args, **kwargs):
-        super().world_setup(*args, **kwargs)
+    def setUp(self) -> None:
+        super().setUp()
         long_tests_key = "long"
         if long_tests_key in os.environ:
             self.skip_long_tests = not bool(os.environ[long_tests_key])
+        performance_tests_key = "performance"
+        if performance_tests_key in os.environ:
+            self.skip_performance_tests = not bool(os.environ[performance_tests_key])
+
+
+class SVTestBase(WorldTestBase, SVTestCase):
+
+    def world_setup(self, *args, **kwargs):
+        super().world_setup(*args, **kwargs)
         if self.constructed:
             self.world = self.multiworld.worlds[self.player]  # noqa
 
@@ -157,8 +178,7 @@ pre_generated_worlds = {}
 
 
 # Mostly a copy of test.general.setup_solo_multiworld, I just don't want to change the core.
-def setup_solo_multiworld(test_options=None, seed=None,
-                          _cache: Dict[FrozenSet[Tuple[str, Any]], MultiWorld] = {}) -> MultiWorld:  # noqa
+def setup_solo_multiworld(test_options=None, seed=None, _cache: Dict[FrozenSet[Tuple[str, Any]], MultiWorld] = {}) -> MultiWorld:  # noqa
     if test_options is None:
         test_options = {}
 
@@ -179,5 +199,32 @@ def setup_solo_multiworld(test_options=None, seed=None,
         call_all(multiworld, step)
 
     _cache[frozen_options] = multiworld
+
+    return multiworld
+
+
+def setup_multiworld(test_options: Iterable[Dict[str, int]] = None, seed=None) -> MultiWorld:  # noqa
+    if test_options is None:
+        test_options = []
+
+    multiworld = MultiWorld(len(test_options))
+    multiworld.player_name = {}
+    multiworld.set_seed(seed)
+    multiworld.state = CollectionState(multiworld)
+    for i in range(1, len(test_options) + 1):
+        multiworld.game[i] = StardewValleyWorld.game
+        multiworld.player_name.update({i: f"Tester{i}"})
+    args = Namespace()
+    for name, option in StardewValleyWorld.options_dataclass.type_hints.items():
+        options = {}
+        for i in range(1, len(test_options) + 1):
+            player_options = test_options[i-1]
+            value = option(player_options[name]) if name in player_options else option.from_any(option.default)
+            options.update({i: value})
+        setattr(args, name, options)
+    multiworld.set_options(args)
+
+    for step in gen_steps:
+        call_all(multiworld, step)
 
     return multiworld

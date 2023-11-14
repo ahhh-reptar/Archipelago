@@ -1,25 +1,28 @@
+from functools import lru_cache
 
 from .building_logic import BuildingLogic
+from .cached_logic import CachedLogic, CachedRules
 from .has_logic import HasLogic
 from .region_logic import RegionLogic
-from ..options import ExcludeGingerIsland
 from ..locations import LocationTags, locations_by_tag
+from ..options import ExcludeGingerIsland
 from ..options import SpecialOrderLocations
 from ..stardew_rule import StardewRule, And
 from ..strings.building_names import Building
 from ..strings.region_names import Region
 
 
-class ShippingLogic:
-    player: int
+class ShippingLogic(CachedLogic):
     exclude_ginger_island: ExcludeGingerIsland
     special_orders_option: SpecialOrderLocations
     has: HasLogic
     region: RegionLogic
     buildings: BuildingLogic
 
-    def __init__(self, player: int, exclude_ginger_island: ExcludeGingerIsland, special_orders_option: SpecialOrderLocations, has: HasLogic, region: RegionLogic, buildings: BuildingLogic):
-        self.player = player
+    def __init__(self, player: int, cached_rules: CachedRules, exclude_ginger_island: ExcludeGingerIsland,
+                 special_orders_option: SpecialOrderLocations,
+                 has: HasLogic, region: RegionLogic, buildings: BuildingLogic):
+        super().__init__(player, cached_rules)
         self.exclude_ginger_island = exclude_ginger_island
         self.special_orders_option = special_orders_option
         self.has = has
@@ -29,6 +32,7 @@ class ShippingLogic:
     def can_use_shipping_bin(self, item: str = "") -> StardewRule:
         return self.buildings.has_building(Building.shipping_bin)
 
+    @lru_cache(maxsize=None)
     def can_ship(self, item: str = "") -> StardewRule:
         shipping_rule = self.region.can_reach(Region.shipping)
         if item == "":
@@ -42,6 +46,6 @@ class ShippingLogic:
         include_qi = self.special_orders_option == SpecialOrderLocations.option_board_qi
         for location in locations_by_tag[LocationTags.SHIPSANITY_FULL_SHIPMENT]:
             if (include_island or LocationTags.GINGER_ISLAND not in location.tags) and \
-               (include_qi or LocationTags.REQUIRES_QI_ORDERS not in location.tags):
+                    (include_qi or LocationTags.REQUIRES_QI_ORDERS not in location.tags):
                 all_items_to_ship.append(location.name[len(shipsanity_prefix):])
-        return self.buildings.has_building(Building.shipping_bin) & And([self.has(item) for item in all_items_to_ship])
+        return self.buildings.has_building(Building.shipping_bin) & And(*(self.has(item) for item in all_items_to_ship))

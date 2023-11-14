@@ -1,3 +1,4 @@
+from .cached_logic import profile_rule
 from .museum_logic import MuseumLogic
 from ..stardew_rule import StardewRule
 from .received_logic import ReceivedLogic
@@ -15,7 +16,7 @@ class WalletLogic:
         self.museum = museum
 
     def can_speak_dwarf(self) -> StardewRule:
-        return self.received("Dwarvish Translation Guide")
+        return self.received(Wallet.dwarvish_translation_guide)
 
     def has_rusty_key(self) -> StardewRule:
         return self.received(Wallet.rusty_key)

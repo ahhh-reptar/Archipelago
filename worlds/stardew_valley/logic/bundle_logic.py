@@ -1,29 +1,32 @@
-from typing import List
+from functools import lru_cache
+from typing import Tuple
 
-from ..data.bundle_data import BundleItem
+from .cached_logic import CachedLogic, CachedRules
 from .farming_logic import FarmingLogic
 from .has_logic import HasLogic
 from .money_logic import MoneyLogic
 from .region_logic import RegionLogic
+from ..data.bundle_data import BundleItem
 from ..stardew_rule import StardewRule
 from ..strings.region_names import Region
 
 
-class BundleLogic:
-    player: int
+class BundleLogic(CachedLogic):
     has: HasLogic
     region: RegionLogic
     money: MoneyLogic
     farming: FarmingLogic
 
-    def __init__(self, player: int, has: HasLogic, region: RegionLogic, money: MoneyLogic, farming: FarmingLogic):
-        self.player = player
+    def __init__(self, player: int, cached_rules: CachedRules, has: HasLogic, region: RegionLogic, money: MoneyLogic,
+                 farming: FarmingLogic):
+        super().__init__(player, cached_rules)
         self.has = has
         self.region = region
         self.money = money
         self.farming = farming
 
-    def can_complete_bundle(self, bundle_requirements: List[BundleItem], number_required: int) -> StardewRule:
+    @lru_cache(maxsize=None)
+    def can_complete_bundle(self, bundle_requirements: Tuple[BundleItem], number_required: int) -> StardewRule:
         item_rules = []
         highest_quality_yet = 0
         can_speak_junimo = self.region.can_reach(Region.wizard_tower)
@@ -34,8 +37,10 @@ class BundleLogic:
                 item_rules.append(bundle_item.item.name)
                 if bundle_item.quality > highest_quality_yet:
                     highest_quality_yet = bundle_item.quality
-        return can_speak_junimo & self.has(item_rules, number_required) & self.farming.can_grow_crop_quality(highest_quality_yet)
+        return can_speak_junimo & self.has(tuple(item_rules), number_required) & self.farming.can_grow_crop_quality(
+            highest_quality_yet)
 
+    @lru_cache(maxsize=None)
     def can_complete_community_center(self) -> StardewRule:
         return (self.region.can_reach_location("Complete Crafts Room") &
                 self.region.can_reach_location("Complete Pantry") &

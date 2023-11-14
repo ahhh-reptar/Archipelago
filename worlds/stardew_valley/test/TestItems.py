@@ -6,12 +6,12 @@ import random
 from typing import Set
 
 from BaseClasses import ItemClassification, MultiWorld
-from . import setup_solo_multiworld, SVTestBase, allsanity_options_without_mods
+from . import setup_solo_multiworld, SVTestCase, allsanity_options_without_mods
 from .. import ItemData, StardewValleyWorld
 from ..items import Group, item_table
 
 
-class TestItems(SVTestBase):
+class TestItems(SVTestCase):
     def test_can_create_item_of_resource_pack(self):
         item_name = "Resource Pack: 500 Money"
 

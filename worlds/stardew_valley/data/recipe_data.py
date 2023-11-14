@@ -17,6 +17,7 @@ from ..strings.skill_names import Skill
 from ..strings.villager_names import NPC
 
 
+
 class CookingRecipe:
     meal: str
     ingredients: Dict[str, int]
