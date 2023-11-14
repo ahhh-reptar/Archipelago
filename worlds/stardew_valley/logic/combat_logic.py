@@ -44,16 +44,16 @@ class CombatLogic(CachedLogic):
 
     @cache_rule
     def has_decent_weapon(self) -> StardewRule:
-        return Or(self.received(weapon, 2) for weapon in valid_weapons)
+        return Or(*(self.received(weapon, 2) for weapon in valid_weapons))
 
     @cache_rule
     def has_good_weapon(self) -> StardewRule:
-        return Or(self.received(weapon, 3) for weapon in valid_weapons)
+        return Or(*(self.received(weapon, 3) for weapon in valid_weapons))
 
     @cache_rule
     def has_great_weapon(self) -> StardewRule:
-        return Or(self.received(weapon, 4) for weapon in valid_weapons)
+        return Or(*(self.received(weapon, 4) for weapon in valid_weapons))
 
     @cache_rule
     def has_galaxy_weapon(self) -> StardewRule:
-        return Or(self.received(weapon, 5) for weapon in valid_weapons)
+        return Or(*(self.received(weapon, 5) for weapon in valid_weapons))

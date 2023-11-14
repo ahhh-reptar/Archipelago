@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Iterable, Dict, List, Union, FrozenSet, Set
+from typing import Iterable, Dict, List, Union, FrozenSet
 
 from BaseClasses import CollectionState, ItemClassification
 from .items import item_table
@@ -21,7 +21,7 @@ class StardewRule:
 
     def __and__(self, other) -> StardewRule:
         if type(other) is And:
-            return And(other.rules.union({self}))
+            return And(*other.rules.union({self}))
 
         return And(self, other)
 
@@ -90,29 +90,9 @@ class Or(StardewRule):
     rules: FrozenSet[StardewRule]
     _simplified: bool
 
-    def __init__(self, rule: Union[StardewRule, Iterable[StardewRule]], *rules: StardewRule):
-        rules_list: Set[StardewRule]
-
-        if isinstance(rule, Iterable):
-            rules_list = {*rule}
-        else:
-            rules_list = {rule}
-
-        if rules is not None:
-            rules_list.update(rules)
-
-        assert rules_list, "Can't create a Or conditions without rules"
-
-        if any(type(rule) is Or for rule in rules_list):
-            new_rules: Set[StardewRule] = set()
-            for rule in rules_list:
-                if type(rule) is Or:
-                    new_rules.update(rule.rules)
-                else:
-                    new_rules.add(rule)
-            rules_list = new_rules
-
-        self.rules = frozenset(rules_list)
+    def __init__(self, *rules: StardewRule):
+        self.rules = frozenset(rules)
+        assert self.rules, "Can't create a Or conditions without rules"
         self._simplified = False
 
     def __call__(self, state: CollectionState) -> bool:
@@ -127,9 +107,9 @@ class Or(StardewRule):
         if other is false_:
             return self
         if type(other) is Or:
-            return Or(self.rules.union(other.rules))
+            return Or(*self.rules.union(other.rules))
 
-        return Or(self.rules.union({other}))
+        return Or(*self.rules.union({other}))
 
     def __eq__(self, other):
         return isinstance(other, self.__class__) and other.rules == self.rules
@@ -164,32 +144,9 @@ class And(StardewRule):
     rules: FrozenSet[StardewRule]
     _simplified: bool
 
-    def __init__(self, rule: Union[StardewRule, Iterable[StardewRule]], *rules: StardewRule):
-        rules_list: Set[StardewRule]
-
-        if isinstance(rule, Iterable):
-            rules_list = {*rule}
-        else:
-            rules_list = {rule}
-
-        if rules is not None:
-            rules_list.update(rules)
-
-        if not rules_list:
-            rules_list.add(true_)
-        elif any(type(rule) is And for rule in rules_list):
-            new_rules: Set[StardewRule] = set()
-            for rule in rules_list:
-                if type(rule) is And:
-                    new_rules.update(rule.rules)
-                else:
-                    new_rules.add(rule)
-            rules_list = new_rules
-
-        self.rules = frozenset(rules_list)
+    def __init__(self, *rules: StardewRule):
+        self.rules = frozenset(rules)
         self._simplified = False
-
-        self.rules = frozenset(rules_list)
 
     def __call__(self, state: CollectionState) -> bool:
         result = all(rule(state) for rule in self.rules)
@@ -204,9 +161,9 @@ class And(StardewRule):
         if other is false_:
             return other
         if type(other) is And:
-            return And(self.rules.union(other.rules))
+            return And(*self.rules.union(other.rules))
 
-        return And(self.rules.union({other}))
+        return And(*self.rules.union({other}))
 
     def __eq__(self, other):
         return isinstance(other, self.__class__) and other.rules == self.rules
@@ -276,8 +233,7 @@ class Count(StardewRule):
         return max(rule.get_difficulty() for rule in easiest_n_rules)
 
     def simplify(self):
-        return self
-        # return Count(self.count, [rule.simplify() for rule in self.rules])
+        return Count(self.count, [rule.simplify() for rule in self.rules])
 
 
 class TotalReceived(StardewRule):
@@ -366,7 +322,7 @@ class Has(StardewRule):
             return self.other_rules[self.item](state)
 
     def __repr__(self):
-        if not self.item in self.other_rules:
+        if self.item not in self.other_rules:
             return f"Has {self.item} -> {MISSING_ITEM}"
         return f"Has {self.item} -> {repr(self.other_rules[self.item])}"
 
@@ -377,4 +333,6 @@ class Has(StardewRule):
         return hash(self.item)
 
     def simplify(self) -> StardewRule:
-        return self.other_rules[self.item].simplify()
+        if self.item in self.other_rules:
+            return self.other_rules[self.item].simplify()
+        return self

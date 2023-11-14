@@ -37,10 +37,10 @@ class MonsterLogic(CachedLogic):
     @cache_rule
     def can_kill_any(self, monsters: Iterable[StardewMonster], amount_tier: int = 0) -> StardewRule:
         rules = [self.can_kill(monster, amount_tier) for monster in monsters]
-        return Or(rules)
+        return Or(*rules)
 
     @cache_rule
     def can_kill_all(self, monsters: Iterable[StardewMonster], amount_tier: int = 0) -> StardewRule:
         rules = [self.can_kill(monster, amount_tier) for monster in monsters]
-        return And(rules)
+        return And(*rules)
 

@@ -15,11 +15,11 @@ class RegionLogic(CachedLogic):
 
     @cache_rule
     def can_reach_any(self, region_names: Iterable[str]) -> StardewRule:
-        return Or(self.can_reach(spot) for spot in region_names)
+        return Or(*(self.can_reach(spot) for spot in region_names))
 
     @cache_rule
     def can_reach_all(self, region_names: Iterable[str]) -> StardewRule:
-        return And(self.can_reach(spot) for spot in region_names)
+        return And(*(self.can_reach(spot) for spot in region_names))
 
     @cache_rule
     def can_reach_all_except_one(self, region_names: Iterable[str]) -> StardewRule:

@@ -46,4 +46,4 @@ class ShippingLogic(CachedLogic):
             if (include_island or LocationTags.GINGER_ISLAND not in location.tags) and \
                (include_qi or LocationTags.REQUIRES_QI_ORDERS not in location.tags):
                 all_items_to_ship.append(location.name[len(shipsanity_prefix):])
-        return self.buildings.has_building(Building.shipping_bin) & And([self.has(item) for item in all_items_to_ship])
+        return self.buildings.has_building(Building.shipping_bin) & And(*(self.has(item) for item in all_items_to_ship))
