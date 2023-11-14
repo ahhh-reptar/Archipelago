@@ -123,24 +123,24 @@ def set_bundle_rules(current_bundles, logic: StardewLogic, multiworld, player):
         simplified_rules = rules.simplify()
         MultiWorldRules.set_rule(location, simplified_rules)
     MultiWorldRules.add_rule(multiworld.get_location("Complete Crafts Room", player),
-                             And(logic.region.can_reach_location(bundle.name)
-                                 for bundle in locations.locations_by_tag[LocationTags.CRAFTS_ROOM_BUNDLE]).simplify())
+                             And(*(logic.region.can_reach_location(bundle.name)
+                                 for bundle in locations.locations_by_tag[LocationTags.CRAFTS_ROOM_BUNDLE])).simplify())
     MultiWorldRules.add_rule(multiworld.get_location("Complete Pantry", player),
-                             And(logic.region.can_reach_location(bundle.name)
-                                 for bundle in locations.locations_by_tag[LocationTags.PANTRY_BUNDLE]).simplify())
+                             And(*(logic.region.can_reach_location(bundle.name)
+                                 for bundle in locations.locations_by_tag[LocationTags.PANTRY_BUNDLE])).simplify())
     MultiWorldRules.add_rule(multiworld.get_location("Complete Fish Tank", player),
-                             And(logic.region.can_reach_location(bundle.name)
-                                 for bundle in locations.locations_by_tag[LocationTags.FISH_TANK_BUNDLE]).simplify())
+                             And(*(logic.region.can_reach_location(bundle.name)
+                                 for bundle in locations.locations_by_tag[LocationTags.FISH_TANK_BUNDLE])).simplify())
     MultiWorldRules.add_rule(multiworld.get_location("Complete Boiler Room", player),
-                             And(logic.region.can_reach_location(bundle.name)
-                                 for bundle in locations.locations_by_tag[LocationTags.BOILER_ROOM_BUNDLE]).simplify())
+                             And(*(logic.region.can_reach_location(bundle.name)
+                                 for bundle in locations.locations_by_tag[LocationTags.BOILER_ROOM_BUNDLE])).simplify())
     MultiWorldRules.add_rule(multiworld.get_location("Complete Bulletin Board", player),
-                             And(logic.region.can_reach_location(bundle.name)
+                             And(*(logic.region.can_reach_location(bundle.name)
                                  for bundle
-                                 in locations.locations_by_tag[LocationTags.BULLETIN_BOARD_BUNDLE]).simplify())
+                                 in locations.locations_by_tag[LocationTags.BULLETIN_BOARD_BUNDLE])).simplify())
     MultiWorldRules.add_rule(multiworld.get_location("Complete Vault", player),
-                             And(logic.region.can_reach_location(bundle.name)
-                                 for bundle in locations.locations_by_tag[LocationTags.VAULT_BUNDLE]).simplify())
+                             And(*(logic.region.can_reach_location(bundle.name)
+                                 for bundle in locations.locations_by_tag[LocationTags.VAULT_BUNDLE])).simplify())
 
 
 def set_skills_rules(logic: StardewLogic, multiworld, player, world_options: StardewValleyOptions):
@@ -580,13 +580,13 @@ def set_museum_milestone_rule(logic: StardewLogic, multiworld: MultiWorld, museu
     elif milestone_name.endswith(artifacts_suffix):
         rule = get_museum_item_count_rule(logic, artifacts_suffix, milestone_name, all_museum_artifacts, logic.museum.can_find_museum_artifacts)
     elif milestone_name == "Dwarf Scrolls":
-        rule = And([logic.museum.can_find_museum_item(item) for item in dwarf_scrolls]) & logic.received(metal_detector, 4)
+        rule = And(*(logic.museum.can_find_museum_item(item) for item in dwarf_scrolls)) & logic.received(metal_detector, 4)
     elif milestone_name == "Skeleton Front":
-        rule = And([logic.museum.can_find_museum_item(item) for item in skeleton_front]) & logic.received(metal_detector, 4)
+        rule = And(*(logic.museum.can_find_museum_item(item) for item in skeleton_front)) & logic.received(metal_detector, 4)
     elif milestone_name == "Skeleton Middle":
-        rule = And([logic.museum.can_find_museum_item(item) for item in skeleton_middle]) & logic.received(metal_detector, 4)
+        rule = And(*(logic.museum.can_find_museum_item(item) for item in skeleton_middle)) & logic.received(metal_detector, 4)
     elif milestone_name == "Skeleton Back":
-        rule = And([logic.museum.can_find_museum_item(item) for item in skeleton_back]) & logic.received(metal_detector, 4)
+        rule = And(*(logic.museum.can_find_museum_item(item) for item in skeleton_back)) & logic.received(metal_detector, 4)
     elif milestone_name == "Ancient Seed":
         rule = logic.museum.can_find_museum_item(Artifact.ancient_seed) & logic.received(metal_detector, 4)
     if rule is None:

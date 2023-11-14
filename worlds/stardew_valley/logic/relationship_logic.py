@@ -1,17 +1,16 @@
 import math
 
-from typing import Iterable, Union
+from typing import Union
 
 from .building_logic import BuildingLogic
-from .cached_logic import CachedLogic, cache_rule, profile_rule
+from .cached_logic import CachedLogic, cache_rule
 from .gift_logic import GiftLogic
 from .has_logic import HasLogic, CachedRules
 from .received_logic import ReceivedLogic
 from .region_logic import RegionLogic
 from .season_logic import SeasonLogic
 from .time_logic import TimeLogic
-from .. import options
-from ..data.villagers_data import all_villagers_by_name, get_villagers_for_mods, Villager
+from ..data.villagers_data import all_villagers_by_name, Villager
 from ..options import Friendsanity, FriendsanityHeartSize, Mods
 from ..stardew_rule import StardewRule, True_, And, Or, Count
 from ..strings.generic_names import Generic
@@ -66,7 +65,7 @@ class RelationshipLogic(CachedLogic):
         if number_children <= 0:
             return True_()
         baby_rules = [self.can_get_married(), self.buildings.has_house(2), self.has_hearts(Generic.bachelor, 12), self.has_children(number_children - 1)]
-        return And(baby_rules)
+        return And(*baby_rules)
 
     @cache_rule
     def has_hearts(self, npc: str, hearts: int = 1) -> StardewRule:
@@ -82,14 +81,14 @@ class RelationshipLogic(CachedLogic):
                         continue
                     if npc == Generic.any or all_villagers_by_name[name].bachelor:
                         possible_friends.append(self.has_hearts(name, hearts))
-                return Or(possible_friends)
+                return Or(*possible_friends)
             if npc == Generic.all:
                 mandatory_friends = []
                 for name in all_villagers_by_name:
                     if not self.npc_is_in_current_slot(name):
                         continue
                     mandatory_friends.append(self.has_hearts(name, hearts))
-                return And(mandatory_friends)
+                return And(*mandatory_friends)
             if npc.isnumeric():
                 possible_friends = []
                 for name in all_villagers_by_name:
@@ -128,7 +127,7 @@ class RelationshipLogic(CachedLogic):
         elif npc == ModNPC.lance:
             rules.append(self.region.can_reach(Region.volcano_floor_10))
 
-        return And(rules)
+        return And(*rules)
 
     def can_give_loved_gifts_to_everyone(self) -> StardewRule:
         rules = []
@@ -137,8 +136,8 @@ class RelationshipLogic(CachedLogic):
                 continue
             meet_rule = self.can_meet(npc)
             rules.append(meet_rule)
-        loved_gifts_rules = And(rules) & self.gifts.has_any_universal_love()
-        return loved_gifts_rules
+        rules.append(self.gifts.has_any_universal_love())
+        return And(*rules)
 
     @cache_rule
     def can_earn_relationship(self, npc: str, hearts: int = 0) -> StardewRule:
@@ -148,24 +147,20 @@ class RelationshipLogic(CachedLogic):
         previous_heart = hearts - self.heart_size_option
         previous_heart_rule = self.has_hearts(npc, previous_heart)
 
-        # if npc == NPC.wizard and ModNames.magic in self.options.mods:
-        #     earn_rule = self.can_meet(npc) & self.time.has_lived_months(hearts)
-        if npc in all_villagers_by_name:
-            if not self.npc_is_in_current_slot(npc):
-                return previous_heart_rule
-            villager = all_villagers_by_name[npc]
-            rule_if_birthday = self.season.has(villager.birthday) & self.time.has_lived_months(hearts // 2)
-            rule_if_not_birthday = self.time.has_lived_months(hearts)
-            earn_rule = self.can_meet(npc) & (rule_if_birthday | rule_if_not_birthday)
-            if villager.bachelor:
-                if hearts > 8:
-                    earn_rule = earn_rule & self.can_date(npc)
-                if hearts > 10:
-                    earn_rule = earn_rule & self.can_marry(npc)
-        else:
-            earn_rule = self.time.has_lived_months(min(hearts // 2, 8))
+        if npc not in all_villagers_by_name or not self.npc_is_in_current_slot(npc):
+            return previous_heart_rule
 
-        return previous_heart_rule & earn_rule
+        rules = [previous_heart_rule, self.can_meet(npc)]
+        villager = all_villagers_by_name[npc]
+        if hearts > self.heart_size_option:
+            rules.append(self.season.has(villager.birthday))
+        if villager.bachelor:
+            if hearts > 8:
+                rules.append(self.can_date(npc))
+            if hearts > 10:
+                rules.append(self.can_marry(npc))
+
+        return And(*rules)
 
     def npc_is_in_current_slot(self, name: str) -> bool:
         npc = all_villagers_by_name[name]

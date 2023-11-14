@@ -1,4 +1,4 @@
-from .cached_logic import cache_rule, CachedLogic, CachedRules, profile_rule
+from .cached_logic import cache_rule, CachedLogic, CachedRules
 from .received_logic import ReceivedLogic
 from .region_logic import RegionLogic
 from .season_logic import SeasonLogic
@@ -58,7 +58,7 @@ class FishingLogic(CachedLogic):
         if fish.difficulty == -1:
             difficulty_rule = self.skill.can_crab_pot()
         else:
-            difficulty_rule = self.skill.can_fish([], 120 if fish.legendary else fish.difficulty)
+            difficulty_rule = self.skill.can_fish(difficulty=120 if fish.legendary else fish.difficulty)
         if fish.name == SVEFish.kittyfish:
             item_rule = self.received("Kittyfish Spell")
         else:
@@ -70,4 +70,4 @@ class FishingLogic(CachedLogic):
             return False_()
         if self.special_order_locations != SpecialOrderLocations.option_board_qi:
             return False_()
-        return self.region.can_reach(Region.qi_walnut_room) & And([self.can_catch_fish(fish) for fish in legendary_fish])
+        return self.region.can_reach(Region.qi_walnut_room) & And(*(self.can_catch_fish(fish) for fish in legendary_fish))

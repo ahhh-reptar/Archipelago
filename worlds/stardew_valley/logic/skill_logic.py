@@ -121,7 +121,7 @@ class SkillLogic(CachedLogic):
         crop_rules = []
         for crop in all_crops:
             crop_rules.append(self.crop.can_grow(crop))
-        return Or(crop_rules)
+        return Or(*crop_rules)
 
     @cache_rule
     def can_get_foraging_xp(self) -> StardewRule:
