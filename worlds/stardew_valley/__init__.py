@@ -4,19 +4,19 @@ from typing import Dict, Any, Iterable, Optional, Union, Set, List
 from BaseClasses import Region, Entrance, Location, Item, Tutorial, CollectionState, ItemClassification, MultiWorld
 from Options import PerGameCommonOptions
 from worlds.AutoWorld import World, WebWorld
+from worlds.generic.Rules import set_rule
 from . import rules
 from .bundles import get_all_bundles, Bundle
 from .items import item_table, create_items, ItemData, Group, items_by_group
 from .locations import location_table, create_locations, LocationData
+from .logic.bundle_logic import BundleLogic
 from .logic.cached_logic import function_total_times, function_call_numbers
 from .logic.logic import StardewLogic
 from .logic.time_logic import MAX_MONTHS
-from .logic.bundle_logic import BundleLogic
 from .options import StardewValleyOptions, SeasonRandomization, Goal, BundleRandomization, BundlePrice, NumberOfLuckBuffs, NumberOfMovementBuffs, \
     BackpackProgression, BuildingProgression, ExcludeGingerIsland
 from .regions import create_regions
 from .rules import set_rules
-from worlds.generic.Rules import set_rule
 from .stardew_rule import True_, StardewRule
 from .strings.ap_names.event_names import Event
 from .strings.goal_names import Goal as GoalName
@@ -97,7 +97,8 @@ class StardewValleyWorld(World):
             self.options.exclude_ginger_island.value = ExcludeGingerIsland.option_false
             goal_name = self.options.goal.current_key
             player_name = self.multiworld.player_name[self.player]
-            logging.warning(f"Goal '{goal_name}' requires Ginger Island. Exclude Ginger Island setting forced to 'False' for player {self.player} ({player_name})")
+            logging.warning(
+                f"Goal '{goal_name}' requires Ginger Island. Exclude Ginger Island setting forced to 'False' for player {self.player} ({player_name})")
 
     def create_regions(self):
         def create_region(name: str, exits: Iterable[str]) -> Region:
@@ -230,7 +231,7 @@ class StardewValleyWorld(World):
                                        Event.victory)
         elif self.options.goal == options.Goal.option_perfection:
             self.create_event_location(location_table[GoalName.perfection],
-                                       self.logic.has_everything(self.all_progression_items),
+                                       self.logic.has_everything(frozenset(self.all_progression_items)),
                                        Event.victory)
 
         self.multiworld.completion_condition[self.player] = lambda state: state.has(Event.victory, self.player)
