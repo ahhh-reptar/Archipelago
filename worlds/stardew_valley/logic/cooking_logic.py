@@ -1,5 +1,6 @@
-from functools import lru_cache
+from functools import cached_property
 
+from Utils import cache_self1
 from .action_logic import ActionLogic
 from .building_logic import BuildingLogic
 from .cached_logic import CachedLogic
@@ -25,9 +26,9 @@ from ..strings.tv_channel_names import Channel
 
 
 class CookingLogic(CachedLogic):
-    mods: Mods
     chefsanity_option: Chefsanity
     exclude_ginger_island: ExcludeGingerIsland
+    mods: Mods
     received: ReceivedLogic
     has: HasLogic
     region: RegionLogic
@@ -39,15 +40,15 @@ class CookingLogic(CachedLogic):
     relationship: RelationshipLogic
     skill: SkillLogic
 
-    def __init__(self, player: int, cached_rules: CachedRules, mods: Mods, chefsanity_option: Chefsanity,
-                 exclude_ginger_island: ExcludeGingerIsland, received: ReceivedLogic,
+    def __init__(self, player: int, cached_rules: CachedRules, chefsanity_option: Chefsanity,
+                 exclude_ginger_island: ExcludeGingerIsland, mods: Mods, received: ReceivedLogic,
                  has: HasLogic, region: RegionLogic, season: SeasonLogic, time: TimeLogic, money: MoneyLogic,
                  action: ActionLogic, buildings: BuildingLogic,
                  relationship: RelationshipLogic, skill: SkillLogic):
         super().__init__(player, cached_rules)
-        self.mods = mods
         self.chefsanity_option = chefsanity_option
         self.exclude_ginger_island = exclude_ginger_island
+        self.mods = mods
         self.received = received
         self.has = has
         self.region = region
@@ -59,11 +60,11 @@ class CookingLogic(CachedLogic):
         self.relationship = relationship
         self.skill = skill
 
-    @lru_cache(maxsize=None)
+    @cached_property
     def can_cook_in_kitchen(self) -> StardewRule:
         return self.buildings.has_house(1) | self.skill.has_level(Skill.foraging, 9)
 
-    @lru_cache(maxsize=None)
+    # Should be cached
     def can_cook(self, recipe: CookingRecipe = None) -> StardewRule:
         cook_rule = self.region.can_reach(Region.kitchen)
         if recipe is None:
@@ -73,7 +74,7 @@ class CookingLogic(CachedLogic):
         ingredients_rule = And(*(self.has(ingredient) for ingredient in recipe.ingredients))
         return cook_rule & recipe_rule & ingredients_rule
 
-    @lru_cache(maxsize=None)
+    # Should be cached
     def knows_recipe(self, source: RecipeSource, meal_name: str) -> StardewRule:
         if self.chefsanity_option == Chefsanity.option_none:
             return self.can_learn_recipe(source)
@@ -93,7 +94,7 @@ class CookingLogic(CachedLogic):
             return self.received_recipe(meal_name)
         return self.can_learn_recipe(source)
 
-    @lru_cache(maxsize=None)
+    @cache_self1
     def can_learn_recipe(self, source: RecipeSource) -> StardewRule:
         if isinstance(source, StarterSource):
             return True_()
@@ -108,15 +109,15 @@ class CookingLogic(CachedLogic):
         if isinstance(source, FriendshipSource):
             return self.relationship.has_hearts(source.friend, source.hearts)
         if isinstance(source, QueenOfSauceSource):
-            year_rule = self.time.has_year_two() if source.year == 2 else self.time.has_year_three()
+            year_rule = self.time.has_year_two if source.year == 2 else self.time.has_year_three
             return self.action.can_watch(Channel.queen_of_sauce) & self.season.has(source.season) & year_rule
         return False_()
 
-    @lru_cache(maxsize=None)
+    @cache_self1
     def received_recipe(self, meal_name: str):
         return self.received(f"{meal_name} Recipe")
 
-    @lru_cache(maxsize=None)
+    @cached_property
     def can_cook_everything(self) -> StardewRule:
         cooksanity_prefix = "Cook "
         all_recipes_names = []

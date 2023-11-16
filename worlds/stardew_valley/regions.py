@@ -24,7 +24,6 @@ vanilla_regions = [
     RegionData(Region.farm,
                [Entrance.farm_to_backwoods, Entrance.farm_to_bus_stop, Entrance.farm_to_forest,
                 Entrance.farm_to_farmcave, Entrance.enter_greenhouse,
-                Entrance.use_desert_obelisk, Entrance.use_island_obelisk,
                 Entrance.enter_coop, Entrance.enter_barn,
                 Entrance.enter_shed, Entrance.enter_slime_hutch,
                 Entrance.farming, Entrance.shipping]),
@@ -83,7 +82,8 @@ vanilla_regions = [
     RegionData(Region.leah_house),
     RegionData(Region.sewer, [Entrance.enter_mutant_bug_lair]),
     RegionData(Region.mutant_bug_lair),
-    RegionData(Region.wizard_tower, [Entrance.enter_wizard_basement]),
+    RegionData(Region.wizard_tower, [Entrance.enter_wizard_basement,
+                                     Entrance.use_desert_obelisk, Entrance.use_island_obelisk]),
     RegionData(Region.wizard_basement),
     RegionData(Region.tent),
     RegionData(Region.carpenter, [Entrance.enter_sebastian_room]),
@@ -149,9 +149,8 @@ vanilla_regions = [
     RegionData(Region.skull_cavern_100, [Entrance.mine_to_skull_cavern_floor_125]),
     RegionData(Region.skull_cavern_125, [Entrance.mine_to_skull_cavern_floor_150]),
     RegionData(Region.skull_cavern_150, [Entrance.mine_to_skull_cavern_floor_175]),
-    RegionData(Region.skull_cavern_175, [Entrance.mine_to_skull_cavern_floor_200,
-                                         Entrance.enter_dangerous_skull_cavern]),
-    RegionData(Region.skull_cavern_200),
+    RegionData(Region.skull_cavern_175, [Entrance.mine_to_skull_cavern_floor_200]),
+    RegionData(Region.skull_cavern_200, [Entrance.enter_dangerous_skull_cavern]),
     RegionData(Region.dangerous_skull_cavern),
     RegionData(Region.island_south, [Entrance.island_south_to_west, Entrance.island_south_to_north,
                                      Entrance.island_south_to_east, Entrance.island_south_to_southeast,
@@ -515,6 +514,7 @@ def modify_vanilla_regions(existing_region: RegionData, modified_region: RegionD
 
     return updated_region
 
+
 def create_regions(region_factory: RegionFactory, random: Random, world_options) -> Tuple[
     Dict[str, Region], Dict[str, str]]:
     final_regions = create_final_regions(world_options)
@@ -642,8 +642,8 @@ def swap_connections_until_valid(regions_by_name, connections_by_name, randomize
         reachable_regions, unreachable_regions = find_reachable_regions(regions_by_name, connections_by_name, randomized_connections)
         if not unreachable_regions:
             return randomized_connections
-        swap_one_connection(regions_by_name, connections_by_name, randomized_connections, reachable_regions,
-                            unreachable_regions, connections_to_randomize, random)
+        swap_one_random_connection(regions_by_name, connections_by_name, randomized_connections, reachable_regions,
+                                   unreachable_regions, connections_to_randomize, random)
 
 
 def find_reachable_regions(regions_by_name, connections_by_name,
@@ -667,9 +667,9 @@ def find_reachable_regions(regions_by_name, connections_by_name,
     return reachable_regions, unreachable_regions
 
 
-def swap_one_connection(regions_by_name, connections_by_name,randomized_connections: Dict[ConnectionData, ConnectionData],
-                        reachable_regions: Set[str], unreachable_regions: Set[str],
-                        connections_to_randomize: List[ConnectionData], random: Random):
+def swap_one_random_connection(regions_by_name, connections_by_name, randomized_connections: Dict[ConnectionData, ConnectionData],
+                               reachable_regions: Set[str], unreachable_regions: Set[str],
+                               connections_to_randomize: List[ConnectionData], random: Random):
     randomized_connections_already_shuffled = {connection: randomized_connections[connection]
                                                for connection in randomized_connections
                                                if connection != randomized_connections[connection]}
@@ -691,7 +691,11 @@ def swap_one_connection(regions_by_name, connections_by_name,randomized_connecti
         chosen_reachable_entrance_name = random.choice(chosen_reachable_region.exits)
         chosen_reachable_entrance = connections_by_name[chosen_reachable_entrance_name]
 
-    reachable_destination = randomized_connections[chosen_reachable_entrance]
-    unreachable_destination = randomized_connections[chosen_unreachable_entrance]
-    randomized_connections[chosen_reachable_entrance] = unreachable_destination
-    randomized_connections[chosen_unreachable_entrance] = reachable_destination
+    swap_two_connections(chosen_reachable_entrance, chosen_unreachable_entrance, randomized_connections)
+
+
+def swap_two_connections(entrance_1, entrance_2, randomized_connections):
+    reachable_destination = randomized_connections[entrance_1]
+    unreachable_destination = randomized_connections[entrance_2]
+    randomized_connections[entrance_1] = unreachable_destination
+    randomized_connections[entrance_2] = reachable_destination

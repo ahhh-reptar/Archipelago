@@ -187,7 +187,7 @@ class StardewValleyWorld(World):
     def setup_victory(self):
         if self.options.goal == Goal.option_community_center:
             self.create_event_location(location_table[GoalName.community_center],
-                                       self.logic.bundle.can_complete_community_center(),
+                                       self.logic.bundle.can_complete_community_center,
                                        Event.victory)
         elif self.options.goal == Goal.option_grandpa_evaluation:
             self.create_event_location(location_table[GoalName.grandpa_evaluation],
@@ -227,7 +227,11 @@ class StardewValleyWorld(World):
                                        Event.victory)
         elif self.options.goal == options.Goal.option_gourmet_chef:
             self.create_event_location(location_table[GoalName.gourmet_chef],
-                                       self.logic.cooking.can_cook_everything(),
+                                       self.logic.cooking.can_cook_everything,
+                                       Event.victory)
+        elif self.options.goal == options.Goal.option_craft_master:
+            self.create_event_location(location_table[GoalName.craft_master],
+                                       self.logic.crafting.can_craft_everything,
                                        Event.victory)
         elif self.options.goal == options.Goal.option_perfection:
             self.create_event_location(location_table[GoalName.perfection],
