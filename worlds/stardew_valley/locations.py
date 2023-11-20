@@ -64,7 +64,8 @@ class LocationTags(enum.Enum):
     REQUIRES_QI_ORDERS = enum.auto()
     GINGER_ISLAND = enum.auto()
     WALNUT_PURCHASE = enum.auto()
-    REQUIRES_MUSEUM = enum.auto()
+
+    BABY = enum.auto()
     MONSTERSANITY = enum.auto()
     MONSTERSANITY_GOALS = enum.auto()
     MONSTERSANITY_PROGRESSIVE_GOALS = enum.auto()
@@ -141,6 +142,9 @@ events_locations = [
     LocationData(None, Region.shipping, Goal.full_shipment),
     LocationData(None, Region.kitchen, Goal.gourmet_chef),
     LocationData(None, Region.farm, Goal.craft_master),
+    LocationData(None, Region.shipping, Goal.legend),
+    LocationData(None, Region.farm, Goal.mystery_of_the_stardrops),
+    LocationData(None, Region.farm, Goal.allsanity),
     LocationData(None, Region.qi_walnut_room, Goal.perfection),
 ]
 
@@ -229,6 +233,8 @@ def extend_friendsanity_locations(randomized_locations: List[LocationData], opti
     if options.friendsanity == Friendsanity.option_none:
         return
 
+    randomized_locations.append(location_table[f"Spouse Stardrop"])
+    extend_baby_locations(randomized_locations)
     exclude_ginger_island = options.exclude_ginger_island == ExcludeGingerIsland.option_true
     exclude_non_bachelors = options.friendsanity == Friendsanity.option_bachelors
     exclude_locked_villagers = options.friendsanity == Friendsanity.option_starting_npcs or \
@@ -254,6 +260,11 @@ def extend_friendsanity_locations(randomized_locations: List[LocationData], opti
         for heart in range(1, 6):
             if heart % heart_size == 0 or heart == 5:
                 randomized_locations.append(location_table[f"Friendsanity: Pet {heart} <3"])
+
+
+def extend_baby_locations(randomized_locations: List[LocationData]):
+    baby_locations = [location for location in locations_by_tag[LocationTags.BABY]]
+    randomized_locations.extend(baby_locations)
 
 
 def extend_festival_locations(randomized_locations: List[LocationData], options: StardewValleyOptions):
@@ -450,11 +461,6 @@ def create_locations(location_collector: StardewLocationCollector,
         location_collector(location_data.name, location_data.code, location_data.region)
 
 
-def filter_museum_locations(options: StardewValleyOptions, locations: List[LocationData]) -> List[LocationData]:
-    include_museum = options.museumsanity != Museumsanity.option_none
-    return [location for location in locations if include_museum or LocationTags.REQUIRES_MUSEUM not in location.tags]
-
-
 def filter_ginger_island(options: StardewValleyOptions, locations: List[LocationData]) -> List[LocationData]:
     include_island = options.exclude_ginger_island == ExcludeGingerIsland.option_false
     return [location for location in locations if include_island or LocationTags.GINGER_ISLAND not in location.tags]
@@ -470,8 +476,7 @@ def filter_modded_locations(options: StardewValleyOptions, locations: List[Locat
 
 
 def filter_disabled_locations(options: StardewValleyOptions, locations: List[LocationData]) -> List[LocationData]:
-    locations_museum_filter = filter_museum_locations(options, locations)
-    locations_island_filter = filter_ginger_island(options, locations_museum_filter)
+    locations_island_filter = filter_ginger_island(options, locations)
     locations_qi_filter = filter_qi_order_locations(options, locations_island_filter)
     locations_mod_filter = filter_modded_locations(options, locations_qi_filter)
     return locations_mod_filter

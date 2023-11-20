@@ -6,9 +6,13 @@ import random
 from typing import Set
 
 from BaseClasses import ItemClassification, MultiWorld
-from . import setup_solo_multiworld, SVTestCase, allsanity_options_without_mods
+from . import setup_solo_multiworld, SVTestCase, allsanity_options_without_mods, SVTestBase
 from .. import ItemData, StardewValleyWorld
 from ..items import Group, item_table
+from ..options import Friendsanity, SeasonRandomization
+
+all_seasons = ["Spring", "Summer", "Fall", "Winter"]
+all_farms = ["Standard Farm", "Riverland Farm", "Forest Farm", "Hill-top Farm", "Wilderness Farm", "Four Corners Farm", "Beach Farm"]
 
 
 class TestItems(SVTestCase):
@@ -33,12 +37,13 @@ class TestItems(SVTestCase):
 
     def test_babies_come_in_all_shapes_and_sizes(self):
         baby_permutations = set()
+        options = {Friendsanity.internal_name: Friendsanity.option_bachelors}
         for attempt_number in range(50):
             if len(baby_permutations) >= 4:
                 print(f"Already got all 4 baby permutations, breaking early [{attempt_number} generations]")
                 break
             seed = random.randrange(sys.maxsize)
-            multiworld = setup_solo_multiworld(seed=seed)
+            multiworld = setup_solo_multiworld(options, seed=seed)
             baby_items = [item for item in multiworld.get_items() if "Baby" in item.name]
             self.assertEqual(len(baby_items), 2)
             baby_permutations.add(f"{baby_items[0]} - {baby_items[1]}")
@@ -49,7 +54,7 @@ class TestItems(SVTestCase):
         allsanity_options = allsanity_options_without_mods()
         multiworld = setup_solo_multiworld(allsanity_options, seed=seed)
         stardrop_items = [item for item in multiworld.get_items() if "Stardrop" in item.name]
-        self.assertEqual(len(stardrop_items), 5)
+        self.assertEqual(len(stardrop_items), 7)
 
     def test_no_duplicate_rings(self):
         seed = random.randrange(sys.maxsize)
@@ -57,3 +62,34 @@ class TestItems(SVTestCase):
         multiworld = setup_solo_multiworld(allsanity_options, seed=seed)
         ring_items = [item.name for item in multiworld.get_items() if Group.RING in item_table[item.name].groups]
         self.assertEqual(len(ring_items), len(set(ring_items)))
+
+    def test_can_start_in_any_season(self):
+        starting_seasons_rolled = set()
+        options = {SeasonRandomization.internal_name: SeasonRandomization.option_randomized}
+        for attempt_number in range(50):
+            if len(starting_seasons_rolled) >= 4:
+                print(f"Already got all 4 starting seasons, breaking early [{attempt_number} generations]")
+                break
+            seed = random.randrange(sys.maxsize)
+            multiworld = setup_solo_multiworld(options, seed=seed)
+            starting_season_items = [item for item in multiworld.precollected_items[1] if item.name in all_seasons]
+            season_items = [item for item in multiworld.get_items() if item.name in all_seasons]
+            self.assertEqual(len(starting_season_items), 1)
+            self.assertEqual(len(season_items), 3)
+            starting_seasons_rolled.add(f"{starting_season_items[0]}")
+        self.assertEqual(len(starting_seasons_rolled), 4)
+
+    def test_can_start_on_any_farm(self):
+        starting_farms_rolled = set()
+        for attempt_number in range(50):
+            if len(starting_farms_rolled) >= 7:
+                print(f"Already got all 7 farm types, breaking early [{attempt_number} generations]")
+                break
+            seed = random.randrange(sys.maxsize)
+            multiworld = setup_solo_multiworld(seed=seed)
+            starting_farm_items = [item for item in multiworld.precollected_items[1] if item.name in all_farms]
+            farm_items = [item for item in multiworld.get_items() if item.name in all_farms]
+            self.assertEqual(len(starting_farm_items), 1)
+            self.assertEqual(len(farm_items), 0)
+            starting_farms_rolled.add(f"{starting_farm_items[0]}")
+        self.assertEqual(len(starting_farms_rolled), 7)

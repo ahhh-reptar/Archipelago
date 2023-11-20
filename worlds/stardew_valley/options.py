@@ -8,18 +8,21 @@ from .mods.mod_data import ModNames
 class Goal(Choice):
     """What the victory condition for this playthrough is
     Community Center: Complete the Community Center.
-    Grandpa's Evaluation: Succeed Grandpa's evaluation with 4 candles lit at Grandpa's Shrine.
+    Grandpa's Evaluation: Succeed grandpa's evaluation with 4 lit candles.
     Bottom of the Mines: Reach level 120 in the mineshaft.
     Cryptic Note: Complete the quest "Cryptic Note" where Mr Qi asks you to reach floor 100 in the Skull Cavern.
     Master Angler: Catch every fish in the game. Pairs well with Fishsanity.
     Complete Collection: Complete the museum by donating every possible item. Pairs well with Museumsanity.
-    Full House: Get married and have two kids. Pairs well with Friendsanity.
+    Full House: Get married and have two children. Pairs well with Friendsanity.
     Greatest Walnut Hunter: Find all 130 Golden Walnuts
     Protector of the Valley: Complete all the monster slayer goals. Pairs well with Monstersanity
     Full Shipment: Ship every item in the collection tab. Pairs well with Shipsanity
     Gourmet Chef: Cook every recipe. Pairs well with Chefsanity and Cooksanity
     Craft Master: Craft every item. Pairs well with Craftsanity
-    Perfection: The world will be completed once you attain Perfection, based on the vanilla definition.
+    Legend: Earn 10 000 000g
+    Mystery of the Stardrops: Find every stardrop
+    Allsanity: Complete every check in your slot
+    Perfection: Attain Perfection, based on the vanilla definition.
     """
     internal_name = "goal"
     display_name = "Goal"
@@ -36,13 +39,14 @@ class Goal(Choice):
     option_full_shipment = 9
     option_gourmet_chef = 10
     option_craft_master = 11
+    option_legend = 12
+    option_mystery_of_the_stardrops = 13
     # option_junimo_kart =
     # option_prairie_king =
     # option_fector_challenge =
-    # option_mystery_of_the_stardrops =
-    # option_legend =
     # option_beloved_farmer =
     # option_master_of_the_five_ways =
+    option_allsanity = 24
     option_perfection = 25
 
     @classmethod
