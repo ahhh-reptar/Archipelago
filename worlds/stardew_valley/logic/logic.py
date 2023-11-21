@@ -124,7 +124,8 @@ class StardewLogic:
         mods_option = self.options.mods
         exclude_ginger_island = self.options.exclude_ginger_island
         self.buildings = BuildingLogic(self.player, self.cached_rules, self.options.building_progression, self.received, self.has, self.region, self.money)
-        self.shipping = ShippingLogic(self.player, self.cached_rules, exclude_ginger_island, special_order_locations, self.has, self.region, self.buildings)
+        self.shipping = ShippingLogic(self.player, self.cached_rules, exclude_ginger_island, special_order_locations, mods_option, self.has, self.region,
+                                      self.buildings)
         self.relationship = RelationshipLogic(self.player, self.cached_rules, friendsanity_option, heart_size_option,
                                               self.received, self.has, self.region, self.time, self.season, self.gifts, self.buildings, mods_option)
         self.museum = MuseumLogic(self.player, self.cached_rules, self.options.museumsanity, self.received, self.has, self.region, self.action)
@@ -155,19 +156,23 @@ class StardewLogic:
                                       self.options.festival_locations, special_order_locations, self.received, self.has, self.region, self.time, self.money,
                                       self.relationship, self.skill, self.special_order)
         self.mod = ModLogic(self.player, skill_option, elevator_option, mods_option, self.received, self.has, self.region, self.action, self.artisan,
-                            self.season, self.money, self.relationship, self.buildings, self.wallet, self.combat, self.tool, self.skill, self.fishing,
+                            self.season, self.money, self.relationship, self.museum, self.buildings, self.wallet, self.combat, self.tool, self.skill, self.fishing,
                             self.cooking, self.mine, self.ability, self.time, self.quest, self.crafting, self.crop)
 
         self.fish_rules.update({fish.name: self.fishing.can_catch_fish(fish) for fish in all_fish})
         self.museum_rules.update({donation.name: self.museum.can_find_museum_item(donation) for donation in all_museum_items})
 
         for recipe in all_cooking_recipes:
+            if recipe.mod_name and recipe.mod_name not in mods_option:
+                continue
             can_cook_rule = self.cooking.can_cook(recipe)
             if recipe.meal in self.cooking_rules:
                 can_cook_rule = can_cook_rule | self.cooking_rules[recipe.meal]
             self.cooking_rules[recipe.meal] = can_cook_rule
 
         for recipe in all_crafting_recipes:
+            if recipe.mod_name and recipe.mod_name not in mods_option:
+                continue
             can_craft_rule = self.crafting.can_craft(recipe)
             if recipe.item in self.crafting_rules:
                 can_craft_rule = can_craft_rule | self.crafting_rules[recipe.item]
