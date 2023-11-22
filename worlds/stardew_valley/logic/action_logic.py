@@ -1,42 +1,40 @@
+from typing import Union
+
 from Utils import cache_self1
-from .cached_logic import CachedLogic
-from .has_logic import HasLogic, CachedRules
-from .received_logic import ReceivedLogic
-from .region_logic import RegionLogic
+from .base_logic import BaseLogic, BaseLogicMixin
+from .has_logic import HasLogicMixin
+from .received_logic import ReceivedLogicMixin
+from .region_logic import RegionLogicMixin
 from ..stardew_rule import StardewRule, True_, Or
 from ..strings.generic_names import Generic
 from ..strings.geode_names import Geode
 from ..strings.region_names import Region
 
 
-class ActionLogic(CachedLogic):
-    received: ReceivedLogic
-    has: HasLogic
-    region: RegionLogic
+class ActionLogicMixin(BaseLogicMixin):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.action = ActionLogic(*args, **kwargs)
 
-    def __init__(self, player: int, cached_rules: CachedRules, received: ReceivedLogic, has: HasLogic,
-                 region: RegionLogic):
-        super().__init__(player, cached_rules)
-        self.received = received
-        self.has = has
-        self.region = region
+
+class ActionLogic(BaseLogic[Union[ActionLogicMixin, RegionLogicMixin, ReceivedLogicMixin, HasLogicMixin]]):
 
     def can_watch(self, channel: str = None):
         tv_rule = True_()
         if channel is None:
             return tv_rule
-        return self.received(channel) & tv_rule
+        return self.logic.received(channel) & tv_rule
 
     def can_pan(self) -> StardewRule:
-        return self.received("Glittering Boulder Removed") & self.region.can_reach(Region.mountain)
+        return self.logic.received("Glittering Boulder Removed") & self.logic.region.can_reach(Region.mountain)
 
     def can_pan_at(self, region: str) -> StardewRule:
-        return self.region.can_reach(region) & self.can_pan()
+        return self.logic.region.can_reach(region) & self.logic.action.can_pan()
 
     @cache_self1
     def can_open_geode(self, geode: str) -> StardewRule:
-        blacksmith_access = self.region.can_reach(Region.blacksmith)
+        blacksmith_access = self.logic.region.can_reach(Region.blacksmith)
         geodes = [Geode.geode, Geode.frozen, Geode.magma, Geode.omni]
         if geode == Generic.any:
-            return blacksmith_access & Or(*(self.has(geode_type) for geode_type in geodes))
-        return blacksmith_access & self.has(geode)
+            return blacksmith_access & Or(*(self.logic.has(geode_type) for geode_type in geodes))
+        return blacksmith_access & self.logic.has(geode)

@@ -1,14 +1,17 @@
 from typing import Tuple
 
 from Utils import cache_self1
-from .cached_logic import CachedLogic, CachedRules
+from .base_logic import BaseLogic, BaseLogicMixin
 from ..stardew_rule import StardewRule, And, Or, Reach, Count
 
 
-class RegionLogic(CachedLogic):
+class RegionLogicMixin(BaseLogicMixin):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.region = RegionLogic(*args, **kwargs)
 
-    def __init__(self, player: int, cached_rules: CachedRules):
-        super().__init__(player, cached_rules)
+
+class RegionLogic(BaseLogic[RegionLogicMixin]):
 
     @cache_self1
     def can_reach(self, region_name: str) -> StardewRule:
@@ -16,11 +19,11 @@ class RegionLogic(CachedLogic):
 
     @cache_self1
     def can_reach_any(self, region_names: Tuple[str, ...]) -> StardewRule:
-        return Or(*(self.can_reach(spot) for spot in region_names))
+        return Or(*(self.logic.region.can_reach(spot) for spot in region_names))
 
     @cache_self1
     def can_reach_all(self, region_names: Tuple[str, ...]) -> StardewRule:
-        return And(*(self.can_reach(spot) for spot in region_names))
+        return And(*(self.logic.region.can_reach(spot) for spot in region_names))
 
     @cache_self1
     def can_reach_all_except_one(self, region_names: Tuple[str, ...]) -> StardewRule:
@@ -28,7 +31,7 @@ class RegionLogic(CachedLogic):
         num_required = len(region_names) - 1
         if num_required <= 0:
             num_required = len(region_names)
-        return Count(num_required, [self.can_reach(spot) for spot in region_names])
+        return Count(num_required, [self.logic.region.can_reach(spot) for spot in region_names])
 
     @cache_self1
     def can_reach_location(self, location_name: str) -> StardewRule:

@@ -1,40 +1,40 @@
 from __future__ import annotations
 
-from dataclasses import field, dataclass
-from typing import Dict
+from dataclasses import dataclass
 
 from worlds.stardew_valley.strings.craftable_names import Consumable, Furniture, Ring, Fishing, Lighting
-from .ability_logic import AbilityLogic
-from .action_logic import ActionLogic
-from .arcade_logic import ArcadeLogic
-from .artisan_logic import ArtisanLogic
-from .building_logic import BuildingLogic
-from .bundle_logic import BundleLogic
-from .combat_logic import CombatLogic
-from .cooking_logic import CookingLogic
-from .crafting_logic import CraftingLogic
-from .crop_logic import CropLogic
-from .farming_logic import FarmingLogic
-from .fishing_logic import FishingLogic
-from .gift_logic import GiftLogic, CachedRules
-from .has_logic import HasLogic
-from .mine_logic import MineLogic
-from .money_logic import MoneyLogic
-from .monster_logic import MonsterLogic
-from .museum_logic import MuseumLogic
-from .pet_logic import PetLogic
-from .quest_logic import QuestLogic
-from .received_logic import ReceivedLogic
-from .region_logic import RegionLogic
-from .relationship_logic import RelationshipLogic
-from .season_logic import SeasonLogic
-from .shipping_logic import ShippingLogic
-from .skill_logic import SkillLogic
-from .special_order_logic import SpecialOrderLogic
-from .time_logic import TimeLogic
-from .tool_logic import ToolLogic
-from .traveling_merchant_logic import TravelingMerchantLogic
-from .wallet_logic import WalletLogic
+from .ability_logic import AbilityLogicMixin
+from .action_logic import ActionLogicMixin
+from .arcade_logic import ArcadeLogicMixin
+from .artisan_logic import ArtisanLogicMixin
+from .base_logic import LogicRegistry
+from .building_logic import BuildingLogicMixin
+from .bundle_logic import BundleLogicMixin
+from .combat_logic import CombatLogicMixin
+from .cooking_logic import CookingLogicMixin
+from .crafting_logic import CraftingLogicMixin
+from .crop_logic import CropLogicMixin
+from .farming_logic import FarmingLogicMixin
+from .fishing_logic import FishingLogicMixin
+from .gift_logic import GiftLogicMixin
+from .has_logic import HasLogicMixin
+from .mine_logic import MineLogicMixin
+from .money_logic import MoneyLogicMixin
+from .monster_logic import MonsterLogicMixin
+from .museum_logic import MuseumLogicMixin
+from .pet_logic import PetLogicMixin
+from .quest_logic import QuestLogicMixin
+from .received_logic import ReceivedLogicMixin
+from .region_logic import RegionLogicMixin
+from .relationship_logic import RelationshipLogicMixin
+from .season_logic import SeasonLogicMixin
+from .shipping_logic import ShippingLogicMixin
+from .skill_logic import SkillLogicMixin
+from .special_order_logic import SpecialOrderLogicMixin
+from .time_logic import TimeLogicMixin
+from .tool_logic import ToolLogicMixin
+from .traveling_merchant_logic import TravelingMerchantLogicMixin
+from .wallet_logic import WalletLogicMixin
 from ..data import all_fish, all_purchasable_seeds, all_crops
 from ..data.craftable_data import all_crafting_recipes
 from ..data.crops_data import crops_by_name
@@ -42,10 +42,10 @@ from ..data.fish_data import island_fish, extended_family, get_fish_for_mods
 from ..data.monster_data import all_monsters_by_category, all_monsters_by_name
 from ..data.museum_data import all_museum_items
 from ..data.recipe_data import all_cooking_recipes
-from ..mods.logic.mod_logic import ModLogic
+from ..mods.logic.magic_logic import MagicLogicMixin
+from ..mods.logic.mod_logic import ModLogicMixin
 from ..mods.mod_data import ModNames
-from ..options import Cropsanity, SpecialOrderLocations, ExcludeGingerIsland, FestivalLocations, StardewValleyOptions, Fishsanity, Museumsanity, Friendsanity
-from ..regions import vanilla_regions
+from ..options import Cropsanity, SpecialOrderLocations, ExcludeGingerIsland, FestivalLocations, Fishsanity, Friendsanity, StardewValleyOptions
 from ..stardew_rule import False_, Or, True_, Count, And, StardewRule
 from ..strings.animal_names import Animal, coop_animals, barn_animals
 from ..strings.animal_product_names import AnimalProduct
@@ -87,98 +87,38 @@ fishing_regions = [Region.beach, Region.town, Region.forest, Region.mountain, Re
 
 
 @dataclass(frozen=False, repr=False)
-class StardewLogic:
+class StardewLogic(ReceivedLogicMixin, HasLogicMixin, RegionLogicMixin, TravelingMerchantLogicMixin, TimeLogicMixin, SeasonLogicMixin, MoneyLogicMixin,
+                   ActionLogicMixin, ArcadeLogicMixin, ArtisanLogicMixin, GiftLogicMixin, BuildingLogicMixin, ShippingLogicMixin, RelationshipLogicMixin,
+                   MuseumLogicMixin, WalletLogicMixin, CombatLogicMixin, MagicLogicMixin, MonsterLogicMixin, ToolLogicMixin, PetLogicMixin, CropLogicMixin,
+                   SkillLogicMixin, FarmingLogicMixin, BundleLogicMixin, FishingLogicMixin, MineLogicMixin, CookingLogicMixin, AbilityLogicMixin,
+                   SpecialOrderLogicMixin, QuestLogicMixin, CraftingLogicMixin, ModLogicMixin):
     player: int
     options: StardewValleyOptions
 
-    item_rules: Dict[str, StardewRule] = field(default_factory=dict)
-    sapling_rules: Dict[str, StardewRule] = field(default_factory=dict)
-    tree_fruit_rules: Dict[str, StardewRule] = field(default_factory=dict)
-    seed_rules: Dict[str, StardewRule] = field(default_factory=dict)
-    cooking_rules: Dict[str, StardewRule] = field(default_factory=dict)
-    crafting_rules: Dict[str, StardewRule] = field(default_factory=dict)
-    crop_rules: Dict[str, StardewRule] = field(default_factory=dict)
-    fish_rules: Dict[str, StardewRule] = field(default_factory=dict)
-    museum_rules: Dict[str, StardewRule] = field(default_factory=dict)
-    festival_rules: Dict[str, StardewRule] = field(default_factory=dict)
+    def __init__(self, player: int, options: StardewValleyOptions):
+        self.registry = LogicRegistry()
+        super().__init__(player, self.registry, options, self)
 
-    def __post_init__(self):
-        self.cached_rules = CachedRules()
-        self.received = ReceivedLogic(self.player, self.cached_rules)
-        self.has = HasLogic(self.player, self.cached_rules, self.item_rules)
-        self.region = RegionLogic(self.player, self.cached_rules)
-        self.traveling_merchant = TravelingMerchantLogic(self.player, self.received)
-        self.time = TimeLogic(self.player, self.cached_rules, self.received)
-        self.season = SeasonLogic(self.player, self.cached_rules, self.options.season_randomization, self.received, self.time)
-        self.money = MoneyLogic(self.player, self.cached_rules, self.options.starting_money, self.received, self.has, self.region, self.time)
-        self.action = ActionLogic(self.player, self.cached_rules, self.received, self.has, self.region)
-        self.arcade = ArcadeLogic(self.player, self.options.arcade_machine_locations, self.received, self.region)
-        self.artisan = ArtisanLogic(self.player, self.has, self.time)
-        self.gifts = GiftLogic(self.player, self.cached_rules, self.has)
-        tool_option = self.options.tool_progression
-        skill_option = self.options.skill_progression
-        elevator_option = self.options.elevator_progression
-        friendsanity_option = self.options.friendsanity
-        heart_size_option = self.options.friendsanity_heart_size
-        special_order_locations = self.options.special_order_locations
-        mods_option = self.options.mods
-        exclude_ginger_island = self.options.exclude_ginger_island
-        self.buildings = BuildingLogic(self.player, self.cached_rules, self.options.building_progression, self.received, self.has, self.region, self.money)
-        self.shipping = ShippingLogic(self.player, self.cached_rules, exclude_ginger_island, special_order_locations, mods_option, self.has, self.region,
-                                      self.buildings)
-        self.relationship = RelationshipLogic(self.player, self.cached_rules, friendsanity_option, heart_size_option,
-                                              self.received, self.has, self.region, self.time, self.season, self.gifts, self.buildings, mods_option)
-        self.museum = MuseumLogic(self.player, self.cached_rules, self.options.museumsanity, self.received, self.has, self.region, self.action)
-        self.wallet = WalletLogic(self.player, self.received, self.museum)
-        self.combat = CombatLogic(self.player, self.cached_rules, self.received, self.region)
-        self.monster = MonsterLogic(self.player, self.cached_rules, self.region, self.time, self.combat)
-        self.tool = ToolLogic(self.player, self.cached_rules, tool_option, self.received, self.has, self.region, self.season, self.money)
-        self.pet = PetLogic(self.player, self.cached_rules, friendsanity_option, heart_size_option, self.received, self.region, self.time, self.tool)
-        self.crop = CropLogic(self.player, self.cached_rules, self.options.cropsanity, exclude_ginger_island, self.received, self.has, self.region, self.traveling_merchant,
-                              self.season, self.money, self.tool)
-        self.skill = SkillLogic(self.player, self.cached_rules, skill_option, self.received, self.has, self.region, self.season, self.time, self.tool,
-                                self.combat, self.crop)
-        self.farming = FarmingLogic(self.player, self.has, self.skill)
-        self.bundle = BundleLogic(self.player, self.cached_rules, self.has, self.region, self.money, self.farming)
-        self.fishing = FishingLogic(self.player, self.cached_rules, exclude_ginger_island, special_order_locations, self.received, self.region, self.season,
-                                    self.tool, self.skill)
-        self.mine = MineLogic(self.player, self.cached_rules, tool_option, skill_option, elevator_option, self.received, self.region, self.combat,
-                              self.tool, self.skill)
-        self.cooking = CookingLogic(self.player, self.cached_rules, self.options.chefsanity, exclude_ginger_island, mods_option, self.received, self.has,
-                                    self.region, self.season, self.time, self.money, self.action, self.buildings, self.relationship, self.skill)
-        self.ability = AbilityLogic(self.player, self.options.movement_buff_number, self.options.luck_buff_number, self.received,
-                                    self.region, self.tool, self.skill, self.mine)
-        self.special_order = SpecialOrderLogic(self.player, self.received, self.has, self.region, self.season, self.time, self.money, self.shipping,
-                                               self.arcade, self.artisan, self.relationship, self.tool, self.skill, self.mine, self.cooking, self.ability)
-        self.quest = QuestLogic(self.player, self.skill, self.received, self.has, self.mine, self.region, self.action, self.relationship, self.buildings,
-                                self.time, self.tool, self.fishing, self.cooking, self.money, self.combat, self.season, self.wallet, mods_option)
-        self.crafting = CraftingLogic(self.player, self.cached_rules, self.options.craftsanity, exclude_ginger_island, mods_option,
-                                      self.options.festival_locations, special_order_locations, self.received, self.has, self.region, self.time, self.money,
-                                      self.relationship, self.skill, self.special_order)
-        self.mod = ModLogic(self.player, skill_option, elevator_option, mods_option, self.received, self.has, self.region, self.action, self.artisan,
-                            self.season, self.money, self.relationship, self.museum, self.buildings, self.wallet, self.combat, self.tool, self.skill, self.fishing,
-                            self.cooking, self.mine, self.ability, self.time, self.quest, self.crafting, self.crop)
-
-        self.fish_rules.update({fish.name: self.fishing.can_catch_fish(fish) for fish in get_fish_for_mods(self.options.mods.value)})
-        self.museum_rules.update({donation.name: self.museum.can_find_museum_item(donation) for donation in all_museum_items})
+        self.registry.fish_rules.update({fish.name: self.fishing.can_catch_fish(fish) for fish in get_fish_for_mods(self.options.mods.value)})
+        self.registry.museum_rules.update({donation.name: self.museum.can_find_museum_item(donation) for donation in all_museum_items})
 
         for recipe in all_cooking_recipes:
-            if recipe.mod_name and recipe.mod_name not in mods_option:
+            if recipe.mod_name and recipe.mod_name not in self.options.mods:
                 continue
             can_cook_rule = self.cooking.can_cook(recipe)
-            if recipe.meal in self.cooking_rules:
-                can_cook_rule = can_cook_rule | self.cooking_rules[recipe.meal]
-            self.cooking_rules[recipe.meal] = can_cook_rule
+            if recipe.meal in self.registry.cooking_rules:
+                can_cook_rule = can_cook_rule | self.registry.cooking_rules[recipe.meal]
+            self.registry.cooking_rules[recipe.meal] = can_cook_rule
 
         for recipe in all_crafting_recipes:
-            if recipe.mod_name and recipe.mod_name not in mods_option:
+            if recipe.mod_name and recipe.mod_name not in self.options.mods:
                 continue
             can_craft_rule = self.crafting.can_craft(recipe)
-            if recipe.item in self.crafting_rules:
-                can_craft_rule = can_craft_rule | self.crafting_rules[recipe.item]
-            self.crafting_rules[recipe.item] = can_craft_rule
+            if recipe.item in self.registry.crafting_rules:
+                can_craft_rule = can_craft_rule | self.registry.crafting_rules[recipe.item]
+            self.registry.crafting_rules[recipe.item] = can_craft_rule
 
-        self.sapling_rules.update({
+        self.registry.sapling_rules.update({
             Sapling.apple: self.can_buy_sapling(Fruit.apple),
             Sapling.apricot: self.can_buy_sapling(Fruit.apricot),
             Sapling.cherry: self.can_buy_sapling(Fruit.cherry),
@@ -189,7 +129,7 @@ class StardewLogic:
             Sapling.mango: self.can_buy_sapling(Fruit.mango),
         })
 
-        self.tree_fruit_rules.update({
+        self.registry.tree_fruit_rules.update({
             Fruit.apple: self.crop.can_plant_and_grow_item(Season.fall),
             Fruit.apricot: self.crop.can_plant_and_grow_item(Season.spring),
             Fruit.cherry: self.crop.can_plant_and_grow_item(Season.spring),
@@ -200,21 +140,21 @@ class StardewLogic:
             Fruit.mango: self.crop.can_plant_and_grow_item(Season.summer),
         })
 
-        for tree_fruit in self.tree_fruit_rules:
-            existing_rules = self.tree_fruit_rules[tree_fruit]
+        for tree_fruit in self.registry.tree_fruit_rules:
+            existing_rules = self.registry.tree_fruit_rules[tree_fruit]
             sapling = f"{tree_fruit} Sapling"
-            self.tree_fruit_rules[tree_fruit] = existing_rules & self.has(sapling) & self.time.has_lived_months(1)
+            self.registry.tree_fruit_rules[tree_fruit] = existing_rules & self.has(sapling) & self.time.has_lived_months(1)
 
-        self.seed_rules.update({seed.name: self.crop.can_buy_seed(seed) for seed in all_purchasable_seeds})
-        self.crop_rules.update({crop.name: self.crop.can_grow(crop) for crop in all_crops})
-        self.crop_rules.update({
+        self.registry.seed_rules.update({seed.name: self.crop.can_buy_seed(seed) for seed in all_purchasable_seeds})
+        self.registry.crop_rules.update({crop.name: self.crop.can_grow(crop) for crop in all_crops})
+        self.registry.crop_rules.update({
             Seed.coffee: (self.season.has(Season.spring) | self.season.has(Season.summer)) & self.crop.can_buy_seed(crops_by_name[Seed.coffee].seed),
             Fruit.ancient_fruit: (self.received("Ancient Seeds") | self.received("Ancient Seeds Recipe")) &
                                  self.region.can_reach(Region.greenhouse) & self.has(Machine.seed_maker),
         })
 
         # @formatter:off
-        self.item_rules.update({
+        self.registry.item_rules.update({
             "Energy Tonic": self.money.can_spend_at(Region.hospital, 1000),
             WaterChest.fishing_chest: self.fishing.can_fish_chests(),
             WaterChest.treasure: self.fishing.can_fish_chests(),
@@ -236,10 +176,10 @@ class StardewLogic:
             # | (self.ability.can_cook() & self.relationship.has_hearts(NPC.jodi, 7) & self.has(AnimalProduct.cow_milk) & self.has(Ingredient.sugar)),
             Animal.chicken: self.can_buy_animal(Animal.chicken),
             Animal.cow: self.can_buy_animal(Animal.cow),
-            Animal.dinosaur: self.buildings.has_building(Building.big_coop) & self.has(AnimalProduct.dinosaur_egg),
+            Animal.dinosaur: self.building.has_building(Building.big_coop) & self.has(AnimalProduct.dinosaur_egg),
             Animal.duck: self.can_buy_animal(Animal.duck),
             Animal.goat: self.can_buy_animal(Animal.goat),
-            Animal.ostrich: self.buildings.has_building(Building.barn) & self.has(AnimalProduct.ostrich_egg) & self.has(Machine.ostrich_incubator),
+            Animal.ostrich: self.building.has_building(Building.barn) & self.has(AnimalProduct.ostrich_egg) & self.has(Machine.ostrich_incubator),
             Animal.pig: self.can_buy_animal(Animal.pig),
             Animal.rabbit: self.can_buy_animal(Animal.rabbit),
             Animal.sheep: self.can_buy_animal(Animal.sheep),
@@ -259,17 +199,17 @@ class StardewLogic:
             AnimalProduct.milk: self.has_animal(Animal.cow),
             AnimalProduct.ostrich_egg: self.tool.can_forage(Generic.any, Region.island_north, True),
             AnimalProduct.rabbit_foot: self.has_happy_animal(Animal.rabbit),
-            AnimalProduct.roe: self.skill.can_fish() & self.buildings.has_building(Building.fish_pond),
-            AnimalProduct.squid_ink: self.mine.can_mine_in_the_mines_floor_81_120() | (self.buildings.has_building(Building.fish_pond) & self.has(Fish.squid)),
-            AnimalProduct.sturgeon_roe: self.has(Fish.sturgeon) & self.buildings.has_building(Building.fish_pond),
+            AnimalProduct.roe: self.skill.can_fish() & self.building.has_building(Building.fish_pond),
+            AnimalProduct.squid_ink: self.mine.can_mine_in_the_mines_floor_81_120() | (self.building.has_building(Building.fish_pond) & self.has(Fish.squid)),
+            AnimalProduct.sturgeon_roe: self.has(Fish.sturgeon) & self.building.has_building(Building.fish_pond),
             AnimalProduct.truffle: self.has_animal(Animal.pig) & self.season.has_any_not_winter(),
-            AnimalProduct.void_egg: self.money.can_spend_at(Region.sewer, 5000) | (self.buildings.has_building(Building.fish_pond) & self.has(Fish.void_salmon)),
+            AnimalProduct.void_egg: self.money.can_spend_at(Region.sewer, 5000) | (self.building.has_building(Building.fish_pond) & self.has(Fish.void_salmon)),
             AnimalProduct.wool: self.has_animal(Animal.rabbit) | self.has_animal(Animal.sheep),
             AnimalProduct.slime_egg_green: self.has(Machine.slime_egg_press) & self.has(Loot.slime),
             AnimalProduct.slime_egg_blue: self.has(Machine.slime_egg_press) & self.has(Loot.slime) & self.time.has_lived_months(3),
             AnimalProduct.slime_egg_red: self.has(Machine.slime_egg_press) & self.has(Loot.slime) & self.time.has_lived_months(6),
             AnimalProduct.slime_egg_purple: self.has(Machine.slime_egg_press) & self.has(Loot.slime) & self.time.has_lived_months(9),
-            AnimalProduct.slime_egg_tiger: self.has(Fish.lionfish) & self.buildings.has_building(Building.fish_pond),
+            AnimalProduct.slime_egg_tiger: self.has(Fish.lionfish) & self.building.has_building(Building.fish_pond),
             ArtisanGood.aged_roe: self.artisan.can_preserves_jar(AnimalProduct.roe),
             ArtisanGood.battery_pack: (self.has(Machine.lightning_rod) & self.season.has_any_not_winter()) | self.has(Machine.solar_panel),
             ArtisanGood.caviar: self.artisan.can_preserves_jar(AnimalProduct.sturgeon_roe),
@@ -326,7 +266,7 @@ class StardewLogic:
             Forageable.dragon_tooth: self.tool.can_forage(Generic.any, Region.volcano_floor_10),
             Forageable.fiddlehead_fern: self.tool.can_forage(Season.summer, Region.secret_woods),
             Forageable.ginger: self.tool.can_forage(Generic.any, Region.island_west, True),
-            Forageable.hay: self.buildings.has_building(Building.silo) & self.tool.has_tool(Tool.scythe),
+            Forageable.hay: self.building.has_building(Building.silo) & self.tool.has_tool(Tool.scythe),
             Forageable.hazelnut: self.tool.can_forage(Season.fall),
             Forageable.holly: self.tool.can_forage(Season.winter),
             Forageable.journal_scrap: self.region.can_reach_all((Region.island_west, Region.island_north, Region.island_south, Region.volcano_floor_10)) & self.received(Wallet.magnifying_glass) & (self.ability.can_chop_trees() | self.mine.can_mine_in_the_mines_floor_1_40()),
@@ -359,29 +299,29 @@ class StardewLogic:
             Geode.frozen: self.mine.can_mine_in_the_mines_floor_41_80(),
             Geode.geode: self.mine.can_mine_in_the_mines_floor_1_40(),
             Geode.golden_coconut: self.region.can_reach(Region.island_north),
-            Geode.magma: self.mine.can_mine_in_the_mines_floor_81_120() | (self.has(Fish.lava_eel) & self.buildings.has_building(Building.fish_pond)),
-            Geode.omni: self.mine.can_mine_in_the_mines_floor_41_80() | self.region.can_reach(Region.desert) | self.action.can_pan() | self.received(Wallet.rusty_key) | (self.has(Fish.octopus) & self.buildings.has_building(Building.fish_pond)) | self.region.can_reach(Region.volcano_floor_10),
+            Geode.magma: self.mine.can_mine_in_the_mines_floor_81_120() | (self.has(Fish.lava_eel) & self.building.has_building(Building.fish_pond)),
+            Geode.omni: self.mine.can_mine_in_the_mines_floor_41_80() | self.region.can_reach(Region.desert) | self.action.can_pan() | self.received(Wallet.rusty_key) | (self.has(Fish.octopus) & self.building.has_building(Building.fish_pond)) | self.region.can_reach(Region.volcano_floor_10),
             Gift.bouquet: self.relationship.has_hearts(Generic.bachelor, 8) & self.money.can_spend_at(Region.pierre_store, 100),
             Gift.golden_pumpkin: self.season.has(Season.fall) | self.action.can_open_geode(Geode.artifact_trove),
-            Gift.mermaid_pendant: self.region.can_reach(Region.tide_pools) & self.relationship.has_hearts(Generic.bachelor, 10) & self.buildings.has_house(1) & self.has(Consumable.rain_totem),
+            Gift.mermaid_pendant: self.region.can_reach(Region.tide_pools) & self.relationship.has_hearts(Generic.bachelor, 10) & self.building.has_house(1) & self.has(Consumable.rain_totem),
             Gift.movie_ticket: self.money.can_spend_at(Region.movie_ticket_stand, 1000),
-            Gift.pearl: (self.has(Fish.blobfish) & self.buildings.has_building(Building.fish_pond)) | self.action.can_open_geode(Geode.artifact_trove),
+            Gift.pearl: (self.has(Fish.blobfish) & self.building.has_building(Building.fish_pond)) | self.action.can_open_geode(Geode.artifact_trove),
             Gift.tea_set: self.season.has(Season.winter) & self.time.has_lived_max_months,
             Gift.void_ghost_pendant: self.money.can_trade_at(Region.desert, Loot.void_essence, 200),
             Gift.wilted_bouquet: self.has(Machine.furnace) & self.has(Gift.bouquet) & self.has(Material.coal),
             Ingredient.oil: self.money.can_spend_at(Region.pierre_store, 200) | (self.has(Machine.oil_maker) & (self.has(Vegetable.corn) | self.has(Flower.sunflower) | self.has(Seed.sunflower))),
             Ingredient.qi_seasoning: self.money.can_trade_at(Region.qi_walnut_room, Currency.qi_gem, 10),
-            Ingredient.rice: self.money.can_spend_at(Region.pierre_store, 200) | (self.buildings.has_building(Building.mill) & self.has(Vegetable.unmilled_rice)),
-            Ingredient.sugar: self.money.can_spend_at(Region.pierre_store, 100) | (self.buildings.has_building(Building.mill) & self.has(Vegetable.beet)),
+            Ingredient.rice: self.money.can_spend_at(Region.pierre_store, 200) | (self.building.has_building(Building.mill) & self.has(Vegetable.unmilled_rice)),
+            Ingredient.sugar: self.money.can_spend_at(Region.pierre_store, 100) | (self.building.has_building(Building.mill) & self.has(Vegetable.beet)),
             Ingredient.vinegar: self.money.can_spend_at(Region.pierre_store, 200),
-            Ingredient.wheat_flour: self.money.can_spend_at(Region.pierre_store, 100) | (self.buildings.has_building(Building.mill) & self.has(Vegetable.wheat)),
+            Ingredient.wheat_flour: self.money.can_spend_at(Region.pierre_store, 100) | (self.building.has_building(Building.mill) & self.has(Vegetable.wheat)),
             Loot.bat_wing: self.mine.can_mine_in_the_mines_floor_41_80() | self.mine.can_mine_in_the_skull_cavern(),
             Loot.bug_meat: self.mine.can_mine_in_the_mines_floor_1_40(),
             Loot.slime: self.mine.can_mine_in_the_mines_floor_1_40(),
             Loot.solar_essence: self.mine.can_mine_in_the_mines_floor_41_80() | self.mine.can_mine_in_the_skull_cavern(),
             Loot.void_essence: self.mine.can_mine_in_the_mines_floor_81_120() | self.mine.can_mine_in_the_skull_cavern(),
             Machine.bee_house: self.skill.has_farming_level(3) & self.has(MetalBar.iron) & self.has(ArtisanGood.maple_syrup) & self.has(Material.coal) & self.has(Material.wood),
-            Machine.cask: self.buildings.has_house(3) & self.region.can_reach(Region.cellar) & self.has(Material.wood) & self.has(Material.hardwood),
+            Machine.cask: self.building.has_house(3) & self.region.can_reach(Region.cellar) & self.has(Material.wood) & self.has(Material.hardwood),
             Machine.cheese_press: self.skill.has_farming_level(6) & self.has(Material.wood) & self.has(Material.stone) & self.has(Material.hardwood) & self.has(MetalBar.copper),
             Machine.coffee_maker: self.received(Machine.coffee_maker),
             Machine.crab_pot: self.skill.has_level(Skill.fishing, 3) & (self.money.can_spend_at(Region.fish_shop, 1500) | (self.has(MetalBar.iron) & self.has(Material.wood))),
@@ -448,33 +388,33 @@ class StardewLogic:
             WaterItem.white_algae: self.skill.can_fish(Region.mines_floor_20),
         })
         # @formatter:on
-        self.item_rules.update(self.fish_rules)
-        self.item_rules.update(self.museum_rules)
-        self.item_rules.update(self.sapling_rules)
-        self.item_rules.update(self.tree_fruit_rules)
-        self.item_rules.update(self.seed_rules)
-        self.item_rules.update(self.crop_rules)
-        self.item_rules.update(self.mod.item.get_modded_item_rules())
+        self.registry.item_rules.update(self.registry.fish_rules)
+        self.registry.item_rules.update(self.registry.museum_rules)
+        self.registry.item_rules.update(self.registry.sapling_rules)
+        self.registry.item_rules.update(self.registry.tree_fruit_rules)
+        self.registry.item_rules.update(self.registry.seed_rules)
+        self.registry.item_rules.update(self.registry.crop_rules)
+        self.registry.item_rules.update(self.mod.item.get_modded_item_rules())
 
         # For some recipes, the cooked item can be obtained directly, so we either cook it or get it
-        for recipe in self.cooking_rules:
-            cooking_rule = self.cooking_rules[recipe]
-            obtention_rule = self.item_rules[recipe] if recipe in self.item_rules else False_()
-            self.item_rules[recipe] = obtention_rule | cooking_rule
+        for recipe in self.registry.cooking_rules:
+            cooking_rule = self.registry.cooking_rules[recipe]
+            obtention_rule = self.registry.item_rules[recipe] if recipe in self.registry.item_rules else False_()
+            self.registry.item_rules[recipe] = obtention_rule | cooking_rule
 
         # For some recipes, the crafted item can be obtained directly, so we either craft it or get it
-        for recipe in self.crafting_rules:
-            crafting_rule = self.crafting_rules[recipe]
-            obtention_rule = self.item_rules[recipe] if recipe in self.item_rules else False_()
-            self.item_rules[recipe] = obtention_rule | crafting_rule
+        for recipe in self.registry.crafting_rules:
+            crafting_rule = self.registry.crafting_rules[recipe]
+            obtention_rule = self.registry.item_rules[recipe] if recipe in self.registry.item_rules else False_()
+            self.registry.item_rules[recipe] = obtention_rule | crafting_rule
 
-        self.buildings.initialize_rules()
-        self.buildings.update_rules(self.mod.buildings.get_modded_building_rules())
+        self.building.initialize_rules()
+        self.building.update_rules(self.mod.building.get_modded_building_rules())
 
         self.quest.initialize_rules()
-        self.quest.update_rules(self.mod.quests.get_modded_quest_rules())
+        self.quest.update_rules(self.mod.quest.get_modded_quest_rules())
 
-        self.festival_rules.update({
+        self.registry.festival_rules.update({
             FestivalCheck.egg_hunt: self.can_win_egg_hunt(),
             FestivalCheck.strawberry_seeds: self.money.can_spend(1000),
             FestivalCheck.dance: self.relationship.has_hearts(Generic.bachelor, 4),
@@ -513,7 +453,7 @@ class StardewLogic:
         })
 
         self.special_order.initialize_rules()
-        self.special_order.update_rules(self.mod.special_orders.get_modded_special_orders_rules(self.special_order.special_order_rules))
+        self.special_order.update_rules(self.mod.special_order.get_modded_special_orders_rules())
 
     def can_buy_sapling(self, fruit: str) -> StardewRule:
         sapling_prices = {Fruit.apple: 4000, Fruit.apricot: 2000, Fruit.cherry: 3400, Fruit.orange: 4000,
@@ -574,7 +514,7 @@ class StardewLogic:
                                self.museum.can_complete_museum(),  # Completing the museum for a point
                                # Catching every fish not expected
                                # Shipping every item not expected
-                               self.relationship.can_get_married() & self.buildings.has_house(2),
+                               self.relationship.can_get_married() & self.building.has_house(2),
                                self.relationship.has_hearts("5", 8),  # 5 Friends
                                self.relationship.has_hearts("10", 8),  # 10 friends
                                self.pet.has_hearts(5),  # Max Pet
@@ -666,7 +606,7 @@ class StardewLogic:
             building = Building.deluxe_barn
         else:
             return True_()
-        return self.money.can_spend_at(Region.ranch, price) & self.buildings.has_building(building)
+        return self.money.can_spend_at(Region.ranch, price) & self.building.has_building(building)
 
     def has_animal(self, animal: str) -> StardewRule:
         if animal == Generic.any:

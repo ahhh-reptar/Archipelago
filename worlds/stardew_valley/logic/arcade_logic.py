@@ -1,36 +1,34 @@
-from .received_logic import ReceivedLogic
-from .region_logic import RegionLogic
+from typing import Union
+
+from .base_logic import BaseLogic, BaseLogicMixin
+from .received_logic import ReceivedLogicMixin
+from .region_logic import RegionLogicMixin
 from .. import options
-from ..options import ArcadeMachineLocations
 from ..stardew_rule import StardewRule, True_
 from ..strings.region_names import Region
 
 
-class ArcadeLogic:
-    player: int
-    arcade_option: ArcadeMachineLocations
-    received = ReceivedLogic
-    region: RegionLogic
+class ArcadeLogicMixin(BaseLogicMixin):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.arcade = ArcadeLogic(*args, **kwargs)
 
-    def __init__(self, player: int, arcade_option: ArcadeMachineLocations, received: ReceivedLogic, region: RegionLogic):
-        self.player = player
-        self.arcade_option = arcade_option
-        self.received = received
-        self.region = region
+
+class ArcadeLogic(BaseLogic[Union[ArcadeLogicMixin, RegionLogicMixin, ReceivedLogicMixin]]):
 
     def has_jotpk_power_level(self, power_level: int) -> StardewRule:
-        if self.arcade_option != options.ArcadeMachineLocations.option_full_shuffling:
+        if self.options.arcade_machine_locations != options.ArcadeMachineLocations.option_full_shuffling:
             return True_()
         jotpk_buffs = ("JotPK: Progressive Boots", "JotPK: Progressive Gun", "JotPK: Progressive Ammo", "JotPK: Extra Life", "JotPK: Increased Drop Rate")
-        return self.received(jotpk_buffs, power_level)
+        return self.logic.received(jotpk_buffs, power_level)
 
     def has_junimo_kart_power_level(self, power_level: int) -> StardewRule:
-        if self.arcade_option != options.ArcadeMachineLocations.option_full_shuffling:
+        if self.options.arcade_machine_locations != options.ArcadeMachineLocations.option_full_shuffling:
             return True_()
-        return self.received("Junimo Kart: Extra Life", power_level)
+        return self.logic.received("Junimo Kart: Extra Life", power_level)
 
     def has_junimo_kart_max_level(self) -> StardewRule:
-        play_rule = self.region.can_reach(Region.junimo_kart_3)
-        if self.arcade_option != options.ArcadeMachineLocations.option_full_shuffling:
+        play_rule = self.logic.region.can_reach(Region.junimo_kart_3)
+        if self.options.arcade_machine_locations != options.ArcadeMachineLocations.option_full_shuffling:
             return play_rule
-        return self.has_junimo_kart_power_level(8)
+        return self.logic.arcade.has_junimo_kart_power_level(8)

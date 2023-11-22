@@ -1,25 +1,22 @@
 from functools import cached_property
 
-from .museum_logic import MuseumLogic
+from .base_logic import BaseLogic, BaseLogicMixin
+from .received_logic import ReceivedLogicMixin
 from ..stardew_rule import StardewRule
-from .received_logic import ReceivedLogic
 from ..strings.wallet_item_names import Wallet
 
 
-class WalletLogic:
-    player: int
-    received = ReceivedLogic
-    museum: MuseumLogic
+class WalletLogicMixin(BaseLogicMixin):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.wallet = WalletLogic(*args, **kwargs)
 
-    def __init__(self, player: int, received: ReceivedLogic, museum: MuseumLogic):
-        self.player = player
-        self.received = received
-        self.museum = museum
 
+class WalletLogic(BaseLogic[ReceivedLogicMixin]):
     @cached_property
     def can_speak_dwarf(self) -> StardewRule:
-        return self.received(Wallet.dwarvish_translation_guide)
+        return self.logic.received(Wallet.dwarvish_translation_guide)
 
     @cached_property
     def has_rusty_key(self) -> StardewRule:
-        return self.received(Wallet.rusty_key)
+        return self.logic.received(Wallet.rusty_key)

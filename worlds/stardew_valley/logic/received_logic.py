@@ -1,14 +1,10 @@
 from typing import Union, Optional, Tuple
 
-from .cached_logic import CachedLogic, CachedRules
+from .base_logic import BaseLogic, BaseLogicMixin
 from ..stardew_rule import StardewRule, True_, Received, And, Or, TotalReceived
 
 
-class ReceivedLogic(CachedLogic):
-
-    def __init__(self, player: int, cached_rules: CachedRules):
-        super().__init__(player, cached_rules)
-
+class ReceivedLogicMixin(BaseLogic[None], BaseLogicMixin):
     def __call__(self, *args, **kwargs) -> StardewRule:
         count = 1
         if len(args) >= 2:
