@@ -127,7 +127,7 @@ def set_bundle_rules(bundle_rooms: List[BundleRoom], logic: StardewLogic, multiw
             room_rules.append(bundle_rules)
             MultiWorldRules.set_rule(location, bundle_rules)
         room_location = f"Complete {bundle_room.name}"
-        MultiWorldRules.add_rule(multiworld.get_location(room_location, player), And(*room_rules))
+        MultiWorldRules.set_rule(multiworld.get_location(room_location, player), And(*room_rules))
 
 
 def set_skills_rules(logic: StardewLogic, multiworld, player, world_options: StardewValleyOptions):
