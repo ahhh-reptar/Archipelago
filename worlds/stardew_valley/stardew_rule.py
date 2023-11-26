@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from functools import reduce, cached_property
-from typing import Iterable, Dict, List, Union, FrozenSet, Optional, Sized
+from functools import cached_property
+from itertools import chain
+from typing import Iterable, Dict, List, Union, Sized, Hashable, Callable, Tuple
+
+from frozendict import frozendict
 
 from BaseClasses import CollectionState, ItemClassification
 from .items import item_table
@@ -43,7 +47,9 @@ class StardewRuleExplanation:
         return [i.explain(self.state) for i in self.sub_rules]
 
 
-class StardewRule:
+class StardewRule(ABC):
+
+    @abstractmethod
     def __call__(self, state: CollectionState) -> bool:
         raise NotImplementedError
 
@@ -59,6 +65,7 @@ class StardewRule:
 
         return And(self, other)
 
+    @abstractmethod
     def get_difficulty(self):
         raise NotImplementedError
 
@@ -69,7 +76,11 @@ class StardewRule:
         return StardewRuleExplanation(self, state)
 
 
-class True_(StardewRule):  # noqa
+class LiteralStardewRule(StardewRule, ABC):
+    pass
+
+
+class True_(LiteralStardewRule):  # noqa
 
     def __new__(cls, _cache=[]):  # noqa
         # Only one single instance will be ever created.
@@ -93,7 +104,7 @@ class True_(StardewRule):  # noqa
         return 0
 
 
-class False_(StardewRule):  # noqa
+class False_(LiteralStardewRule):  # noqa
 
     def __new__(cls, _cache=[]):  # noqa
         # Only one single instance will be ever created.
@@ -122,168 +133,231 @@ true_ = True_()
 assert false_ is False_()
 assert true_ is True_()
 
-_default_has_progression_percent = object()
+_default_combinable_rules = object()
 
 
-class Or(StardewRule):
-    rules: FrozenSet[StardewRule]
+class CombinableStardewRule(StardewRule, ABC):
 
+    @property
+    @abstractmethod
+    def combination_key(self) -> Hashable:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def value(self):
+        raise NotImplementedError
+
+    def is_same_rule(self, other: CombinableStardewRule):
+        return self.combination_key == other.combination_key
+
+    @staticmethod
+    def split_rules(rules: Union[Iterable[StardewRule]],
+                    reducer: Callable[[CombinableStardewRule, CombinableStardewRule], CombinableStardewRule]) \
+            -> Tuple[Tuple[StardewRule, ...], frozendict[Hashable, CombinableStardewRule]]:
+        if not rules:
+            return (), frozendict()
+
+        other_rules = []
+        reduced_rules = {}
+        for rule in rules:
+            if isinstance(rule, CombinableStardewRule):
+                key = rule.combination_key
+                if key not in reduced_rules:
+                    reduced_rules[key] = rule
+                    continue
+
+                reduced_rules[key] = reducer(reduced_rules[key], rule)
+            else:
+                other_rules.append(rule)
+
+        return tuple(other_rules), frozendict(reduced_rules)
+
+    @staticmethod
+    def reduce(rules: Union[Iterable[CombinableStardewRule]],
+               reducer: Callable[[CombinableStardewRule, CombinableStardewRule], CombinableStardewRule]) \
+            -> frozendict[Hashable, CombinableStardewRule]:
+        if not rules:
+            return frozendict()
+
+        reduced_rules = {}
+        for rule in rules:
+            key = rule.combination_key
+            if key not in reduced_rules:
+                reduced_rules[key] = rule
+                continue
+
+            reduced_rules[key] = reducer(reduced_rules[key], rule)
+
+        return frozendict(reduced_rules)
+
+    @staticmethod
+    def merge(left: frozendict[Hashable, CombinableStardewRule],
+              right: frozendict[Hashable, CombinableStardewRule],
+              reducer: Callable[[CombinableStardewRule, CombinableStardewRule], CombinableStardewRule]) \
+            -> frozendict[Hashable, CombinableStardewRule]:
+        return CombinableStardewRule.reduce({*left.values(), *right.values()}, reducer)
+
+    def add_into(self, rules: frozendict[Hashable, CombinableStardewRule],
+                 reducer: Callable[[CombinableStardewRule, CombinableStardewRule], CombinableStardewRule]) \
+            -> frozendict[Hashable, CombinableStardewRule]:
+        if self.combination_key not in rules:
+            return rules | {self.combination_key: self}
+
+        other = rules[self.combination_key]
+        return rules | {self.combination_key: reducer(self, other)}
+
+    def __and__(self, other):
+        if isinstance(other, CombinableStardewRule) and self.is_same_rule(other):
+            return And.combine(self, other)
+        return super().__and__(other)
+
+    def __or__(self, other):
+        if isinstance(other, CombinableStardewRule) and self.is_same_rule(other):
+            return Or.combine(self, other)
+        return super().__or__(other)
+
+
+class AggregatingStardewRule(StardewRule, ABC):
+    identity: LiteralStardewRule
+    complement: LiteralStardewRule
+    symbol: str
+
+    combinable_rules: frozendict[Hashable, CombinableStardewRule]
+    other_rules: Union[Iterable[StardewRule], Sized]
+
+    detailed_unique_rules: Union[Iterable[StardewRule], Sized]
     _simplified: bool
-    _has_progression_percent: Optional[HasProgressionPercent]
-    _detailed_rules: FrozenSet[StardewRule]
 
-    def __init__(self, *rules: StardewRule, _has_progression_percent=_default_has_progression_percent):
+    def __init__(self, *rules: StardewRule, _combinable_rules=_default_combinable_rules):
         self._simplified = False
 
-        if _has_progression_percent is _default_has_progression_percent:
-            assert rules, "Can't create a Or conditions without rules"
-            _has_progression_percent = HasProgressionPercent.reduce_or([i for i in rules if type(i) is HasProgressionPercent])
-            if rules is not None:
-                rules = (i for i in rules if type(i) is not HasProgressionPercent)
+        if _combinable_rules is _default_combinable_rules:
+            assert rules, f"Can't create an aggregating condition without rules"
+            rules, _combinable_rules = CombinableStardewRule.split_rules(rules, self.combine)
 
-        self.rules = frozenset(rules)
-        self._detailed_rules = self.rules
-        self._has_progression_percent = _has_progression_percent
+        self.other_rules = tuple(rules)
+        self.combinable_rules = _combinable_rules
 
-    def __call__(self, state: CollectionState) -> bool:
-        self.simplify()
-        return any(rule(state) for rule in self.rules)
+        self.detailed_unique_rules = self.other_rules
+
+    @property
+    def rules_iterable(self):
+        return chain(self.other_rules, self.combinable_rules.values())
+
+    @property
+    def detailed_rules_iterable(self):
+        return chain(self.detailed_unique_rules, self.combinable_rules.values())
+
+    @staticmethod
+    @abstractmethod
+    def combine(left: CombinableStardewRule, right: CombinableStardewRule) -> CombinableStardewRule:
+        raise NotImplementedError
 
     def __str__(self):
-        prefix = str(self._has_progression_percent) + " | " if self._has_progression_percent else ""
-        return f"({prefix}{' | '.join(str(rule) for rule in self._detailed_rules)})"
+        return f"({self.symbol.join(str(rule) for rule in self.detailed_rules_iterable)})"
 
     def __repr__(self):
-        prefix = repr(self._has_progression_percent) + " | " if self._has_progression_percent else ""
-        return f"({prefix}{' | '.join(repr(rule) for rule in self._detailed_rules)})"
+        return f"({self.symbol.join(repr(rule) for rule in self.detailed_rules_iterable)})"
+
+    def __eq__(self, other):
+        return isinstance(other, type(self)) and self.combinable_rules == other.combinable_rules and self.other_rules == self.other_rules
+
+    def __hash__(self):
+        return hash((self.combinable_rules, self.other_rules))
+
+    def simplify(self) -> StardewRule:
+        if self._simplified:
+            return self
+        self.other_rules = frozenset(self.other_rules)
+        if self.complement in self.other_rules:
+            self.other_rules = (self.complement,)
+            return self.complement
+
+        simplified_rules = frozenset(simplified
+                                     for simplified in (rule.simplify() for rule in self.other_rules)
+                                     if simplified is not self.identity)
+
+        if not simplified_rules and not self.combinable_rules:
+            self.other_rules = (self.identity,)
+            return self.identity
+
+        if len(simplified_rules) == 1 and not self.combinable_rules:
+            return next(iter(simplified_rules))
+
+        if not simplified_rules and len(self.combinable_rules) == 1:
+            return next(iter(self.combinable_rules.values()))
+
+        self.other_rules = simplified_rules
+        self._simplified = True
+        return self
+
+    def explain(self, state: CollectionState) -> StardewRuleExplanation:
+        return StardewRuleExplanation(self, state, frozenset(self.detailed_unique_rules))
+
+
+class Or(AggregatingStardewRule):
+    identity = false_
+    complement = true_
+    symbol = " | "
+
+    def __call__(self, state: CollectionState) -> bool:
+        if any(rule(state) for rule in self.combinable_rules.values()):
+            return True
+        self.simplify()
+        return any(rule(state) for rule in self.other_rules)
 
     def __or__(self, other):
         if other is true_ or other is false_:
             return other | self
 
-        if type(other) is HasProgressionPercent:
-            if self._has_progression_percent:
-                return Or(*self.rules, _has_progression_percent=self._has_progression_percent | other)
-            return Or(*self.rules, _has_progression_percent=other)
+        if isinstance(other, CombinableStardewRule):
+            return Or(*self.other_rules, _combinable_rules=other.add_into(self.combinable_rules, self.combine))
 
         if type(other) is Or:
-            return Or(*self.rules.union(other.rules), _has_progression_percent=self._has_progression_percent)
+            return Or(*self.other_rules, *other.other_rules,
+                      _combinable_rules=CombinableStardewRule.merge(self.combinable_rules, other.combinable_rules, self.combine))
 
-        return Or(*self.rules.union({other}), _has_progression_percent=self._has_progression_percent)
+        return Or(*self.other_rules, other, _combinable_rules=self.combinable_rules)
 
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and other.rules == self.rules
-
-    def __hash__(self):
-        return hash(self.rules)
+    @staticmethod
+    def combine(left: CombinableStardewRule, right: CombinableStardewRule) -> CombinableStardewRule:
+        return min(left, right, key=lambda x: x.value)
 
     def get_difficulty(self):
-        return min(rule.get_difficulty() for rule in self.rules)
-
-    def simplify(self) -> StardewRule:
-        if self._simplified:
-            return self
-        if true_ in self.rules:
-            return true_
-
-        rules = self.rules.union({self._has_progression_percent}) if self._has_progression_percent else self.rules
-        simplified_rules = [simplified
-                            for simplified in {rule.simplify() for rule in rules}
-                            if simplified is not false_]
-
-        if not simplified_rules:
-            return false_
-
-        if len(simplified_rules) == 1:
-            return simplified_rules[0]
-
-        self.rules = frozenset(simplified_rules)
-        self._simplified = True
-        return self
-
-    def explain(self, state: CollectionState) -> StardewRuleExplanation:
-        return StardewRuleExplanation(self, state, self._detailed_rules)
+        return min(rule.get_difficulty() for rule in self.rules_iterable)
 
 
-class And(StardewRule):
-    rules: FrozenSet[StardewRule]
-
-    _simplified: bool
-    _has_progression_percent: Optional[HasProgressionPercent]
-    _detailed_rules: FrozenSet[StardewRule]
-
-    def __init__(self, *rules: StardewRule, _has_progression_percent=_default_has_progression_percent):
-        self._simplified = False
-
-        if _has_progression_percent is _default_has_progression_percent:
-            assert rules, "Can't create a And conditions without rules"
-            _has_progression_percent = HasProgressionPercent.reduce_and([i for i in rules if type(i) is HasProgressionPercent])
-            if rules is not None:
-                rules = (i for i in rules if type(i) is not HasProgressionPercent)
-
-        self.rules = frozenset(rules)
-        self._detailed_rules = self.rules
-        self._has_progression_percent = _has_progression_percent
+class And(AggregatingStardewRule):
+    identity = true_
+    complement = false_
+    symbol = " & "
 
     def __call__(self, state: CollectionState) -> bool:
+        if not all(rule(state) for rule in self.combinable_rules.values()):
+            return False
         self.simplify()
-        result = all(rule(state) for rule in self.rules)
-        return result
-
-    def __str__(self):
-        prefix = str(self._has_progression_percent) + " & " if self._has_progression_percent else ""
-        return f"({prefix}{' & '.join(str(rule) for rule in self._detailed_rules)})"
-
-    def __repr__(self):
-        prefix = repr(self._has_progression_percent) + " & " if self._has_progression_percent else ""
-        return f"({prefix}{' & '.join(repr(rule) for rule in self._detailed_rules)})"
+        return all(rule(state) for rule in self.other_rules)
 
     def __and__(self, other):
         if other is true_ or other is false_:
             return other & self
 
-        if type(other) is HasProgressionPercent:
-            if self._has_progression_percent:
-                return And(*self.rules, _has_progression_percent=self._has_progression_percent & other)
-            return And(*self.rules, _has_progression_percent=other)
+        if isinstance(other, CombinableStardewRule):
+            return And(*self.other_rules, _combinable_rules=other.add_into(self.combinable_rules, self.combine))
 
         if type(other) is And:
-            return And(*self.rules.union(other.rules), _has_progression_percent=self._has_progression_percent)
+            return And(*self.other_rules, *other.other_rules,
+                       _combinable_rules=CombinableStardewRule.merge(self.combinable_rules, other.combinable_rules, self.combine))
 
-        return And(*self.rules.union({other}), _has_progression_percent=self._has_progression_percent)
+        return And(*self.other_rules, other, _combinable_rules=self.combinable_rules)
 
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and other.rules == self.rules
-
-    def __hash__(self):
-        return hash(self.rules)
+    @staticmethod
+    def combine(left: CombinableStardewRule, right: CombinableStardewRule) -> CombinableStardewRule:
+        return max(left, right, key=lambda x: x.value)
 
     def get_difficulty(self):
-        return max(rule.get_difficulty() for rule in self.rules)
-
-    def simplify(self) -> StardewRule:
-        if self._simplified:
-            return self
-        if false_ in self.rules:
-            return false_
-
-        rules = self.rules.union({self._has_progression_percent}) if self._has_progression_percent else self.rules
-        simplified_rules = [simplified
-                            for simplified in {rule.simplify() for rule in rules}
-                            if simplified is not true_]
-
-        if not simplified_rules:
-            return true_
-
-        if len(simplified_rules) == 1:
-            return simplified_rules[0]
-
-        self.rules = frozenset(simplified_rules)
-        self._simplified = True
-        return self
-
-    def explain(self, state: CollectionState) -> StardewRuleExplanation:
-        return StardewRuleExplanation(self, state, self._detailed_rules)
+        return max(rule.get_difficulty() for rule in self.rules_iterable)
 
 
 class Count(StardewRule):
@@ -381,7 +455,7 @@ class TotalReceived(StardewRule):
 
 
 @dataclass(frozen=True)
-class Received(StardewRule):
+class Received(CombinableStardewRule):
     item: str
     player: int
     count: int
@@ -389,6 +463,14 @@ class Received(StardewRule):
     def __post_init__(self):
         assert item_table[self.item].classification & ItemClassification.progression, \
             f"Item [{item_table[self.item].name}] has to be progression to be used in logic"
+
+    @property
+    def combination_key(self) -> Hashable:
+        return self.item
+
+    @property
+    def value(self):
+        return self.count
 
     def __call__(self, state: CollectionState) -> bool:
         return state.has(self.item, self.player, self.count)
@@ -427,8 +509,6 @@ class Reach(StardewRule):
             spot = state.multiworld.get_entrance(self.spot, self.player)
             access_rule = spot.access_rule
         else:
-            # default to Region
-            spot = state.multiworld.get_region(self.spot, self.player)
             # TODO check entrances rules
             access_rule = None
 
@@ -475,31 +555,21 @@ class Has(StardewRule):
 
 
 @dataclass(frozen=True)
-class HasProgressionPercent(StardewRule):
+class HasProgressionPercent(CombinableStardewRule):
     player: int
     percent: int
-
-    # Cache in __new__
-
-    @staticmethod
-    def reduce_and(rules: Union[Iterable[HasProgressionPercent], Sized]) -> Optional[HasProgressionPercent]:
-        if not rules:
-            return None
-        if len(rules) == 1:
-            return next(iter(rules))
-        return reduce(HasProgressionPercent.__and__, rules)  # noqa
-
-    @staticmethod
-    def reduce_or(rules: Union[Iterable[HasProgressionPercent], Sized]) -> Optional[HasProgressionPercent]:
-        if not rules:
-            return None
-        if len(rules) == 1:
-            return next(iter(rules))
-        return reduce(HasProgressionPercent.__or__, rules)  # noqa
 
     def __post_init__(self):
         assert self.percent > 0, "HasProgressionPercent rule must be above 0%"
         assert self.percent <= 100, "HasProgressionPercent rule can't require more than 100% of items"
+
+    @property
+    def combination_key(self) -> Hashable:
+        return HasProgressionPercent.__name__
+
+    @property
+    def value(self):
+        return self.percent
 
     def __call__(self, state: CollectionState) -> bool:
         stardew_world = state.multiworld.worlds[self.player]
@@ -515,16 +585,6 @@ class HasProgressionPercent(StardewRule):
 
     def __repr__(self):
         return f"HasProgressionPercent {self.percent}"
-
-    def __and__(self, other):
-        if type(other) is HasProgressionPercent:
-            return max(self, other, key=lambda x: x.percent)
-        return super().__and__(other)
-
-    def __or__(self, other):
-        if type(other) is HasProgressionPercent:
-            return min(self, other, key=lambda x: x.percent)
-        return super().__or__(other)
 
     def get_difficulty(self):
         return self.percent
