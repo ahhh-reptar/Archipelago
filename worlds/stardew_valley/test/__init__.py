@@ -7,9 +7,9 @@ from BaseClasses import MultiWorld, CollectionState
 from Utils import cache_argsless
 from test.bases import WorldTestBase
 from test.general import gen_steps, setup_solo_multiworld as setup_base_solo_multiworld
+from worlds.AutoWorld import call_all
 from .. import StardewValleyWorld
 from ..mods.mod_data import all_mods
-from worlds.AutoWorld import call_all
 from ..options import Cropsanity, SkillProgression, SpecialOrderLocations, Friendsanity, NumberOfLuckBuffs, SeasonRandomization, ToolProgression, \
     ElevatorProgression, Museumsanity, BackpackProgression, BuildingProgression, ArcadeMachineLocations, HelpWantedLocations, Fishsanity, NumberOfMovementBuffs, \
     BundleRandomization, BundlePrice, FestivalLocations, FriendsanityHeartSize, ExcludeGingerIsland, TrapItems, Goal, Mods, Monstersanity, Shipsanity, \
@@ -145,23 +145,19 @@ class SVTestCase(unittest.TestCase):
     game = "Stardew Valley"
     world: StardewValleyWorld
     player: ClassVar[int] = 1
-    """Set to False to not skip some 'extra' tests"""
+    # Set False to not skip some 'extra' tests
     skip_extra_tests: bool = True
-    """Set to False to run tests that take long"""
+    # Set False to run tests that take long
     skip_long_tests: bool = True
-    """Set to False to run tests that take long"""
-    skip_performance_tests: bool = True
 
     options = get_minsanity_options()
 
-    def setUp(self) -> None:
-        super().setUp()
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
         long_tests_key = "long"
         if long_tests_key in os.environ:
-            self.skip_long_tests = not bool(os.environ[long_tests_key])
-        performance_tests_key = "performance"
-        if performance_tests_key in os.environ:
-            self.skip_performance_tests = not bool(os.environ[performance_tests_key])
+            cls.skip_long_tests = not bool(os.environ[long_tests_key])
 
 
 class SVTestBase(WorldTestBase, SVTestCase):
@@ -195,7 +191,7 @@ pre_generated_worlds = {}
 
 
 # Mostly a copy of test.general.setup_solo_multiworld, I just don't want to change the core.
-def setup_solo_multiworld(test_options=None, seed=None, _cache: Dict[FrozenSet[Tuple[str, Any]], MultiWorld] = {}) -> MultiWorld:  # noqa
+def setup_solo_multiworld(test_options=None, seed=None, _cache: Dict[FrozenSet[Tuple[str, Any]], MultiWorld] = {}, _steps=gen_steps) -> MultiWorld:  # noqa
     if test_options is None:
         test_options = {}
 
@@ -212,7 +208,7 @@ def setup_solo_multiworld(test_options=None, seed=None, _cache: Dict[FrozenSet[T
         value = option(test_options[name]) if name in test_options else option.from_any(option.default)
         setattr(args, name, {1: value})
     multiworld.set_options(args)
-    for step in gen_steps:
+    for step in _steps:
         call_all(multiworld, step)
 
     _cache[frozen_options] = multiworld
@@ -235,7 +231,7 @@ def setup_multiworld(test_options: Iterable[Dict[str, int]] = None, seed=None) -
     for name, option in StardewValleyWorld.options_dataclass.type_hints.items():
         options = {}
         for i in range(1, len(test_options) + 1):
-            player_options = test_options[i-1]
+            player_options = test_options[i - 1]
             value = option(player_options[name]) if name in player_options else option.from_any(option.default)
             options.update({i: value})
         setattr(args, name, options)
