@@ -1,17 +1,16 @@
-from typing import List, Union
-import unittest
 import random
 import sys
+import unittest
+from typing import List, Union
 
 from BaseClasses import MultiWorld
-from worlds.stardew_valley.test import setup_solo_multiworld
-from worlds.stardew_valley.test.TestOptions import basic_checks, SVTestBase
-from worlds.stardew_valley import options, locations, items, Group, ItemClassification, StardewOptions
-from worlds.stardew_valley.mods.mod_data import ModNames
-from worlds.stardew_valley.regions import RandomizationFlag, create_final_connections, randomize_connections, create_final_regions
+from worlds.stardew_valley import options, items, Group, ItemClassification, StardewOptions
 from worlds.stardew_valley.items import item_table, items_by_group
-from worlds.stardew_valley.locations import location_table, LocationTags
+from worlds.stardew_valley.locations import location_table
 from worlds.stardew_valley.options import stardew_valley_option_classes, Mods, EntranceRandomization
+from worlds.stardew_valley.regions import RandomizationFlag, create_final_connections, randomize_connections, create_final_regions
+from worlds.stardew_valley.test import setup_solo_multiworld, allsanity_options_without_mods
+from worlds.stardew_valley.test.TestOptions import basic_checks, SVTestBase
 
 mod_list = ["DeepWoods", "Tractor Mod", "Bigger Backpack",
             "Luck Skill", "Magic", "Socializing Skill", "Archaeology",
@@ -154,9 +153,9 @@ class TestModEntranceRando(unittest.TestCase):
                         connection_in_randomized = connection.name in randomized_connections
                         reverse_in_randomized = connection.reverse in randomized_connections
                         self.assertTrue(connection_in_randomized,
-                                      f"Connection {connection.name} should be randomized but it is not in the output. Seed = {seed}")
+                                        f"Connection {connection.name} should be randomized but it is not in the output. Seed = {seed}")
                         self.assertTrue(reverse_in_randomized,
-                                      f"Connection {connection.reverse} should be randomized but it is not in the output. Seed = {seed}")
+                                        f"Connection {connection.reverse} should be randomized but it is not in the output. Seed = {seed}")
 
                 self.assertEqual(len(set(randomized_connections.values())), len(randomized_connections.values()),
                                  f"Connections are duplicated in randomization. Seed = {seed}")
@@ -168,7 +167,7 @@ class TestModTraps(SVTestBase):
         for value in trap_option.options:
             if value == "no_traps":
                 continue
-            world_options = self.allsanity_options_without_mods()
+            world_options = allsanity_options_without_mods()
             world_options.update({options.TrapItems.internal_name: trap_option.options[value], Mods: "Magic"})
             multi_world = setup_solo_multiworld(world_options)
             trap_items = [item_data.name for item_data in items_by_group[Group.TRAP] if Group.DEPRECATED not in item_data.groups]

@@ -46,6 +46,7 @@ class SVPerformanceTestCase(SVTestCase):
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
+
         performance_tests_key = "performance"
         if performance_tests_key in os.environ:
             cls.skip_performance_tests = not bool(os.environ[performance_tests_key])
@@ -90,6 +91,7 @@ class SVPerformanceTestCase(SVTestCase):
 
                 print("Starting world setup")
                 multiworld = setup_multiworld(options, seed)
+                multiworld.set_default_common_options()
                 if not self.skip_fill:
                     distribute_items_restrictive(multiworld)
                     AutoWorld.call_all(multiworld, 'post_fill')

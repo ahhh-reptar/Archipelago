@@ -1,5 +1,5 @@
 from BaseClasses import ItemClassification, MultiWorld
-from . import setup_solo_multiworld, SVTestBase
+from . import setup_solo_multiworld, SVTestBase, minimal_locations_maximal_items, allsanity_options_without_mods, allsanity_options_with_mods
 from .. import locations, items, location_table, options
 from ..data.villagers_data import all_villagers_by_name, all_villagers_by_mod_by_name
 from ..items import items_by_group, Group
@@ -133,31 +133,24 @@ class TestGivenProgressiveBackpack(SVTestBase):
 class TestRemixedMineRewards(SVTestBase):
     def test_when_generate_world_then_one_reward_is_added_per_chest(self):
         # assert self.world.create_item("Rusty Sword") in self.multiworld.itempool
-        self.assertTrue(any(self.world.create_item(item) in self.multiworld.itempool
-                   for item in items_by_group[Group.MINES_FLOOR_10]))
-        self.assertTrue(any(self.world.create_item(item) in self.multiworld.itempool
-                   for item in items_by_group[Group.MINES_FLOOR_20]))
+        self.assertTrue(any(self.world.create_item(item) in self.multiworld.itempool for item in items_by_group[Group.MINES_FLOOR_10]))
+        self.assertTrue(any(self.world.create_item(item) in self.multiworld.itempool for item in items_by_group[Group.MINES_FLOOR_20]))
         self.assertIn(self.world.create_item("Slingshot"), self.multiworld.itempool)
-        self.assertTrue(any(self.world.create_item(item) in self.multiworld.itempool
-                   for item in items_by_group[Group.MINES_FLOOR_50]))
-        self.assertTrue(any(self.world.create_item(item) in self.multiworld.itempool
-                   for item in items_by_group[Group.MINES_FLOOR_60]))
+        self.assertTrue(any(self.world.create_item(item) in self.multiworld.itempool for item in items_by_group[Group.MINES_FLOOR_50]))
+        self.assertTrue(any(self.world.create_item(item) in self.multiworld.itempool for item in items_by_group[Group.MINES_FLOOR_60]))
         self.assertIn(self.world.create_item("Master Slingshot"), self.multiworld.itempool)
-        self.assertTrue(any(self.world.create_item(item) in self.multiworld.itempool
-                   for item in items_by_group[Group.MINES_FLOOR_80]))
-        self.assertTrue(any(self.world.create_item(item) in self.multiworld.itempool
-                   for item in items_by_group[Group.MINES_FLOOR_90]))
+        self.assertTrue(any(self.world.create_item(item) in self.multiworld.itempool for item in items_by_group[Group.MINES_FLOOR_80]))
+        self.assertTrue(any(self.world.create_item(item) in self.multiworld.itempool for item in items_by_group[Group.MINES_FLOOR_90]))
         self.assertIn(self.world.create_item("Stardrop"), self.multiworld.itempool)
-        self.assertTrue(any(self.world.create_item(item) in self.multiworld.itempool
-                   for item in items_by_group[Group.MINES_FLOOR_110]))
+        self.assertTrue(any(self.world.create_item(item) in self.multiworld.itempool for item in items_by_group[Group.MINES_FLOOR_110]))
         self.assertIn(self.world.create_item("Skull Key"), self.multiworld.itempool)
 
     # This test has a 1/90,000 chance to fail... Sorry in advance
     def test_when_generate_world_then_rewards_are_not_all_vanilla(self):
         self.assertFalse(all(self.world.create_item(item) in self.multiworld.itempool
-                       for item in
-                       ["Leather Boots", "Steel Smallsword", "Tundra Boots", "Crystal Dagger", "Firewalker Boots",
-                        "Obsidian Edge", "Space Boots"]))
+                             for item in
+                             ["Leather Boots", "Steel Smallsword", "Tundra Boots", "Crystal Dagger", "Firewalker Boots",
+                              "Obsidian Edge", "Space Boots"]))
 
 
 class TestProgressiveElevator(SVTestBase):
@@ -208,14 +201,14 @@ class TestLocationGeneration(SVTestBase):
 class TestLocationAndItemCount(SVTestBase):
 
     def test_minimal_location_maximal_items_still_valid(self):
-        min_max_options = self.minimal_locations_maximal_items()
+        min_max_options = minimal_locations_maximal_items()
         multiworld = setup_solo_multiworld(min_max_options)
         valid_locations = get_real_locations(self, multiworld)
         self.assertGreaterEqual(len(valid_locations), len(multiworld.itempool))
 
     def test_allsanity_without_mods_has_at_least_locations(self):
         expected_locations = 994
-        allsanity_options = self.allsanity_options_without_mods()
+        allsanity_options = allsanity_options_without_mods()
         multiworld = setup_solo_multiworld(allsanity_options)
         number_locations = len(get_real_locations(self, multiworld))
         self.assertGreaterEqual(number_locations, expected_locations)
@@ -228,7 +221,7 @@ class TestLocationAndItemCount(SVTestBase):
 
     def test_allsanity_with_mods_has_at_least_locations(self):
         expected_locations = 1246
-        allsanity_options = self.allsanity_options_with_mods()
+        allsanity_options = allsanity_options_with_mods()
         multiworld = setup_solo_multiworld(allsanity_options)
         number_locations = len(get_real_locations(self, multiworld))
         self.assertGreaterEqual(number_locations, expected_locations)

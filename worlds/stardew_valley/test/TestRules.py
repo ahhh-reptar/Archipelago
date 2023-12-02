@@ -3,17 +3,8 @@ from collections import Counter
 from . import SVTestBase
 from .. import options
 from ..locations import locations_by_tag, LocationTags, location_table
-from ..strings.animal_names import Animal
-from ..strings.animal_product_names import AnimalProduct
-from ..strings.artisan_good_names import ArtisanGood
-from ..strings.crop_names import Vegetable
 from ..strings.entrance_names import Entrance
-from ..strings.food_names import Meal
-from ..strings.ingredient_names import Ingredient
-from ..strings.machine_names import Machine
 from ..strings.region_names import Region
-from ..strings.season_names import Season
-from ..strings.seed_names import Seed
 
 
 class TestProgressiveToolsLogic(SVTestBase):
@@ -116,17 +107,17 @@ class TestBuildingLogic(SVTestBase):
 
     def test_big_coop_blueprint(self):
         self.assertFalse(self.world.logic.can_reach_location("Big Coop Blueprint")(self.multiworld.state),
-            f"Rule is {repr(self.multiworld.get_location('Big Coop Blueprint', self.player).access_rule)}")
+                         f"Rule is {repr(self.multiworld.get_location('Big Coop Blueprint', self.player).access_rule)}")
 
         self.multiworld.state.collect(self.world.create_item("Month End"), event=True)
         self.multiworld.state.collect(self.world.create_item("Month End"), event=True)
         self.multiworld.state.collect(self.world.create_item("Month End"), event=True)
         self.assertFalse(self.world.logic.can_reach_location("Big Coop Blueprint")(self.multiworld.state),
-            f"Rule is {repr(self.multiworld.get_location('Big Coop Blueprint', self.player).access_rule)}")
+                         f"Rule is {repr(self.multiworld.get_location('Big Coop Blueprint', self.player).access_rule)}")
 
         self.multiworld.state.collect(self.world.create_item("Progressive Coop"), event=True)
         self.assertTrue(self.world.logic.can_reach_location("Big Coop Blueprint")(self.multiworld.state),
-            f"Rule is {repr(self.multiworld.get_location('Big Coop Blueprint', self.player).access_rule)}")
+                        f"Rule is {repr(self.multiworld.get_location('Big Coop Blueprint', self.player).access_rule)}")
 
     def test_deluxe_coop_blueprint(self):
         self.assertFalse(self.world.logic.can_reach_location("Deluxe Coop Blueprint")(self.multiworld.state))
@@ -148,7 +139,7 @@ class TestBuildingLogic(SVTestBase):
 
     def test_big_shed_blueprint(self):
         self.assertFalse(self.world.logic.can_reach_location("Big Shed Blueprint")(self.multiworld.state),
-            f"Rule is {repr(self.multiworld.get_location('Big Shed Blueprint', self.player).access_rule)}")
+                         f"Rule is {repr(self.multiworld.get_location('Big Shed Blueprint', self.player).access_rule)}")
 
         self.multiworld.state.collect(self.world.create_item("Month End"), event=True)
         self.multiworld.state.collect(self.world.create_item("Month End"), event=True)
@@ -157,11 +148,11 @@ class TestBuildingLogic(SVTestBase):
         self.multiworld.state.collect(self.world.create_item("Month End"), event=True)
         self.multiworld.state.collect(self.world.create_item("Month End"), event=True)
         self.assertFalse(self.world.logic.can_reach_location("Big Shed Blueprint")(self.multiworld.state),
-            f"Rule is {repr(self.multiworld.get_location('Big Shed Blueprint', self.player).access_rule)}")
+                         f"Rule is {repr(self.multiworld.get_location('Big Shed Blueprint', self.player).access_rule)}")
 
         self.multiworld.state.collect(self.world.create_item("Progressive Shed"), event=True)
         self.assertTrue(self.world.logic.can_reach_location("Big Shed Blueprint")(self.multiworld.state),
-            f"Rule is {repr(self.multiworld.get_location('Big Shed Blueprint', self.player).access_rule)}")
+                        f"Rule is {repr(self.multiworld.get_location('Big Shed Blueprint', self.player).access_rule)}")
 
 
 class TestArcadeMachinesLogic(SVTestBase):
@@ -401,7 +392,8 @@ class TestDonationLogicRandomized(SVTestBase):
         guild_item = "Adventurer's Guild"
         swap_museum_and_guild(self.multiworld, self.player)
         collect_all_except(self.multiworld, guild_item)
-        donation_locations = [location for location in self.multiworld.get_locations() if not location.event and LocationTags.MUSEUM_DONATIONS in location_table[location.name].tags]
+        donation_locations = [location for location in self.multiworld.get_locations() if
+                              not location.event and LocationTags.MUSEUM_DONATIONS in location_table[location.name].tags]
 
         for donation in donation_locations:
             self.assertFalse(self.world.logic.can_reach_location(donation.name)(self.multiworld.state))
@@ -503,4 +495,3 @@ class TestFriendsanityDatingRules(SVTestBase):
             location = f"{prefix}{npc} {i}{suffix}"
             can_reach = self.world.logic.can_reach_location(location)(self.multiworld.state)
             self.assertFalse(can_reach, f"Should not be able to earn relationship up to {i} hearts")
-

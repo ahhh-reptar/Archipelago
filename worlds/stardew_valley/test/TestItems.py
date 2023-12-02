@@ -1,14 +1,10 @@
-import itertools
-import math
-import sys
-import unittest
 import random
-from typing import Set
+import sys
 
-from BaseClasses import ItemClassification, MultiWorld
-from . import setup_solo_multiworld, SVTestBase
-from .. import ItemData, StardewValleyWorld
-from ..items import Group, item_table
+from BaseClasses import MultiWorld
+from . import setup_solo_multiworld, SVTestBase, allsanity_options_without_mods
+from .. import StardewValleyWorld
+from ..items import item_table
 
 
 class TestItems(SVTestBase):
@@ -46,7 +42,7 @@ class TestItems(SVTestBase):
 
     def test_correct_number_of_stardrops(self):
         seed = random.randrange(sys.maxsize)
-        allsanity_options = self.allsanity_options_without_mods()
+        allsanity_options = allsanity_options_without_mods()
         multiworld = setup_solo_multiworld(allsanity_options, seed=seed)
         stardrop_items = [item for item in multiworld.get_items() if "Stardrop" in item.name]
         self.assertEqual(len(stardrop_items), 5)
