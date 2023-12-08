@@ -20,6 +20,7 @@ from .options import ToolProgression, BuildingProgression, ExcludeGingerIsland, 
 from .stardew_rule import And
 from .strings.ap_names.event_names import Event
 from .strings.ap_names.transport_names import Transportation
+from .strings.ap_names.mods.mod_items import SVELocation
 from .strings.artisan_good_names import ArtisanGood
 from .strings.building_names import Building
 from .strings.bundle_names import CCRoom
@@ -32,7 +33,7 @@ from .strings.generic_names import Generic
 from .strings.material_names import Material
 from .strings.metal_names import MetalBar
 from .strings.quest_names import Quest, ModQuest
-from .strings.region_names import Region
+from .strings.region_names import Region, SVERegion
 from .strings.season_names import Season
 from .strings.skill_names import ModSkill, Skill
 from .strings.tool_names import Tool, ToolMaterial
@@ -902,8 +903,6 @@ def set_sve_rules(logic: StardewLogic, multiworld: MultiWorld, player: int, worl
                              logic.quest.can_complete_quest(Quest.magic_ink))
     MultiWorldRules.set_rule(multiworld.get_entrance(SVEEntrance.secret_woods_to_west, player),
                              logic.tool.has_tool(Tool.axe, ToolMaterial.iron))
-    MultiWorldRules.set_rule(multiworld.get_entrance(SVEEntrance.wizard_to_fable_reef, player),
-                             logic.received("Fable Reef Portal"))
     MultiWorldRules.set_rule(multiworld.get_entrance(SVEEntrance.grandpa_shed_to_interior, player),
                              logic.tool.has_tool(Tool.axe, ToolMaterial.iron))
     MultiWorldRules.set_rule(multiworld.get_entrance(SVEEntrance.aurora_warp_to_aurora, player),
@@ -924,11 +923,10 @@ def set_sve_rules(logic: StardewLogic, multiworld: MultiWorld, player: int, worl
                              logic.relationship.has_hearts(ModNPC.apples, 10))
     MultiWorldRules.set_rule(multiworld.get_entrance(SVEEntrance.grandpa_interior_to_upstairs, player),
                              logic.quest.can_complete_quest(ModQuest.GrandpasShed))
-    MultiWorldRules.set_rule(multiworld.get_entrance(SVEEntrance.highlands_to_cave, player),
-                             logic.tool.has_tool(Tool.pickaxe, ToolMaterial.iron))
     MultiWorldRules.set_rule(multiworld.get_entrance(SVEEntrance.use_bear_shop, player),
                              (logic.quest.can_complete_quest(Quest.strange_note) & logic.tool.has_tool(Tool.axe, ToolMaterial.basic) &
                               logic.tool.has_tool(Tool.pickaxe, ToolMaterial.basic)))
+    logic.mod.sve.initialize_rules()
     for location in logic.registry.sve_location_rules:
         MultiWorldRules.set_rule(multiworld.get_location(location, player),
                                  logic.registry.sve_location_rules[location])
@@ -942,3 +940,7 @@ def set_sve_ginger_island_rules(logic: StardewLogic, multiworld: MultiWorld, pla
                              logic.received("Marlon's Boat Paddle"))
     MultiWorldRules.set_rule(multiworld.get_entrance(SVEEntrance.wizard_to_fable_reef, player),
                              logic.received("Fable Reef Portal"))
+    MultiWorldRules.set_rule(multiworld.get_location(SVELocation.diamond_wand, player),
+                             logic.quest.can_complete_quest(ModQuest.MonsterCrops) & logic.region.can_reach(SVERegion.lances_house))
+    MultiWorldRules.set_rule(multiworld.get_entrance(SVEEntrance.highlands_to_cave, player),
+                             logic.tool.has_tool(Tool.pickaxe, ToolMaterial.iron) & logic.tool.has_tool(Tool.axe, ToolMaterial.iron))
