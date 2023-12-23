@@ -5,9 +5,11 @@ from .base_logic import BaseLogic, BaseLogicMixin
 from .received_logic import ReceivedLogicMixin
 from .time_logic import TimeLogicMixin
 from ..options import SeasonRandomization
-from ..stardew_rule import StardewRule, True_, Or
+from ..stardew_rule import StardewRule, True_, Or, ChoiceOptionRule
 from ..strings.generic_names import Generic
 from ..strings.season_names import Season
+
+seasons_order = [Season.spring, Season.summer, Season.fall, Season.winter]
 
 
 class SeasonLogicMixin(BaseLogicMixin):
@@ -22,14 +24,13 @@ class SeasonLogic(BaseLogic[Union[SeasonLogicMixin, TimeLogicMixin, ReceivedLogi
     def has(self, season: str) -> StardewRule:
         if season == Generic.any:
             return True_()
-        seasons_order = [Season.spring, Season.summer, Season.fall, Season.winter]
-        if self.options.season_randomization == SeasonRandomization.option_progressive:
-            return self.logic.received(Season.progressive, seasons_order.index(season))
-        if self.options.season_randomization == SeasonRandomization.option_disabled:
-            if season == Season.spring:
-                return True_()
-            return self.logic.time.has_lived_months(1)
-        return self.logic.received(season)
+
+        return ChoiceOptionRule(self.options.season_randomization, {
+            SeasonRandomization.option_disabled: True_() if season == Season.spring else self.logic.time.has_lived_months(1),
+            SeasonRandomization.option_progressive: self.logic.received(Season.progressive, seasons_order.index(season)),
+            SeasonRandomization.option_randomized: self.logic.received(season),
+            SeasonRandomization.option_randomized_not_winter: self.logic.received(season),
+        })
 
     def has_any(self, seasons: Iterable[str]):
         if not seasons:

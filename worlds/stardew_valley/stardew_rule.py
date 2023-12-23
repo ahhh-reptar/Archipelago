@@ -10,6 +10,7 @@ from threading import Lock
 from typing import Iterable, Dict, List, Union, Sized, Hashable, Callable, Tuple, Set, Optional
 
 from BaseClasses import CollectionState, ItemClassification
+from Options import Choice
 from .items import item_table
 
 MISSING_ITEM = "THIS ITEM IS MISSING"
@@ -707,6 +708,21 @@ class HasProgressionPercent(CombinableStardewRule):
 
     def get_difficulty(self):
         return self.percent
+
+
+@dataclass(frozen=True)
+class ChoiceOptionRule(StardewRule):
+    option: Choice
+    choices: Dict[int, StardewRule]
+
+    def __call__(self, state: CollectionState) -> bool:
+        return self.choices[self.option.value](state)
+
+    def evaluate_while_simplifying(self, state: CollectionState) -> Tuple[StardewRule, bool]:
+        return self.choices[self.option.value].evaluate_while_simplifying(state)
+
+    def get_difficulty(self):
+        return self.choices[self.option.value].get_difficulty()
 
 
 class RepeatableChain(Iterable, Sized):
