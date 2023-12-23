@@ -7,12 +7,14 @@ from BaseClasses import CollectionState
 from .explanation import ExplainableRule
 
 
-@runtime_checkable
-class StardewRule(ExplainableRule, Protocol):
-
+class APRule(Protocol):
     @abstractmethod
     def __call__(self, state: CollectionState) -> bool:
         ...
+
+
+@runtime_checkable
+class StardewRule(APRule, ExplainableRule, Protocol):
 
     @abstractmethod
     def __or__(self, other) -> StardewRule:

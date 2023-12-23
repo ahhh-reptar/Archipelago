@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from collections import deque
 from itertools import chain
-from typing import Tuple, Set, Optional, Dict, Hashable, Union, Iterable, List, Sized, Callable
+from typing import Tuple, Set, Optional, Dict, Hashable, Union, Iterable, List, Sized
 
 from BaseClasses import CollectionState
 from .explanation import RuleExplanation
@@ -40,29 +40,25 @@ class CombinableStardewRule(BaseStardewRule, ABC):
     def value(self):
         ...
 
-    def add_into(self, rules: Dict[Hashable, CombinableStardewRule], reducer: Callable[[CombinableStardewRule, CombinableStardewRule], CombinableStardewRule]) \
-            -> Dict[Hashable, CombinableStardewRule]:
-        rules = dict(rules)
-
-        if self.combination_key in rules:
-            rules[self.combination_key] = reducer(self, rules[self.combination_key])
-        else:
-            rules[self.combination_key] = self
-
-        return rules
-
     def is_same_rule(self, other: CombinableStardewRule):
         return self.combination_key == other.combination_key
 
+    def max(self, other: CombinableStardewRule) -> CombinableStardewRule:
+        return max(self, other, key=lambda x: x.value)
+
     def __and__(self, other):
-        # It is so weird that we have to delegate to and/or here...
         if isinstance(other, CombinableStardewRule) and self.is_same_rule(other):
-            return And.combine(self, other)
+            return self.max(other)
+
         return super().__and__(other)
+
+    def min(self, other: CombinableStardewRule) -> CombinableStardewRule:
+        return min(self, other, key=lambda x: x.value)
 
     def __or__(self, other):
         if isinstance(other, CombinableStardewRule) and self.is_same_rule(other):
-            return Or.combine(self, other)
+            return self.min(other)
+
         return super().__or__(other)
 
 
@@ -225,6 +221,17 @@ class AggregatingStardewRule(BaseStardewRule, ABC):
 
         return reduced_rules
 
+    @classmethod
+    def add_into(cls, rule: CombinableStardewRule, rules: Dict[Hashable, CombinableStardewRule]) -> Dict[Hashable, CombinableStardewRule]:
+        rules = dict(rules)
+
+        if rule.combination_key in rules:
+            rules[rule.combination_key] = cls.combine(rule, rules[rule.combination_key])
+        else:
+            rules[rule.combination_key] = rule
+
+        return rules
+
     @staticmethod
     @abstractmethod
     def combine(left: CombinableStardewRule, right: CombinableStardewRule) -> CombinableStardewRule:
@@ -349,7 +356,7 @@ class Or(AggregatingStardewRule):
             return other | self
 
         if isinstance(other, CombinableStardewRule):
-            return Or(_combinable_rules=other.add_into(self.combinable_rules, self.combine), _simplification_state=self.simplification_state)
+            return Or(_combinable_rules=self.add_into(other, self.combinable_rules), _simplification_state=self.simplification_state)
 
         if type(other) is Or:
             return Or(_combinable_rules=self.merge(self.combinable_rules, other.combinable_rules),
@@ -359,7 +366,7 @@ class Or(AggregatingStardewRule):
 
     @staticmethod
     def combine(left: CombinableStardewRule, right: CombinableStardewRule) -> CombinableStardewRule:
-        return min(left, right, key=lambda x: x.value)
+        return left.min(right)
 
     def get_difficulty(self):
         return min(rule.get_difficulty() for rule in self.original_rules)
@@ -378,7 +385,7 @@ class And(AggregatingStardewRule):
             return other & self
 
         if isinstance(other, CombinableStardewRule):
-            return And(_combinable_rules=other.add_into(self.combinable_rules, self.combine), _simplification_state=self.simplification_state)
+            return And(_combinable_rules=self.add_into(other, self.combinable_rules), _simplification_state=self.simplification_state)
 
         if type(other) is And:
             return And(_combinable_rules=self.merge(self.combinable_rules, other.combinable_rules),
@@ -388,7 +395,7 @@ class And(AggregatingStardewRule):
 
     @staticmethod
     def combine(left: CombinableStardewRule, right: CombinableStardewRule) -> CombinableStardewRule:
-        return max(left, right, key=lambda x: x.value)
+        return left.max(right)
 
     def get_difficulty(self):
         return max(rule.get_difficulty() for rule in self.original_rules)
