@@ -14,13 +14,12 @@ class ExplainableRule(Protocol):
     def __call__(self, state: CollectionState) -> bool:
         ...
 
-    def explain(self, state: CollectionState, expected=True) -> StardewRuleExplanation:
-        return StardewRuleExplanation(self, state, expected)
+    def explain(self, state: CollectionState, expected=True) -> RuleExplanation:
+        return RuleExplanation(self, state, expected)
 
 
-# TODO rename
 @dataclass
-class StardewRuleExplanation:
+class RuleExplanation:
     rule: ExplainableRule
     state: CollectionState
     expected: bool
@@ -33,7 +32,7 @@ class StardewRuleExplanation:
         if not self.sub_rules:
             return self.summary(depth)
 
-        return self.summary(depth) + "\n" + "\n".join(StardewRuleExplanation.__str__(i, depth + 1)
+        return self.summary(depth) + "\n" + "\n".join(RuleExplanation.__str__(i, depth + 1)
                                                       if i.result is not self.expected else i.summary(depth + 1)
                                                       for i in sorted(self.explained_sub_rules, key=lambda x: x.result))
 
@@ -41,7 +40,7 @@ class StardewRuleExplanation:
         if not self.sub_rules:
             return self.summary(depth)
 
-        return self.summary(depth) + "\n" + "\n".join(StardewRuleExplanation.__repr__(i, depth + 1)
+        return self.summary(depth) + "\n" + "\n".join(RuleExplanation.__repr__(i, depth + 1)
                                                       for i in sorted(self.explained_sub_rules, key=lambda x: x.result))
 
     @cached_property

@@ -3,7 +3,7 @@ from typing import Hashable, Tuple, Iterable, List, Union
 
 from BaseClasses import ItemClassification, CollectionState
 from .base import CombinableStardewRule, BaseStardewRule, And, Or
-from .explanation import StardewRuleExplanation
+from .explanation import RuleExplanation
 from .protocol import StardewRule
 from ..items import item_table
 
@@ -98,7 +98,7 @@ class Reach(BaseStardewRule):
     def get_difficulty(self):
         return 1
 
-    def explain(self, state: CollectionState, expected=True) -> StardewRuleExplanation:
+    def explain(self, state: CollectionState, expected=True) -> RuleExplanation:
         if self.resolution_hint == 'Location':
             spot = state.multiworld.get_location(self.spot, self.player)
             access_rule = spot.access_rule
@@ -112,9 +112,9 @@ class Reach(BaseStardewRule):
             access_rule = Or(*(Reach(e.name, "Entrance", self.player) for e in spot.entrances))
 
         if not isinstance(access_rule, StardewRule):
-            return StardewRuleExplanation(self, state, expected)
+            return RuleExplanation(self, state, expected)
 
-        return StardewRuleExplanation(self, state, expected, [access_rule])
+        return RuleExplanation(self, state, expected, [access_rule])
 
 
 class TotalReceived(BaseStardewRule):
@@ -150,8 +150,8 @@ class TotalReceived(BaseStardewRule):
     def evaluate_while_simplifying(self, state: CollectionState) -> Tuple[StardewRule, bool]:
         return self, self(state)
 
-    def explain(self, state: CollectionState, expected=True) -> StardewRuleExplanation:
-        return StardewRuleExplanation(self, state, expected, [Received(i, self.player, 1) for i in self.items])
+    def explain(self, state: CollectionState, expected=True) -> RuleExplanation:
+        return RuleExplanation(self, state, expected, [Received(i, self.player, 1) for i in self.items])
 
     def get_difficulty(self):
         return self.count

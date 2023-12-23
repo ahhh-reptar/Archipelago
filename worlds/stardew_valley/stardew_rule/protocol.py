@@ -7,7 +7,6 @@ from BaseClasses import CollectionState
 from .explanation import ExplainableRule
 
 
-# TODO rename
 @runtime_checkable
 class StardewRule(ExplainableRule, Protocol):
 

@@ -6,7 +6,7 @@ from itertools import chain
 from typing import Tuple, Set, Optional, Dict, Hashable, Union, Iterable, List, Sized, Callable
 
 from BaseClasses import CollectionState
-from .explanation import StardewRuleExplanation
+from .explanation import RuleExplanation
 from .literal import LiteralStardewRule, false_, true_
 from .protocol import StardewRule
 
@@ -81,8 +81,8 @@ class Has(BaseStardewRule):
     def evaluate_while_simplifying(self, state: CollectionState) -> Tuple[StardewRule, bool]:
         return self.other_rules[self.item].evaluate_while_simplifying(state)
 
-    def explain(self, state: CollectionState, expected=True) -> StardewRuleExplanation:
-        return StardewRuleExplanation(self, state, expected, [self.other_rules[self.item]])
+    def explain(self, state: CollectionState, expected=True) -> RuleExplanation:
+        return RuleExplanation(self, state, expected, [self.other_rules[self.item]])
 
     def get_difficulty(self):
         return self.other_rules[self.item].get_difficulty() + 1
@@ -332,8 +332,8 @@ class AggregatingStardewRule(BaseStardewRule, ABC):
     def __hash__(self):
         return hash((id(self.combinable_rules), self.simplification_state.original_simplifiable_rules))
 
-    def explain(self, state: CollectionState, expected=True) -> StardewRuleExplanation:
-        return StardewRuleExplanation(self, state, expected, self.original_rules)
+    def explain(self, state: CollectionState, expected=True) -> RuleExplanation:
+        return RuleExplanation(self, state, expected, self.original_rules)
 
 
 class Or(AggregatingStardewRule):
@@ -436,8 +436,8 @@ class Count(BaseStardewRule):
     def __call__(self, state: CollectionState) -> bool:
         return self.evaluate_while_simplifying(state)[1]
 
-    def explain(self, state: CollectionState, expected=True) -> StardewRuleExplanation:
-        return StardewRuleExplanation(self, state, expected, self.rules)
+    def explain(self, state: CollectionState, expected=True) -> RuleExplanation:
+        return RuleExplanation(self, state, expected, self.rules)
 
     def get_difficulty(self):
         self.rules = sorted(self.rules, key=lambda x: x.get_difficulty())
