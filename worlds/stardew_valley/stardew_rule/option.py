@@ -1,22 +1,17 @@
 from abc import ABC
 from dataclasses import dataclass
-from typing import Tuple, Mapping, Type
+from typing import Tuple, Mapping
 
 from BaseClasses import CollectionState, ItemClassification
 from .base import BaseStardewRule
 from .protocol import StardewRule, PlayerWorldContext
 from .state import Received
 from ..items import item_table
-from ..options import StardewValleyOption
 
 
 @dataclass(frozen=True)
 class BaseOptionRule(BaseStardewRule, ABC):
-    option: Type[StardewValleyOption]
-
-    @property
-    def option_name(self):
-        return self.option.internal_name
+    option_name: str
 
 
 @dataclass(frozen=True)
@@ -58,7 +53,10 @@ class OptionReceived(BaseOptionRule):
         return simplified, simplified(state, context)
 
     def __repr__(self):
-        return f"Received [Options {self.option.display_name}] {self.item}"
+        return f"Received [Option {self.option_name}] {self.item}"
 
     def get_difficulty(self, context: PlayerWorldContext):
         return context.get_option_value(self.option_name)
+
+    def __hash__(self):
+        return hash(self.item)

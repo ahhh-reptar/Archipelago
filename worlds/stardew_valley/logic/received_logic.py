@@ -1,9 +1,7 @@
-from typing import Union, Optional, Tuple, Type
+from typing import Union, Optional, Tuple
 
 from .base_logic import BaseLogic
-from ..options import StardewValleyOption
 from ..stardew_rule import StardewRule, True_, Received, And, Or, TotalReceived
-from ..stardew_rule.option import OptionReceived
 
 
 class ReceivedLogicMixin(BaseLogic[None]):
@@ -23,7 +21,3 @@ class ReceivedLogicMixin(BaseLogic[None]):
             return Or(*(self.received(item) for item in items))
 
         return TotalReceived(count, items)
-
-    @staticmethod
-    def option_received(item: str, option: Type[StardewValleyOption]) -> StardewRule:
-        return OptionReceived(option, item)  # noqa
