@@ -1,11 +1,12 @@
 from types import MappingProxyType
-from typing import Type, Mapping, Any
+from typing import Type, Mapping, Any, Union, Optional
 
 from BaseClasses import ItemClassification
+from Options import Choice
 from .base_logic import BaseLogic, BaseLogicMixin
 from ..items import item_table
 from ..options import StardewValleyOption
-from ..stardew_rule import StardewRule, ChoiceOptionRule, OptionReceived
+from ..stardew_rule import StardewRule, ChooseOptionRule, OptionReceived, BinaryChoiceOptionRule
 
 
 class OptionLogicMixin(BaseLogicMixin):
@@ -17,8 +18,17 @@ class OptionLogicMixin(BaseLogicMixin):
 class OptionLogic(BaseLogic[None]):
 
     @staticmethod
-    def choose(option: Type[StardewValleyOption], choices: Mapping[Any, StardewRule]):
-        return ChoiceOptionRule(option.internal_name, MappingProxyType(choices))
+    def choose(option: Union[Type[StardewValleyOption], Choice], /, *, choices: Mapping[Any, StardewRule], default: Optional[StardewRule] = None):
+        if not default:
+            for value_name, value_value in option.options.items():
+                assert value_value in choices.keys(), \
+                    f"All possible value must be supplied in 'choices' when there is no default, a choice for [{value_name}] is missing."
+
+        return ChooseOptionRule(option.internal_name, default, MappingProxyType(choices))
+
+    @staticmethod
+    def binary_choice(option: Type[StardewValleyOption], /, *, value: int, match: StardewRule, no_match: StardewRule):
+        return BinaryChoiceOptionRule(option.internal_name, value, match, no_match)
 
     @staticmethod
     def received(option: Type[StardewValleyOption], item: str) -> StardewRule:

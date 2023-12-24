@@ -4,17 +4,17 @@ from Utils import cache_self1
 from .base_logic import BaseLogic, BaseLogicMixin
 from .has_logic import HasLogicMixin
 from .money_logic import MoneyLogicMixin
+from .option_logic import OptionLogicMixin
 from .received_logic import ReceivedLogicMixin
 from .region_logic import RegionLogicMixin
 from ..options import BuildingProgression
-from ..stardew_rule import StardewRule, True_, False_, Has
+from ..stardew_rule import StardewRule, True_, False_, Has, true_
 from ..strings.ap_names.event_names import Event
 from ..strings.artisan_good_names import ArtisanGood
 from ..strings.building_names import Building
 from ..strings.fish_names import WaterItem
 from ..strings.material_names import Material
 from ..strings.metal_names import MetalBar
-from ..strings.region_names import Region
 
 
 class BuildingLogicMixin(BaseLogicMixin):
@@ -23,7 +23,7 @@ class BuildingLogicMixin(BaseLogicMixin):
         self.building = BuildingLogic(*args, **kwargs)
 
 
-class BuildingLogic(BaseLogic[Union[BuildingLogicMixin, MoneyLogicMixin, RegionLogicMixin, ReceivedLogicMixin, HasLogicMixin]]):
+class BuildingLogic(BaseLogic[Union[BuildingLogicMixin, MoneyLogicMixin, RegionLogicMixin, ReceivedLogicMixin, HasLogicMixin, OptionLogicMixin]]):
     def initialize_rules(self):
         self.registry.building_rules.update({
             # @formatter:off
@@ -55,9 +55,7 @@ class BuildingLogic(BaseLogic[Union[BuildingLogicMixin, MoneyLogicMixin, RegionL
     def has_building(self, building: str) -> StardewRule:
         # Shipping bin is special. The mod auto-builds it when received, no need to go to Robin.
         if building is Building.shipping_bin:
-            if not self.options.building_progression & BuildingProgression.option_progressive:
-                return True_()
-            return self.logic.received(f"{building}")
+            return self.has_shipping_bin()
 
         carpenter_rule = self.logic.received(Event.can_construct_buildings)
         if not self.options.building_progression & BuildingProgression.option_progressive:
@@ -73,6 +71,12 @@ class BuildingLogic(BaseLogic[Union[BuildingLogicMixin, MoneyLogicMixin, RegionL
             count = 3
             building = " ".join(["Progressive", *building.split(" ")[1:]])
         return self.logic.received(f"{building}", count) & carpenter_rule
+
+    def has_shipping_bin(self):
+        return self.logic.option.binary_choice(BuildingProgression,
+                                               value=BuildingProgression.option_progressive,
+                                               match=self.logic.received(Building.shipping_bin),
+                                               no_match=true_)
 
     @cache_self1
     def has_house(self, upgrade_level: int) -> StardewRule:

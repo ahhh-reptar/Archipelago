@@ -1,6 +1,6 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Tuple, Mapping
+from typing import Tuple, Mapping, Optional, Union, Set
 
 from BaseClasses import CollectionState
 from .base import BaseStardewRule
@@ -12,14 +12,12 @@ from .state import Received
 class BaseOptionRule(BaseStardewRule, ABC):
     option_name: str
 
+    def get_option_value(self, context: PlayerWorldContext) -> Union[int, str, Set[str]]:
+        return context.get_option_value(self.option_name)
 
-@dataclass(frozen=True)
-class ChoiceOptionRule(BaseOptionRule):
-    choices: Mapping[int, StardewRule]
-
-    def choose_rule(self, context: PlayerWorldContext):
-        option_value = context.get_option_value(self.option_name)
-        return self.choices[option_value]
+    @abstractmethod
+    def choose_rule(self, context: PlayerWorldContext) -> StardewRule:
+        ...
 
     def __call__(self, state: CollectionState, context: PlayerWorldContext) -> bool:
         return self.choose_rule(context)(state, context)
@@ -30,28 +28,43 @@ class ChoiceOptionRule(BaseOptionRule):
     def get_difficulty(self, context: PlayerWorldContext):
         return self.choose_rule(context).get_difficulty(context)
 
-    def __hash__(self):
-        return id(self.choices)
-
     # TODO implement explanation
+
+
+@dataclass(frozen=True)
+class ChooseOptionRule(BaseOptionRule):
+    default: Optional[StardewRule]
+    choices: Mapping[int, StardewRule]
+
+    def choose_rule(self, context: PlayerWorldContext) -> StardewRule:
+        try:
+            return self.choices[self.get_option_value(context)]
+        except KeyError:
+            return self.default
+
+    def __hash__(self):
+        return hash((self.option_name, self.default, id(self.choices)))
+
+
+@dataclass(frozen=True)
+class BinaryChoiceOptionRule(BaseOptionRule):
+    binary_value: int
+    match: StardewRule
+    no_match: StardewRule
+
+    def choose_rule(self, context: PlayerWorldContext):
+        if self.get_option_value(context) & self.binary_value:
+            return self.match
+        else:
+            return self.no_match
 
 
 @dataclass(frozen=True)
 class OptionReceived(BaseOptionRule):
     item: str
 
-    def __call__(self, state: CollectionState, context: PlayerWorldContext) -> bool:
-        return state.has(self.item, context.player, context.get_option_value(self.option_name))
-
-    def evaluate_while_simplifying(self, state: CollectionState, context: PlayerWorldContext) -> Tuple[StardewRule, bool]:
-        simplified = Received(self.item, context.get_option_value(self.option_name))
-        return simplified, simplified(state, context)
+    def choose_rule(self, context: PlayerWorldContext) -> StardewRule:
+        return Received(self.item, context.get_option_value(self.option_name))
 
     def __repr__(self):
         return f"Received [Option {self.option_name}] {self.item}"
-
-    def get_difficulty(self, context: PlayerWorldContext):
-        return context.get_option_value(self.option_name)
-
-    def __hash__(self):
-        return hash(self.item)

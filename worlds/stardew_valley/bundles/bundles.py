@@ -7,11 +7,11 @@ from ..data.bundle_data import pantry_vanilla, crafts_room_vanilla, fish_tank_va
     crafts_room_remixed, fish_tank_remixed, boiler_room_remixed, bulletin_board_remixed, vault_remixed, all_bundle_items_except_money, \
     abandoned_joja_mart_thematic, abandoned_joja_mart_vanilla, abandoned_joja_mart_remixed
 from ..logic.logic import StardewLogic
+from ..multi_world_adapter import PlayerMultiWorldAdapter
 from ..options import BundleRandomization, StardewValleyOptions, ExcludeGingerIsland
-from ..stardew_rule.protocol import PlayerWorldContext
 
 
-def get_all_bundles(random: Random, logic: StardewLogic, world: PlayerWorldContext) -> List[BundleRoom]:
+def get_all_bundles(random: Random, logic: StardewLogic, world: PlayerMultiWorldAdapter) -> List[BundleRoom]:
     if world.options.bundle_randomization == BundleRandomization.option_vanilla:
         return get_vanilla_bundles(random, world.options)
     elif world.options.bundle_randomization == BundleRandomization.option_thematic:
@@ -60,7 +60,7 @@ def get_remixed_bundles(random: Random, options: StardewValleyOptions) -> List[B
     return [pantry, crafts_room, fish_tank, boiler_room, bulletin_board, vault, abandoned_joja_mart]
 
 
-def get_shuffled_bundles(random: Random, logic: StardewLogic, world: PlayerWorldContext) -> List[BundleRoom]:
+def get_shuffled_bundles(random: Random, logic: StardewLogic, world: PlayerMultiWorldAdapter) -> List[BundleRoom]:
     allow_island = world.options.exclude_ginger_island == ExcludeGingerIsland.option_false
     valid_bundle_items = [bundle_item for bundle_item in all_bundle_items_except_money if allow_island or not bundle_item.requires_island]
 

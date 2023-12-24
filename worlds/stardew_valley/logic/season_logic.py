@@ -26,12 +26,10 @@ class SeasonLogic(BaseLogic[Union[SeasonLogicMixin, TimeLogicMixin, ReceivedLogi
         if season == Generic.any:
             return True_()
 
-        return self.logic.option.choose(SeasonRandomization, {
+        return self.logic.option.choose(SeasonRandomization, choices={
             SeasonRandomization.option_disabled: True_() if season == Season.spring else self.logic.time.has_lived_months(1),
             SeasonRandomization.option_progressive: self.logic.received(Season.progressive, seasons_order.index(season)),
-            SeasonRandomization.option_randomized: self.logic.received(season),
-            SeasonRandomization.option_randomized_not_winter: self.logic.received(season),
-        })
+        }, default=self.logic.received(season))
 
     def has_any(self, seasons: Iterable[str]):
         if not seasons:

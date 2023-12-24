@@ -2,7 +2,7 @@ from typing import Union, Optional, Tuple
 
 from BaseClasses import ItemClassification
 from .base_logic import BaseLogic
-from .. import item_table
+from ..items import item_table
 from ..stardew_rule import StardewRule, True_, Received, And, Or, TotalReceived
 
 
