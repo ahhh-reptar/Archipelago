@@ -101,7 +101,7 @@ class StardewValleyWorld(World):
         self.logic = StardewLogic(self.player, self.options)
         self.modified_bundles = get_all_bundles(self.multiworld.random,
                                                 self.logic,
-                                                self.options)
+                                                self.multi_world_adapter)
 
     def force_change_options_if_incompatible(self):
         goal_is_walnut_hunter = self.options.goal == Goal.option_greatest_walnut_hunter

@@ -37,7 +37,7 @@ class Received(CombinableStardewRule):
             return f"Received {self.item}"
         return f"Received {self.count} {self.item}"
 
-    def get_difficulty(self):
+    def get_difficulty(self, *_):
         return self.count
 
 
@@ -76,7 +76,7 @@ class HasProgressionPercent(CombinableStardewRule):
     def __repr__(self):
         return f"HasProgressionPercent {self.percent}"
 
-    def get_difficulty(self):
+    def get_difficulty(self, *_):
         return self.percent
 
 
@@ -95,7 +95,7 @@ class Reach(BaseStardewRule):
     def __repr__(self):
         return f"Reach {self.resolution_hint} {self.spot}"
 
-    def get_difficulty(self):
+    def get_difficulty(self, *_):
         return 1
 
     def explain(self, state: CollectionState, context: PlayerWorldContext, expected=True) -> RuleExplanation:
@@ -153,7 +153,7 @@ class TotalReceived(BaseStardewRule):
     def explain(self, state: CollectionState, context: PlayerWorldContext, expected=True) -> RuleExplanation:
         return RuleExplanation(self, state, context, expected, [Received(i, self.player, 1) for i in self.items])
 
-    def get_difficulty(self):
+    def get_difficulty(self, *_):
         return self.count
 
     def __repr__(self):

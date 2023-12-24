@@ -78,10 +78,10 @@ class Has(BaseStardewRule):
         return self.other_rules[self.item].evaluate_while_simplifying(state, *args)
 
     def explain(self, state: CollectionState, *args, expected=True) -> RuleExplanation:
-        return RuleExplanation(self, state, *args, expected, [self.other_rules[self.item]])
+        return RuleExplanation(self, state, *args, expected=expected, sub_rules=[self.other_rules[self.item]])
 
-    def get_difficulty(self):
-        return self.other_rules[self.item].get_difficulty() + 1
+    def get_difficulty(self, *args):
+        return self.other_rules[self.item].get_difficulty(*args) + 1
 
     def __str__(self):
         if self.item not in self.other_rules:
@@ -340,7 +340,7 @@ class AggregatingStardewRule(BaseStardewRule, ABC):
         return hash((id(self.combinable_rules), self.simplification_state.original_simplifiable_rules))
 
     def explain(self, state: CollectionState, *args, expected=True) -> RuleExplanation:
-        return RuleExplanation(self, state, *args, expected, self.original_rules)
+        return RuleExplanation(self, state, *args, expected=expected, sub_rules=self.original_rules)
 
 
 class Or(AggregatingStardewRule):
@@ -368,8 +368,8 @@ class Or(AggregatingStardewRule):
     def combine(left: CombinableStardewRule, right: CombinableStardewRule) -> CombinableStardewRule:
         return left.min(right)
 
-    def get_difficulty(self):
-        return min(rule.get_difficulty() for rule in self.original_rules)
+    def get_difficulty(self, *args):
+        return min(rule.get_difficulty(*args) for rule in self.original_rules)
 
 
 class And(AggregatingStardewRule):
@@ -397,8 +397,8 @@ class And(AggregatingStardewRule):
     def combine(left: CombinableStardewRule, right: CombinableStardewRule) -> CombinableStardewRule:
         return left.max(right)
 
-    def get_difficulty(self):
-        return max(rule.get_difficulty() for rule in self.original_rules)
+    def get_difficulty(self, *args):
+        return max(rule.get_difficulty(*args) for rule in self.original_rules)
 
 
 class Count(BaseStardewRule):
@@ -446,11 +446,11 @@ class Count(BaseStardewRule):
     def explain(self, state: CollectionState, *args, expected=True) -> RuleExplanation:
         return RuleExplanation(self, state, *args, expected=expected, sub_rules=self.rules)
 
-    def get_difficulty(self):
+    def get_difficulty(self, *args):
         self.rules = sorted(self.rules, key=lambda x: x.get_difficulty())
         # In an optimal situation, all the simplest rules will be true. Since the rules are sorted, we know that the most difficult rule we might have to do
         # is the one at the "self.count".
-        return self.rules[self.count - 1].get_difficulty()
+        return self.rules[self.count - 1].get_difficulty(*args)
 
     def __repr__(self):
         return f"Received {self.count} {repr(self.rules)}"

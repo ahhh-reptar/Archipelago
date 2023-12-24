@@ -25,7 +25,7 @@ class SeasonLogic(BaseLogic[Union[SeasonLogicMixin, TimeLogicMixin, ReceivedLogi
         if season == Generic.any:
             return True_()
 
-        return ChoiceOptionRule(self.options.season_randomization, {
+        return ChoiceOptionRule(SeasonRandomization, {
             SeasonRandomization.option_disabled: True_() if season == Season.spring else self.logic.time.has_lived_months(1),
             SeasonRandomization.option_progressive: self.logic.received(Season.progressive, seasons_order.index(season)),
             SeasonRandomization.option_randomized: self.logic.received(season),
