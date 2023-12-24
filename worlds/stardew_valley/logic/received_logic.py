@@ -1,6 +1,8 @@
 from typing import Union, Optional, Tuple
 
+from BaseClasses import ItemClassification
 from .base_logic import BaseLogic
+from .. import item_table
 from ..stardew_rule import StardewRule, True_, Received, And, Or, TotalReceived
 
 
@@ -12,6 +14,7 @@ class ReceivedLogicMixin(BaseLogic[None]):
             return True_()
 
         if isinstance(items, str):
+            assert item_table[items].classification & ItemClassification.progression, f"Item [{items}] has to be progression to be used in logic"
             return Received(items, count)
 
         if count is None:

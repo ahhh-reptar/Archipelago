@@ -2,11 +2,10 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import Tuple, Mapping
 
-from BaseClasses import CollectionState, ItemClassification
+from BaseClasses import CollectionState
 from .base import BaseStardewRule
 from .protocol import StardewRule, PlayerWorldContext
 from .state import Received
-from ..items import item_table
 
 
 @dataclass(frozen=True)
@@ -40,10 +39,6 @@ class ChoiceOptionRule(BaseOptionRule):
 @dataclass(frozen=True)
 class OptionReceived(BaseOptionRule):
     item: str
-
-    def __post_init__(self):
-        assert item_table[self.item].classification & ItemClassification.progression, \
-            f"Item [{item_table[self.item].name}] has to be progression to be used in logic"
 
     def __call__(self, state: CollectionState, context: PlayerWorldContext) -> bool:
         return state.has(self.item, context.player, context.get_option_value(self.option_name))

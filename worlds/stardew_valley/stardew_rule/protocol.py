@@ -5,7 +5,6 @@ from typing import Tuple, Protocol, runtime_checkable, Union, Set
 
 from BaseClasses import CollectionState
 from .explanation import ExplainableRule
-from ..options import StardewValleyOptions
 
 
 class PlayerWorldContext(Protocol):
@@ -13,12 +12,11 @@ class PlayerWorldContext(Protocol):
     Offers a read only view on the multi world, from the player perspective.
     """
     player: int
-    options: StardewValleyOptions
 
     # Maybe add starting inventory
 
     def get_option_value(self, option: str) -> Union[int, str, Set[str]]:
-        return self.options.get_value_of(option).value
+        ...
 
 
 @runtime_checkable

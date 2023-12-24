@@ -1,7 +1,9 @@
 from types import MappingProxyType
 from typing import Type, Mapping, Any
 
+from BaseClasses import ItemClassification
 from .base_logic import BaseLogic, BaseLogicMixin
+from ..items import item_table
 from ..options import StardewValleyOption
 from ..stardew_rule import StardewRule, ChoiceOptionRule, OptionReceived
 
@@ -19,5 +21,6 @@ class OptionLogic(BaseLogic[None]):
         return ChoiceOptionRule(option.internal_name, MappingProxyType(choices))
 
     @staticmethod
-    def received(item: str, option: Type[StardewValleyOption]) -> StardewRule:
+    def received(option: Type[StardewValleyOption], item: str) -> StardewRule:
+        assert item_table[item].classification & ItemClassification.progression, f"Item [{item}] has to be progression to be used in logic"
         return OptionReceived(option.internal_name, item)

@@ -13,10 +13,6 @@ class Received(CombinableStardewRule):
     item: str
     count: int
 
-    def __post_init__(self):
-        assert item_table[self.item].classification & ItemClassification.progression, \
-            f"Item [{item_table[self.item].name}] has to be progression to be used in logic"
-
     @property
     def combination_key(self) -> Hashable:
         return self.item

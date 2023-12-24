@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Iterable
+from typing import Iterable, Union, Set
 
 from BaseClasses import MultiWorld, Entrance, Location, CollectionState
 from worlds.generic import Rules as MultiWorldRules
@@ -63,3 +63,6 @@ class PlayerMultiWorldAdapter(PlayerWorldContext):
 
     def has_mod(self, name: str) -> bool:
         return name in self.options.mods
+
+    def get_option_value(self, option: str) -> Union[int, str, Set[str]]:
+        return self.options.get_value_of(option).value

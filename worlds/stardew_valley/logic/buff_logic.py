@@ -19,7 +19,7 @@ class BuffLogic(BaseLogic[Union[ReceivedLogicMixin, OptionLogicMixin]]):
         return self.has_max_speed() & self.has_max_luck()
 
     def has_max_speed(self) -> StardewRule:
-        return self.logic.option.received(Buff.movement, NumberOfMovementBuffs)
+        return self.logic.option.received(NumberOfMovementBuffs, Buff.movement)
 
     def has_max_luck(self) -> StardewRule:
-        return self.logic.option.received(Buff.luck, NumberOfLuckBuffs)
+        return self.logic.option.received(NumberOfLuckBuffs, Buff.luck)
