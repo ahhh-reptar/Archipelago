@@ -1,8 +1,12 @@
 from dataclasses import dataclass
-from typing import Dict
+from typing import Type, Protocol, Any
 
-from Options import Range, NamedRange, Toggle, Choice, OptionSet, PerGameCommonOptions, DeathLink, Option
+from Options import Range, NamedRange, Toggle, Choice, OptionSet, PerGameCommonOptions, DeathLink
 from .mods.mod_data import ModNames
+
+
+class StardewValleyOption(Protocol):
+    internal_name: str
 
 
 class Goal(Choice):
@@ -717,3 +721,6 @@ class StardewValleyOptions(PerGameCommonOptions):
     gifting: Gifting
     mods: Mods
     death_link: DeathLink
+
+    def get_value_of(self, option: Type[StardewValleyOption]) -> Any:
+        return self.__getattribute__(option.internal_name)

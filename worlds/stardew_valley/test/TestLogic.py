@@ -2,7 +2,8 @@ import unittest
 
 from . import setup_solo_multiworld, allsanity_options_with_mods
 from ..data.bundle_data import all_bundle_items_except_money
-from ..stardew_rule import MISSING_ITEM, False_
+from ..stardew_rule import False_
+from ..stardew_rule.base import MISSING_ITEM
 
 multi_world = setup_solo_multiworld(allsanity_options_with_mods())
 world = multi_world.worlds[1]

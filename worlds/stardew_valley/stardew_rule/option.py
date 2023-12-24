@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict, Tuple
+from typing import Tuple, Mapping
 
 from BaseClasses import CollectionState
 from Options import Choice
@@ -10,7 +10,7 @@ from .protocol import StardewRule
 @dataclass(frozen=True)
 class ChoiceOptionRule(BaseStardewRule):
     option: Choice
-    choices: Dict[int, StardewRule]
+    choices: Mapping[int, StardewRule]
 
     def __call__(self, state: CollectionState) -> bool:
         return self.choices[self.option.value](state)
@@ -20,3 +20,6 @@ class ChoiceOptionRule(BaseStardewRule):
 
     def get_difficulty(self):
         return self.choices[self.option.value].get_difficulty()
+
+    def __hash__(self):
+        return id(self.choices)

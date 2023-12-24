@@ -1,3 +1,4 @@
+# FIXME this should be an enum
 class ModNames:
     vanilla = None
     deepwoods = "DeepWoods"

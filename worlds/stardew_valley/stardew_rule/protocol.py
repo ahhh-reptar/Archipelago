@@ -4,17 +4,12 @@ from abc import abstractmethod
 from typing import Tuple, Protocol, runtime_checkable
 
 from BaseClasses import CollectionState
+from worlds.generic.Rules import CollectionRule
 from .explanation import ExplainableRule
 
 
-class APRule(Protocol):
-    @abstractmethod
-    def __call__(self, state: CollectionState) -> bool:
-        ...
-
-
 @runtime_checkable
-class StardewRule(APRule, ExplainableRule, Protocol):
+class StardewRule(CollectionRule, ExplainableRule, Protocol):
 
     @abstractmethod
     def __or__(self, other) -> StardewRule:
