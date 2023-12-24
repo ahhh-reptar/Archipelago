@@ -4,17 +4,25 @@ from Utils import cache_self1
 from .base_logic import BaseLogicMixin, BaseLogic
 from .buff_logic import BuffLogicMixin
 from .has_logic import HasLogicMixin
+from .option_logic import OptionLogicMixin
 from .received_logic import ReceivedLogicMixin
 from .region_logic import RegionLogicMixin
 from .time_logic import TimeLogicMixin
-from ..options import SpecialOrderLocations
+from .. import options
 from ..stardew_rule import StardewRule, True_, HasProgressionPercent, False_
 from ..strings.ap_names.event_names import Event
 from ..strings.currency_names import Currency
 from ..strings.region_names import Region
 
+default_required_qi_gem_rewards_to_trade = 2
+
 qi_gem_rewards = ("100 Qi Gems", "50 Qi Gems", "40 Qi Gems", "35 Qi Gems", "25 Qi Gems",
                   "20 Qi Gems", "15 Qi Gems", "10 Qi Gems")
+
+
+def calculate_number_rewards_to_trade_qi_gems_for_special_order_board_qi(qi_gems_amount):
+    number_rewards = min(len(qi_gem_rewards), max(1, (qi_gems_amount // 10)))
+    return number_rewards
 
 
 class MoneyLogicMixin(BaseLogicMixin):
@@ -23,7 +31,8 @@ class MoneyLogicMixin(BaseLogicMixin):
         self.money = MoneyLogic(*args, **kwargs)
 
 
-class MoneyLogic(BaseLogic[Union[RegionLogicMixin, MoneyLogicMixin, TimeLogicMixin, RegionLogicMixin, ReceivedLogicMixin, HasLogicMixin, BuffLogicMixin]]):
+class MoneyLogic(BaseLogic[Union[RegionLogicMixin, MoneyLogicMixin, TimeLogicMixin, RegionLogicMixin, ReceivedLogicMixin, HasLogicMixin, BuffLogicMixin,
+OptionLogicMixin]]):
 
     @cache_self1
     def can_have_earned_total(self, amount: int) -> StardewRule:
@@ -68,21 +77,26 @@ class MoneyLogic(BaseLogic[Union[RegionLogicMixin, MoneyLogicMixin, TimeLogicMix
     def can_trade(self, currency: str, amount: int) -> StardewRule:
         if amount == 0:
             return True_()
+
         if currency == Currency.money:
-            return self.can_spend(amount)
+            return self.logic.money.can_spend(amount)
+
         if currency == Currency.star_token:
             return self.logic.region.can_reach(Region.fair)
+
         if currency == Currency.qi_coin:
             return self.logic.region.can_reach(Region.casino) & self.logic.buff.has_max_luck()
+
         if currency == Currency.qi_gem:
-            if self.options.special_order_locations == SpecialOrderLocations.option_board_qi:
-                number_rewards = min(len(qi_gem_rewards), max(1, (amount // 10)))
-                return self.logic.received(qi_gem_rewards, number_rewards)
-            number_rewards = 2
-            return self.logic.received(qi_gem_rewards, number_rewards) & self.logic.region.can_reach(Region.qi_walnut_room) & \
-                self.logic.region.can_reach(Region.saloon) & self.can_have_earned_total(5000)
+            board_qi_rule = self.logic.received(qi_gem_rewards, calculate_number_rewards_to_trade_qi_gems_for_special_order_board_qi(amount))
+            return self.logic.option.choose(options.SpecialOrderLocations,
+                                            choices={options.SpecialOrderLocations.option_board_qi: board_qi_rule},
+                                            default=self.logic.received(qi_gem_rewards, default_required_qi_gem_rewards_to_trade) &
+                                                    self.logic.region.can_reach(Region.qi_walnut_room) &
+                                                    self.logic.region.can_reach(Region.saloon) & self.can_have_earned_total(5000))
+
         if currency == Currency.golden_walnut:
-            return self.can_spend_walnut(amount)
+            return self.logic.money.can_spend_walnut(amount)
 
         return self.logic.has(currency) & self.logic.time.has_lived_months(amount)
 

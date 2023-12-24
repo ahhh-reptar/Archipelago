@@ -4,11 +4,12 @@ from Utils import cache_self1
 from .action_logic import ActionLogicMixin
 from .base_logic import BaseLogic, BaseLogicMixin
 from .has_logic import HasLogicMixin
+from .option_logic import OptionLogicMixin
 from .received_logic import ReceivedLogicMixin
 from .region_logic import RegionLogicMixin
 from .. import options
 from ..data.museum_data import MuseumItem, all_museum_items, all_museum_artifacts, all_museum_minerals
-from ..stardew_rule import StardewRule, And, False_, Count, true_
+from ..stardew_rule import StardewRule, And, False_, Count
 from ..strings.region_names import Region
 
 
@@ -18,7 +19,7 @@ class MuseumLogicMixin(BaseLogicMixin):
         self.museum = MuseumLogic(*args, **kwargs)
 
 
-class MuseumLogic(BaseLogic[Union[ReceivedLogicMixin, HasLogicMixin, RegionLogicMixin, ActionLogicMixin, MuseumLogicMixin]]):
+class MuseumLogic(BaseLogic[Union[ReceivedLogicMixin, HasLogicMixin, RegionLogicMixin, ActionLogicMixin, MuseumLogicMixin, OptionLogicMixin]]):
 
     def can_donate_museum_items(self, number: int) -> StardewRule:
         return self.logic.region.can_reach(Region.museum) & self.logic.museum.can_find_museum_items(number)
@@ -67,12 +68,15 @@ class MuseumLogic(BaseLogic[Union[ReceivedLogicMixin, HasLogicMixin, RegionLogic
     def can_complete_museum(self) -> StardewRule:
         rules = [self.logic.region.can_reach(Region.museum)]
 
-        if self.options.museumsanity != options.Museumsanity.option_none:
-            rules.append(self.logic.received("Traveling Merchant Metal Detector", 4))
-
         for donation in all_museum_items:
             rules.append(self.logic.museum.can_find_museum_item(donation))
-        return And(*rules) & self.logic.region.can_reach(Region.museum)
+
+        can_complete_museum_without_metal_detectors = And(*rules)
+        return self.logic.option.choose(options.Museumsanity,
+                                        choices={
+                                            options.Museumsanity.option_none: can_complete_museum_without_metal_detectors,
+                                        },
+                                        default=can_complete_museum_without_metal_detectors & self.logic.received("Traveling Merchant Metal Detector", 4))
 
     def can_donate(self, item: str) -> StardewRule:
         return self.logic.has(item) & self.logic.region.can_reach(Region.museum)

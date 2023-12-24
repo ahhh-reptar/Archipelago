@@ -7,7 +7,7 @@ from .money_logic import MoneyLogicMixin
 from .option_logic import OptionLogicMixin
 from .received_logic import ReceivedLogicMixin
 from .region_logic import RegionLogicMixin
-from ..options import BuildingProgression
+from .. import options
 from ..stardew_rule import StardewRule, True_, Has, true_
 from ..strings.ap_names.event_names import Event
 from ..strings.artisan_good_names import ArtisanGood
@@ -81,8 +81,8 @@ class BuildingLogic(BaseLogic[Union[BuildingLogicMixin, MoneyLogicMixin, RegionL
 
         progressive_building_rule = self.logic.received(*get_progressive_building_item_name(building)) & self.logic.building.has_carpenter_access()
         non_progressive_building_rule = Has(building, self.registry.building_rules) & self.logic.building.has_carpenter_access()
-        return self.logic.option.bitwise_choice(BuildingProgression,
-                                                value=BuildingProgression.option_progressive,
+        return self.logic.option.bitwise_choice(options.BuildingProgression,
+                                                value=options.BuildingProgression.option_progressive,
                                                 match=progressive_building_rule,
                                                 no_match=non_progressive_building_rule)
 
@@ -90,8 +90,8 @@ class BuildingLogic(BaseLogic[Union[BuildingLogicMixin, MoneyLogicMixin, RegionL
         """
         Shipping bin is special. The mod auto-builds it when received, no need to go to Robin.
         """
-        return self.logic.option.bitwise_choice(BuildingProgression,
-                                                value=BuildingProgression.option_progressive,
+        return self.logic.option.bitwise_choice(options.BuildingProgression,
+                                                value=options.BuildingProgression.option_progressive,
                                                 match=self.logic.received(Building.shipping_bin),
                                                 no_match=true_)
 
@@ -104,7 +104,7 @@ class BuildingLogic(BaseLogic[Union[BuildingLogicMixin, MoneyLogicMixin, RegionL
 
         progressive_rule = self.logic.received("Progressive House", upgrade_level) & self.logic.building.has_carpenter_access()
         non_progressive_rule = Has(house_upgrade_by_level[upgrade_level], self.registry.building_rules) & self.logic.building.has_carpenter_access()
-        return self.logic.option.bitwise_choice(BuildingProgression,
-                                                value=BuildingProgression.option_progressive,
+        return self.logic.option.bitwise_choice(options.BuildingProgression,
+                                                value=options.BuildingProgression.option_progressive,
                                                 match=progressive_rule,
                                                 no_match=non_progressive_rule)
