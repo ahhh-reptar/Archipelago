@@ -63,7 +63,7 @@ class TestBaseLocationDependencies(SVTestBase):
         missing_items = []
         missing_items.extend(item_list)
         rule = self.world.logic.region.can_reach_location("Lance's Diamond Wand")
-        self.assertFalse(rule(self.multiworld.state), msg="Has No Items")
+        self.assert_rule_false(rule)
         for item in item_list:
             missing_items.remove(item)
             created_item = self.world.create_item(item)

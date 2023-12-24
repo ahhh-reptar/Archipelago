@@ -9,10 +9,9 @@ from .region_logic import RegionLogicMixin
 from .time_logic import TimeLogicMixin
 from ..options import SpecialOrderLocations
 from ..stardew_rule import StardewRule, True_, HasProgressionPercent, False_
-from ..strings.currency_names import Currency
-from ..strings.machine_names import Machine
-from ..strings.region_names import Region
 from ..strings.ap_names.event_names import Event
+from ..strings.currency_names import Currency
+from ..strings.region_names import Region
 
 qi_gem_rewards = ("100 Qi Gems", "50 Qi Gems", "40 Qi Gems", "35 Qi Gems", "25 Qi Gems",
                   "20 Qi Gems", "15 Qi Gems", "10 Qi Gems")
@@ -53,7 +52,7 @@ class MoneyLogic(BaseLogic[Union[RegionLogicMixin, MoneyLogicMixin, TimeLogicMix
             return shipping_rule & seed_rules
 
         percent_progression_items_needed = min(90, amount // 20000)
-        return shipping_rule & seed_rules & HasProgressionPercent(self.player, percent_progression_items_needed)
+        return shipping_rule & seed_rules & HasProgressionPercent(percent_progression_items_needed)
 
     @cache_self1
     def can_spend(self, amount: int) -> StardewRule:
@@ -81,7 +80,7 @@ class MoneyLogic(BaseLogic[Union[RegionLogicMixin, MoneyLogicMixin, TimeLogicMix
                 return self.logic.received(qi_gem_rewards, number_rewards)
             number_rewards = 2
             return self.logic.received(qi_gem_rewards, number_rewards) & self.logic.region.can_reach(Region.qi_walnut_room) & \
-                   self.logic.region.can_reach(Region.saloon) & self.can_have_earned_total(5000)
+                self.logic.region.can_reach(Region.saloon) & self.can_have_earned_total(5000)
         if currency == Currency.golden_walnut:
             return self.can_spend_walnut(amount)
 

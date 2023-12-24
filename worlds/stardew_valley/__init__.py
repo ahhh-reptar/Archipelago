@@ -273,11 +273,11 @@ class StardewValleyWorld(World):
                                        Event.victory)
         elif self.options.goal == Goal.option_allsanity:
             self.create_event_location(location_table[GoalName.allsanity],
-                                       HasProgressionPercent(self.player, 100),
+                                       HasProgressionPercent(100),
                                        Event.victory)
         elif self.options.goal == Goal.option_perfection:
             self.create_event_location(location_table[GoalName.perfection],
-                                       HasProgressionPercent(self.player, 100),
+                                       HasProgressionPercent(100),
                                        Event.victory)
 
         self.multiworld.completion_condition[self.player] = lambda state: state.has(Event.victory, self.player)

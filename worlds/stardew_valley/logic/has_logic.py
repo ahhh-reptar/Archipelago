@@ -5,11 +5,6 @@ from ..stardew_rule import StardewRule, True_, And, Or, Has, Count
 
 
 class HasLogicMixin(BaseLogic[None]):
-    def __call__(self, *args, **kwargs) -> StardewRule:
-        count = None
-        if len(args) >= 2:
-            count = args[1]
-        return self.has(args[0], count)
 
     # Should be cached
     def has(self, items: Union[str, Tuple[str, ...]], count: Optional[int] = None) -> StardewRule:

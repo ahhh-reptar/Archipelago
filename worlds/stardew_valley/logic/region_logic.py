@@ -34,7 +34,7 @@ class RegionLogic(BaseLogic[RegionLogicMixin]):
         if region_name in always_regions_by_setting[self.options.entrance_randomization]:
             return True_()
 
-        return Reach(region_name, "Region", self.player)
+        return Reach(region_name, "Region")
 
     @cache_self1
     def can_reach_any(self, region_names: Tuple[str, ...]) -> StardewRule:
@@ -54,7 +54,7 @@ class RegionLogic(BaseLogic[RegionLogicMixin]):
 
     @cache_self1
     def can_reach_location(self, location_name: str) -> StardewRule:
-        return Reach(location_name, "Location", self.player)
+        return Reach(location_name, "Location")
 
     # @cache_self1
     # def can_reach_entrance(self, entrance_name: str) -> StardewRule:
