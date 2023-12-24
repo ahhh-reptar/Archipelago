@@ -6,7 +6,7 @@ from Options import Choice
 from .base_logic import BaseLogic, BaseLogicMixin
 from ..items import item_table
 from ..options import StardewValleyOption
-from ..stardew_rule import StardewRule, ChooseOptionRule, OptionReceived, BinaryChoiceOptionRule
+from ..stardew_rule import StardewRule, ChooseOptionRule, OptionReceived, BitwiseOptionRule
 
 
 class OptionLogicMixin(BaseLogicMixin):
@@ -27,8 +27,8 @@ class OptionLogic(BaseLogic[None]):
         return ChooseOptionRule(option.internal_name, default, MappingProxyType(choices))
 
     @staticmethod
-    def binary_choice(option: Type[StardewValleyOption], /, *, value: int, match: StardewRule, no_match: StardewRule):
-        return BinaryChoiceOptionRule(option.internal_name, value, match, no_match)
+    def bitwise_choice(option: Type[StardewValleyOption], /, *, value: int, match: StardewRule, no_match: StardewRule):
+        return BitwiseOptionRule(option.internal_name, value, match, no_match)
 
     @staticmethod
     def received(option: Type[StardewValleyOption], item: str) -> StardewRule:

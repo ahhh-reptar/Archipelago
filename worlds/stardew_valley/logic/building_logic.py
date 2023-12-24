@@ -8,13 +8,33 @@ from .option_logic import OptionLogicMixin
 from .received_logic import ReceivedLogicMixin
 from .region_logic import RegionLogicMixin
 from ..options import BuildingProgression
-from ..stardew_rule import StardewRule, True_, False_, Has, true_
+from ..stardew_rule import StardewRule, True_, Has, true_
 from ..strings.ap_names.event_names import Event
 from ..strings.artisan_good_names import ArtisanGood
 from ..strings.building_names import Building
 from ..strings.fish_names import WaterItem
 from ..strings.material_names import Material
 from ..strings.metal_names import MetalBar
+
+
+def get_progressive_building_item_name(building):
+    count = 1
+    if building in [Building.coop, Building.barn, Building.shed]:
+        building = f"Progressive {building}"
+    elif building.startswith("Big"):
+        count = 2
+        building = " ".join(["Progressive", *building.split(" ")[1:]])
+    elif building.startswith("Deluxe"):
+        count = 3
+        building = " ".join(["Progressive", *building.split(" ")[1:]])
+    return building, count
+
+
+house_upgrade_by_level = {
+    1: Building.kitchen,
+    2: Building.kids_room,
+    3: Building.cellar,
+}
 
 
 class BuildingLogicMixin(BaseLogicMixin):
@@ -51,50 +71,40 @@ class BuildingLogic(BaseLogic[Union[BuildingLogicMixin, MoneyLogicMixin, RegionL
     def update_rules(self, new_rules: Dict[str, StardewRule]):
         self.registry.building_rules.update(new_rules)
 
+    def has_carpenter_access(self) -> StardewRule:
+        return self.logic.received(Event.can_construct_buildings)
+
     @cache_self1
     def has_building(self, building: str) -> StardewRule:
-        # Shipping bin is special. The mod auto-builds it when received, no need to go to Robin.
         if building is Building.shipping_bin:
             return self.has_shipping_bin()
 
-        carpenter_rule = self.logic.received(Event.can_construct_buildings)
-        if not self.options.building_progression & BuildingProgression.option_progressive:
-            return Has(building, self.registry.building_rules) & carpenter_rule
-
-        count = 1
-        if building in [Building.coop, Building.barn, Building.shed]:
-            building = f"Progressive {building}"
-        elif building.startswith("Big"):
-            count = 2
-            building = " ".join(["Progressive", *building.split(" ")[1:]])
-        elif building.startswith("Deluxe"):
-            count = 3
-            building = " ".join(["Progressive", *building.split(" ")[1:]])
-        return self.logic.received(f"{building}", count) & carpenter_rule
+        progressive_building_rule = self.logic.received(*get_progressive_building_item_name(building)) & self.logic.building.has_carpenter_access()
+        non_progressive_building_rule = Has(building, self.registry.building_rules) & self.logic.building.has_carpenter_access()
+        return self.logic.option.bitwise_choice(BuildingProgression,
+                                                value=BuildingProgression.option_progressive,
+                                                match=progressive_building_rule,
+                                                no_match=non_progressive_building_rule)
 
     def has_shipping_bin(self):
-        return self.logic.option.binary_choice(BuildingProgression,
-                                               value=BuildingProgression.option_progressive,
-                                               match=self.logic.received(Building.shipping_bin),
-                                               no_match=true_)
+        """
+        Shipping bin is special. The mod auto-builds it when received, no need to go to Robin.
+        """
+        return self.logic.option.bitwise_choice(BuildingProgression,
+                                                value=BuildingProgression.option_progressive,
+                                                match=self.logic.received(Building.shipping_bin),
+                                                no_match=true_)
 
     @cache_self1
     def has_house(self, upgrade_level: int) -> StardewRule:
-        if upgrade_level < 1:
+        assert 0 <= upgrade_level <= 3, "There is only 3 level of house upgrade."
+
+        if upgrade_level == 0:
             return True_()
 
-        if upgrade_level > 3:
-            return False_()
-
-        carpenter_rule = self.logic.received(Event.can_construct_buildings)
-        if self.options.building_progression & BuildingProgression.option_progressive:
-            return carpenter_rule & self.logic.received(f"Progressive House", upgrade_level)
-
-        if upgrade_level == 1:
-            return carpenter_rule & Has(Building.kitchen, self.registry.building_rules)
-
-        if upgrade_level == 2:
-            return carpenter_rule & Has(Building.kids_room, self.registry.building_rules)
-
-        # if upgrade_level == 3:
-        return carpenter_rule & Has(Building.cellar, self.registry.building_rules)
+        progressive_rule = self.logic.received("Progressive House", upgrade_level) & self.logic.building.has_carpenter_access()
+        non_progressive_rule = Has(house_upgrade_by_level[upgrade_level], self.registry.building_rules) & self.logic.building.has_carpenter_access()
+        return self.logic.option.bitwise_choice(BuildingProgression,
+                                                value=BuildingProgression.option_progressive,
+                                                match=progressive_rule,
+                                                no_match=non_progressive_rule)

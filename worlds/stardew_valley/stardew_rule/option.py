@@ -47,7 +47,7 @@ class ChooseOptionRule(BaseOptionRule):
 
 
 @dataclass(frozen=True)
-class BinaryChoiceOptionRule(BaseOptionRule):
+class BitwiseOptionRule(BaseOptionRule):
     binary_value: int
     match: StardewRule
     no_match: StardewRule
