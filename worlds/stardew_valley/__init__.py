@@ -98,7 +98,7 @@ class StardewValleyWorld(World):
 
         self.force_change_options_if_incompatible()
 
-        self.logic = StardewLogic(self.player, self.options)
+        self.logic = StardewLogic(self.options)
         self.modified_bundles = get_all_bundles(self.multiworld.random,
                                                 self.logic,
                                                 self.multi_world_adapter)

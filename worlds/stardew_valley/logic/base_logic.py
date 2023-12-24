@@ -35,14 +35,12 @@ T = TypeVar("T", bound=BaseLogicMixin)
 
 
 class BaseLogic(BaseLogicMixin, Generic[T]):
-    player: int
     registry: LogicRegistry
     options: StardewValleyOptions
     logic: T
 
-    def __init__(self, player: int, registry: LogicRegistry, options: StardewValleyOptions, logic: T):
-        super().__init__(player, registry, options, logic)
-        self.player = player
+    def __init__(self, registry: LogicRegistry, options: StardewValleyOptions, logic: T):
+        super().__init__(registry, options, logic)
         self.registry = registry
         self.options = options
         self.logic = logic
