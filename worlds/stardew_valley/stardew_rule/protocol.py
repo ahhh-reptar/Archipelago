@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Tuple, Protocol, runtime_checkable, Type
+from typing import Tuple, Protocol, runtime_checkable
 
 from BaseClasses import CollectionState
 from .explanation import ExplainableRule
-from ..options import StardewValleyOptions, StardewValleyOption
+from ..options import StardewValleyOptions
 
 
 class PlayerWorldContext(Protocol):
@@ -17,7 +17,7 @@ class PlayerWorldContext(Protocol):
 
     # Maybe add starting inventory
 
-    def get_option_value(self, option: Type[StardewValleyOption]):
+    def get_option_value(self, option: str):
         return self.options.get_value_of(option)
 
 

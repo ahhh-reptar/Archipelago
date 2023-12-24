@@ -1,7 +1,9 @@
 from typing import Union
 
 from .base_logic import BaseLogicMixin, BaseLogic
+from .option_logic import OptionLogicMixin
 from .received_logic import ReceivedLogicMixin
+from ..options import NumberOfMovementBuffs, NumberOfLuckBuffs
 from ..stardew_rule import StardewRule
 from ..strings.ap_names.buff_names import Buff
 
@@ -12,12 +14,12 @@ class BuffLogicMixin(BaseLogicMixin):
         self.buff = BuffLogic(*args, **kwargs)
 
 
-class BuffLogic(BaseLogic[Union[ReceivedLogicMixin]]):
+class BuffLogic(BaseLogic[Union[ReceivedLogicMixin, OptionLogicMixin]]):
     def has_max_buffs(self) -> StardewRule:
         return self.has_max_speed() & self.has_max_luck()
 
     def has_max_speed(self) -> StardewRule:
-        return self.logic.received(Buff.movement, self.options.movement_buff_number.value)
+        return self.logic.option.received(Buff.movement, NumberOfMovementBuffs)
 
     def has_max_luck(self) -> StardewRule:
-        return self.logic.received(Buff.luck, self.options.luck_buff_number.value)
+        return self.logic.option.received(Buff.luck, NumberOfLuckBuffs)

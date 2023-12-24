@@ -22,6 +22,7 @@ from .mine_logic import MineLogicMixin
 from .money_logic import MoneyLogicMixin
 from .monster_logic import MonsterLogicMixin
 from .museum_logic import MuseumLogicMixin
+from .option_logic import OptionLogicMixin
 from .pet_logic import PetLogicMixin
 from .quest_logic import QuestLogicMixin
 from .received_logic import ReceivedLogicMixin
@@ -93,7 +94,7 @@ class StardewLogic(ReceivedLogicMixin, HasLogicMixin, RegionLogicMixin, BuffLogi
                    BuildingLogicMixin, ShippingLogicMixin, RelationshipLogicMixin, MuseumLogicMixin, WalletLogicMixin,
                    CombatLogicMixin, MagicLogicMixin, MonsterLogicMixin, ToolLogicMixin, PetLogicMixin, CropLogicMixin,
                    SkillLogicMixin, FarmingLogicMixin, BundleLogicMixin, FishingLogicMixin, MineLogicMixin, CookingLogicMixin, AbilityLogicMixin,
-                   SpecialOrderLogicMixin, QuestLogicMixin, CraftingLogicMixin, ModLogicMixin):
+                   SpecialOrderLogicMixin, QuestLogicMixin, CraftingLogicMixin, ModLogicMixin, OptionLogicMixin):
     options: StardewValleyOptions
 
     def __init__(self, options: StardewValleyOptions):
