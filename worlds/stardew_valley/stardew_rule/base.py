@@ -71,14 +71,14 @@ class Has(BaseStardewRule):
         self.item = item
         self.other_rules = other_rules
 
-    def __call__(self, state: CollectionState) -> bool:
-        return self.evaluate_while_simplifying(state)[1]
+    def __call__(self, state: CollectionState, *args) -> bool:
+        return self.evaluate_while_simplifying(state, *args)[1]
 
-    def evaluate_while_simplifying(self, state: CollectionState) -> Tuple[StardewRule, bool]:
-        return self.other_rules[self.item].evaluate_while_simplifying(state)
+    def evaluate_while_simplifying(self, state: CollectionState, *args) -> Tuple[StardewRule, bool]:
+        return self.other_rules[self.item].evaluate_while_simplifying(state, *args)
 
-    def explain(self, state: CollectionState, expected=True) -> RuleExplanation:
-        return RuleExplanation(self, state, expected, [self.other_rules[self.item]])
+    def explain(self, state: CollectionState, *args, expected=True) -> RuleExplanation:
+        return RuleExplanation(self, state, *args, expected, [self.other_rules[self.item]])
 
     def get_difficulty(self):
         return self.other_rules[self.item].get_difficulty() + 1
@@ -246,32 +246,32 @@ class AggregatingStardewRule(BaseStardewRule, ABC):
         self._last_short_circuiting_rule = rule
         return self, self.complement.value
 
-    def evaluate_while_simplifying(self, state: CollectionState) -> Tuple[StardewRule, bool]:
+    def evaluate_while_simplifying(self, state: CollectionState, *args) -> Tuple[StardewRule, bool]:
         """
         The global idea here is the same as short-circuiting operators, applied to evaluation and rule simplification.
         """
 
         # Directly checking last rule that short-circuited, in case state has not changed.
         if self._last_short_circuiting_rule:
-            if self._last_short_circuiting_rule(state) is self.complement.value:
+            if self._last_short_circuiting_rule(state, *args) is self.complement.value:
                 return self.short_circuit_evaluation(self._last_short_circuiting_rule)
             self._last_short_circuiting_rule = None
 
         # Combinable rules are considered already simplified, so we evaluate them right away to go faster.
         for rule in self.combinable_rules.values():
-            if rule(state) is self.complement.value:
+            if rule(state, *args) is self.complement.value:
                 return self.short_circuit_evaluation(rule)
 
         if self.simplification_state.is_simplified:
             # The rule is fully simplified, so now we can only evaluate.
             for rule in self.simplification_state.simplified_rules:
-                if rule(state) is self.complement.value:
+                if rule(state, *args) is self.complement.value:
                     return self.short_circuit_evaluation(rule)
             return self, self.identity.value
 
-        return self.evaluate_while_simplifying_stateful(state)
+        return self.evaluate_while_simplifying_stateful(state, *args)
 
-    def evaluate_while_simplifying_stateful(self, state):
+    def evaluate_while_simplifying_stateful(self, state: CollectionState, *args):
         local_state = self.simplification_state
         try:
             # Creating a new copy, so we don't modify the rules while we're already evaluating it. This can happen if a rule is used for an entrance and a
@@ -287,7 +287,7 @@ class AggregatingStardewRule(BaseStardewRule, ABC):
             # Evaluating what has already been simplified. First it will be faster than simplifying "new" rules, but we also assume that if we reach this point
             # and there are already are simplified rule, one of these rules has short-circuited, and might again, so we can leave early.
             for rule in local_state.simplified_rules:
-                if rule(state) is self.complement.value:
+                if rule(state, *args) is self.complement.value:
                     return self.short_circuit_evaluation(rule)
 
             # If the queue is None, it means we have not start simplifying. Otherwise, we will continue simplification where we left.
@@ -299,7 +299,7 @@ class AggregatingStardewRule(BaseStardewRule, ABC):
 
             # Start simplification where we left.
             while local_state.rules_to_simplify:
-                result = self.evaluate_rule_while_simplifying_stateful(local_state, state)
+                result = self.evaluate_rule_while_simplifying_stateful(local_state, state, *args)
                 local_state.try_popleft()
                 if result is not None:
                     return result
@@ -309,8 +309,8 @@ class AggregatingStardewRule(BaseStardewRule, ABC):
         finally:
             local_state.release()
 
-    def evaluate_rule_while_simplifying_stateful(self, local_state, state):
-        simplified, value = local_state.rules_to_simplify[0].evaluate_while_simplifying(state)
+    def evaluate_rule_while_simplifying_stateful(self, local_state: _SimplificationState, state: CollectionState, *args):
+        simplified, value = local_state.rules_to_simplify[0].evaluate_while_simplifying(state, *args)
 
         # Identity is removed from the resulting simplification since it does not affect the result.
         if simplified is self.identity:
@@ -339,8 +339,8 @@ class AggregatingStardewRule(BaseStardewRule, ABC):
     def __hash__(self):
         return hash((id(self.combinable_rules), self.simplification_state.original_simplifiable_rules))
 
-    def explain(self, state: CollectionState, expected=True) -> RuleExplanation:
-        return RuleExplanation(self, state, expected, self.original_rules)
+    def explain(self, state: CollectionState, *args, expected=True) -> RuleExplanation:
+        return RuleExplanation(self, state, *args, expected, self.original_rules)
 
 
 class Or(AggregatingStardewRule):
@@ -348,8 +348,8 @@ class Or(AggregatingStardewRule):
     complement = true_
     symbol = " | "
 
-    def __call__(self, state: CollectionState) -> bool:
-        return self.evaluate_while_simplifying(state)[1]
+    def __call__(self, state: CollectionState, *args) -> bool:
+        return self.evaluate_while_simplifying(state, *args)[1]
 
     def __or__(self, other):
         if other is true_ or other is false_:
@@ -377,8 +377,8 @@ class And(AggregatingStardewRule):
     complement = false_
     symbol = " & "
 
-    def __call__(self, state: CollectionState) -> bool:
-        return self.evaluate_while_simplifying(state)[1]
+    def __call__(self, state: CollectionState, *args) -> bool:
+        return self.evaluate_while_simplifying(state, *args)[1]
 
     def __and__(self, other):
         if other is true_ or other is false_:
@@ -426,10 +426,10 @@ class Count(BaseStardewRule):
         self.rules_count = len(rules_list)
         self._simplified = False
 
-    def evaluate_while_simplifying(self, state: CollectionState) -> Tuple[StardewRule, bool]:
+    def evaluate_while_simplifying(self, state: CollectionState, *args) -> Tuple[StardewRule, bool]:
         c = 0
         for i in range(self.rules_count):
-            self.rules[i], value = self.rules[i].evaluate_while_simplifying(state)
+            self.rules[i], value = self.rules[i].evaluate_while_simplifying(state, *args)
             if value:
                 c += 1
 
@@ -440,11 +440,11 @@ class Count(BaseStardewRule):
 
         return self, False
 
-    def __call__(self, state: CollectionState) -> bool:
-        return self.evaluate_while_simplifying(state)[1]
+    def __call__(self, state: CollectionState, *args) -> bool:
+        return self.evaluate_while_simplifying(state, *args)[1]
 
-    def explain(self, state: CollectionState, expected=True) -> RuleExplanation:
-        return RuleExplanation(self, state, expected, self.rules)
+    def explain(self, state: CollectionState, *args, expected=True) -> RuleExplanation:
+        return RuleExplanation(self, state, *args, expected=expected, sub_rules=self.rules)
 
     def get_difficulty(self):
         self.rules = sorted(self.rules, key=lambda x: x.get_difficulty())

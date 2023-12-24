@@ -12,7 +12,7 @@ from .locations import LocationTags
 from .logic.logic import StardewLogic
 from .logic.tool_logic import tool_upgrade_prices
 from .mods.mod_data import ModNames
-from .multi_world_view import PlayerMultiWorldAdapter
+from .multi_world_adapter import PlayerMultiWorldAdapter
 from .options import Friendsanity
 from .options import ToolProgression, BuildingProgression, ExcludeGingerIsland, SpecialOrderLocations, Museumsanity, BackpackProgression, Shipsanity, \
     Monstersanity, Chefsanity, Craftsanity, ArcadeMachineLocations, Cooksanity, Cropsanity, SkillProgression
@@ -42,47 +42,39 @@ from .strings.villager_names import NPC, ModNPC
 from .strings.wallet_item_names import Wallet
 
 
-def set_rules(world):
-    multiworld = world.multiworld
-    world.options = world.options
-    player = world.player
-    logic = world.logic
-    bundle_rooms: List[BundleRoom] = world.modified_bundles
-
-    world_adapter = PlayerMultiWorldAdapter(world.multiworld, world.player, world.options)
-
-    all_location_names = list(location.name for location in multiworld.get_locations(player))
+def set_rules(logic: StardewLogic, world: PlayerMultiWorldAdapter, bundle_rooms: List[BundleRoom]):
+    all_location_names = [location.name for location in world.get_all_locations()]
 
     # FIXME it's ridiculous how we pass there parameters of every single function. This should be in a class.
-    set_entrance_rules(logic, world_adapter)
-    set_ginger_island_rules(logic, world_adapter)
+    set_entrance_rules(logic, world)
+    set_ginger_island_rules(logic, world)
 
-    set_tool_rules(logic, world_adapter)
-    set_skills_rules(logic, world_adapter)
-    set_bundle_rules(bundle_rooms, logic, world_adapter)
-    set_building_rules(logic, world_adapter)
-    set_cropsanity_rules(all_location_names, logic, world_adapter)
-    set_story_quests_rules(all_location_names, logic, world_adapter)
-    set_special_order_rules(all_location_names, logic, world_adapter)
-    set_help_wanted_quests_rules(logic, world_adapter)
-    set_fishsanity_rules(all_location_names, logic, world_adapter)
-    set_museumsanity_rules(all_location_names, logic, world_adapter)
+    set_tool_rules(logic, world)
+    set_skills_rules(logic, world)
+    set_bundle_rules(bundle_rooms, logic, world)
+    set_building_rules(logic, world)
+    set_cropsanity_rules(all_location_names, logic, world)
+    set_story_quests_rules(all_location_names, logic, world)
+    set_special_order_rules(all_location_names, logic, world)
+    set_help_wanted_quests_rules(logic, world)
+    set_fishsanity_rules(all_location_names, logic, world)
+    set_museumsanity_rules(all_location_names, logic, world)
 
-    set_friendsanity_rules(all_location_names, logic, world_adapter)
-    set_backpack_rules(logic, world_adapter)
-    set_festival_rules(all_location_names, logic, world_adapter)
-    set_monstersanity_rules(all_location_names, logic, world_adapter)
-    set_shipsanity_rules(all_location_names, logic, world_adapter)
-    set_cooksanity_rules(all_location_names, logic, world_adapter)
-    set_chefsanity_rules(all_location_names, logic, world_adapter)
-    set_craftsanity_rules(all_location_names, logic, world_adapter)
-    set_isolated_locations_rules(logic, world_adapter)
-    set_traveling_merchant_day_rules(logic, world_adapter)
-    set_arcade_machine_rules(logic, world_adapter)
+    set_friendsanity_rules(all_location_names, logic, world)
+    set_backpack_rules(logic, world)
+    set_festival_rules(all_location_names, logic, world)
+    set_monstersanity_rules(all_location_names, logic, world)
+    set_shipsanity_rules(all_location_names, logic, world)
+    set_cooksanity_rules(all_location_names, logic, world)
+    set_chefsanity_rules(all_location_names, logic, world)
+    set_craftsanity_rules(all_location_names, logic, world)
+    set_isolated_locations_rules(logic, world)
+    set_traveling_merchant_day_rules(logic, world)
+    set_arcade_machine_rules(logic, world)
 
-    set_deepwoods_rules(logic, world_adapter)
-    set_magic_spell_rules(logic, world_adapter)
-    set_sve_rules(logic, world_adapter)
+    set_deepwoods_rules(logic, world)
+    set_magic_spell_rules(logic, world)
+    set_sve_rules(logic, world)
 
 
 def set_isolated_locations_rules(logic: StardewLogic, world: PlayerMultiWorldAdapter):

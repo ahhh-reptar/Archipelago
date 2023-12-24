@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import abstractmethod
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import Iterable, Protocol
+from typing import Iterable, Protocol, Any
 
 from BaseClasses import CollectionState
 
@@ -11,17 +11,19 @@ from BaseClasses import CollectionState
 class ExplainableRule(Protocol):
 
     @abstractmethod
-    def __call__(self, state: CollectionState) -> bool:
+    def __call__(self, state: CollectionState, context) -> bool:
         ...
 
-    def explain(self, state: CollectionState, expected=True) -> RuleExplanation:
-        return RuleExplanation(self, state, expected)
+    def explain(self, state: CollectionState, context, expected=True) -> RuleExplanation:
+        return RuleExplanation(self, state, context, expected)
 
 
 @dataclass
 class RuleExplanation:
     rule: ExplainableRule
     state: CollectionState
+    # FIXME
+    context: Any
     expected: bool
     sub_rules: Iterable[ExplainableRule] = field(default_factory=set)
 
@@ -45,8 +47,8 @@ class RuleExplanation:
 
     @cached_property
     def result(self):
-        return self.rule(self.state)
+        return self.rule(self.state, self.context)
 
     @cached_property
     def explained_sub_rules(self):
-        return [i.explain(self.state) for i in self.sub_rules]
+        return [i.explain(self.state, self.context) for i in self.sub_rules]

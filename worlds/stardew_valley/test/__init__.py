@@ -14,6 +14,7 @@ from ..options import Cropsanity, SkillProgression, SpecialOrderLocations, Frien
     ElevatorProgression, Museumsanity, BackpackProgression, BuildingProgression, ArcadeMachineLocations, QuestLocations, Fishsanity, NumberOfMovementBuffs, \
     BundleRandomization, BundlePrice, FestivalLocations, FriendsanityHeartSize, ExcludeGingerIsland, TrapItems, Goal, Mods, Monstersanity, Shipsanity, \
     Cooksanity, Chefsanity, Craftsanity
+from ..stardew_rule import StardewRule
 
 
 @cache_argsless
@@ -241,6 +242,14 @@ class SVTestBase(WorldTestBase, SVTestCase):
         self.multiworld.state.collect(self.world.create_item("Shipping Bin"), event=False)
         for i in range(1000):
             self.multiworld.state.collect(self.world.create_item("Stardrop"), event=False)
+
+    def assert_rule_true(self, rule: StardewRule):
+        self.assertTrue(rule(self.multiworld.state, self.world.multi_world_adapter),
+                        rule.explain(self.multiworld.state, self.world.multi_world_adapter))
+
+    def assert_rule_false(self, rule: StardewRule):
+        self.assertFalse(rule(self.multiworld.state, self.world.multi_world_adapter),
+                         rule.explain(self.multiworld.state, self.world.multi_world_adapter, expected=False))
 
 
 pre_generated_worlds = {}

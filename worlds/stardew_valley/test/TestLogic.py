@@ -1,6 +1,7 @@
 import unittest
 
 from . import setup_solo_multiworld, allsanity_options_with_mods
+from .. import PlayerMultiWorldAdapter
 from ..data.bundle_data import all_bundle_items_except_money
 from ..stardew_rule import False_
 from ..stardew_rule.base import MISSING_ITEM
@@ -8,6 +9,7 @@ from ..stardew_rule.base import MISSING_ITEM
 multi_world = setup_solo_multiworld(allsanity_options_with_mods())
 world = multi_world.worlds[1]
 logic = world.logic
+context: PlayerMultiWorldAdapter = world.multi_world_adapter
 
 
 def collect_all(mw):
@@ -29,74 +31,73 @@ class TestLogic(unittest.TestCase):
             with self.subTest(msg=item):
                 rule = logic.registry.item_rules[item]
                 self.assertNotIn(MISSING_ITEM, repr(rule))
-                self.assertTrue(rule == False_() or rule(multi_world.state), rule.explain(multi_world.state))
+                self.assertTrue(rule == False_() or rule(multi_world.state, context), rule.explain(multi_world.state, context))
 
     def test_given_building_rule_then_can_be_resolved(self):
         for building in logic.registry.building_rules.keys():
             with self.subTest(msg=building):
                 rule = logic.registry.building_rules[building]
                 self.assertNotIn(MISSING_ITEM, repr(rule))
-                self.assertTrue(rule == False_() or rule(multi_world.state), rule.explain(multi_world.state))
+                self.assertTrue(rule == False_() or rule(multi_world.state, context), rule.explain(multi_world.state, context))
 
     def test_given_quest_rule_then_can_be_resolved(self):
         for quest in logic.registry.quest_rules.keys():
             with self.subTest(msg=quest):
                 rule = logic.registry.quest_rules[quest]
                 self.assertNotIn(MISSING_ITEM, repr(rule))
-                self.assertTrue(rule == False_() or rule(multi_world.state), rule.explain(multi_world.state))
+                self.assertTrue(rule == False_() or rule(multi_world.state, context), rule.explain(multi_world.state, context))
 
     def test_given_special_order_rule_then_can_be_resolved(self):
         for special_order in logic.registry.special_order_rules.keys():
             with self.subTest(msg=special_order):
                 rule = logic.registry.special_order_rules[special_order]
                 self.assertNotIn(MISSING_ITEM, repr(rule))
-                self.assertTrue(rule == False_() or rule(multi_world.state), rule.explain(multi_world.state))
+                self.assertTrue(rule == False_() or rule(multi_world.state, context), rule.explain(multi_world.state, context))
 
     def test_given_tree_fruit_rule_then_can_be_resolved(self):
         for tree_fruit in logic.registry.tree_fruit_rules.keys():
             with self.subTest(msg=tree_fruit):
                 rule = logic.registry.tree_fruit_rules[tree_fruit]
                 self.assertNotIn(MISSING_ITEM, repr(rule))
-                self.assertTrue(rule == False_() or rule(multi_world.state), rule.explain(multi_world.state))
+                self.assertTrue(rule == False_() or rule(multi_world.state, context), rule.explain(multi_world.state, context))
 
     def test_given_seed_rule_then_can_be_resolved(self):
         for seed in logic.registry.seed_rules.keys():
             with self.subTest(msg=seed):
                 rule = logic.registry.seed_rules[seed]
                 self.assertNotIn(MISSING_ITEM, repr(rule))
-                self.assertTrue(rule == False_() or rule(multi_world.state), rule.explain(multi_world.state))
+                self.assertTrue(rule == False_() or rule(multi_world.state, context), rule.explain(multi_world.state, context))
 
     def test_given_crop_rule_then_can_be_resolved(self):
         for crop in logic.registry.crop_rules.keys():
             with self.subTest(msg=crop):
                 rule = logic.registry.crop_rules[crop]
                 self.assertNotIn(MISSING_ITEM, repr(rule))
-                self.assertTrue(rule == False_() or rule(multi_world.state), rule.explain(multi_world.state))
+                self.assertTrue(rule == False_() or rule(multi_world.state, context), rule.explain(multi_world.state, context))
 
     def test_given_fish_rule_then_can_be_resolved(self):
         for fish in logic.registry.fish_rules.keys():
             with self.subTest(msg=fish):
                 rule = logic.registry.fish_rules[fish]
                 self.assertNotIn(MISSING_ITEM, repr(rule))
-                rule_result = rule(multi_world.state)
-                self.assertTrue(rule == False_() or rule_result, rule.explain(multi_world.state))
+                self.assertTrue(rule == False_() or rule(multi_world.state, context), rule.explain(multi_world.state, context))
 
     def test_given_museum_rule_then_can_be_resolved(self):
         for donation in logic.registry.museum_rules.keys():
             with self.subTest(msg=donation):
                 rule = logic.registry.museum_rules[donation]
                 self.assertNotIn(MISSING_ITEM, repr(rule))
-                self.assertTrue(rule == False_() or rule(multi_world.state), rule.explain(multi_world.state))
+                self.assertTrue(rule == False_() or rule(multi_world.state, context), rule.explain(multi_world.state, context))
 
     def test_given_cooking_rule_then_can_be_resolved(self):
         for cooking_rule in logic.registry.cooking_rules.keys():
             with self.subTest(msg=cooking_rule):
                 rule = logic.registry.cooking_rules[cooking_rule]
                 self.assertNotIn(MISSING_ITEM, repr(rule))
-                self.assertTrue(rule == False_() or rule(multi_world.state), rule.explain(multi_world.state))
+                self.assertTrue(rule == False_() or rule(multi_world.state, context), rule.explain(multi_world.state, context))
 
     def test_given_location_rule_then_can_be_resolved(self):
-        for location in multi_world.get_locations(1):
+        for location in context.get_all_locations():
             with self.subTest(msg=location.name):
                 rule = location.access_rule
                 self.assertNotIn(MISSING_ITEM, repr(rule))

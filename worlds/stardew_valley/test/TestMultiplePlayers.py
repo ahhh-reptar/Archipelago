@@ -59,10 +59,10 @@ class TestDifferentSettings(SVTestCase):
         multiplayer_options = [options_festivals_limited_money, options_festivals_limited_money]
         multiworld = setup_multiworld(multiplayer_options)
 
-        player_1_rarecrow_2 = get_access_rule(multiworld, 1, FestivalCheck.rarecrow_2)
-        player_1_rarecrow_4 = get_access_rule(multiworld, 1, FestivalCheck.rarecrow_4)
-        player_2_rarecrow_2 = get_access_rule(multiworld, 2, FestivalCheck.rarecrow_2)
-        player_2_rarecrow_4 = get_access_rule(multiworld, 2, FestivalCheck.rarecrow_4)
+        player_1_rarecrow_2 = get_access_rule(multiworld, 1, FestivalCheck.rarecrow_2).rule
+        player_1_rarecrow_4 = get_access_rule(multiworld, 1, FestivalCheck.rarecrow_4).rule
+        player_2_rarecrow_2 = get_access_rule(multiworld, 2, FestivalCheck.rarecrow_2).rule
+        player_2_rarecrow_4 = get_access_rule(multiworld, 2, FestivalCheck.rarecrow_4).rule
 
         with self.subTest("Rules are not cached between players"):
             self.assertNotEqual(id(player_1_rarecrow_2), id(player_2_rarecrow_2))

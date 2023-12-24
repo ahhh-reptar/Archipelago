@@ -13,12 +13,13 @@ from .locations import location_table, create_locations, LocationData, locations
 from .logic.bundle_logic import BundleLogic
 from .logic.logic import StardewLogic
 from .logic.time_logic import MAX_MONTHS
+from .multi_world_adapter import PlayerMultiWorldAdapter, ContextualizedRule
 from .options import StardewValleyOptions, SeasonRandomization, Goal, BundleRandomization, BundlePrice, NumberOfLuckBuffs, NumberOfMovementBuffs, \
     BackpackProgression, BuildingProgression, ExcludeGingerIsland, TrapItems
 from .presets import sv_options_presets
 from .regions import create_regions
 from .rules import set_rules
-from .stardew_rule import True_, StardewRule, HasProgressionPercent
+from .stardew_rule import True_, StardewRule, HasProgressionPercent, true_
 from .strings.ap_names.event_names import Event
 from .strings.goal_names import Goal as GoalName
 from .strings.region_names import Region as RegionName
@@ -65,22 +66,25 @@ class StardewValleyWorld(World):
     item_name_to_id = {name: data.code for name, data in item_table.items()}
     location_name_to_id = {name: data.code for name, data in location_table.items()}
 
-    item_name_groups = {group.name.replace("_", " ").title() + (" Group" if group.name.replace("_", " ").title()
-                                                                in item_table else ""):
-                        [item.name for item in items] for group, items in items_by_group.items()}
-    location_name_groups = {group.name.replace("_", " ").title() + (" Group" if group.name.replace("_", " ").title()
-                                                                    in locations_by_tag else ""):
-                            [location.name for location in locations] for group, locations in locations_by_tag.items()}
-    
+    item_name_groups = {
+        group.name.replace("_", " ").title() + (" Group" if group.name.replace("_", " ").title() in item_table else ""):
+            [item.name for item in items] for group, items in items_by_group.items()
+    }
+    location_name_groups = {
+        group.name.replace("_", " ").title() + (" Group" if group.name.replace("_", " ").title() in locations_by_tag else ""):
+            [location.name for location in locations] for group, locations in locations_by_tag.items()
+    }
+
     data_version = 3
     required_client_version = (0, 4, 0)
 
     options_dataclass = StardewValleyOptions
     options: StardewValleyOptions
     logic: StardewLogic
+    multi_world_adapter: PlayerMultiWorldAdapter
 
     web = StardewWebWorld()
-    modified_bundles: List[BundleRoom]
+    modified_bundles: List[BundleRoom]  # FIXME should be in multi world adapter
     randomized_entrances: Dict[str, str]
     total_progression_items: int
 
@@ -90,6 +94,8 @@ class StardewValleyWorld(World):
         self.total_progression_items = 0
 
     def generate_early(self):
+        self.multi_world_adapter = PlayerMultiWorldAdapter(self.multiworld, self.player, self.options)
+
         self.force_change_options_if_incompatible()
 
         self.logic = StardewLogic(self.player, self.options)
@@ -301,12 +307,12 @@ class StardewValleyWorld(World):
 
         region = self.multiworld.get_region(location_data.region, self.player)
         location = StardewLocation(self.player, location_data.name, None, region)
-        location.access_rule = rule
+        location.access_rule = ContextualizedRule(self.multi_world_adapter, rule)
         region.locations.append(location)
         location.place_locked_item(self.create_item(item))
 
     def set_rules(self):
-        set_rules(self)
+        set_rules(self.logic, self.multi_world_adapter, self.modified_bundles)
 
     def generate_basic(self):
         pass
@@ -328,7 +334,7 @@ class StardewValleyWorld(World):
             include_traps = True
             exclude_island = False
             for player in link_group["players"]:
-                player_options = self.multiworld.worlds[player].options
+                player_options = self.options
                 if self.multiworld.game[player] != self.game:
                     continue
                 if player_options.trap_items == TrapItems.option_no_traps:

@@ -4,7 +4,7 @@ from typing import Hashable, Tuple, Iterable, List, Union
 from BaseClasses import ItemClassification, CollectionState
 from .base import CombinableStardewRule, BaseStardewRule, And, Or
 from .explanation import RuleExplanation
-from .protocol import StardewRule
+from .protocol import StardewRule, PlayerWorldContext
 from ..items import item_table
 
 
@@ -26,10 +26,10 @@ class Received(CombinableStardewRule):
     def value(self):
         return self.count
 
-    def __call__(self, state: CollectionState) -> bool:
+    def __call__(self, state: CollectionState, *_) -> bool:
         return state.has(self.item, self.player, self.count)
 
-    def evaluate_while_simplifying(self, state: CollectionState) -> Tuple[StardewRule, bool]:
+    def evaluate_while_simplifying(self, state: CollectionState, *_) -> Tuple[StardewRule, bool]:
         return self, self(state)
 
     def __repr__(self):
@@ -58,7 +58,7 @@ class HasProgressionPercent(CombinableStardewRule):
     def value(self):
         return self.percent
 
-    def __call__(self, state: CollectionState) -> bool:
+    def __call__(self, state: CollectionState, *_) -> bool:
         stardew_world = state.multiworld.worlds[self.player]
         total_count = stardew_world.total_progression_items
         needed_count = (total_count * self.percent) // 100
@@ -70,7 +70,7 @@ class HasProgressionPercent(CombinableStardewRule):
                 return True
         return False
 
-    def evaluate_while_simplifying(self, state: CollectionState) -> Tuple[StardewRule, bool]:
+    def evaluate_while_simplifying(self, state: CollectionState, *_) -> Tuple[StardewRule, bool]:
         return self, self(state)
 
     def __repr__(self):
@@ -86,10 +86,10 @@ class Reach(BaseStardewRule):
     resolution_hint: str
     player: int
 
-    def __call__(self, state: CollectionState) -> bool:
+    def __call__(self, state: CollectionState, *_) -> bool:
         return state.can_reach(self.spot, self.resolution_hint, self.player)
 
-    def evaluate_while_simplifying(self, state: CollectionState) -> Tuple[StardewRule, bool]:
+    def evaluate_while_simplifying(self, state: CollectionState, *_) -> Tuple[StardewRule, bool]:
         return self, self(state)
 
     def __repr__(self):
@@ -98,7 +98,7 @@ class Reach(BaseStardewRule):
     def get_difficulty(self):
         return 1
 
-    def explain(self, state: CollectionState, expected=True) -> RuleExplanation:
+    def explain(self, state: CollectionState, context: PlayerWorldContext, expected=True) -> RuleExplanation:
         if self.resolution_hint == 'Location':
             spot = state.multiworld.get_location(self.spot, self.player)
             access_rule = spot.access_rule
@@ -112,9 +112,9 @@ class Reach(BaseStardewRule):
             access_rule = Or(*(Reach(e.name, "Entrance", self.player) for e in spot.entrances))
 
         if not isinstance(access_rule, StardewRule):
-            return RuleExplanation(self, state, expected)
+            return RuleExplanation(self, state, context, expected)
 
-        return RuleExplanation(self, state, expected, [access_rule])
+        return RuleExplanation(self, state, context, expected, [access_rule])
 
 
 class TotalReceived(BaseStardewRule):
@@ -139,7 +139,7 @@ class TotalReceived(BaseStardewRule):
         self.items = items_list
         self.count = count
 
-    def __call__(self, state: CollectionState) -> bool:
+    def __call__(self, state: CollectionState, *_) -> bool:
         c = 0
         for item in self.items:
             c += state.count(item, self.player)
@@ -147,11 +147,11 @@ class TotalReceived(BaseStardewRule):
                 return True
         return False
 
-    def evaluate_while_simplifying(self, state: CollectionState) -> Tuple[StardewRule, bool]:
+    def evaluate_while_simplifying(self, state: CollectionState, *_) -> Tuple[StardewRule, bool]:
         return self, self(state)
 
-    def explain(self, state: CollectionState, expected=True) -> RuleExplanation:
-        return RuleExplanation(self, state, expected, [Received(i, self.player, 1) for i in self.items])
+    def explain(self, state: CollectionState, context: PlayerWorldContext, expected=True) -> RuleExplanation:
+        return RuleExplanation(self, state, context, expected, [Received(i, self.player, 1) for i in self.items])
 
     def get_difficulty(self):
         return self.count

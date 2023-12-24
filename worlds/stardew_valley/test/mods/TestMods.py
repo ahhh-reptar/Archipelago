@@ -1,8 +1,6 @@
 import random
 import sys
 import unittest
-from collections import Counter
-from itertools import chain, combinations
 from typing import List, Union
 
 from BaseClasses import MultiWorld
@@ -59,9 +57,9 @@ class TestBaseLocationDependencies(SVTestBase):
 
     def test_lance_chest_requires_quest_thoroughly(self):  # the method can be reused for other locations that seem troublesome.
         item_list = ["Spring", "Summer", "Fall", "Winter", "Marlon's Boat Paddle"]
-        item_list.extend(weapon for weapon in ["Progressive Weapon"]*3)
-        item_list.extend(tool for tool in ["Progressive Axe"]*2)
-        item_list.extend(tool for tool in ["Progressive Pickaxe"]*2)
+        item_list.extend(weapon for weapon in ["Progressive Weapon"] * 3)
+        item_list.extend(tool for tool in ["Progressive Axe"] * 2)
+        item_list.extend(tool for tool in ["Progressive Pickaxe"] * 2)
         missing_items = []
         missing_items.extend(item_list)
         rule = self.world.logic.region.can_reach_location("Lance's Diamond Wand")
@@ -72,8 +70,8 @@ class TestBaseLocationDependencies(SVTestBase):
             self.multiworld.state.collect(created_item, event=False)
             if not missing_items:
                 continue
-            self.assertFalse(rule(self.multiworld.state), rule.explain(self.multiworld.state))
-        self.assertTrue(rule(self.multiworld.state), rule.explain(self.multiworld.state))
+            self.assert_rule_false(rule)
+        self.assert_rule_true(rule)
 
 
 class TestBaseItemGeneration(SVTestBase):

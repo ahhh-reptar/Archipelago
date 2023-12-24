@@ -1,17 +1,16 @@
 from abc import ABC
 from typing import Tuple
 
-from BaseClasses import CollectionState
 from .protocol import StardewRule
 
 
 class LiteralStardewRule(StardewRule, ABC):
     value: bool
 
-    def evaluate_while_simplifying(self, state: CollectionState) -> Tuple[StardewRule, bool]:
+    def evaluate_while_simplifying(self, *_) -> Tuple[StardewRule, bool]:
         return self, self.value
 
-    def __call__(self, state: CollectionState) -> bool:
+    def __call__(self, *_) -> bool:
         return self.value
 
     def __repr__(self):
