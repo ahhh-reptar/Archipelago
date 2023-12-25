@@ -58,13 +58,9 @@ CombatLogicMixin, CropLogicMixin, MagicLogicMixin, OptionLogicMixin]]):
         elif skill == Skill.farming:
             xp_rule = self.logic.tool.has_tool(Tool.hoe, tool_material) & self.logic.tool.can_water(tool_level)
         elif skill == Skill.foraging:
-            xp_rule = self.logic.tool.has_tool(Tool.axe,
-                                               tool_material) | self.logic.magic.can_use_clear_debris_instead_of_tool_level(
-                tool_level)
+            xp_rule = self.logic.tool.has_tool(Tool.axe, tool_material) | self.logic.magic.can_use_clear_debris_instead_of_tool_level(tool_level)
         elif skill == Skill.mining:
-            xp_rule = self.logic.tool.has_tool(Tool.pickaxe,
-                                               tool_material) | self.logic.magic.can_use_clear_debris_instead_of_tool_level(
-                tool_level)
+            xp_rule = self.logic.tool.has_tool(Tool.pickaxe, tool_material) | self.logic.magic.can_use_clear_debris_instead_of_tool_level(tool_level)
         elif skill == Skill.combat:
             combat_tier = Performance.tiers[tool_level]
             xp_rule = self.logic.combat.can_fight_at_level(combat_tier)
@@ -95,7 +91,7 @@ CombatLogicMixin, CropLogicMixin, MagicLogicMixin, OptionLogicMixin]]):
             return True_()
 
         if allow_modded_skills:
-            def create_rule(mods):
+            def create_rule(mods: options.Mods):
                 return self.logic.received(skill_progressive_item_names + get_mod_skill_levels(mods), level)
 
             progressive_skill_rule = self.logic.option.custom_rule(options.Mods, create_rule)
@@ -144,23 +140,27 @@ CombatLogicMixin, CropLogicMixin, MagicLogicMixin, OptionLogicMixin]]):
 
     @cached_property
     def can_get_fishing_xp(self) -> StardewRule:
-        if self.options.skill_progression == options.SkillProgression.option_progressive:
-            return self.logic.skill.can_fish() | self.logic.skill.can_crab_pot
-
-        return self.logic.skill.can_fish()
+        progressive_skill_rule = self.logic.skill.can_fish() | self.logic.skill.can_crab_pot
+        return self.logic.option.choose(options.SkillProgression,
+                                        choices={options.SkillProgression.option_progressive: progressive_skill_rule},
+                                        default=self.logic.skill.can_fish())
 
     # Should be cached
     def can_fish(self, regions: Union[str, Tuple[str, ...]] = None, difficulty: int = 0) -> StardewRule:
         if isinstance(regions, str):
             regions = regions,
+
         if regions is None or len(regions) == 0:
             regions = fishing_regions
+
         skill_required = min(10, max(0, int((difficulty / 10) - 1)))
         if difficulty <= 40:
             skill_required = 0
+
         skill_rule = self.logic.skill.has_level(Skill.fishing, skill_required)
         region_rule = self.logic.region.can_reach_any(regions)
         number_fishing_rod_required = 1 if difficulty < 50 else (2 if difficulty < 80 else 4)
+
         return self.logic.tool.has_fishing_rod(number_fishing_rod_required) & skill_rule & region_rule
 
     @cache_self1
@@ -169,14 +169,19 @@ CombatLogicMixin, CropLogicMixin, MagicLogicMixin, OptionLogicMixin]]):
 
     @cached_property
     def can_crab_pot(self) -> StardewRule:
-        crab_pot_rule = self.logic.has(Fishing.bait)
-        if self.options.skill_progression == options.SkillProgression.option_progressive:
-            crab_pot_rule = crab_pot_rule & self.logic.has(Machine.crab_pot)
-        else:
-            crab_pot_rule = crab_pot_rule & self.logic.skill.can_get_fishing_xp
+        def create_rule(skill_progression: options.SkillProgression):
+            crab_pot_rule = self.logic.has(Fishing.bait)
+            if skill_progression == options.SkillProgression.option_progressive:
+                crab_pot_rule = crab_pot_rule & self.logic.has(Machine.crab_pot)
+            else:
+                crab_pot_rule = crab_pot_rule & self.logic.skill.can_get_fishing_xp
 
-        water_region_rules = self.logic.region.can_reach_any(fishing_regions)
-        return crab_pot_rule & water_region_rules
+            water_region_rules = self.logic.region.can_reach_any(fishing_regions)
+            return crab_pot_rule & water_region_rules
+
+        # There is a loop in the can_crab_pot and can_get_fishing_xp rules. Using a custom option rule allows to check if the user can get fishing xp only if
+        #  we know they have vanilla skills.
+        return self.logic.option.custom_rule(options.SkillProgression, rule_factory=create_rule)
 
     def can_forage_quality(self, quality: str) -> StardewRule:
         if quality == ForageQuality.basic:
