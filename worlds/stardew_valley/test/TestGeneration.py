@@ -275,23 +275,23 @@ class TestSkullCavernLogic(SVTestBase):
         skull_25 = self.multiworld.get_region(Region.skull_cavern_25, self.player)
         skull_75 = self.multiworld.get_region(Region.skull_cavern_75, self.player)
 
-        self.assertTrue(floor_115.can_reach(self.multiworld.state))
-        self.assertFalse(skull_25.can_reach(self.multiworld.state))
-        self.assertFalse(skull_75.can_reach(self.multiworld.state))
+        self.assert_can_reach(floor_115)
+        self.assert_cannot_reach(skull_25)
+        self.assert_cannot_reach(skull_75)
 
         self.remove(items_for_115)
         self.collect(items_for_skull_50)
 
-        self.assertTrue(floor_115.can_reach(self.multiworld.state))
-        self.assertTrue(skull_25.can_reach(self.multiworld.state))
-        self.assertFalse(skull_75.can_reach(self.multiworld.state))
+        self.assert_can_reach(floor_115)
+        self.assert_can_reach(skull_25)
+        self.assert_cannot_reach(skull_75)
 
         self.remove(items_for_skull_50)
         self.collect(items_for_skull_100)
 
-        self.assertTrue(floor_115.can_reach(self.multiworld.state))
-        self.assertTrue(skull_25.can_reach(self.multiworld.state))
-        self.assertTrue(skull_75.can_reach(self.multiworld.state))
+        self.assert_can_reach(floor_115)
+        self.assert_can_reach(skull_25)
+        self.assert_can_reach(skull_75)
 
     def generate_items_for_mine_115(self) -> List[Item]:
         pickaxes = [self.get_item_by_name("Progressive Pickaxe")] * 2

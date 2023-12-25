@@ -16,7 +16,7 @@ from .multi_world_adapter import PlayerMultiWorldAdapter
 from .options import Friendsanity
 from .options import ToolProgression, BuildingProgression, ExcludeGingerIsland, SpecialOrderLocations, Museumsanity, BackpackProgression, Shipsanity, \
     Monstersanity, Chefsanity, Craftsanity, ArcadeMachineLocations, Cooksanity, Cropsanity, SkillProgression
-from .stardew_rule import And
+from .stardew_rule import And, true_
 from .strings.ap_names.event_names import Event
 from .strings.ap_names.mods.mod_items import SVELocation
 from .strings.ap_names.mods.mod_items import SVEQuestItem
@@ -40,16 +40,6 @@ from .strings.tool_names import Tool, ToolMaterial
 from .strings.tv_channel_names import Channel
 from .strings.villager_names import NPC, ModNPC
 from .strings.wallet_item_names import Wallet
-
-mine_amount_of_floor_in_a_day = 10
-mine_elevator_distance = 5
-mine_max_elevator_floor = 120
-mine_floors_to_check_tier = {5, 45, 85}
-
-skull_cavern_amount_of_floor_in_a_day = 25
-skull_cavern_elevator_distance = 25
-skull_cavern_max_elevator_floor = 200
-skull_cavern_floors_to_check_tier = {25, 75, 125}
 
 
 def set_rules(logic: StardewLogic, world: PlayerMultiWorldAdapter, bundle_rooms: List[BundleRoom]):
@@ -250,27 +240,30 @@ def set_bedroom_entrance_rules(logic: StardewLogic, world: PlayerMultiWorldAdapt
 
 
 def set_mines_floor_entrance_rules(logic: StardewLogic, world: PlayerMultiWorldAdapter):
-    # In the first levels accessible from the top of the mine, we only check that the player can progress.
-    for floor in range(mine_elevator_distance, mine_amount_of_floor_in_a_day, mine_elevator_distance):
-        world.set_entrance_rule(dig_to_mines_floor(floor), logic.mine.can_progress_in_the_mines_from_floor(floor))
+    elevator_distance = 5
+    max_elevator_floor = 120
+    amount_of_floor_per_day = 10
+    floors_to_check_tier = {5, 45, 85}
 
-    for floor in range(mine_amount_of_floor_in_a_day, mine_max_elevator_floor + mine_elevator_distance, mine_elevator_distance):
-        rule = logic.mine.has_mine_elevator_to_floor(floor - mine_amount_of_floor_in_a_day)
-        if floor in mine_floors_to_check_tier:
+    for floor in range(elevator_distance, max_elevator_floor + elevator_distance, elevator_distance):
+        # In the first levels accessible from the top of the mine, we only check that the player can progress.
+        rule = logic.mine.has_mine_elevator_to_floor(floor - amount_of_floor_per_day) if floor > amount_of_floor_per_day else true_
+        if floor in floors_to_check_tier:
             rule = rule & logic.mine.can_progress_in_the_mines_from_floor(floor)
 
         world.set_entrance_rule(dig_to_mines_floor(floor), rule)
 
 
 def set_skull_cavern_floor_entrance_rules(logic: StardewLogic, world: PlayerMultiWorldAdapter):
-    for floor in range(skull_cavern_elevator_distance, skull_cavern_amount_of_floor_in_a_day, skull_cavern_elevator_distance):
-        world.set_entrance_rule(dig_to_mines_floor(floor), logic.mine.can_progress_in_the_skull_cavern_from_floor(floor))
+    elevator_distance = 25
+    max_elevator_floor = 200
+    amount_of_floor_per_day = 25
+    floors_to_check_tier = {25, 75, 125}
 
-    for floor in range(skull_cavern_amount_of_floor_in_a_day,
-                       skull_cavern_max_elevator_floor + skull_cavern_elevator_distance,
-                       skull_cavern_elevator_distance):
-        rule = logic.mod.elevator.has_skull_cavern_elevator_to_floor(floor - skull_cavern_amount_of_floor_in_a_day)
-        if floor in skull_cavern_floors_to_check_tier:
+    for floor in range(elevator_distance, max_elevator_floor + elevator_distance, elevator_distance):
+        # In the first levels accessible from the top of the mine, we only check that the player can progress.
+        rule = logic.mod.elevator.has_skull_cavern_elevator_to_floor(floor - amount_of_floor_per_day) if floor > amount_of_floor_per_day else true_
+        if floor in floors_to_check_tier:
             rule = rule & logic.mine.can_progress_in_the_skull_cavern_from_floor(floor)
 
         world.set_entrance_rule(dig_to_skull_floor(floor), rule)
