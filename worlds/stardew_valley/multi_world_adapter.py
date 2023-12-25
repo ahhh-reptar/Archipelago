@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Iterable, Union, Set
+from typing import Iterable, Union, Set, Tuple
 
 from BaseClasses import MultiWorld, Entrance, Location, CollectionState
 from worlds.generic import Rules as MultiWorldRules
@@ -77,3 +77,6 @@ class PlayerMultiWorldAdapter(PlayerWorldContext):
 
     def get_option_value(self, option: str) -> Union[int, str, Set[str]]:
         return self.options.get_value_of(option).value
+
+    def get_option_values(self, *options: str) -> Tuple[Union[int, str, Set[str]]]:
+        return tuple(self.get_option_value(option) for option in options)

@@ -22,7 +22,7 @@ class PetLogicMixin(BaseLogicMixin):
 
 
 class PetLogic(BaseLogic[Union[RegionLogicMixin, ReceivedLogicMixin, TimeLogicMixin, ToolLogicMixin, OptionLogicMixin]]):
-    def has_hearts(self, hearts: int = 1) -> StardewRule:
+    def has_pet_hearts(self, hearts: int = 1) -> StardewRule:
         assert hearts >= 0, "You can't have negative hearts with a pet."
         if hearts == 0:
             return True_()

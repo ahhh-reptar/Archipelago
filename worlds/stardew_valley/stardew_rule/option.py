@@ -10,10 +10,6 @@ from .state import Received
 
 @dataclass(frozen=True)
 class BaseOptionRule(BaseStardewRule, ABC):
-    option_name: str
-
-    def get_option_value(self, context: PlayerWorldContext) -> Union[int, str, Set[str]]:
-        return context.get_option_value(self.option_name)
 
     @abstractmethod
     def choose_rule(self, context: PlayerWorldContext) -> StardewRule:
@@ -28,11 +24,17 @@ class BaseOptionRule(BaseStardewRule, ABC):
     def get_difficulty(self, context: PlayerWorldContext):
         return self.choose_rule(context).get_difficulty(context)
 
-    # TODO implement explanation
+
+@dataclass(frozen=True)
+class SingleOptionRule(BaseOptionRule, ABC):
+    option_name: str
+
+    def get_option_value(self, context: PlayerWorldContext) -> Union[int, str, Set[str]]:
+        return context.get_option_value(self.option_name)
 
 
 @dataclass(frozen=True)
-class ChooseOptionRule(BaseOptionRule):
+class ChooseOptionRule(SingleOptionRule):
     default: Optional[StardewRule]
     choices: Mapping[int, StardewRule]
 
@@ -47,7 +49,7 @@ class ChooseOptionRule(BaseOptionRule):
 
 
 @dataclass(frozen=True)
-class BitwiseOptionRule(BaseOptionRule):
+class BitwiseOptionRule(SingleOptionRule):
     binary_value: int
     match: StardewRule
     no_match: StardewRule
@@ -65,7 +67,7 @@ class ReceivedAmountFunction(Protocol):
 
 
 @dataclass(frozen=True)
-class OptionReceived(BaseOptionRule):
+class OptionReceived(SingleOptionRule):
     item: str
     transform_received_amount: ReceivedAmountFunction
 
@@ -77,3 +79,18 @@ class OptionReceived(BaseOptionRule):
 
     def __repr__(self):
         return f"Received [Option {self.option_name}] {self.item}"
+
+
+class RuleFactory(Protocol):
+    def __call__(self, *option_values: Union[str, int, Set[str]]) -> StardewRule:
+        ...
+
+
+@dataclass(frozen=True)
+class CustomOptionRule(BaseOptionRule):
+    rule_factory: RuleFactory
+    option_dependency_names: Tuple[str, ...]
+
+    def choose_rule(self, context: PlayerWorldContext) -> StardewRule:
+        # TODO add cache based on option dependencies, mods will be a problem because the option is a set and not a frozenset ...
+        return self.rule_factory(*context.get_option_values(*self.option_dependency_names))

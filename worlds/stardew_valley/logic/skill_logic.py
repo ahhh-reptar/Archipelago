@@ -2,11 +2,11 @@ from functools import cached_property
 from typing import Union, Tuple
 
 from Utils import cache_self1
-from ..strings.craftable_names import Fishing
 from .base_logic import BaseLogicMixin, BaseLogic
 from .combat_logic import CombatLogicMixin
 from .crop_logic import CropLogicMixin
 from .has_logic import HasLogicMixin
+from .option_logic import OptionLogicMixin
 from .received_logic import ReceivedLogicMixin
 from .region_logic import RegionLogicMixin
 from .season_logic import SeasonLogicMixin
@@ -17,12 +17,15 @@ from ..data import all_crops
 from ..mods.logic.magic_logic import MagicLogicMixin
 from ..mods.logic.mod_skills_levels import get_mod_skill_levels
 from ..stardew_rule import StardewRule, True_, Or, False_
+from ..strings.craftable_names import Fishing
 from ..strings.machine_names import Machine
 from ..strings.performance_names import Performance
 from ..strings.quality_names import ForageQuality
 from ..strings.region_names import Region
 from ..strings.skill_names import Skill
 from ..strings.tool_names import ToolMaterial, Tool
+
+skill_progressive_item_names = ("Farming Level", "Mining Level", "Foraging Level", "Fishing Level", "Combat Level")
 
 fishing_regions = (Region.beach, Region.town, Region.forest, Region.mountain, Region.island_south, Region.island_west)
 
@@ -34,7 +37,7 @@ class SkillLogicMixin(BaseLogicMixin):
 
 
 class SkillLogic(BaseLogic[Union[HasLogicMixin, ReceivedLogicMixin, RegionLogicMixin, SeasonLogicMixin, TimeLogicMixin, ToolLogicMixin, SkillLogicMixin,
-                                 CombatLogicMixin, CropLogicMixin, MagicLogicMixin]]):
+CombatLogicMixin, CropLogicMixin, MagicLogicMixin, OptionLogicMixin]]):
     # Should be cached
     def can_earn_level(self, skill: str, level: int) -> StardewRule:
         if level <= 0:
@@ -68,7 +71,8 @@ class SkillLogic(BaseLogic[Union[HasLogicMixin, ReceivedLogicMixin, RegionLogicM
 
     # Should be cached
     def has_level(self, skill: str, level: int) -> StardewRule:
-        if level <= 0:
+        assert level >= 0, "Can't have negative skill level."
+        if level == 0:
             return True_()
 
         if self.options.skill_progression == options.SkillProgression.option_progressive:
@@ -82,21 +86,31 @@ class SkillLogic(BaseLogic[Union[HasLogicMixin, ReceivedLogicMixin, RegionLogicM
 
     # Should be cached
     def has_total_level(self, level: int, allow_modded_skills: bool = False) -> StardewRule:
-        if level <= 0:
+        assert level >= 0, "Can't have negative skill level."
+        if level == 0:
             return True_()
 
-        if self.options.skill_progression == options.SkillProgression.option_progressive:
-            skills_items = ("Farming Level", "Mining Level", "Foraging Level", "Fishing Level", "Combat Level")
-            if allow_modded_skills:
-                skills_items += get_mod_skill_levels(self.options.mods)
-            return self.logic.received(skills_items, level)
+        if allow_modded_skills:
+            def create_rule(mods):
+                return self.logic.received(skill_progressive_item_names + get_mod_skill_levels(mods), level)
 
-        months_with_4_skills = max(1, (level // 4) - 1)
-        months_with_5_skills = max(1, (level // 5) - 1)
-        rule_with_fishing = self.logic.time.has_lived_months(months_with_5_skills) & self.logic.skill.can_get_fishing_xp
+            progressive_skill_rule = self.logic.option.custom_rule(options.Mods, create_rule)
+        else:
+            # FIXME there is a bug here if we want exactly 5 total level. The rule will require exactly one level of each skill.
+            progressive_skill_rule = self.logic.received(skill_progressive_item_names, level)
+
+        months_required_to_get_levels_with_all_skills_available = max(1, (level // 5) - 1)
+        rule_with_fishing = self.logic.time.has_lived_months(months_required_to_get_levels_with_all_skills_available) & self.logic.skill.can_get_fishing_xp
         if level > 40:
-            return rule_with_fishing
-        return self.logic.time.has_lived_months(months_with_4_skills) | rule_with_fishing
+            return self.logic.option.choose(options.SkillProgression,
+                                            choices={options.SkillProgression.option_progressive: progressive_skill_rule},
+                                            default=rule_with_fishing)
+
+        months_required_to_get_levels_without_fishing = max(1, (level // 4) - 1)
+        rule_without_necessarily_fishing = self.logic.time.has_lived_months(months_required_to_get_levels_without_fishing) | rule_with_fishing
+        return self.logic.option.choose(options.SkillProgression,
+                                        choices={options.SkillProgression.option_progressive: progressive_skill_rule},
+                                        default=rule_without_necessarily_fishing)
 
     @cached_property
     def can_get_farming_xp(self) -> StardewRule:

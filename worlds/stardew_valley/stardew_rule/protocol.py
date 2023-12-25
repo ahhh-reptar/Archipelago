@@ -18,6 +18,9 @@ class PlayerWorldContext(Protocol):
     def get_option_value(self, option: str) -> Union[int, str, Set[str]]:
         ...
 
+    def get_option_values(self, *options: str) -> Tuple[Union[int, str, Set[str]], ...]:
+        ...
+
 
 @runtime_checkable
 class StardewRule(ExplainableRule, Protocol):

@@ -523,7 +523,7 @@ class StardewLogic(ReceivedLogicMixin, HasLogicMixin, RegionLogicMixin, BuffLogi
                                self.relationship.can_get_married() & self.building.has_house(2),
                                self.relationship.has_hearts("5", 8),  # 5 Friends
                                self.relationship.has_hearts("10", 8),  # 10 friends
-                               self.pet.has_hearts(5),  # Max Pet
+                               self.pet.has_pet_hearts(5),  # Max Pet
                                self.bundle.can_complete_community_center,  # Community Center Completion
                                self.bundle.can_complete_community_center,  # CC Ceremony first point
                                self.bundle.can_complete_community_center,  # CC Ceremony second point
