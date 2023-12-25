@@ -3,11 +3,12 @@ from __future__ import annotations
 from abc import abstractmethod
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import Iterable, Protocol, Any
+from typing import Iterable, Protocol, Any, runtime_checkable
 
 from BaseClasses import CollectionState
 
 
+@runtime_checkable
 class ExplainableRule(Protocol):
 
     @abstractmethod

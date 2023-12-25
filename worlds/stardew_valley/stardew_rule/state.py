@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from typing import Hashable, Tuple, Iterable
 
 from BaseClasses import ItemClassification, CollectionState
-from .base import CombinableStardewRule, BaseStardewRule, And, Or
-from .explanation import RuleExplanation
+from .base import CombinableStardewRule, BaseStardewRule
+from .explanation import RuleExplanation, ExplainableRule
 from .protocol import StardewRule, PlayerWorldContext
 from ..items import item_table
 
@@ -92,22 +92,27 @@ class Reach(BaseStardewRule):
         return 1
 
     def explain(self, state: CollectionState, context: PlayerWorldContext, expected=True) -> RuleExplanation:
+        access_rules = None
         if self.resolution_hint == 'Location':
             spot = state.multiworld.get_location(self.spot, context.player)
-            access_rule = spot.access_rule
-            if isinstance(access_rule, StardewRule):
-                access_rule = And(access_rule, Reach(spot.parent_region.name, "Region"))
+
+            if isinstance(spot.access_rule, ExplainableRule):
+                access_rules = [spot.access_rule, Reach(spot.parent_region.name, "Region")]
+
         elif self.resolution_hint == 'Entrance':
             spot = state.multiworld.get_entrance(self.spot, context.player)
-            access_rule = spot.access_rule
+
+            if isinstance(spot.access_rule, ExplainableRule):
+                access_rules = [spot.access_rule, Reach(spot.parent_region.name, "Region")]
+
         else:
             spot = state.multiworld.get_region(self.spot, context.player)
-            access_rule = Or(*(Reach(e.name, "Entrance") for e in spot.entrances))
+            access_rules = [*(Reach(e.name, "Entrance") for e in spot.entrances)]
 
-        if not isinstance(access_rule, StardewRule):
+        if not access_rules:
             return RuleExplanation(self, state, context, expected)
 
-        return RuleExplanation(self, state, context, expected, [access_rule])
+        return RuleExplanation(self, state, context, expected, access_rules)
 
 
 class TotalReceived(BaseStardewRule):

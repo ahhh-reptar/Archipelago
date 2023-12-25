@@ -6,18 +6,22 @@ from worlds.generic import Rules as MultiWorldRules
 from worlds.generic.Rules import CollectionRule
 from .options import StardewValleyOptions
 from .stardew_rule import StardewRule
+from .stardew_rule.explanation import ExplainableRule
 from .stardew_rule.literal import LiteralStardewRule
 from .stardew_rule.option import BaseOptionRule
 from .stardew_rule.protocol import PlayerWorldContext
 
 
 @dataclass(frozen=True)
-class ContextualizedRule(CollectionRule):
+class ContextualizedRule(CollectionRule, ExplainableRule):
     context: PlayerWorldContext
     rule: StardewRule
 
-    def __call__(self, state: CollectionState):
+    def __call__(self, state: CollectionState, *args):
         return self.rule(state, self.context)
+
+    def explain(self, state: CollectionState, *args):
+        return self.rule.explain(state, self.context)
 
 
 @dataclass(frozen=True)

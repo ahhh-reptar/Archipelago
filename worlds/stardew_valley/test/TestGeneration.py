@@ -9,8 +9,6 @@ from ..data.villagers_data import all_villagers_by_name, all_villagers_by_mod_by
 from ..items import Group, item_table
 from ..locations import LocationTags
 from ..mods.mod_data import ModNames
-from ..options import Friendsanity, SpecialOrderLocations, Shipsanity, Chefsanity, SeasonRandomization, Craftsanity, ExcludeGingerIsland, ToolProgression, \
-    FriendsanityHeartSize
 from ..strings.region_names import Region
 
 
@@ -24,12 +22,12 @@ def get_real_location_names(tester: typing.Union[SVTestBase, SVTestCase], multiw
 
 class TestBaseItemGeneration(SVTestBase):
     options = {
-        Friendsanity.internal_name: Friendsanity.option_all_with_marriage,
-        SeasonRandomization.internal_name: SeasonRandomization.option_progressive,
-        SpecialOrderLocations.internal_name: SpecialOrderLocations.option_board_qi,
-        Shipsanity.internal_name: Shipsanity.option_everything,
-        Chefsanity.internal_name: Chefsanity.option_all,
-        Craftsanity.internal_name: Craftsanity.option_all,
+        options.Friendsanity.internal_name: options.Friendsanity.option_all_with_marriage,
+        options.SeasonRandomization.internal_name: options.SeasonRandomization.option_progressive,
+        options.SpecialOrderLocations.internal_name: options.SpecialOrderLocations.option_board_qi,
+        options.Shipsanity.internal_name: options.Shipsanity.option_everything,
+        options.Chefsanity.internal_name: options.Chefsanity.option_all,
+        options.Craftsanity.internal_name: options.Craftsanity.option_all,
     }
 
     def test_all_progression_items_are_added_to_the_pool(self):
@@ -76,12 +74,12 @@ class TestBaseItemGeneration(SVTestBase):
 
 class TestNoGingerIslandItemGeneration(SVTestBase):
     options = {
-        Friendsanity.internal_name: Friendsanity.option_all_with_marriage,
-        SeasonRandomization.internal_name: SeasonRandomization.option_progressive,
-        ExcludeGingerIsland.internal_name: ExcludeGingerIsland.option_true,
-        Shipsanity.internal_name: Shipsanity.option_everything,
-        Chefsanity.internal_name: Chefsanity.option_all,
-        Craftsanity.internal_name: Craftsanity.option_all,
+        options.Friendsanity.internal_name: options.Friendsanity.option_all_with_marriage,
+        options.SeasonRandomization.internal_name: options.SeasonRandomization.option_progressive,
+        options.ExcludeGingerIsland.internal_name: options.ExcludeGingerIsland.option_true,
+        options.Shipsanity.internal_name: options.Shipsanity.option_everything,
+        options.Chefsanity.internal_name: options.Chefsanity.option_all,
+        options.Craftsanity.internal_name: options.Craftsanity.option_all,
     }
 
     def test_all_progression_items_except_island_are_added_to_the_pool(self):
@@ -225,7 +223,7 @@ class TestMonstersanityProgressive(SVTestBase):
 class TestProgressiveElevator(SVTestBase):
     options = {
         options.ElevatorProgression.internal_name: options.ElevatorProgression.option_progressive,
-        ToolProgression.internal_name: ToolProgression.option_progressive,
+        options.ToolProgression.internal_name: options.ToolProgression.option_progressive,
         options.SkillProgression.internal_name: options.SkillProgression.option_progressive,
     }
 
@@ -236,12 +234,12 @@ class TestProgressiveElevator(SVTestBase):
         floor_115 = self.multiworld.get_region("The Mines - Floor 115", self.player)
         floor_120 = self.multiworld.get_region("The Mines - Floor 120", self.player)
 
-        self.assertTrue(floor_115.can_reach(self.multiworld.state))
-        self.assertFalse(floor_120.can_reach(self.multiworld.state))
+        self.assert_can_reach(floor_115)
+        self.assert_cannot_reach(floor_120)
 
         self.collect(last_elevator)
 
-        self.assertTrue(floor_120.can_reach(self.multiworld.state))
+        self.assert_can_reach(floor_120)
 
     def generate_items_for_mine_115(self) -> List[Item]:
         pickaxes = [self.get_item_by_name("Progressive Pickaxe")] * 2
@@ -264,7 +262,7 @@ class TestProgressiveElevator(SVTestBase):
 class TestSkullCavernLogic(SVTestBase):
     options = {
         options.ElevatorProgression.internal_name: options.ElevatorProgression.option_vanilla,
-        ToolProgression.internal_name: ToolProgression.option_progressive,
+        options.ToolProgression.internal_name: options.ToolProgression.option_progressive,
         options.SkillProgression.internal_name: options.SkillProgression.option_progressive,
     }
 
@@ -410,7 +408,7 @@ class TestLocationAndItemCount(SVTestCase):
 
 class TestFriendsanityNone(SVTestBase):
     options = {
-        Friendsanity.internal_name: Friendsanity.option_none,
+        options.Friendsanity.internal_name: options.Friendsanity.option_none,
     }
 
     @property
@@ -435,8 +433,8 @@ class TestFriendsanityNone(SVTestBase):
 
 class TestFriendsanityBachelors(SVTestBase):
     options = {
-        Friendsanity.internal_name: Friendsanity.option_bachelors,
-        FriendsanityHeartSize.internal_name: 1,
+        options.Friendsanity.internal_name: options.Friendsanity.option_bachelors,
+        options.FriendsanityHeartSize.internal_name: 1,
     }
     bachelors = {"Harvey", "Elliott", "Sam", "Alex", "Shane", "Sebastian", "Emily", "Haley", "Leah", "Abigail", "Penny",
                  "Maru"}
@@ -470,8 +468,8 @@ class TestFriendsanityBachelors(SVTestBase):
 
 class TestFriendsanityStartingNpcs(SVTestBase):
     options = {
-        Friendsanity.internal_name: Friendsanity.option_starting_npcs,
-        FriendsanityHeartSize.internal_name: 1,
+        options.Friendsanity.internal_name: options.Friendsanity.option_starting_npcs,
+        options.FriendsanityHeartSize.internal_name: 1,
     }
     excluded_npcs = {"Leo", "Krobus", "Dwarf", "Sandy", "Kent"}
 
@@ -510,8 +508,8 @@ class TestFriendsanityStartingNpcs(SVTestBase):
 
 class TestFriendsanityAllNpcs(SVTestBase):
     options = {
-        Friendsanity.internal_name: Friendsanity.option_all,
-        FriendsanityHeartSize.internal_name: 4,
+        options.Friendsanity.internal_name: options.Friendsanity.option_all,
+        options.FriendsanityHeartSize.internal_name: 4,
     }
 
     def test_friendsanity_all_npcs(self):
@@ -563,9 +561,9 @@ class TestFriendsanityAllNpcs(SVTestBase):
 
 class TestFriendsanityAllNpcsExcludingGingerIsland(SVTestBase):
     options = {
-        Friendsanity.internal_name: Friendsanity.option_all,
-        FriendsanityHeartSize.internal_name: 4,
-        ExcludeGingerIsland.internal_name: ExcludeGingerIsland.option_true
+        options.Friendsanity.internal_name: options.Friendsanity.option_all,
+        options.FriendsanityHeartSize.internal_name: 4,
+        options.ExcludeGingerIsland.internal_name: options.ExcludeGingerIsland.option_true
     }
 
     def test_friendsanity_all_npcs_exclude_island(self):
@@ -604,8 +602,8 @@ class TestFriendsanityAllNpcsExcludingGingerIsland(SVTestBase):
 
 class TestFriendsanityHeartSize3(SVTestBase):
     options = {
-        Friendsanity.internal_name: Friendsanity.option_all_with_marriage,
-        FriendsanityHeartSize.internal_name: 3,
+        options.Friendsanity.internal_name: options.Friendsanity.option_all_with_marriage,
+        options.FriendsanityHeartSize.internal_name: 3,
     }
 
     def test_friendsanity_all_npcs_with_marriage(self):
@@ -657,8 +655,8 @@ class TestFriendsanityHeartSize3(SVTestBase):
 
 class TestFriendsanityHeartSize5(SVTestBase):
     options = {
-        Friendsanity.internal_name: Friendsanity.option_all_with_marriage,
-        FriendsanityHeartSize.internal_name: 5,
+        options.Friendsanity.internal_name: options.Friendsanity.option_all_with_marriage,
+        options.FriendsanityHeartSize.internal_name: 5,
     }
 
     def test_friendsanity_all_npcs_with_marriage(self):
@@ -710,7 +708,7 @@ class TestFriendsanityHeartSize5(SVTestBase):
 
 class TestShipsanityNone(SVTestBase):
     options = {
-        Shipsanity.internal_name: Shipsanity.option_none
+        options.Shipsanity.internal_name: options.Shipsanity.option_none
     }
 
     def test_no_shipsanity_locations(self):
@@ -723,8 +721,8 @@ class TestShipsanityNone(SVTestBase):
 
 class TestShipsanityCrops(SVTestBase):
     options = {
-        Shipsanity.internal_name: Shipsanity.option_crops,
-        SpecialOrderLocations.internal_name: SpecialOrderLocations.option_board_qi
+        options.Shipsanity.internal_name: options.Shipsanity.option_crops,
+        options.SpecialOrderLocations.internal_name: options.SpecialOrderLocations.option_board_qi
     }
 
     def test_only_crop_shipsanity_locations(self):
@@ -746,8 +744,8 @@ class TestShipsanityCrops(SVTestBase):
 
 class TestShipsanityCropsExcludeIsland(SVTestBase):
     options = {
-        Shipsanity.internal_name: Shipsanity.option_crops,
-        ExcludeGingerIsland.internal_name: ExcludeGingerIsland.option_true
+        options.Shipsanity.internal_name: options.Shipsanity.option_crops,
+        options.ExcludeGingerIsland.internal_name: options.ExcludeGingerIsland.option_true
     }
 
     def test_only_crop_shipsanity_locations(self):
@@ -769,8 +767,8 @@ class TestShipsanityCropsExcludeIsland(SVTestBase):
 
 class TestShipsanityCropsNoQiCropWithoutSpecialOrders(SVTestBase):
     options = {
-        Shipsanity.internal_name: Shipsanity.option_crops,
-        SpecialOrderLocations.internal_name: SpecialOrderLocations.option_board_only
+        options.Shipsanity.internal_name: options.Shipsanity.option_crops,
+        options.SpecialOrderLocations.internal_name: options.SpecialOrderLocations.option_board_only
     }
 
     def test_only_crop_shipsanity_locations(self):
@@ -792,8 +790,8 @@ class TestShipsanityCropsNoQiCropWithoutSpecialOrders(SVTestBase):
 
 class TestShipsanityFish(SVTestBase):
     options = {
-        Shipsanity.internal_name: Shipsanity.option_fish,
-        SpecialOrderLocations.internal_name: SpecialOrderLocations.option_board_qi
+        options.Shipsanity.internal_name: options.Shipsanity.option_fish,
+        options.SpecialOrderLocations.internal_name: options.SpecialOrderLocations.option_board_qi
     }
 
     def test_only_fish_shipsanity_locations(self):
@@ -816,8 +814,8 @@ class TestShipsanityFish(SVTestBase):
 
 class TestShipsanityFishExcludeIsland(SVTestBase):
     options = {
-        Shipsanity.internal_name: Shipsanity.option_fish,
-        ExcludeGingerIsland.internal_name: ExcludeGingerIsland.option_true
+        options.Shipsanity.internal_name: options.Shipsanity.option_fish,
+        options.ExcludeGingerIsland.internal_name: options.ExcludeGingerIsland.option_true
     }
 
     def test_only_fish_shipsanity_locations(self):
@@ -840,8 +838,8 @@ class TestShipsanityFishExcludeIsland(SVTestBase):
 
 class TestShipsanityFishExcludeQiOrders(SVTestBase):
     options = {
-        Shipsanity.internal_name: Shipsanity.option_fish,
-        SpecialOrderLocations.internal_name: SpecialOrderLocations.option_board_only
+        options.Shipsanity.internal_name: options.Shipsanity.option_fish,
+        options.SpecialOrderLocations.internal_name: options.SpecialOrderLocations.option_board_only
     }
 
     def test_only_fish_shipsanity_locations(self):
@@ -864,8 +862,8 @@ class TestShipsanityFishExcludeQiOrders(SVTestBase):
 
 class TestShipsanityFullShipment(SVTestBase):
     options = {
-        Shipsanity.internal_name: Shipsanity.option_full_shipment,
-        SpecialOrderLocations.internal_name: SpecialOrderLocations.option_board_qi
+        options.Shipsanity.internal_name: options.Shipsanity.option_full_shipment,
+        options.SpecialOrderLocations.internal_name: options.SpecialOrderLocations.option_board_qi
     }
 
     def test_only_full_shipment_shipsanity_locations(self):
@@ -891,8 +889,8 @@ class TestShipsanityFullShipment(SVTestBase):
 
 class TestShipsanityFullShipmentExcludeIsland(SVTestBase):
     options = {
-        Shipsanity.internal_name: Shipsanity.option_full_shipment,
-        ExcludeGingerIsland.internal_name: ExcludeGingerIsland.option_true
+        options.Shipsanity.internal_name: options.Shipsanity.option_full_shipment,
+        options.ExcludeGingerIsland.internal_name: options.ExcludeGingerIsland.option_true
     }
 
     def test_only_full_shipment_shipsanity_locations(self):
@@ -918,8 +916,8 @@ class TestShipsanityFullShipmentExcludeIsland(SVTestBase):
 
 class TestShipsanityFullShipmentExcludeQiBoard(SVTestBase):
     options = {
-        Shipsanity.internal_name: Shipsanity.option_full_shipment,
-        SpecialOrderLocations.internal_name: SpecialOrderLocations.option_disabled
+        options.Shipsanity.internal_name: options.Shipsanity.option_full_shipment,
+        options.SpecialOrderLocations.internal_name: options.SpecialOrderLocations.option_disabled
     }
 
     def test_only_full_shipment_shipsanity_locations(self):
@@ -945,8 +943,8 @@ class TestShipsanityFullShipmentExcludeQiBoard(SVTestBase):
 
 class TestShipsanityFullShipmentWithFish(SVTestBase):
     options = {
-        Shipsanity.internal_name: Shipsanity.option_full_shipment_with_fish,
-        SpecialOrderLocations.internal_name: SpecialOrderLocations.option_board_qi
+        options.Shipsanity.internal_name: options.Shipsanity.option_full_shipment_with_fish,
+        options.SpecialOrderLocations.internal_name: options.SpecialOrderLocations.option_board_qi
     }
 
     def test_only_full_shipment_and_fish_shipsanity_locations(self):
@@ -980,8 +978,8 @@ class TestShipsanityFullShipmentWithFish(SVTestBase):
 
 class TestShipsanityFullShipmentWithFishExcludeIsland(SVTestBase):
     options = {
-        Shipsanity.internal_name: Shipsanity.option_full_shipment_with_fish,
-        ExcludeGingerIsland.internal_name: ExcludeGingerIsland.option_true
+        options.Shipsanity.internal_name: options.Shipsanity.option_full_shipment_with_fish,
+        options.ExcludeGingerIsland.internal_name: options.ExcludeGingerIsland.option_true
     }
 
     def test_only_full_shipment_and_fish_shipsanity_locations(self):
@@ -1015,8 +1013,8 @@ class TestShipsanityFullShipmentWithFishExcludeIsland(SVTestBase):
 
 class TestShipsanityFullShipmentWithFishExcludeQiBoard(SVTestBase):
     options = {
-        Shipsanity.internal_name: Shipsanity.option_full_shipment_with_fish,
-        SpecialOrderLocations.internal_name: SpecialOrderLocations.option_board_only
+        options.Shipsanity.internal_name: options.Shipsanity.option_full_shipment_with_fish,
+        options.SpecialOrderLocations.internal_name: options.SpecialOrderLocations.option_board_only
     }
 
     def test_only_full_shipment_and_fish_shipsanity_locations(self):

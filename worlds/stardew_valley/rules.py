@@ -41,6 +41,16 @@ from .strings.tv_channel_names import Channel
 from .strings.villager_names import NPC, ModNPC
 from .strings.wallet_item_names import Wallet
 
+mine_amount_of_floor_in_a_day = 10
+mine_elevator_distance = 5
+mine_max_elevator_floor = 120
+mine_floors_to_check_tier = {5, 45, 85}
+
+skull_cavern_amount_of_floor_in_a_day = 25
+skull_cavern_elevator_distance = 25
+skull_cavern_max_elevator_floor = 200
+skull_cavern_floors_to_check_tier = {25, 75, 125}
+
 
 def set_rules(logic: StardewLogic, world: PlayerMultiWorldAdapter, bundle_rooms: List[BundleRoom]):
     all_location_names = [location.name for location in world.get_all_locations()]
@@ -157,18 +167,18 @@ def set_modded_skill_rule_for_level(logic: StardewLogic, world: PlayerMultiWorld
         set_modded_skill_rule(logic, world, ModSkill.archaeology, level)
 
 
-def get_skill_level_location(world, skill: str, level: int) -> str:
+def get_skill_level_location(skill: str, level: int) -> str:
     return f"Level {level} {skill}"
 
 
 def set_vanilla_skill_rule(logic: StardewLogic, world: PlayerMultiWorldAdapter, skill: str, level: int):
     rule = logic.skill.can_earn_level(skill, level)
-    world.set_location_rule(get_skill_level_location(world, skill, level), rule)
+    world.set_location_rule(get_skill_level_location(skill, level), rule)
 
 
 def set_modded_skill_rule(logic: StardewLogic, world: PlayerMultiWorldAdapter, skill: str, level: int):
     rule = logic.mod.skill.can_earn_mod_skill_level(skill, level)
-    world.set_location_rule(get_skill_level_location(world, skill, level), rule)
+    world.set_location_rule(get_skill_level_location(skill, level), rule)
 
 
 def set_entrance_rules(logic: StardewLogic, world: PlayerMultiWorldAdapter):
@@ -240,18 +250,29 @@ def set_bedroom_entrance_rules(logic: StardewLogic, world: PlayerMultiWorldAdapt
 
 
 def set_mines_floor_entrance_rules(logic: StardewLogic, world: PlayerMultiWorldAdapter):
-    for floor in range(5, 120 + 5, 5):
-        rule = logic.mine.has_mine_elevator_to_floor(floor - 10)
-        if floor == 5 or floor == 45 or floor == 85:
+    # In the first levels accessible from the top of the mine, we only check that the player can progress.
+    for floor in range(mine_elevator_distance, mine_amount_of_floor_in_a_day, mine_elevator_distance):
+        world.set_entrance_rule(dig_to_mines_floor(floor), logic.mine.can_progress_in_the_mines_from_floor(floor))
+
+    for floor in range(mine_amount_of_floor_in_a_day, mine_max_elevator_floor + mine_elevator_distance, mine_elevator_distance):
+        rule = logic.mine.has_mine_elevator_to_floor(floor - mine_amount_of_floor_in_a_day)
+        if floor in mine_floors_to_check_tier:
             rule = rule & logic.mine.can_progress_in_the_mines_from_floor(floor)
+
         world.set_entrance_rule(dig_to_mines_floor(floor), rule)
 
 
 def set_skull_cavern_floor_entrance_rules(logic: StardewLogic, world: PlayerMultiWorldAdapter):
-    for floor in range(25, 200 + 25, 25):
-        rule = logic.mod.elevator.has_skull_cavern_elevator_to_floor(floor - 25)
-        if floor == 25 or floor == 75 or floor == 125:
+    for floor in range(skull_cavern_elevator_distance, skull_cavern_amount_of_floor_in_a_day, skull_cavern_elevator_distance):
+        world.set_entrance_rule(dig_to_mines_floor(floor), logic.mine.can_progress_in_the_skull_cavern_from_floor(floor))
+
+    for floor in range(skull_cavern_amount_of_floor_in_a_day,
+                       skull_cavern_max_elevator_floor + skull_cavern_elevator_distance,
+                       skull_cavern_elevator_distance):
+        rule = logic.mod.elevator.has_skull_cavern_elevator_to_floor(floor - skull_cavern_amount_of_floor_in_a_day)
+        if floor in skull_cavern_floors_to_check_tier:
             rule = rule & logic.mine.can_progress_in_the_skull_cavern_from_floor(floor)
+
         world.set_entrance_rule(dig_to_skull_floor(floor), rule)
 
 

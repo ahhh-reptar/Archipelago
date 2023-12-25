@@ -3,13 +3,13 @@ from typing import Union
 from Utils import cache_self1
 from .base_logic import BaseLogicMixin, BaseLogic
 from .combat_logic import CombatLogicMixin
+from .option_logic import OptionLogicMixin
 from .received_logic import ReceivedLogicMixin
 from .region_logic import RegionLogicMixin
 from .skill_logic import SkillLogicMixin
 from .tool_logic import ToolLogicMixin
 from .. import options
-from ..options import ToolProgression
-from ..stardew_rule import StardewRule, And, True_
+from ..stardew_rule import StardewRule, And, true_
 from ..strings.performance_names import Performance
 from ..strings.region_names import Region
 from ..strings.skill_names import Skill
@@ -22,7 +22,7 @@ class MineLogicMixin(BaseLogicMixin):
         self.mine = MineLogic(*args, **kwargs)
 
 
-class MineLogic(BaseLogic[Union[MineLogicMixin, RegionLogicMixin, ReceivedLogicMixin, CombatLogicMixin, ToolLogicMixin, SkillLogicMixin]]):
+class MineLogic(BaseLogic[Union[MineLogicMixin, RegionLogicMixin, ReceivedLogicMixin, CombatLogicMixin, ToolLogicMixin, SkillLogicMixin, OptionLogicMixin]]):
     # Regions
     def can_mine_in_the_mines_floor_1_40(self) -> StardewRule:
         return self.logic.region.can_reach(Region.mines_floor_5)
@@ -51,36 +51,50 @@ class MineLogic(BaseLogic[Union[MineLogicMixin, RegionLogicMixin, ReceivedLogicM
 
     @cache_self1
     def can_progress_in_the_mines_from_floor(self, floor: int) -> StardewRule:
-        tier = floor // 40
-        rules = []
-        weapon_rule = self.logic.mine.get_weapon_rule_for_floor_tier(tier)
-        rules.append(weapon_rule)
-        if self.options.tool_progression & ToolProgression.option_progressive:
-            rules.append(self.logic.tool.has_tool(Tool.pickaxe, ToolMaterial.tiers[tier]))
-        if self.options.skill_progression == options.SkillProgression.option_progressive:
-            skill_tier = min(10, max(0, tier * 2))
-            rules.append(self.logic.skill.has_level(Skill.combat, skill_tier))
-            rules.append(self.logic.skill.has_level(Skill.mining, skill_tier))
-        return And(*rules)
+        assert floor >= 0, "Can't use elevator to go to a negative floor."
+        mine_tier = floor // 40
+
+        has_weapon_to_progress = self.logic.mine.get_weapon_rule_for_floor_tier(mine_tier)
+
+        required_tool_tier = mine_tier
+        has_tools_to_progress = self.logic.option.bitwise_choice(options.ToolProgression,
+                                                                 value=options.ToolProgression.option_progressive,
+                                                                 match=self.logic.tool.has_tool(Tool.pickaxe, ToolMaterial.tiers[required_tool_tier]),
+                                                                 no_match=true_)
+
+        required_skill_tier = min(10, max(0, mine_tier * 2))
+        progressive_skill_rule = self.logic.skill.has_level(Skill.combat, required_skill_tier) & self.logic.skill.has_level(Skill.mining, required_skill_tier)
+        has_skills_to_progress = self.logic.option.choose(options.SkillProgression,
+                                                          choices={options.SkillProgression.option_progressive: progressive_skill_rule},
+                                                          default=true_)
+
+        return And(has_weapon_to_progress, has_tools_to_progress, has_skills_to_progress)
 
     @cache_self1
     def has_mine_elevator_to_floor(self, floor: int) -> StardewRule:
-        if floor < 0:
-            floor = 0
-        if self.options.elevator_progression != options.ElevatorProgression.option_vanilla:
-            return self.logic.received("Progressive Mine Elevator", floor // 5)
-        return True_()
+        assert floor >= 0, "Can't use elevator to go to a negative floor."
+
+        return self.logic.option.choose(options.ElevatorProgression,
+                                        choices={options.ElevatorProgression.option_vanilla: true_},
+                                        default=self.logic.received("Progressive Mine Elevator", floor // 5))
 
     @cache_self1
     def can_progress_in_the_skull_cavern_from_floor(self, floor: int) -> StardewRule:
-        tier = floor // 50
-        rules = []
-        weapon_rule = self.logic.combat.has_great_weapon
-        rules.append(weapon_rule)
-        if self.options.tool_progression & ToolProgression.option_progressive:
-            rules.append(self.logic.received("Progressive Pickaxe", min(4, max(0, tier + 2))))
-        if self.options.skill_progression == options.SkillProgression.option_progressive:
-            skill_tier = min(10, max(0, tier * 2 + 6))
-            rules.extend({self.logic.skill.has_level(Skill.combat, skill_tier),
-                          self.logic.skill.has_level(Skill.mining, skill_tier)})
-        return And(*rules)
+        assert floor >= 0, "Can't use elevator to go to a negative floor."
+        skull_cavern_tier = floor // 50
+
+        has_weapon_to_progress = self.logic.combat.has_great_weapon
+
+        required_tool_tier = min(4, max(0, skull_cavern_tier + 2))
+        has_tools_to_progress = self.logic.option.bitwise_choice(options.ToolProgression,
+                                                                 value=options.ToolProgression.option_progressive,
+                                                                 match=self.logic.tool.has_tool(Tool.pickaxe, ToolMaterial.tiers[required_tool_tier]),
+                                                                 no_match=true_)
+
+        required_skill_tier = min(10, max(0, skull_cavern_tier * 2 + 6))
+        progressive_skill_rule = self.logic.skill.has_level(Skill.combat, required_skill_tier) & self.logic.skill.has_level(Skill.mining, required_skill_tier)
+        has_skills_to_progress = self.logic.option.choose(options.SkillProgression,
+                                                          choices={options.SkillProgression.option_progressive: progressive_skill_rule},
+                                                          default=true_)
+
+        return And(has_weapon_to_progress, has_tools_to_progress, has_skills_to_progress)

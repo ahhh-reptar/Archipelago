@@ -3,7 +3,7 @@ import unittest
 from argparse import Namespace
 from typing import Dict, FrozenSet, Tuple, Any, ClassVar, Iterable
 
-from BaseClasses import MultiWorld, CollectionState
+from BaseClasses import MultiWorld, CollectionState, Region
 from Utils import cache_argsless
 from test.bases import WorldTestBase
 from test.general import gen_steps, setup_solo_multiworld as setup_base_solo_multiworld
@@ -250,6 +250,14 @@ class SVTestBase(WorldTestBase, SVTestCase):
     def assert_rule_false(self, rule: StardewRule):
         self.assertFalse(rule(self.multiworld.state, self.world.multi_world_adapter),
                          rule.explain(self.multiworld.state, self.world.multi_world_adapter, expected=False))
+
+    def assert_can_reach(self, region: Region):
+        self.assertTrue(region.can_reach(self.multiworld.state),
+                        self.world.logic.region.can_reach(region.name).explain(self.multiworld.state, self.world.multi_world_adapter))
+
+    def assert_cannot_reach(self, region: Region):
+        self.assertFalse(region.can_reach(self.multiworld.state),
+                         self.world.logic.region.can_reach(region.name).explain(self.multiworld.state, self.world.multi_world_adapter, expected=False))
 
 
 pre_generated_worlds = {}
