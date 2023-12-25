@@ -10,7 +10,6 @@ from .region_logic import RegionLogicMixin
 from .season_logic import SeasonLogicMixin
 from .. import options
 from ..mods.logic.magic_logic import MagicLogicMixin
-from ..options import ToolProgression
 from ..stardew_rule import StardewRule, True_
 from ..strings.region_names import Region
 from ..strings.skill_names import ModSkill
@@ -61,14 +60,13 @@ OptionLogicMixin]]):
         assert level > 0, "Can't have a negative fishing rod level"
 
         progressive_tool_rule = self.logic.received(f"Progressive {Tool.fishing_rod}", level)
-        if self.options.tool_progression & ToolProgression.option_progressive:
-            return progressive_tool_rule
 
         if level == 1:
             return self.logic.option.bitwise_choice(options.ToolProgression,
                                                     value=options.ToolProgression.option_progressive,
                                                     match=progressive_tool_rule,
                                                     no_match=self.logic.region.can_reach(Region.beach))
+
         return self.logic.option.bitwise_choice(options.ToolProgression,
                                                 value=options.ToolProgression.option_progressive,
                                                 match=progressive_tool_rule,
