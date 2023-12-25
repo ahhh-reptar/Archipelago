@@ -2,15 +2,15 @@ from typing import Union
 
 from Utils import cache_self1
 from .base_logic import BaseLogicMixin, BaseLogic
+from .option_logic import OptionLogicMixin
 from .received_logic import ReceivedLogicMixin
 from .region_logic import RegionLogicMixin
 from .season_logic import SeasonLogicMixin
 from .skill_logic import SkillLogicMixin
 from .tool_logic import ToolLogicMixin
+from .. import options
 from ..data import FishItem
 from ..data.fish_data import legendary_fish
-from ..options import ExcludeGingerIsland
-from ..options import SpecialOrderLocations
 from ..stardew_rule import StardewRule, True_, False_, And
 from ..strings.fish_names import SVEFish
 from ..strings.quality_names import FishQuality
@@ -24,7 +24,8 @@ class FishingLogicMixin(BaseLogicMixin):
         self.fishing = FishingLogic(*args, **kwargs)
 
 
-class FishingLogic(BaseLogic[Union[FishingLogicMixin, ReceivedLogicMixin, RegionLogicMixin, SeasonLogicMixin, ToolLogicMixin, SkillLogicMixin]]):
+class FishingLogic(
+    BaseLogic[Union[FishingLogicMixin, ReceivedLogicMixin, RegionLogicMixin, SeasonLogicMixin, ToolLogicMixin, SkillLogicMixin, OptionLogicMixin]]):
     def can_fish_in_freshwater(self) -> StardewRule:
         return self.logic.skill.can_fish() & self.logic.region.can_reach_any((Region.forest, Region.town, Region.mountain))
 
@@ -57,11 +58,15 @@ class FishingLogic(BaseLogic[Union[FishingLogicMixin, ReceivedLogicMixin, Region
         return quest_rule & region_rule & season_rule & difficulty_rule & item_rule
 
     def can_start_extended_family_quest(self) -> StardewRule:
-        if self.options.exclude_ginger_island == ExcludeGingerIsland.option_true:
-            return False_()
-        if self.options.special_order_locations != SpecialOrderLocations.option_board_qi:
-            return False_()
-        return self.logic.region.can_reach(Region.qi_walnut_room) & And(*(self.logic.fishing.can_catch_fish(fish) for fish in legendary_fish))
+        def create_rule(exclude_ginger_island, special_order_locations):
+            if exclude_ginger_island == options.ExcludeGingerIsland.option_true:
+                return False_()
+            if special_order_locations != options.SpecialOrderLocations.option_board_qi:
+                return False_()
+            return self.logic.region.can_reach(Region.qi_walnut_room) & And(*(self.logic.fishing.can_catch_fish(fish) for fish in legendary_fish))
+
+        return self.logic.option.custom_rule(options.ExcludeGingerIsland, options.SpecialOrderLocations,
+                                             rule_factory=create_rule)
 
     def can_catch_quality_fish(self, fish_quality: str) -> StardewRule:
         if fish_quality == FishQuality.basic:
