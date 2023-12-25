@@ -22,7 +22,7 @@ from ..strings.machine_names import Machine
 from ..strings.performance_names import Performance
 from ..strings.quality_names import ForageQuality
 from ..strings.region_names import Region
-from ..strings.skill_names import Skill
+from ..strings.skill_names import Skill, all_mod_skills
 from ..strings.tool_names import ToolMaterial, Tool
 
 skill_progressive_item_names = ("Farming Level", "Mining Level", "Foraging Level", "Fishing Level", "Combat Level")
@@ -42,6 +42,10 @@ CombatLogicMixin, CropLogicMixin, MagicLogicMixin, OptionLogicMixin]]):
     def can_earn_level(self, skill: str, level: int) -> StardewRule:
         if level <= 0:
             return True_()
+
+        if skill in all_mod_skills:
+            # FIXME I hate this
+            return self.logic.mod.skill.can_earn_mod_skill_level(skill, level)
 
         tool_level = (level - 1) // 2
         tool_material = ToolMaterial.tiers[tool_level]
@@ -75,10 +79,10 @@ CombatLogicMixin, CropLogicMixin, MagicLogicMixin, OptionLogicMixin]]):
         if level == 0:
             return True_()
 
-        if self.options.skill_progression == options.SkillProgression.option_progressive:
-            return self.logic.received(f"{skill} Level", level)
-
-        return self.logic.skill.can_earn_level(skill, level)
+        progressive_skills_rule = self.logic.received(f"{skill} Level", level)
+        return self.logic.option.choose(options.SkillProgression,
+                                        choices={options.SkillProgression.option_progressive: progressive_skills_rule, },
+                                        default=self.logic.skill.can_earn_level(skill, level))
 
     @cache_self1
     def has_farming_level(self, level: int) -> StardewRule:
