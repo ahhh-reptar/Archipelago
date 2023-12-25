@@ -9,7 +9,7 @@ from .received_logic import ReceivedLogicMixin
 from .region_logic import RegionLogicMixin
 from .time_logic import TimeLogicMixin
 from .. import options
-from ..stardew_rule import StardewRule, True_, HasProgressionPercent, False_
+from ..stardew_rule import StardewRule, True_, HasProgressionPercent, False_, true_
 from ..strings.ap_names.event_names import Event
 from ..strings.currency_names import Currency
 from ..strings.region_names import Region
@@ -65,9 +65,10 @@ OptionLogicMixin]]):
 
     @cache_self1
     def can_spend(self, amount: int) -> StardewRule:
-        if self.options.starting_money == -1:
-            return True_()
-        return self.logic.money.can_have_earned_total(amount * 5)
+        return self.logic.option.choose(options.StartingMoney,
+                                        choices={
+                                            options.StartingMoney.special_range_names["unlimited"]: true_,
+                                        }, default=self.logic.money.can_have_earned_total(amount * 5))
 
     # Should be cached
     def can_spend_at(self, region: str, amount: int) -> StardewRule:

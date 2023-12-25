@@ -7,6 +7,7 @@ from worlds.generic.Rules import CollectionRule
 from .options import StardewValleyOptions
 from .stardew_rule import StardewRule
 from .stardew_rule.literal import LiteralStardewRule
+from .stardew_rule.option import BaseOptionRule
 from .stardew_rule.protocol import PlayerWorldContext
 
 
@@ -39,6 +40,12 @@ class PlayerMultiWorldAdapter(PlayerWorldContext):
         return self.multi_world.get_locations(self.player)
 
     def _add_context(self, rule: StardewRule):
+        # FIXME this bypasses the abstractions. This should be handled by the rules themselves.
+        # If possible, we choose the rule to use in advance, so the non-option based rule will be directly set in the spot.
+        while isinstance(rule, BaseOptionRule):
+            rule = rule.choose_rule(self)
+
+        # Literals never need context to be evaluated, and by definition will not contain any other rule, so we can skip evaluating context.
         if isinstance(rule, LiteralStardewRule):
             return rule
 
