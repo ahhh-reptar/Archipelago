@@ -4,9 +4,11 @@ from Utils import cache_self1
 from .base_logic import BaseLogicMixin, BaseLogic
 from .has_logic import HasLogicMixin
 from .money_logic import MoneyLogicMixin
+from .option_logic import OptionLogicMixin
 from .received_logic import ReceivedLogicMixin
 from .region_logic import RegionLogicMixin
 from .season_logic import SeasonLogicMixin
+from .. import options
 from ..mods.logic.magic_logic import MagicLogicMixin
 from ..options import ToolProgression
 from ..stardew_rule import StardewRule, True_
@@ -36,16 +38,21 @@ class ToolLogicMixin(BaseLogicMixin):
         self.tool = ToolLogic(*args, **kwargs)
 
 
-class ToolLogic(BaseLogic[Union[ToolLogicMixin, HasLogicMixin, ReceivedLogicMixin, RegionLogicMixin, SeasonLogicMixin, MoneyLogicMixin, MagicLogicMixin]]):
+class ToolLogic(BaseLogic[Union[ToolLogicMixin, HasLogicMixin, ReceivedLogicMixin, RegionLogicMixin, SeasonLogicMixin, MoneyLogicMixin, MagicLogicMixin,
+OptionLogicMixin]]):
     # Should be cached
     def has_tool(self, tool: str, material: str = ToolMaterial.basic) -> StardewRule:
         if material == ToolMaterial.basic or tool == Tool.scythe:
             return True_()
 
-        if self.options.tool_progression & ToolProgression.option_progressive:
-            return self.logic.received(f"Progressive {tool}", tool_materials[material])
+        def create_rule(tool_progression):
+            if tool_progression & options.ToolProgression.option_progressive:
+                return self.logic.received(f"Progressive {tool}", tool_materials[material])
 
-        return self.logic.has(f"{material} Bar") & self.logic.money.can_spend(tool_upgrade_prices[material])
+            return self.logic.has(f"{material} Bar") & self.logic.money.can_spend(tool_upgrade_prices[material])
+
+        # For some reason, using a "choose" here completely destroys performances
+        return self.logic.option.custom_rule(options.ToolProgression, rule_factory=create_rule)
 
     @cache_self1
     def has_fishing_rod(self, level: int) -> StardewRule:

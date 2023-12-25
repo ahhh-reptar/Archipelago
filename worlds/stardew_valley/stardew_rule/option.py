@@ -93,4 +93,5 @@ class CustomOptionRule(BaseOptionRule):
 
     def choose_rule(self, context: PlayerWorldContext) -> StardewRule:
         # TODO add cache based on option dependencies, mods will be a problem because the option is a set and not a frozenset ...
+        #  Note that this is probably not such a major improvement, since it will only cause the rule to be shared between all players.
         return self.rule_factory(*context.get_option_values(*self.option_dependency_names))

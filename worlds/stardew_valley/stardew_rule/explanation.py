@@ -7,6 +7,8 @@ from typing import Iterable, Protocol, Any, runtime_checkable
 
 from BaseClasses import CollectionState
 
+max_explanation_depth = 10
+
 
 @runtime_checkable
 class ExplainableRule(Protocol):
@@ -32,7 +34,7 @@ class RuleExplanation:
         return "  " * depth + f"{str(self.rule)} -> {self.result}"
 
     def __str__(self, depth=0):
-        if not self.sub_rules:
+        if not self.sub_rules or depth >= max_explanation_depth:
             return self.summary(depth)
 
         return self.summary(depth) + "\n" + "\n".join(RuleExplanation.__str__(i, depth + 1)
@@ -40,7 +42,7 @@ class RuleExplanation:
                                                       for i in sorted(self.explained_sub_rules, key=lambda x: x.result))
 
     def __repr__(self, depth=0):
-        if not self.sub_rules:
+        if not self.sub_rules or depth >= max_explanation_depth:
             return self.summary(depth)
 
         return self.summary(depth) + "\n" + "\n".join(RuleExplanation.__repr__(i, depth + 1)
