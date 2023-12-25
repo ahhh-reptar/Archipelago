@@ -7,6 +7,7 @@ from .base_logic import BaseLogic, BaseLogicMixin
 from ..items import item_table
 from ..options import StardewValleyOption
 from ..stardew_rule import StardewRule, ChooseOptionRule, OptionReceived, BitwiseOptionRule
+from ..stardew_rule.option import ReceivedAmountFunction
 
 
 class OptionLogicMixin(BaseLogicMixin):
@@ -31,6 +32,6 @@ class OptionLogic(BaseLogic[None]):
         return BitwiseOptionRule(option.internal_name, value, match, no_match)
 
     @staticmethod
-    def received(option: Type[StardewValleyOption], item: str) -> StardewRule:
+    def received(option: Type[StardewValleyOption], item: str, received_amount_function: ReceivedAmountFunction = lambda x: x) -> StardewRule:
         assert item_table[item].classification & ItemClassification.progression, f"Item [{item}] has to be progression to be used in logic"
-        return OptionReceived(option.internal_name, item)
+        return OptionReceived(option.internal_name, item, received_amount_function)

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Tuple, Mapping, Optional, Union, Set
+from typing import Tuple, Mapping, Optional, Union, Set, Protocol
 
 from BaseClasses import CollectionState
 from .base import BaseStardewRule
@@ -59,12 +59,21 @@ class BitwiseOptionRule(BaseOptionRule):
             return self.no_match
 
 
+class ReceivedAmountFunction(Protocol):
+    def __call__(self, option_value: int) -> int:
+        ...
+
+
 @dataclass(frozen=True)
 class OptionReceived(BaseOptionRule):
     item: str
+    transform_received_amount: ReceivedAmountFunction
 
     def choose_rule(self, context: PlayerWorldContext) -> StardewRule:
-        return Received(self.item, context.get_option_value(self.option_name))
+        return Received(self.item, self.compute_received_amount(context))
+
+    def compute_received_amount(self, context):
+        return self.transform_received_amount(self.get_option_value(context))
 
     def __repr__(self):
         return f"Received [Option {self.option_name}] {self.item}"
