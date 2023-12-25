@@ -17,6 +17,8 @@ from ..strings.skill_names import ModSkill
 from ..strings.spells import MagicSpell
 from ..strings.tool_names import ToolMaterial, Tool
 
+fishing_rod_price_by_tier = {2: 500, 3: 1800, 4: 7500}
+
 tool_materials = {
     ToolMaterial.copper: 1,
     ToolMaterial.iron: 2,
@@ -51,19 +53,26 @@ OptionLogicMixin]]):
 
             return self.logic.has(f"{material} Bar") & self.logic.money.can_spend(tool_upgrade_prices[material])
 
-        # For some reason, using a "choose" here completely destroys performances
+        # For some reason, using a "bitwise_choice" here completely destroys performances
         return self.logic.option.custom_rule(options.ToolProgression, rule_factory=create_rule)
 
     @cache_self1
     def has_fishing_rod(self, level: int) -> StardewRule:
-        if self.options.tool_progression & ToolProgression.option_progressive:
-            return self.logic.received(f"Progressive {Tool.fishing_rod}", level)
+        assert level > 0, "Can't have a negative fishing rod level"
 
-        if level <= 1:
-            return self.logic.region.can_reach(Region.beach)
-        prices = {2: 500, 3: 1800, 4: 7500}
-        level = min(level, 4)
-        return self.logic.money.can_spend_at(Region.fish_shop, prices[level])
+        progressive_tool_rule = self.logic.received(f"Progressive {Tool.fishing_rod}", level)
+        if self.options.tool_progression & ToolProgression.option_progressive:
+            return progressive_tool_rule
+
+        if level == 1:
+            return self.logic.option.bitwise_choice(options.ToolProgression,
+                                                    value=options.ToolProgression.option_progressive,
+                                                    match=progressive_tool_rule,
+                                                    no_match=self.logic.region.can_reach(Region.beach))
+        return self.logic.option.bitwise_choice(options.ToolProgression,
+                                                value=options.ToolProgression.option_progressive,
+                                                match=progressive_tool_rule,
+                                                no_match=self.logic.money.can_spend_at(Region.fish_shop, fishing_rod_price_by_tier[min(level, 4)]))
 
     # Should be cached
     def can_forage(self, season: str, region: str = Region.forest, need_hoe: bool = False) -> StardewRule:
