@@ -8,6 +8,7 @@ from .fishing_logic import FishingLogicMixin
 from .has_logic import HasLogicMixin
 from .mine_logic import MineLogicMixin
 from .money_logic import MoneyLogicMixin
+from .option_logic import OptionLogicMixin
 from .received_logic import ReceivedLogicMixin
 from .region_logic import RegionLogicMixin
 from .relationship_logic import RelationshipLogicMixin
@@ -16,6 +17,7 @@ from .skill_logic import SkillLogicMixin
 from .time_logic import TimeLogicMixin
 from .tool_logic import ToolLogicMixin
 from .wallet_logic import WalletLogicMixin
+from .. import options
 from ..stardew_rule import StardewRule, Has, True_
 from ..strings.artisan_good_names import ArtisanGood
 from ..strings.building_names import Building
@@ -43,7 +45,8 @@ class QuestLogicMixin(BaseLogicMixin):
 
 
 class QuestLogic(BaseLogic[Union[HasLogicMixin, ReceivedLogicMixin, MoneyLogicMixin, MineLogicMixin, RegionLogicMixin, RelationshipLogicMixin, ToolLogicMixin,
-FishingLogicMixin, CookingLogicMixin, CombatLogicMixin, SeasonLogicMixin, SkillLogicMixin, WalletLogicMixin, QuestLogicMixin, BuildingLogicMixin, TimeLogicMixin]]):
+FishingLogicMixin, CookingLogicMixin, CombatLogicMixin, SeasonLogicMixin, SkillLogicMixin, WalletLogicMixin, QuestLogicMixin, BuildingLogicMixin, TimeLogicMixin,
+OptionLogicMixin]]):
 
     def initialize_rules(self):
         self.update_rules({
@@ -98,7 +101,8 @@ FishingLogicMixin, CookingLogicMixin, CombatLogicMixin, SeasonLogicMixin, SkillL
             Quest.grannys_gift: self.logic.season.has(Season.spring) & self.logic.has(Forageable.leek) & self.logic.relationship.can_meet(NPC.evelyn),
             Quest.exotic_spirits: self.logic.season.has(Season.winter) & self.logic.has(Forageable.coconut) & self.logic.relationship.can_meet(NPC.gus),
             Quest.catch_a_lingcod: self.logic.season.has(Season.winter) & self.logic.has(Fish.lingcod) & self.logic.relationship.can_meet(NPC.willy),
-            Quest.dark_talisman: self.logic.region.can_reach(Region.railroad) & self.logic.wallet.has_rusty_key() & self.logic.relationship.can_meet(NPC.krobus),
+            Quest.dark_talisman: self.logic.region.can_reach(Region.railroad) & self.logic.wallet.has_rusty_key() & self.logic.relationship.can_meet(
+                NPC.krobus),
             Quest.goblin_problem: self.logic.region.can_reach(Region.witch_swamp),
             Quest.magic_ink: self.logic.relationship.can_meet(NPC.wizard),
             Quest.the_pirates_wife: self.logic.relationship.can_meet(NPC.kent) & self.logic.relationship.can_meet(NPC.gus) &
@@ -113,16 +117,22 @@ FishingLogicMixin, CookingLogicMixin, CombatLogicMixin, SeasonLogicMixin, SkillL
         return Has(quest, self.registry.quest_rules)
 
     def has_club_card(self) -> StardewRule:
-        if self.options.quest_locations < 0:
-            return self.logic.quest.can_complete_quest(Quest.the_mysterious_qi)
-        return self.logic.received(Wallet.club_card)
+        return self.logic.option.choose(options.QuestLocations,
+                                        choices={
+                                            options.QuestLocations.special_range_names["none"]: self.logic.quest.can_complete_quest(Quest.the_mysterious_qi)
+                                        },
+                                        default=self.logic.received(Wallet.club_card))
 
     def has_magnifying_glass(self) -> StardewRule:
-        if self.options.quest_locations < 0:
-            return self.logic.quest.can_complete_quest(Quest.a_winter_mystery)
-        return self.logic.received(Wallet.magnifying_glass)
+        return self.logic.option.choose(options.QuestLocations,
+                                        choices={
+                                            options.QuestLocations.special_range_names["none"]: self.logic.quest.can_complete_quest(Quest.a_winter_mystery)
+                                        },
+                                        default=self.logic.received(Wallet.magnifying_glass))
 
     def has_dark_talisman(self) -> StardewRule:
-        if self.options.quest_locations < 0:
-            return self.logic.quest.can_complete_quest(Quest.dark_talisman)
-        return self.logic.received(Wallet.dark_talisman)
+        return self.logic.option.choose(options.QuestLocations,
+                                        choices={
+                                            options.QuestLocations.special_range_names["none"]: self.logic.quest.can_complete_quest(Quest.dark_talisman)
+                                        },
+                                        default=self.logic.received(Wallet.dark_talisman))

@@ -2,7 +2,7 @@ from types import MappingProxyType
 from typing import Type, Mapping, Any, Union, Optional
 
 from BaseClasses import ItemClassification
-from Options import Choice
+from Options import Choice, NamedRange
 from .base_logic import BaseLogic, BaseLogicMixin
 from ..items import item_table
 from ..options import StardewValleyOption
@@ -19,8 +19,12 @@ class OptionLogicMixin(BaseLogicMixin):
 class OptionLogic(BaseLogic[None]):
 
     @staticmethod
-    def choose(option: Union[Type[StardewValleyOption], Choice], /, *, choices: Mapping[Any, StardewRule], default: Optional[StardewRule] = None):
+    def choose(option: Union[Type[StardewValleyOption], Type[Choice], Type[NamedRange]], /, *,
+               choices: Mapping[Any, StardewRule],
+               default: Optional[StardewRule] = None):
         if not default:
+            assert not issubclass(option, NamedRange), "A default choice is mandatory when using NamedRange options."
+
             for value_name, value_value in option.options.items():
                 assert value_value in choices.keys(), \
                     f"All possible value must be supplied in 'choices' when there is no default, a choice for [{value_name}] is missing."
