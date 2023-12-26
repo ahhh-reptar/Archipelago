@@ -249,7 +249,7 @@ class StardewValleyWorld(World):
                                        Event.victory)
         elif self.options.goal == Goal.option_protector_of_the_valley:
             self.create_event_location(location_table[GoalName.protector_of_the_valley],
-                                       self.logic.can_complete_all_monster_slaying_goals(),
+                                       self.logic.monster.can_complete_all_monster_slaying_goals(),
                                        Event.victory)
         elif self.options.goal == Goal.option_full_shipment:
             self.create_event_location(location_table[GoalName.full_shipment],

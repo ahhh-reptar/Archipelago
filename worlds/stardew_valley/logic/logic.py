@@ -41,13 +41,12 @@ from ..data import all_purchasable_seeds, all_crops
 from ..data.craftable_data import all_crafting_recipes
 from ..data.crops_data import crops_by_name
 from ..data.fish_data import all_fish
-from ..data.monster_data import all_monsters_by_category, all_monsters_by_name
+from ..data.monster_data import all_monsters_by_name
 from ..data.museum_data import all_museum_items
 from ..data.recipe_data import all_cooking_recipes
 from ..mods.logic.magic_logic import MagicLogicMixin
 from ..mods.logic.mod_logic import ModLogicMixin
 from ..mods.mod_data import ModNames
-from ..options import SpecialOrderLocations, ExcludeGingerIsland, FestivalLocations, Fishsanity, Friendsanity, StardewValleyOptions
 from ..stardew_rule import False_, Or, True_, Count, And, StardewRule, true_
 from ..strings.animal_names import Animal, coop_animals, barn_animals
 from ..strings.animal_product_names import AnimalProduct
@@ -84,6 +83,16 @@ from ..strings.tool_names import Tool, ToolMaterial
 from ..strings.villager_names import NPC
 from ..strings.wallet_item_names import Wallet
 
+price_and_building_by_animal = {
+    Animal.chicken: (800, Building.coop),
+    Animal.cow: (1500, Building.barn),
+    Animal.goat: (4000, Building.big_barn),
+    Animal.duck: (1200, Building.big_coop),
+    Animal.sheep: (8000, Building.deluxe_barn),
+    Animal.rabbit: (8000, Building.deluxe_barn),
+    Animal.pig: (16000, Building.deluxe_barn)
+}
+
 sapling_prices = {Fruit.apple: 4000, Fruit.apricot: 2000, Fruit.cherry: 3400, Fruit.orange: 4000,
                   Fruit.peach: 6000,
                   Fruit.pomegranate: 6000, Fruit.banana: 0, Fruit.mango: 0}
@@ -100,11 +109,11 @@ class StardewLogic(ReceivedLogicMixin, HasLogicMixin, RegionLogicMixin, BuffLogi
                    CombatLogicMixin, MagicLogicMixin, MonsterLogicMixin, ToolLogicMixin, PetLogicMixin, CropLogicMixin,
                    SkillLogicMixin, FarmingLogicMixin, BundleLogicMixin, FishingLogicMixin, MineLogicMixin, CookingLogicMixin, AbilityLogicMixin,
                    SpecialOrderLogicMixin, QuestLogicMixin, CraftingLogicMixin, ModLogicMixin, OptionLogicMixin):
-    options: StardewValleyOptions
+    options: options.StardewValleyOptions
 
-    def __init__(self, options: StardewValleyOptions):
+    def __init__(self, player_options: options.StardewValleyOptions):
         self.registry = LogicRegistry()
-        super().__init__(self.registry, options, self)
+        super().__init__(self.registry, player_options, self)
 
         self.registry.fish_rules.update({fish.name: self.fishing.can_catch_fish(fish) for fish in all_fish})
         self.registry.museum_rules.update({donation.item_name: self.museum.can_find_museum_item(donation) for donation in all_museum_items})
@@ -519,26 +528,15 @@ class StardewLogic(ReceivedLogicMixin, HasLogicMixin, RegionLogicMixin, BuffLogi
                                ]
         return Count(12, rules_worth_a_point)
 
-    def can_complete_all_monster_slaying_goals(self) -> StardewRule:
-        rules = [self.time.has_lived_max_months]
-        exclude_island = self.options.exclude_ginger_island == ExcludeGingerIsland.option_true
-        island_regions = [Region.volcano_floor_5, Region.volcano_floor_10, Region.island_west, Region.dangerous_skull_cavern]
-        for category in all_monsters_by_category:
-            if exclude_island and all(all(location in island_regions for location in monster.locations) for monster in all_monsters_by_category[category]):
-                continue
-            rules.append(self.monster.can_kill_any(all_monsters_by_category[category]))
-
-        return And(*rules)
-
     def can_win_egg_hunt(self) -> StardewRule:
-        number_of_movement_buffs = self.options.movement_buff_number
-        if self.options.festival_locations == FestivalLocations.option_hard or number_of_movement_buffs < 2:
-            return True_()
-        return self.received(Buff.movement, number_of_movement_buffs // 2)
+        def create_rule(number_of_movement_buffs, festival_locations):
+            if festival_locations == options.FestivalLocations.option_hard or number_of_movement_buffs < 2:
+                return True_()
+            return self.received(Buff.movement, number_of_movement_buffs // 2)
+
+        return self.option.custom_rule(options.NumberOfMovementBuffs, options.FestivalLocations, rule_factory=create_rule)
 
     def can_succeed_luau_soup(self) -> StardewRule:
-        if self.options.festival_locations != FestivalLocations.option_hard:
-            return True_()
         eligible_fish = [Fish.blobfish, Fish.crimsonfish, "Ice Pip", Fish.lava_eel, Fish.legend, Fish.angler, Fish.catfish, Fish.glacierfish, Fish.mutant_carp,
                          Fish.spookfish, Fish.stingray, Fish.sturgeon, "Super Cucumber"]
         fish_rule = [self.has(fish) for fish in eligible_fish]
@@ -549,11 +547,13 @@ class StardewLogic(ReceivedLogicMixin, HasLogicMixin, RegionLogicMixin, BuffLogi
         keg_rules = [self.artisan.can_keg(kegable) for kegable in eligible_kegables]
         aged_rule = self.has(Machine.cask) & Or(*keg_rules)
         # There are a few other valid items but I don't feel like coding them all
-        return Or(*fish_rule) | aged_rule
+        can_succeed_luau_soup_rule = Or(*fish_rule) | aged_rule
+
+        return self.option.choice_or_true(options.FestivalLocations,
+                                          value=options.FestivalLocations.option_hard,
+                                          match=can_succeed_luau_soup_rule)
 
     def can_succeed_grange_display(self) -> StardewRule:
-        if self.options.festival_locations != FestivalLocations.option_hard:
-            return True_()
         animal_rule = self.has_animal(Generic.any)
         artisan_rule = self.artisan.can_keg(Generic.any) | self.artisan.can_preserves_jar(Generic.any)
         cooking_rule = self.money.can_spend_at(Region.saloon, 220)  # Salads at the bar are good enough
@@ -567,39 +567,21 @@ class StardewLogic(ReceivedLogicMixin, HasLogicMixin, RegionLogicMixin, BuffLogi
                            Vegetable.radish, Vegetable.taro_root, Vegetable.yam, Vegetable.red_cabbage, Vegetable.pumpkin]
         vegetable_rule = Or(*(self.has(vegetable) for vegetable in good_vegetables))
 
-        return animal_rule & artisan_rule & cooking_rule & fish_rule & \
-            forage_rule & fruit_rule & mineral_rule & vegetable_rule
+        can_succeed_grange_display_rule = animal_rule & artisan_rule & cooking_rule & fish_rule & forage_rule & fruit_rule & mineral_rule & vegetable_rule
+
+        return self.option.choice_or_true(options.FestivalLocations,
+                                          value=options.FestivalLocations.option_hard,
+                                          match=can_succeed_grange_display_rule)
 
     def can_win_fishing_competition(self) -> StardewRule:
         return self.skill.can_fish(difficulty=60)
 
     def can_buy_animal(self, animal: str) -> StardewRule:
-        price = 0
-        building = ""
-        if animal == Animal.chicken:
-            price = 800
-            building = Building.coop
-        elif animal == Animal.cow:
-            price = 1500
-            building = Building.barn
-        elif animal == Animal.goat:
-            price = 4000
-            building = Building.big_barn
-        elif animal == Animal.duck:
-            price = 1200
-            building = Building.big_coop
-        elif animal == Animal.sheep:
-            price = 8000
-            building = Building.deluxe_barn
-        elif animal == Animal.rabbit:
-            price = 8000
-            building = Building.deluxe_coop
-        elif animal == Animal.pig:
-            price = 16000
-            building = Building.deluxe_barn
-        else:
-            return True_()
-        return self.money.can_spend_at(Region.ranch, price) & self.building.has_building(building)
+        try:
+            price, building = price_and_building_by_animal[animal]
+            return self.money.can_spend_at(Region.ranch, price) & self.building.has_building(building)
+        except KeyError:
+            return true_
 
     def has_animal(self, animal: str) -> StardewRule:
         if animal == Generic.any:
@@ -625,87 +607,97 @@ class StardewLogic(ReceivedLogicMixin, HasLogicMixin, RegionLogicMixin, BuffLogi
         return barn_rule
 
     def has_island_trader(self) -> StardewRule:
-        if self.options.exclude_ginger_island == ExcludeGingerIsland.option_true:
-            return False_()
-        return self.region.can_reach(Region.island_trader)
+        return self.option.choice_or_false(options.ExcludeGingerIsland,
+                                           value=options.ExcludeGingerIsland.option_false,
+                                           match=self.region.can_reach(Region.island_trader))
 
     def has_walnut(self, number: int) -> StardewRule:
-        if self.options.exclude_ginger_island == ExcludeGingerIsland.option_true:
-            return False_()
-        if number <= 0:
+        assert number >= 0, "Can't have a negative amount of walnut."
+
+        if number == 0:
             return True_()
-        # https://stardewcommunitywiki.com/Golden_Walnut#Walnut_Locations
-        reach_south = self.region.can_reach(Region.island_south)
-        reach_north = self.region.can_reach(Region.island_north)
-        reach_west = self.region.can_reach(Region.island_west)
-        reach_hut = self.region.can_reach(Region.leo_hut)
-        reach_southeast = self.region.can_reach(Region.island_south_east)
-        reach_field_office = self.region.can_reach(Region.field_office)
-        reach_pirate_cove = self.region.can_reach(Region.pirate_cove)
-        reach_outside_areas = And(reach_south, reach_north, reach_west, reach_hut)
-        reach_volcano_regions = [self.region.can_reach(Region.volcano),
-                                 self.region.can_reach(Region.volcano_secret_beach),
-                                 self.region.can_reach(Region.volcano_floor_5),
-                                 self.region.can_reach(Region.volcano_floor_10)]
-        reach_volcano = Or(*reach_volcano_regions)
-        reach_all_volcano = And(*reach_volcano_regions)
-        reach_walnut_regions = [reach_south, reach_north, reach_west, reach_volcano, reach_field_office]
-        reach_caves = And(self.region.can_reach(Region.qi_walnut_room), self.region.can_reach(Region.dig_site),
-                          self.region.can_reach(Region.gourmand_frog_cave),
-                          self.region.can_reach(Region.colored_crystals_cave),
-                          self.region.can_reach(Region.shipwreck), self.received(APWeapon.slingshot))
-        reach_entire_island = And(reach_outside_areas, reach_all_volcano,
-                                  reach_caves, reach_southeast, reach_field_office, reach_pirate_cove)
-        if number <= 5:
-            return Or(reach_south, reach_north, reach_west, reach_volcano)
-        if number <= 10:
-            return Count(2, reach_walnut_regions)
-        if number <= 15:
-            return Count(3, reach_walnut_regions)
-        if number <= 20:
-            return And(*reach_walnut_regions)
-        if number <= 50:
-            return reach_entire_island
-        gems = (Mineral.amethyst, Mineral.aquamarine, Mineral.emerald, Mineral.ruby, Mineral.topaz)
-        return reach_entire_island & self.has(Fruit.banana) & self.has(gems) & self.ability.can_mine_perfectly() & \
-            self.ability.can_fish_perfectly() & self.has(Furniture.flute_block) & self.has(Seed.melon) & self.has(Seed.wheat) & self.has(Seed.garlic) & \
-            self.can_complete_field_office()
+
+        def create_rule(exclude_ginger_island):
+            if exclude_ginger_island == options.ExcludeGingerIsland.option_true:
+                return False_()
+            # https://stardewcommunitywiki.com/Golden_Walnut#Walnut_Locations
+            reach_south = self.region.can_reach(Region.island_south)
+            reach_north = self.region.can_reach(Region.island_north)
+            reach_west = self.region.can_reach(Region.island_west)
+            reach_hut = self.region.can_reach(Region.leo_hut)
+            reach_southeast = self.region.can_reach(Region.island_south_east)
+            reach_field_office = self.region.can_reach(Region.field_office)
+            reach_pirate_cove = self.region.can_reach(Region.pirate_cove)
+            reach_outside_areas = And(reach_south, reach_north, reach_west, reach_hut)
+            reach_volcano_regions = [self.region.can_reach(Region.volcano),
+                                     self.region.can_reach(Region.volcano_secret_beach),
+                                     self.region.can_reach(Region.volcano_floor_5),
+                                     self.region.can_reach(Region.volcano_floor_10)]
+            reach_volcano = Or(*reach_volcano_regions)
+            reach_all_volcano = And(*reach_volcano_regions)
+            reach_walnut_regions = [reach_south, reach_north, reach_west, reach_volcano, reach_field_office]
+            reach_caves = And(self.region.can_reach(Region.qi_walnut_room), self.region.can_reach(Region.dig_site),
+                              self.region.can_reach(Region.gourmand_frog_cave),
+                              self.region.can_reach(Region.colored_crystals_cave),
+                              self.region.can_reach(Region.shipwreck), self.received(APWeapon.slingshot))
+            reach_entire_island = And(reach_outside_areas, reach_all_volcano,
+                                      reach_caves, reach_southeast, reach_field_office, reach_pirate_cove)
+            if number <= 5:
+                return Or(reach_south, reach_north, reach_west, reach_volcano)
+            if number <= 10:
+                return Count(2, reach_walnut_regions)
+            if number <= 15:
+                return Count(3, reach_walnut_regions)
+            if number <= 20:
+                return And(*reach_walnut_regions)
+            if number <= 50:
+                return reach_entire_island
+            gems = (Mineral.amethyst, Mineral.aquamarine, Mineral.emerald, Mineral.ruby, Mineral.topaz)
+            return reach_entire_island & self.has(Fruit.banana) & self.has(gems) & self.ability.can_mine_perfectly() & \
+                self.ability.can_fish_perfectly() & self.has(Furniture.flute_block) & self.has(Seed.melon) & self.has(Seed.wheat) & self.has(Seed.garlic) & \
+                self.can_complete_field_office()
+
+        return self.option.custom_rule(options.ExcludeGingerIsland, rule_factory=create_rule)
 
     def has_all_stardrops(self) -> StardewRule:
-        other_rules = []
-        number_of_stardrops_to_receive = 0
-        number_of_stardrops_to_receive += 1  # The Mines level 100
-        number_of_stardrops_to_receive += 1  # Old Master Cannoli
-        number_of_stardrops_to_receive += 1  # Museum Stardrop
-        number_of_stardrops_to_receive += 1  # Krobus Stardrop
+        def create_rule(fishsanity, festival_locations, friendsanity, enabled_mods):
+            other_rules = []
+            number_of_stardrops_to_receive = 0
+            number_of_stardrops_to_receive += 1  # The Mines level 100
+            number_of_stardrops_to_receive += 1  # Old Master Cannoli
+            number_of_stardrops_to_receive += 1  # Museum Stardrop
+            number_of_stardrops_to_receive += 1  # Krobus Stardrop
 
-        if self.options.fishsanity == Fishsanity.option_none:  # Master Angler Stardrop
-            other_rules.append(self.fishing.can_catch_every_fish())
-        else:
-            number_of_stardrops_to_receive += 1
+            if fishsanity == options.Fishsanity.option_none:  # Master Angler Stardrop
+                other_rules.append(self.fishing.can_catch_every_fish())
+            else:
+                number_of_stardrops_to_receive += 1
 
-        if self.options.festival_locations == FestivalLocations.option_disabled:  # Fair Stardrop
-            other_rules.append(self.season.has(Season.fall))
-        else:
-            number_of_stardrops_to_receive += 1
+            if festival_locations == options.FestivalLocations.option_disabled:  # Fair Stardrop
+                other_rules.append(self.season.has(Season.fall))
+            else:
+                number_of_stardrops_to_receive += 1
 
-        if self.options.friendsanity == Friendsanity.option_none:  # Spouse Stardrop
-            other_rules.append(self.relationship.has_hearts(Generic.bachelor, 13))
-        else:
-            number_of_stardrops_to_receive += 1
+            if friendsanity == options.Friendsanity.option_none:  # Spouse Stardrop
+                other_rules.append(self.relationship.has_hearts(Generic.bachelor, 13))
+            else:
+                number_of_stardrops_to_receive += 1
 
-        if ModNames.deepwoods in self.options.mods:  # Petting the Unicorn
-            number_of_stardrops_to_receive += 1
+            if ModNames.deepwoods in enabled_mods:  # Petting the Unicorn
+                number_of_stardrops_to_receive += 1
 
-        if not other_rules:
-            return self.received("Stardrop", number_of_stardrops_to_receive)
+            if not other_rules:
+                return self.received("Stardrop", number_of_stardrops_to_receive)
 
-        return self.received("Stardrop", number_of_stardrops_to_receive) & And(*other_rules)
+            return self.received("Stardrop", number_of_stardrops_to_receive) & And(*other_rules)
+
+        return self.option.custom_rule(options.Fishsanity, options.FestivalLocations, options.Friendsanity, options.Mods, rule_factory=create_rule)
 
     def has_prismatic_jelly_reward_access(self) -> StardewRule:
-        if self.options.special_order_locations == SpecialOrderLocations.option_disabled:
-            return self.special_order.can_complete_special_order("Prismatic Jelly")
-        return self.received("Monster Musk Recipe")
+        return self.option.choice(options.SpecialOrderLocations,
+                                  value=options.SpecialOrderLocations.option_disabled,
+                                  match=self.special_order.can_complete_special_order("Prismatic Jelly"),
+                                  no_match=self.received("Monster Musk Recipe"))
 
     def has_all_rarecrows(self) -> StardewRule:
         rules = []
