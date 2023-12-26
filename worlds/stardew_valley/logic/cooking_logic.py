@@ -7,22 +7,24 @@ from .base_logic import BaseLogicMixin, BaseLogic
 from .building_logic import BuildingLogicMixin
 from .has_logic import HasLogicMixin
 from .money_logic import MoneyLogicMixin
+from .option_logic import OptionLogicMixin
 from .received_logic import ReceivedLogicMixin
 from .region_logic import RegionLogicMixin
 from .relationship_logic import RelationshipLogicMixin
 from .season_logic import SeasonLogicMixin
 from .skill_logic import SkillLogicMixin
+from .. import options
 from ..data.recipe_data import RecipeSource, StarterSource, ShopSource, SkillSource, FriendshipSource, \
     QueenOfSauceSource, CookingRecipe, ShopFriendshipSource, \
     all_cooking_recipes_by_name
 from ..data.recipe_source import CutsceneSource, ShopTradeSource
 from ..locations import locations_by_tag, LocationTags
-from ..options import Chefsanity
-from ..options import ExcludeGingerIsland
 from ..stardew_rule import StardewRule, True_, False_, And
 from ..strings.region_names import Region
 from ..strings.skill_names import Skill
 from ..strings.tv_channel_names import Channel
+
+cooksanity_prefix = "Cook "
 
 
 class CookingLogicMixin(BaseLogicMixin):
@@ -32,7 +34,7 @@ class CookingLogicMixin(BaseLogicMixin):
 
 
 class CookingLogic(BaseLogic[Union[HasLogicMixin, ReceivedLogicMixin, RegionLogicMixin, SeasonLogicMixin, MoneyLogicMixin, ActionLogicMixin,
-BuildingLogicMixin, RelationshipLogicMixin, SkillLogicMixin, CookingLogicMixin]]):
+BuildingLogicMixin, RelationshipLogicMixin, SkillLogicMixin, CookingLogicMixin, OptionLogicMixin]]):
     @cached_property
     def can_cook_in_kitchen(self) -> StardewRule:
         return self.logic.building.has_house(1) | self.logic.skill.has_level(Skill.foraging, 9)
@@ -49,25 +51,33 @@ BuildingLogicMixin, RelationshipLogicMixin, SkillLogicMixin, CookingLogicMixin]]
 
     # Should be cached
     def knows_recipe(self, source: RecipeSource, meal_name: str) -> StardewRule:
-        if self.options.chefsanity == Chefsanity.option_none:
-            return self.logic.cooking.can_learn_recipe(source)
-        if isinstance(source, StarterSource):
-            return self.logic.cooking.received_recipe(meal_name)
-        if isinstance(source, ShopTradeSource) and self.options.chefsanity & Chefsanity.option_purchases:
-            return self.logic.cooking.received_recipe(meal_name)
-        if isinstance(source, ShopSource) and self.options.chefsanity & Chefsanity.option_purchases:
-            return self.logic.cooking.received_recipe(meal_name)
-        if isinstance(source, SkillSource) and self.options.chefsanity & Chefsanity.option_skills:
-            return self.logic.cooking.received_recipe(meal_name)
-        if isinstance(source, CutsceneSource) and self.options.chefsanity & Chefsanity.option_friendship:
-            return self.logic.cooking.received_recipe(meal_name)
-        if isinstance(source, FriendshipSource) and self.options.chefsanity & Chefsanity.option_friendship:
-            return self.logic.cooking.received_recipe(meal_name)
-        if isinstance(source, QueenOfSauceSource) and self.options.chefsanity & Chefsanity.option_queen_of_sauce:
-            return self.logic.cooking.received_recipe(meal_name)
-        if isinstance(source, ShopFriendshipSource) and self.options.chefsanity & Chefsanity.option_friendship:
-            return self.logic.cooking.received_recipe(meal_name)
-        return self.logic.cooking.can_learn_recipe(source)
+        default_rule = self.logic.cooking.can_learn_recipe(source)
+
+        if isinstance(source, (ShopTradeSource, ShopSource)):
+            return self.logic.option.bitwise_choice(options.Chefsanity,
+                                                    value=options.Chefsanity.option_purchases,
+                                                    match=self.logic.cooking.received_recipe(meal_name),
+                                                    no_match=default_rule)
+
+        if isinstance(source, SkillSource):
+            return self.logic.option.bitwise_choice(options.Chefsanity,
+                                                    value=options.Chefsanity.option_skills,
+                                                    match=self.logic.cooking.received_recipe(meal_name),
+                                                    no_match=default_rule)
+
+        if isinstance(source, (CutsceneSource, FriendshipSource, ShopFriendshipSource)):
+            return self.logic.option.bitwise_choice(options.Chefsanity,
+                                                    value=options.Chefsanity.option_friendship,
+                                                    match=self.logic.cooking.received_recipe(meal_name),
+                                                    no_match=default_rule)
+
+        if isinstance(source, QueenOfSauceSource):
+            return self.logic.option.bitwise_choice(options.Chefsanity,
+                                                    value=options.Chefsanity.option_queen_of_sauce,
+                                                    match=self.logic.cooking.received_recipe(meal_name),
+                                                    no_match=default_rule)
+
+        return default_rule
 
     @cache_self1
     def can_learn_recipe(self, source: RecipeSource) -> StardewRule:
@@ -95,14 +105,17 @@ BuildingLogicMixin, RelationshipLogicMixin, SkillLogicMixin, CookingLogicMixin]]
 
     @cached_property
     def can_cook_everything(self) -> StardewRule:
-        cooksanity_prefix = "Cook "
-        all_recipes_names = []
-        exclude_island = self.options.exclude_ginger_island == ExcludeGingerIsland.option_true
-        for location in locations_by_tag[LocationTags.COOKSANITY]:
-            if exclude_island and LocationTags.GINGER_ISLAND in location.tags:
-                continue
-            if location.mod_name and location.mod_name not in self.options.mods:
-                continue
-            all_recipes_names.append(location.name[len(cooksanity_prefix):])
-        all_recipes = [all_cooking_recipes_by_name[recipe_name] for recipe_name in all_recipes_names]
-        return And(*(self.logic.cooking.can_cook(recipe) for recipe in all_recipes))
+
+        def create_rule(exclude_ginger_island):
+            all_recipes_names = []
+            exclude_island = exclude_ginger_island == options.ExcludeGingerIsland.option_true
+            for location in locations_by_tag[LocationTags.COOKSANITY]:
+                if exclude_island and LocationTags.GINGER_ISLAND in location.tags:
+                    continue
+                if location.mod_name and location.mod_name not in self.options.mods:
+                    continue
+                all_recipes_names.append(location.name[len(cooksanity_prefix):])
+            all_recipes = [all_cooking_recipes_by_name[recipe_name] for recipe_name in all_recipes_names]
+            return And(*(self.logic.cooking.can_cook(recipe) for recipe in all_recipes))
+
+        return self.logic.option.custom_rule(options.ExcludeGingerIsland, rule_factory=create_rule)
