@@ -109,11 +109,10 @@ class StardewLogic(ReceivedLogicMixin, HasLogicMixin, RegionLogicMixin, BuffLogi
                    CombatLogicMixin, MagicLogicMixin, MonsterLogicMixin, ToolLogicMixin, PetLogicMixin, CropLogicMixin,
                    SkillLogicMixin, FarmingLogicMixin, BundleLogicMixin, FishingLogicMixin, MineLogicMixin, CookingLogicMixin, AbilityLogicMixin,
                    SpecialOrderLogicMixin, QuestLogicMixin, CraftingLogicMixin, ModLogicMixin, OptionLogicMixin):
-    options: options.StardewValleyOptions
 
-    def __init__(self, player_options: options.StardewValleyOptions):
+    def __init__(self):
         self.registry = LogicRegistry()
-        super().__init__(self.registry, player_options, self)
+        super().__init__(self.registry, self)
 
         self.registry.fish_rules.update({fish.name: self.fishing.can_catch_fish(fish) for fish in all_fish})
         self.registry.museum_rules.update({donation.item_name: self.museum.can_find_museum_item(donation) for donation in all_museum_items})

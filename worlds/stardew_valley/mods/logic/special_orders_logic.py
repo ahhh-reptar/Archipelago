@@ -1,6 +1,5 @@
 from typing import Union
 
-from ..mod_data import ModNames
 from ...logic.action_logic import ActionLogicMixin
 from ...logic.artisan_logic import ArtisanLogicMixin
 from ...logic.base_logic import BaseLogicMixin, BaseLogic
@@ -35,30 +34,29 @@ class ModSpecialOrderLogic(BaseLogic[Union[ActionLogicMixin, ArtisanLogicMixin, 
 RelationshipLogicMixin, SeasonLogicMixin, WalletLogicMixin]]):
     def get_modded_special_orders_rules(self):
         special_orders = {}
-        if ModNames.juna in self.options.mods:
-            special_orders.update({
-                ModSpecialOrder.junas_monster_mash: self.logic.relationship.has_hearts(ModNPC.juna, 4) &
-                                                    self.registry.special_order_rules[SpecialOrder.a_curious_substance] &
-                                                    self.logic.wallet.has_rusty_key() &
-                                                    self.logic.region.can_reach(Region.forest) & self.logic.has(Consumable.monster_musk) &
-                                                    self.logic.has("Energy Tonic") & self.logic.has(Material.sap) & self.logic.has(Loot.bug_meat) &
-                                                    self.logic.has(Edible.oil_of_garlic) & self.logic.has(Meal.strange_bun)
-            })
-        if ModNames.sve in self.options.mods:
-            special_orders.update({
-                ModSpecialOrder.andys_cellar: self.logic.has(Material.stone) & self.logic.has(Material.wood) & self.logic.has(Material.hardwood) &
-                                              self.logic.has(MetalBar.iron) &
-                                              self.logic.region.can_reach(SVERegion.fairhaven_farm),
-                ModSpecialOrder.a_mysterious_venture: self.logic.has(Bomb.cherry_bomb) & self.logic.has(Bomb.bomb) & self.logic.has(Bomb.mega_bomb) &
-                                                      self.logic.region.can_reach(Region.adventurer_guild),
-                ModSpecialOrder.an_elegant_reception: self.logic.artisan.can_keg(Fruit.starfruit) & self.logic.has(ArtisanGood.cheese) &
-                                                      self.logic.has(ArtisanGood.goat_cheese) & self.logic.season.has_any_not_winter() &
-                                                      self.logic.region.can_reach(SVERegion.jenkins_cellar),
-                ModSpecialOrder.fairy_garden: self.logic.has(Consumable.fairy_dust) &
-                                              self.logic.region.can_reach(Region.island_south) & (
-                                                      self.logic.action.can_open_geode(Geode.frozen) | self.logic.action.can_open_geode(Geode.omni)) &
-                                              self.logic.region.can_reach(SVERegion.blue_moon_vineyard),
-                ModSpecialOrder.homemade_fertilizer: self.logic.has(Fertilizer.quality) & self.logic.region.can_reach(SVERegion.susans_house)
-            })
+        special_orders.update({
+            ModSpecialOrder.junas_monster_mash: self.logic.relationship.has_hearts(ModNPC.juna, 4) &
+                                                self.registry.special_order_rules[SpecialOrder.a_curious_substance] &
+                                                self.logic.wallet.has_rusty_key() &
+                                                self.logic.region.can_reach(Region.forest) & self.logic.has(Consumable.monster_musk) &
+                                                self.logic.has("Energy Tonic") & self.logic.has(Material.sap) & self.logic.has(Loot.bug_meat) &
+                                                self.logic.has(Edible.oil_of_garlic) & self.logic.has(Meal.strange_bun)
+        })
+        
+        special_orders.update({
+            ModSpecialOrder.andys_cellar: self.logic.has(Material.stone) & self.logic.has(Material.wood) & self.logic.has(Material.hardwood) &
+                                          self.logic.has(MetalBar.iron) &
+                                          self.logic.region.can_reach(SVERegion.fairhaven_farm),
+            ModSpecialOrder.a_mysterious_venture: self.logic.has(Bomb.cherry_bomb) & self.logic.has(Bomb.bomb) & self.logic.has(Bomb.mega_bomb) &
+                                                  self.logic.region.can_reach(Region.adventurer_guild),
+            ModSpecialOrder.an_elegant_reception: self.logic.artisan.can_keg(Fruit.starfruit) & self.logic.has(ArtisanGood.cheese) &
+                                                  self.logic.has(ArtisanGood.goat_cheese) & self.logic.season.has_any_not_winter() &
+                                                  self.logic.region.can_reach(SVERegion.jenkins_cellar),
+            ModSpecialOrder.fairy_garden: self.logic.has(Consumable.fairy_dust) &
+                                          self.logic.region.can_reach(Region.island_south) & (
+                                                  self.logic.action.can_open_geode(Geode.frozen) | self.logic.action.can_open_geode(Geode.omni)) &
+                                          self.logic.region.can_reach(SVERegion.blue_moon_vineyard),
+            ModSpecialOrder.homemade_fertilizer: self.logic.has(Fertilizer.quality) & self.logic.region.can_reach(SVERegion.susans_house)
+        })
 
         return special_orders

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import TypeVar, Generic, Dict
 
-from ..options import StardewValleyOptions
 from ..stardew_rule import StardewRule
 
 
@@ -36,11 +35,9 @@ T = TypeVar("T", bound=BaseLogicMixin)
 
 class BaseLogic(BaseLogicMixin, Generic[T]):
     registry: LogicRegistry
-    options: StardewValleyOptions
     logic: T
 
-    def __init__(self, registry: LogicRegistry, options: StardewValleyOptions, logic: T):
-        super().__init__(registry, options, logic)
+    def __init__(self, registry: LogicRegistry, logic: T):
+        super().__init__(registry, logic)
         self.registry = registry
-        self.options = options
         self.logic = logic
