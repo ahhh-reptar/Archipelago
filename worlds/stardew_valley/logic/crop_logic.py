@@ -12,7 +12,6 @@ from .tool_logic import ToolLogicMixin
 from .traveling_merchant_logic import TravelingMerchantLogicMixin
 from .. import options
 from ..data import CropItem, SeedItem
-from ..options import Cropsanity, ExcludeGingerIsland
 from ..stardew_rule import StardewRule, True_, False_, false_
 from ..strings.forageable_names import Forageable
 from ..strings.metal_names import Fossil
@@ -53,19 +52,22 @@ ToolLogicMixin, CropLogicMixin, OptionLogicMixin]]):
 
     @cache_self1
     def can_buy_seed(self, seed: SeedItem) -> StardewRule:
-        if seed.requires_island and self.options.exclude_ginger_island == ExcludeGingerIsland.option_true:
-            return False_()
-        if self.options.cropsanity == Cropsanity.option_disabled or seed.name == Seed.qi_bean:
-            item_rule = True_()
-        else:
-            item_rule = self.logic.received(seed.name)
-        if seed.name == Seed.coffee:
-            item_rule = item_rule & self.logic.traveling_merchant.has_days(3)
-        season_rule = self.logic.season.has_any(seed.seasons)
-        region_rule = self.logic.region.can_reach_all(seed.regions)
-        currency_rule = self.logic.money.can_spend(1000)
-        if seed.name == Seed.pineapple:
-            currency_rule = self.logic.has(Forageable.magma_cap)
-        if seed.name == Seed.taro:
-            currency_rule = self.logic.has(Fossil.bone_fragment)
-        return season_rule & region_rule & item_rule & currency_rule
+        def create_rule(exclude_ginger_island, cropsanity):
+            if seed.requires_island and exclude_ginger_island == options.ExcludeGingerIsland.option_true:
+                return False_()
+            if cropsanity == options.Cropsanity.option_disabled or seed.name == Seed.qi_bean:
+                item_rule = True_()
+            else:
+                item_rule = self.logic.received(seed.name)
+            if seed.name == Seed.coffee:
+                item_rule = item_rule & self.logic.traveling_merchant.has_days(3)
+            season_rule = self.logic.season.has_any(seed.seasons)
+            region_rule = self.logic.region.can_reach_all(seed.regions)
+            currency_rule = self.logic.money.can_spend(1000)
+            if seed.name == Seed.pineapple:
+                currency_rule = self.logic.has(Forageable.magma_cap)
+            if seed.name == Seed.taro:
+                currency_rule = self.logic.has(Fossil.bone_fragment)
+            return season_rule & region_rule & item_rule & currency_rule
+
+        return self.logic.option.custom_rule(options.ExcludeGingerIsland, options.Cropsanity, rule_factory=create_rule)

@@ -34,20 +34,18 @@ class ShippingLogic(BaseLogic[Union[ReceivedLogicMixin, ShippingLogicMixin, Buil
         return self.logic.received(Event.can_ship_items) & self.logic.has(item)
 
     def can_ship_everything(self) -> StardewRule:
-        def create_rule(exclude_ginger_island, special_order_locations, mods):
+        def create_rule(exclude_ginger_island, special_order_locations, enabled_mods):
             all_items_to_ship = []
             exclude_island = exclude_ginger_island == options.ExcludeGingerIsland.option_true
             exclude_qi = special_order_locations != options.SpecialOrderLocations.option_board_qi
-            mod_list = mods
             for location in locations_by_tag[LocationTags.SHIPSANITY_FULL_SHIPMENT]:
                 if exclude_island and LocationTags.GINGER_ISLAND in location.tags:
                     continue
                 if exclude_qi and LocationTags.REQUIRES_QI_ORDERS in location.tags:
                     continue
-                if location.mod_name and location.mod_name not in mod_list:
+                if location.mod_name and location.mod_name not in enabled_mods:
                     continue
                 all_items_to_ship.append(location.name[len(shipsanity_prefix):])
             return self.logic.building.has_building(Building.shipping_bin) & And(*(self.logic.has(item) for item in all_items_to_ship))
 
-        return self.logic.option.custom_rule(options.ExcludeGingerIsland, options.SpecialOrderLocations, options.Mods,
-                                             rule_factory=create_rule)
+        return self.logic.option.custom_rule(options.ExcludeGingerIsland, options.SpecialOrderLocations, options.Mods, rule_factory=create_rule)

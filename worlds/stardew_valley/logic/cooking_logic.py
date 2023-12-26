@@ -105,17 +105,16 @@ BuildingLogicMixin, RelationshipLogicMixin, SkillLogicMixin, CookingLogicMixin, 
 
     @cached_property
     def can_cook_everything(self) -> StardewRule:
-
-        def create_rule(exclude_ginger_island):
+        def create_rule(exclude_ginger_island, enabled_mods):
             all_recipes_names = []
             exclude_island = exclude_ginger_island == options.ExcludeGingerIsland.option_true
             for location in locations_by_tag[LocationTags.COOKSANITY]:
                 if exclude_island and LocationTags.GINGER_ISLAND in location.tags:
                     continue
-                if location.mod_name and location.mod_name not in self.options.mods:
+                if location.mod_name and location.mod_name not in enabled_mods:
                     continue
                 all_recipes_names.append(location.name[len(cooksanity_prefix):])
             all_recipes = [all_cooking_recipes_by_name[recipe_name] for recipe_name in all_recipes_names]
             return And(*(self.logic.cooking.can_cook(recipe) for recipe in all_recipes))
 
-        return self.logic.option.custom_rule(options.ExcludeGingerIsland, rule_factory=create_rule)
+        return self.logic.option.custom_rule(options.ExcludeGingerIsland, options.Mods, rule_factory=create_rule)
