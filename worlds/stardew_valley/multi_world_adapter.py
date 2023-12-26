@@ -24,7 +24,6 @@ class ContextualizedRule(CollectionRule, ExplainableRule):
         return self.rule.explain(state, self.context)
 
 
-@dataclass(frozen=True)
 class PlayerMultiWorldAdapter(PlayerWorldContext):
     """
     Wrap the usage of the multi world to avoid always needing to pass the player and options context.
@@ -33,6 +32,11 @@ class PlayerMultiWorldAdapter(PlayerWorldContext):
 
     player: int
     options: StardewValleyOptions
+
+    def __init__(self, multi_world: MultiWorld, player: int, options: StardewValleyOptions):
+        self.multi_world = multi_world
+        self.player = player
+        self.options = options
 
     def get_entrance(self, name: str) -> Entrance:
         return self.multi_world.get_entrance(name, self.player)

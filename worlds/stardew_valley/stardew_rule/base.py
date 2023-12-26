@@ -2,11 +2,13 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections import deque
+from copy import copy
 from itertools import chain
 from typing import Tuple, Set, Optional, Dict, Hashable, Union, Iterable, List, Sized
 
 from BaseClasses import CollectionState
 from .explanation import RuleExplanation
+from .fork import fork_per_player
 from .literal import LiteralStardewRule, false_, true_
 from .protocol import StardewRule
 
@@ -129,7 +131,7 @@ class _SimplificationState:
             pass
 
     def acquire_copy(self):
-        state = _SimplificationState(self.original_simplifiable_rules, self.rules_to_simplify.copy(), self.simplified_rules.copy())
+        state = copy(self)
         state.acquire()
         return state
 
@@ -152,6 +154,9 @@ class _SimplificationState:
     def release(self):
         assert self.locked
         self.locked = False
+
+    def __copy__(self):
+        return _SimplificationState(self.original_simplifiable_rules, copy(self.rules_to_simplify), copy(self.simplified_rules))
 
 
 class AggregatingStardewRule(BaseStardewRule, ABC):
@@ -246,6 +251,7 @@ class AggregatingStardewRule(BaseStardewRule, ABC):
         self._last_short_circuiting_rule = rule
         return self, self.complement.value
 
+    @fork_per_player
     def evaluate_while_simplifying(self, state: CollectionState, *args) -> Tuple[StardewRule, bool]:
         """
         The global idea here is the same as short-circuiting operators, applied to evaluation and rule simplification.
@@ -338,6 +344,9 @@ class AggregatingStardewRule(BaseStardewRule, ABC):
 
     def __hash__(self):
         return hash((id(self.combinable_rules), self.simplification_state.original_simplifiable_rules))
+
+    def __copy__(self):
+        return type(self)(_combinable_rules=self.combinable_rules, _simplification_state=copy(self.simplification_state))
 
     def explain(self, state: CollectionState, *args, expected=True) -> RuleExplanation:
         return RuleExplanation(self, state, *args, expected=expected, sub_rules=self.original_rules)

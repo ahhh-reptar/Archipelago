@@ -110,10 +110,10 @@ class TestEvaluateWhileSimplifying(unittest.TestCase):
     def test_identity_is_removed_from_other_rules(self):
         rule = Or(false_, HasProgressionPercent(10))
 
-        rule.evaluate_while_simplifying(any_collection_state, any_context)
+        simplified, _ = rule.evaluate_while_simplifying(any_collection_state, any_context)
 
-        self.assertEqual(1, len(rule.current_rules))
-        self.assertIn(HasProgressionPercent(10), rule.current_rules)
+        self.assertEqual(1, len(simplified.current_rules))
+        self.assertIn(HasProgressionPercent(10), simplified.current_rules)
 
     def test_complement_replaces_combinable_rules(self):
         rule = Or(HasProgressionPercent(10), true_)

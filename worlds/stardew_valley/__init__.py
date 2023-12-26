@@ -78,7 +78,7 @@ class StardewValleyWorld(World):
 
     options_dataclass = StardewValleyOptions
     options: StardewValleyOptions
-    logic: stardew_logic.StardewLogic = stardew_logic.instance
+    logic: stardew_logic.StardewLogic
     multi_world_adapter: PlayerMultiWorldAdapter
 
     web = StardewWebWorld()
@@ -95,6 +95,8 @@ class StardewValleyWorld(World):
         self.multi_world_adapter = PlayerMultiWorldAdapter(self.multiworld, self.player, self.options)
 
         self.force_change_options_if_incompatible()
+
+        self.logic = stardew_logic.instance
 
         self.modified_bundles = get_all_bundles(self.multiworld.random,
                                                 self.logic,
