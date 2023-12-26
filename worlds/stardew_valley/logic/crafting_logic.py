@@ -18,7 +18,6 @@ from ..data.recipe_data import StarterSource, ShopSource, SkillSource, Friendshi
 from ..data.recipe_source import CutsceneSource, ShopTradeSource, ArchipelagoSource, LogicSource, SpecialOrderSource, \
     FestivalShopSource, QuestSource
 from ..locations import locations_by_tag, LocationTags
-from ..options import SpecialOrderLocations, ExcludeGingerIsland
 from ..stardew_rule import StardewRule, True_, False_, And
 from ..strings.region_names import Region
 
@@ -67,7 +66,7 @@ SkillLogicMixin, SpecialOrderLogicMixin, CraftingLogicMixin, QuestLogicMixin, Op
 
         if isinstance(recipe.source, SpecialOrderSource):
             def has_craftsanity_and_special_order_randomization(craftsanity, special_order_randomization):
-                return craftsanity != options.Craftsanity.option_none and special_order_randomization != SpecialOrderLocations.option_disabled
+                return craftsanity != options.Craftsanity.option_none and special_order_randomization != options.SpecialOrderLocations.option_disabled
 
             return self.logic.option.complex_choice(options.Craftsanity, options.SpecialOrderLocations,
                                                     condition=has_craftsanity_and_special_order_randomization,
@@ -122,7 +121,7 @@ SkillLogicMixin, SpecialOrderLogicMixin, CraftingLogicMixin, QuestLogicMixin, Op
     def can_craft_everything(self) -> StardewRule:
         def create_rule(exclude_ginger_island, enabled_mods):
             all_recipes_names = []
-            exclude_island = exclude_ginger_island == ExcludeGingerIsland.option_true
+            exclude_island = exclude_ginger_island == options.ExcludeGingerIsland.option_true
             for location in locations_by_tag[LocationTags.CRAFTSANITY]:
                 if not location.name.startswith(craftsanity_prefix):
                     continue

@@ -37,7 +37,7 @@ class PetLogic(BaseLogic[Union[RegionLogicMixin, ReceivedLogicMixin, TimeLogicMi
     def received_pet_hearts(self, hearts: int) -> StardewRule:
         return self.logic.option.received(options.FriendsanityHeartSize,
                                           pet_heart_item_name,
-                                          lambda option_value: math.ceil(hearts / option_value))
+                                          lambda friendsanity_heart_size: math.ceil(hearts / friendsanity_heart_size))
 
     def can_befriend_pet(self, hearts: int) -> StardewRule:
         assert hearts >= 0, "You can't have negative hearts with a pet."
