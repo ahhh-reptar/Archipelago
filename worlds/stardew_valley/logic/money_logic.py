@@ -65,10 +65,10 @@ OptionLogicMixin]]):
 
     @cache_self1
     def can_spend(self, amount: int) -> StardewRule:
-        return self.logic.option.choose(options.StartingMoney,
-                                        choices={
-                                            options.StartingMoney.special_range_names["unlimited"]: true_,
-                                        }, default=self.logic.money.can_have_earned_total(amount * 5))
+        return self.logic.option.choice(options.StartingMoney,
+                                        value=options.StartingMoney.special_range_names["unlimited"],
+                                        match=true_,
+                                        no_match=self.logic.money.can_have_earned_total(amount * 5))
 
     # Should be cached
     def can_spend_at(self, region: str, amount: int) -> StardewRule:
@@ -90,11 +90,12 @@ OptionLogicMixin]]):
 
         if currency == Currency.qi_gem:
             board_qi_rule = self.logic.received(qi_gem_rewards, calculate_number_rewards_to_trade_qi_gems_for_special_order_board_qi(amount))
-            return self.logic.option.choose(options.SpecialOrderLocations,
-                                            choices={options.SpecialOrderLocations.option_board_qi: board_qi_rule},
-                                            default=self.logic.received(qi_gem_rewards, default_required_qi_gem_rewards_to_trade) &
-                                                    self.logic.region.can_reach(Region.qi_walnut_room) &
-                                                    self.logic.region.can_reach(Region.saloon) & self.can_have_earned_total(5000))
+            return self.logic.option.choice(options.SpecialOrderLocations,
+                                            value=options.SpecialOrderLocations.option_board_qi,
+                                            match=board_qi_rule,
+                                            no_match=(self.logic.received(qi_gem_rewards, default_required_qi_gem_rewards_to_trade) &
+                                                      self.logic.region.can_reach(Region.qi_walnut_room) &
+                                                      self.logic.region.can_reach(Region.saloon) & self.can_have_earned_total(5000)))
 
         if currency == Currency.golden_walnut:
             return self.logic.money.can_spend_walnut(amount)

@@ -57,16 +57,15 @@ class MineLogic(BaseLogic[Union[MineLogicMixin, RegionLogicMixin, ReceivedLogicM
         has_weapon_to_progress = self.logic.mine.get_weapon_rule_for_floor_tier(mine_tier)
 
         required_tool_tier = mine_tier
-        has_tools_to_progress = self.logic.option.bitwise_choice(options.ToolProgression,
-                                                                 value=options.ToolProgression.option_progressive,
-                                                                 match=self.logic.tool.has_tool(Tool.pickaxe, ToolMaterial.tiers[required_tool_tier]),
-                                                                 no_match=true_)
+        has_tools_to_progress = self.logic.option.bitwise_choice_or_true(options.ToolProgression,
+                                                                         value=options.ToolProgression.option_progressive,
+                                                                         match=self.logic.tool.has_tool(Tool.pickaxe, ToolMaterial.tiers[required_tool_tier]))
 
         required_skill_tier = min(10, max(0, mine_tier * 2))
         progressive_skill_rule = self.logic.skill.has_level(Skill.combat, required_skill_tier) & self.logic.skill.has_level(Skill.mining, required_skill_tier)
-        has_skills_to_progress = self.logic.option.choose(options.SkillProgression,
-                                                          choices={options.SkillProgression.option_progressive: progressive_skill_rule},
-                                                          default=true_)
+        has_skills_to_progress = self.logic.option.choice_or_true(options.SkillProgression,
+                                                                  value=options.SkillProgression.option_progressive,
+                                                                  match=progressive_skill_rule)
 
         return And(has_weapon_to_progress, has_tools_to_progress, has_skills_to_progress)
 
@@ -74,9 +73,10 @@ class MineLogic(BaseLogic[Union[MineLogicMixin, RegionLogicMixin, ReceivedLogicM
     def has_mine_elevator_to_floor(self, floor: int) -> StardewRule:
         assert floor >= 0, "Can't use elevator to go to a negative floor."
 
-        return self.logic.option.choose(options.ElevatorProgression,
-                                        choices={options.ElevatorProgression.option_vanilla: true_},
-                                        default=self.logic.received("Progressive Mine Elevator", floor // 5))
+        return self.logic.option.choice(options.ElevatorProgression,
+                                        value=options.ElevatorProgression.option_vanilla,
+                                        match=true_,
+                                        no_match=self.logic.received("Progressive Mine Elevator", floor // 5))
 
     @cache_self1
     def can_progress_in_the_skull_cavern_from_floor(self, floor: int) -> StardewRule:
@@ -86,15 +86,14 @@ class MineLogic(BaseLogic[Union[MineLogicMixin, RegionLogicMixin, ReceivedLogicM
         has_weapon_to_progress = self.logic.combat.has_great_weapon
 
         required_tool_tier = min(4, max(0, skull_cavern_tier + 2))
-        has_tools_to_progress = self.logic.option.bitwise_choice(options.ToolProgression,
-                                                                 value=options.ToolProgression.option_progressive,
-                                                                 match=self.logic.tool.has_tool(Tool.pickaxe, ToolMaterial.tiers[required_tool_tier]),
-                                                                 no_match=true_)
+        has_tools_to_progress = (self.logic.option.bitwise_choice_or_true(options.ToolProgression,
+                                                                          value=options.ToolProgression.option_progressive,
+                                                                          match=self.logic.tool.has_tool(Tool.pickaxe, ToolMaterial.tiers[required_tool_tier])))
 
         required_skill_tier = min(10, max(0, skull_cavern_tier * 2 + 6))
         progressive_skill_rule = self.logic.skill.has_level(Skill.combat, required_skill_tier) & self.logic.skill.has_level(Skill.mining, required_skill_tier)
-        has_skills_to_progress = self.logic.option.choose(options.SkillProgression,
-                                                          choices={options.SkillProgression.option_progressive: progressive_skill_rule},
-                                                          default=true_)
+        has_skills_to_progress = self.logic.option.choice_or_true(options.SkillProgression,
+                                                                  value=options.SkillProgression.option_progressive,
+                                                                  match=progressive_skill_rule)
 
         return And(has_weapon_to_progress, has_tools_to_progress, has_skills_to_progress)

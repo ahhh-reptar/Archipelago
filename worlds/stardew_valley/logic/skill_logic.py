@@ -75,10 +75,10 @@ CombatLogicMixin, CropLogicMixin, MagicLogicMixin, OptionLogicMixin]]):
         if level == 0:
             return True_()
 
-        progressive_skills_rule = self.logic.received(f"{skill} Level", level)
-        return self.logic.option.choose(options.SkillProgression,
-                                        choices={options.SkillProgression.option_progressive: progressive_skills_rule, },
-                                        default=self.logic.skill.can_earn_level(skill, level))
+        return self.logic.option.choice(options.SkillProgression,
+                                        value=options.SkillProgression.option_progressive,
+                                        match=self.logic.received(f"{skill} Level", level),
+                                        no_match=self.logic.skill.can_earn_level(skill, level))
 
     @cache_self1
     def has_farming_level(self, level: int) -> StardewRule:
@@ -102,15 +102,18 @@ CombatLogicMixin, CropLogicMixin, MagicLogicMixin, OptionLogicMixin]]):
         months_required_to_get_levels_with_all_skills_available = max(1, (level // 5) - 1)
         rule_with_fishing = self.logic.time.has_lived_months(months_required_to_get_levels_with_all_skills_available) & self.logic.skill.can_get_fishing_xp
         if level > 40:
-            return self.logic.option.choose(options.SkillProgression,
-                                            choices={options.SkillProgression.option_progressive: progressive_skill_rule},
-                                            default=rule_with_fishing)
+            return self.logic.option.choice(options.SkillProgression,
+                                            value=options.SkillProgression.option_progressive,
+                                            match=progressive_skill_rule,
+                                            no_match=rule_with_fishing)
 
         months_required_to_get_levels_without_fishing = max(1, (level // 4) - 1)
         rule_without_necessarily_fishing = self.logic.time.has_lived_months(months_required_to_get_levels_without_fishing) | rule_with_fishing
-        return self.logic.option.choose(options.SkillProgression,
-                                        choices={options.SkillProgression.option_progressive: progressive_skill_rule},
-                                        default=rule_without_necessarily_fishing)
+
+        return self.logic.option.choice(options.SkillProgression,
+                                        value=options.SkillProgression.option_progressive,
+                                        match=progressive_skill_rule,
+                                        no_match=rule_without_necessarily_fishing)
 
     @cached_property
     def can_get_farming_xp(self) -> StardewRule:
@@ -141,9 +144,10 @@ CombatLogicMixin, CropLogicMixin, MagicLogicMixin, OptionLogicMixin]]):
     @cached_property
     def can_get_fishing_xp(self) -> StardewRule:
         progressive_skill_rule = self.logic.skill.can_fish() | self.logic.skill.can_crab_pot
-        return self.logic.option.choose(options.SkillProgression,
-                                        choices={options.SkillProgression.option_progressive: progressive_skill_rule},
-                                        default=self.logic.skill.can_fish())
+        return self.logic.option.choice(options.SkillProgression,
+                                        value=options.SkillProgression.option_progressive,
+                                        match=progressive_skill_rule,
+                                        no_match=self.logic.skill.can_fish())
 
     # Should be cached
     def can_fish(self, regions: Union[str, Tuple[str, ...]] = None, difficulty: int = 0) -> StardewRule:

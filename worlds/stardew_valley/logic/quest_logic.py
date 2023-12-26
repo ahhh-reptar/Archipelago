@@ -117,22 +117,19 @@ OptionLogicMixin]]):
         return Has(quest, self.registry.quest_rules)
 
     def has_club_card(self) -> StardewRule:
-        return self.logic.option.choose(options.QuestLocations,
-                                        choices={
-                                            options.QuestLocations.special_range_names["none"]: self.logic.quest.can_complete_quest(Quest.the_mysterious_qi)
-                                        },
-                                        default=self.logic.received(Wallet.club_card))
+        return self.logic.option.choice(options.QuestLocations,
+                                        value=options.QuestLocations.special_range_names["none"],
+                                        match=self.logic.quest.can_complete_quest(Quest.the_mysterious_qi),
+                                        no_match=self.logic.received(Wallet.club_card))
 
     def has_magnifying_glass(self) -> StardewRule:
-        return self.logic.option.choose(options.QuestLocations,
-                                        choices={
-                                            options.QuestLocations.special_range_names["none"]: self.logic.quest.can_complete_quest(Quest.a_winter_mystery)
-                                        },
-                                        default=self.logic.received(Wallet.magnifying_glass))
+        return self.logic.option.choice(options.QuestLocations,
+                                        value=options.QuestLocations.special_range_names["none"],
+                                        match=self.logic.quest.can_complete_quest(Quest.a_winter_mystery),
+                                        no_match=self.logic.received(Wallet.magnifying_glass))
 
     def has_dark_talisman(self) -> StardewRule:
-        return self.logic.option.choose(options.QuestLocations,
-                                        choices={
-                                            options.QuestLocations.special_range_names["none"]: self.logic.quest.can_complete_quest(Quest.dark_talisman)
-                                        },
-                                        default=self.logic.received(Wallet.dark_talisman))
+        return self.logic.option.choice(options.QuestLocations,
+                                        value=options.QuestLocations.special_range_names["none"],
+                                        match=self.logic.quest.can_complete_quest(Quest.dark_talisman),
+                                        no_match=self.logic.received(Wallet.dark_talisman))

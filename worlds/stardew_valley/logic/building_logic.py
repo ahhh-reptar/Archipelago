@@ -8,7 +8,7 @@ from .option_logic import OptionLogicMixin
 from .received_logic import ReceivedLogicMixin
 from .region_logic import RegionLogicMixin
 from .. import options
-from ..stardew_rule import StardewRule, True_, Has, true_
+from ..stardew_rule import StardewRule, True_, Has
 from ..strings.ap_names.event_names import Event
 from ..strings.artisan_good_names import ArtisanGood
 from ..strings.building_names import Building
@@ -90,10 +90,9 @@ class BuildingLogic(BaseLogic[Union[BuildingLogicMixin, MoneyLogicMixin, RegionL
         """
         Shipping bin is special. The mod auto-builds it when received, no need to go to Robin.
         """
-        return self.logic.option.bitwise_choice(options.BuildingProgression,
-                                                value=options.BuildingProgression.option_progressive,
-                                                match=self.logic.received(Building.shipping_bin),
-                                                no_match=true_)
+        return self.logic.option.bitwise_choice_or_true(options.BuildingProgression,
+                                                        value=options.BuildingProgression.option_progressive,
+                                                        match=self.logic.received(Building.shipping_bin))
 
     @cache_self1
     def has_house(self, upgrade_level: int) -> StardewRule:

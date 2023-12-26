@@ -4,14 +4,16 @@ from Utils import cache_self1
 from .base_logic import BaseLogicMixin, BaseLogic
 from .has_logic import HasLogicMixin
 from .money_logic import MoneyLogicMixin
+from .option_logic import OptionLogicMixin
 from .received_logic import ReceivedLogicMixin
 from .region_logic import RegionLogicMixin
 from .season_logic import SeasonLogicMixin
 from .tool_logic import ToolLogicMixin
 from .traveling_merchant_logic import TravelingMerchantLogicMixin
+from .. import options
 from ..data import CropItem, SeedItem
 from ..options import Cropsanity, ExcludeGingerIsland
-from ..stardew_rule import StardewRule, True_, False_
+from ..stardew_rule import StardewRule, True_, False_, false_
 from ..strings.forageable_names import Forageable
 from ..strings.metal_names import Fossil
 from ..strings.region_names import Region
@@ -26,7 +28,7 @@ class CropLogicMixin(BaseLogicMixin):
 
 
 class CropLogic(BaseLogic[Union[HasLogicMixin, ReceivedLogicMixin, RegionLogicMixin, TravelingMerchantLogicMixin, SeasonLogicMixin, MoneyLogicMixin,
-                                ToolLogicMixin, CropLogicMixin]]):
+ToolLogicMixin, CropLogicMixin, OptionLogicMixin]]):
     @cache_self1
     def can_grow(self, crop: CropItem) -> StardewRule:
         season_rule = self.logic.season.has_any(crop.farm_growth_seasons)
@@ -44,9 +46,10 @@ class CropLogic(BaseLogic[Union[HasLogicMixin, ReceivedLogicMixin, RegionLogicMi
         return season_rule & farm_rule
 
     def has_island_farm(self) -> StardewRule:
-        if self.options.exclude_ginger_island == ExcludeGingerIsland.option_false:
-            return self.logic.region.can_reach(Region.island_west)
-        return False_()
+        return self.logic.option.choice(options.ExcludeGingerIsland,
+                                        value=options.ExcludeGingerIsland.option_true,
+                                        match=false_,
+                                        no_match=self.logic.region.can_reach(Region.island_west))
 
     @cache_self1
     def can_buy_seed(self, seed: SeedItem) -> StardewRule:

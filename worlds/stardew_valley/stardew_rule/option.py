@@ -34,6 +34,14 @@ class SingleOptionRule(BaseOptionRule, ABC):
 
 
 @dataclass(frozen=True)
+class MultipleOptionRule(BaseOptionRule, ABC):
+    option_dependency_names: Tuple[str, ...]
+
+    def get_option_values(self, context: PlayerWorldContext) -> Tuple[Union[int, str, Set[str]], ...]:
+        return context.get_option_values(*self.option_dependency_names)
+
+
+@dataclass(frozen=True)
 class ChooseOptionRule(SingleOptionRule):
     default: Optional[StardewRule]
     choices: Mapping[int, StardewRule]
@@ -87,11 +95,41 @@ class RuleFactory(Protocol):
 
 
 @dataclass(frozen=True)
-class CustomOptionRule(BaseOptionRule):
+class CustomOptionRule(MultipleOptionRule):
     rule_factory: RuleFactory
-    option_dependency_names: Tuple[str, ...]
 
     def choose_rule(self, context: PlayerWorldContext) -> StardewRule:
         # TODO add cache based on option dependencies, mods will be a problem because the option is a set and not a frozenset ...
         #  Note that this is probably not such a major improvement, since it will only cause the rule to be shared between all players.
-        return self.rule_factory(*context.get_option_values(*self.option_dependency_names))
+        return self.rule_factory(*self.get_option_values(context))
+
+
+@dataclass(frozen=True)
+class SimpleChoiceOptionRule(SingleOptionRule):
+    expected_value: Union[str, int, Set[str]]
+    match: StardewRule
+    no_match: StardewRule
+
+    def choose_rule(self, context: PlayerWorldContext) -> StardewRule:
+        if self.expected_value == self.get_option_value(context):
+            return self.match
+        else:
+            return self.no_match
+
+
+class Condition(Protocol):
+    def __call__(self, *option_values: Union[str, int, Set[str]]) -> bool:
+        ...
+
+
+@dataclass(frozen=True)
+class ComplexChoiceOptionRule(MultipleOptionRule):
+    condition: Condition
+    match: StardewRule
+    no_match: StardewRule
+
+    def choose_rule(self, context: PlayerWorldContext) -> StardewRule:
+        if self.condition(*self.get_option_values(context)):
+            return self.match
+        else:
+            return self.no_match
