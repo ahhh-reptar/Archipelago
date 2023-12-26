@@ -7,7 +7,7 @@ from .base_logic import BaseLogic, BaseLogicMixin
 from ..items import item_table
 from ..options import StardewValleyOption
 from ..stardew_rule import StardewRule, ChooseOptionRule, OptionReceived, ReceivedAmountFunction, BitwiseOptionRule, CustomOptionRule, RuleFactory, Condition, \
-    ComplexChoiceOptionRule, SimpleChoiceOptionRule, false_, true_
+    ComplexChoiceOptionRule, SimpleChoiceOptionRule, false_, true_, ContainsChoiceOptionRule
 
 
 class OptionLogicMixin(BaseLogicMixin):
@@ -37,6 +37,18 @@ class OptionLogic(BaseLogic[None]):
     @staticmethod
     def bitwise_choice_or_true(option: Type[StardewValleyOption], /, *, value: int, match: StardewRule):
         return OptionLogic.choice(option, value=value, match=match, no_match=true_)
+
+    @staticmethod
+    def contains_choice(option: Type[StardewValleyOption], /, *, value: Any, match: StardewRule, no_match: StardewRule):
+        return ContainsChoiceOptionRule(option.internal_name, value, match, no_match)
+
+    @staticmethod
+    def contains_choice_or_true(option: Type[StardewValleyOption], /, *, value: Any, match: StardewRule):
+        return OptionLogic.contains_choice(option, value=value, match=match, no_match=true_)
+
+    @staticmethod
+    def contains_choice_or_false(option: Type[StardewValleyOption], /, *, value: Any, match: StardewRule):
+        return OptionLogic.contains_choice(option, value=value, match=match, no_match=false_)
 
     @staticmethod
     def choose(option: Union[Type[StardewValleyOption], Type[Choice], Type[NamedRange]], /, *,

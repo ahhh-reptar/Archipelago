@@ -1,6 +1,6 @@
 from typing import Dict, Union
 
-from ..mod_data import ModNames
+from ... import options
 from ...data.craftable_data import all_crafting_recipes_by_name
 from ...logic.base_logic import BaseLogicMixin, BaseLogic
 from ...logic.combat_logic import CombatLogicMixin
@@ -11,13 +11,13 @@ from ...logic.fishing_logic import FishingLogicMixin
 from ...logic.has_logic import HasLogicMixin
 from ...logic.money_logic import MoneyLogicMixin
 from ...logic.museum_logic import MuseumLogicMixin
+from ...logic.option_logic import OptionLogicMixin
 from ...logic.received_logic import ReceivedLogicMixin
 from ...logic.region_logic import RegionLogicMixin
 from ...logic.relationship_logic import RelationshipLogicMixin
 from ...logic.season_logic import SeasonLogicMixin
 from ...logic.tool_logic import ToolLogicMixin
-from ...options import Cropsanity
-from ...stardew_rule import StardewRule, True_
+from ...stardew_rule import StardewRule, true_
 from ...strings.craftable_names import ModCraftable, ModEdible, ModMachine
 from ...strings.crop_names import SVEVegetable, SVEFruit, DistantLandsCrop
 from ...strings.fish_names import DistantLandsFish
@@ -43,16 +43,13 @@ class ModItemLogicMixin(BaseLogicMixin):
 
 
 class ModItemLogic(BaseLogic[Union[CombatLogicMixin, ReceivedLogicMixin, CropLogicMixin, CookingLogicMixin, FishingLogicMixin, HasLogicMixin, MoneyLogicMixin,
-RegionLogicMixin, SeasonLogicMixin, RelationshipLogicMixin, MuseumLogicMixin, ToolLogicMixin, CraftingLogicMixin]]):
+RegionLogicMixin, SeasonLogicMixin, RelationshipLogicMixin, MuseumLogicMixin, ToolLogicMixin, CraftingLogicMixin, OptionLogicMixin]]):
 
     def get_modded_item_rules(self) -> Dict[str, StardewRule]:
         items = dict()
-        if ModNames.sve in self.options.mods:
-            items.update(self.get_sve_item_rules())
-        if ModNames.archaeology in self.options.mods:
-            items.update(self.get_archaeology_item_rules())
-        if ModNames.distant_lands in self.options.mods:
-            items.update(self.get_distant_lands_item_rules())
+        items.update(self.get_sve_item_rules())
+        items.update(self.get_archaeology_item_rules())
+        items.update(self.get_distant_lands_item_rules())
         return items
 
     def get_sve_item_rules(self):
@@ -78,7 +75,7 @@ RegionLogicMixin, SeasonLogicMixin, RelationshipLogicMixin, MuseumLogicMixin, To
                 SVEForage.red_baneberry: self.logic.region.can_reach(Region.secret_woods) & self.logic.season.has(Season.summer),
                 SVEForage.ferngill_primrose: self.logic.region.can_reach(SVERegion.summit) & self.logic.season.has(Season.spring),
                 SVEForage.goldenrod: self.logic.region.can_reach(SVERegion.summit) & (
-                            self.logic.season.has(Season.summer) | self.logic.season.has(Season.fall)),
+                        self.logic.season.has(Season.summer) | self.logic.season.has(Season.fall)),
                 SVESeed.shrub_seed: self.logic.region.can_reach(Region.secret_woods) & self.logic.tool.has_tool(Tool.hoe, ToolMaterial.basic),
                 SVEFruit.salal_berry: self.logic.crop.can_plant_and_grow_item([Season.spring, Season.summer]) & self.logic.has(SVESeed.shrub_seed),
                 ModEdible.aegis_elixir: self.logic.money.can_spend_at(SVERegion.galmoran_outpost, 28000),
@@ -124,7 +121,7 @@ RegionLogicMixin, SeasonLogicMixin, RelationshipLogicMixin, MuseumLogicMixin, To
         return archaeology_item_rules
 
     def get_distant_lands_item_rules(self):
-        return{
+        return {
             DistantLandsForageable.swamp_herb: self.logic.region.can_reach(Region.witch_swamp),
             DistantLandsForageable.brown_amanita: self.logic.region.can_reach(Region.witch_swamp),
             DistantLandsFish.purple_algae: self.logic.fishing.can_fish_at(Region.witch_swamp),
@@ -135,6 +132,7 @@ RegionLogicMixin, SeasonLogicMixin, RelationshipLogicMixin, MuseumLogicMixin, To
         }
 
     def has_seed_unlocked(self, seed_name: str):
-        if self.options.cropsanity == Cropsanity.option_disabled:
-            return True_()
-        return self.logic.received(seed_name)
+        return self.logic.option.choice(options.Cropsanity,
+                                        value=options.Cropsanity.option_disabled,
+                                        match=true_,
+                                        no_match=self.logic.received(seed_name))

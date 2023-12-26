@@ -117,6 +117,19 @@ class SimpleChoiceOptionRule(SingleOptionRule):
             return self.no_match
 
 
+@dataclass(frozen=True)
+class ContainsChoiceOptionRule(SingleOptionRule):
+    expected_value: Union[str, int, Set[str]]
+    match: StardewRule
+    no_match: StardewRule
+
+    def choose_rule(self, context: PlayerWorldContext) -> StardewRule:
+        if self.expected_value in self.get_option_value(context):
+            return self.match
+        else:
+            return self.no_match
+
+
 class Condition(Protocol):
     def __call__(self, *option_values: Union[str, int, Set[str]]) -> bool:
         ...
