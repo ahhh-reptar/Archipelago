@@ -36,18 +36,19 @@ from .time_logic import TimeLogicMixin
 from .tool_logic import ToolLogicMixin
 from .traveling_merchant_logic import TravelingMerchantLogicMixin
 from .wallet_logic import WalletLogicMixin
+from .. import options
 from ..data import all_purchasable_seeds, all_crops
 from ..data.craftable_data import all_crafting_recipes
 from ..data.crops_data import crops_by_name
-from ..data.fish_data import island_fish, extended_family, get_fish_for_mods
+from ..data.fish_data import all_fish
 from ..data.monster_data import all_monsters_by_category, all_monsters_by_name
 from ..data.museum_data import all_museum_items
 from ..data.recipe_data import all_cooking_recipes
 from ..mods.logic.magic_logic import MagicLogicMixin
 from ..mods.logic.mod_logic import ModLogicMixin
 from ..mods.mod_data import ModNames
-from ..options import Cropsanity, SpecialOrderLocations, ExcludeGingerIsland, FestivalLocations, Fishsanity, Friendsanity, StardewValleyOptions
-from ..stardew_rule import False_, Or, True_, Count, And, StardewRule
+from ..options import SpecialOrderLocations, ExcludeGingerIsland, FestivalLocations, Fishsanity, Friendsanity, StardewValleyOptions
+from ..stardew_rule import False_, Or, True_, Count, And, StardewRule, true_
 from ..strings.animal_names import Animal, coop_animals, barn_animals
 from ..strings.animal_product_names import AnimalProduct
 from ..strings.ap_names.ap_weapon_names import APWeapon
@@ -83,6 +84,10 @@ from ..strings.tool_names import Tool, ToolMaterial
 from ..strings.villager_names import NPC
 from ..strings.wallet_item_names import Wallet
 
+sapling_prices = {Fruit.apple: 4000, Fruit.apricot: 2000, Fruit.cherry: 3400, Fruit.orange: 4000,
+                  Fruit.peach: 6000,
+                  Fruit.pomegranate: 6000, Fruit.banana: 0, Fruit.mango: 0}
+
 MISSING_ITEM = "THIS ITEM IS MISSING"
 
 fishing_regions = [Region.beach, Region.town, Region.forest, Region.mountain, Region.island_south, Region.island_west]
@@ -101,20 +106,16 @@ class StardewLogic(ReceivedLogicMixin, HasLogicMixin, RegionLogicMixin, BuffLogi
         self.registry = LogicRegistry()
         super().__init__(self.registry, options, self)
 
-        self.registry.fish_rules.update({fish.name: self.fishing.can_catch_fish(fish) for fish in get_fish_for_mods(self.options.mods.value)})
+        self.registry.fish_rules.update({fish.name: self.fishing.can_catch_fish(fish) for fish in all_fish})
         self.registry.museum_rules.update({donation.item_name: self.museum.can_find_museum_item(donation) for donation in all_museum_items})
 
         for recipe in all_cooking_recipes:
-            if recipe.mod_name and recipe.mod_name not in self.options.mods:
-                continue
             can_cook_rule = self.cooking.can_cook(recipe)
             if recipe.meal in self.registry.cooking_rules:
                 can_cook_rule = can_cook_rule | self.registry.cooking_rules[recipe.meal]
             self.registry.cooking_rules[recipe.meal] = can_cook_rule
 
         for recipe in all_crafting_recipes:
-            if recipe.mod_name and recipe.mod_name not in self.options.mods:
-                continue
             can_craft_rule = self.crafting.can_craft(recipe)
             if recipe.item in self.registry.crafting_rules:
                 can_craft_rule = can_craft_rule | self.registry.crafting_rules[recipe.item]
@@ -242,7 +243,7 @@ class StardewLogic(ReceivedLogicMixin, HasLogicMixin, RegionLogicMixin, BuffLogi
             Fertilizer.basic: self.money.can_spend_at(Region.pierre_store, 100),
             Fertilizer.quality: self.time.has_year_two & self.money.can_spend_at(Region.pierre_store, 150),
             Fertilizer.tree: self.skill.has_level(Skill.foraging, 7) & self.has(Material.fiber) & self.has(Material.stone),
-            Fish.any: Or(*(self.fishing.can_catch_fish(fish) for fish in get_fish_for_mods(self.options.mods.value))),
+            Fish.any: self.fishing.can_catch_any_fish(),
             Fish.crab: self.skill.can_crab_pot_at(Region.beach),
             Fish.crayfish: self.skill.can_crab_pot_at(Region.town),
             Fish.lobster: self.skill.can_crab_pot_at(Region.beach),
@@ -462,33 +463,19 @@ class StardewLogic(ReceivedLogicMixin, HasLogicMixin, RegionLogicMixin, BuffLogi
         self.special_order.update_rules(self.mod.special_order.get_modded_special_orders_rules())
 
     def can_buy_sapling(self, fruit: str) -> StardewRule:
-        sapling_prices = {Fruit.apple: 4000, Fruit.apricot: 2000, Fruit.cherry: 3400, Fruit.orange: 4000,
-                          Fruit.peach: 6000,
-                          Fruit.pomegranate: 6000, Fruit.banana: 0, Fruit.mango: 0}
-        received_sapling = self.received(f"{fruit} Sapling")
-        if self.options.cropsanity == Cropsanity.option_disabled:
-            allowed_buy_sapling = True_()
-        else:
-            allowed_buy_sapling = received_sapling
-        can_buy_sapling = self.money.can_spend_at(Region.pierre_store, sapling_prices[fruit])
+        allowed_buy_sapling = self.option.choice(options.Cropsanity,
+                                                 value=options.Cropsanity.option_disabled,
+                                                 match=true_,
+                                                 no_match=self.received(f"{fruit} Sapling"))
+
         if fruit == Fruit.banana:
             can_buy_sapling = self.has_island_trader() & self.has(Forageable.dragon_tooth)
         elif fruit == Fruit.mango:
             can_buy_sapling = self.has_island_trader() & self.has(Fish.mussel_node)
+        else:
+            can_buy_sapling = self.money.can_spend_at(Region.pierre_store, sapling_prices[fruit])
 
         return allowed_buy_sapling & can_buy_sapling
-
-    def can_catch_every_fish(self) -> StardewRule:
-        rules = [self.skill.has_level(Skill.fishing, 10), self.tool.has_fishing_rod(4)]
-        exclude_island = self.options.exclude_ginger_island == ExcludeGingerIsland.option_true
-        exclude_extended_family = self.options.special_order_locations != SpecialOrderLocations.option_board_qi
-        for fish in get_fish_for_mods(self.options.mods.value):
-            if exclude_island and fish in island_fish:
-                continue
-            if exclude_extended_family and fish in extended_family:
-                continue
-            rules.append(self.fishing.can_catch_fish(fish))
-        return And(*rules)
 
     def can_smelt(self, item: str) -> StardewRule:
         return self.has(Machine.furnace) & self.has(item)
@@ -693,7 +680,7 @@ class StardewLogic(ReceivedLogicMixin, HasLogicMixin, RegionLogicMixin, BuffLogi
         number_of_stardrops_to_receive += 1  # Krobus Stardrop
 
         if self.options.fishsanity == Fishsanity.option_none:  # Master Angler Stardrop
-            other_rules.append(self.can_catch_every_fish())
+            other_rules.append(self.fishing.can_catch_every_fish())
         else:
             number_of_stardrops_to_receive += 1
 

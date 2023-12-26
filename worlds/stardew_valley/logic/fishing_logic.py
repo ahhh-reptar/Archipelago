@@ -9,9 +9,8 @@ from .season_logic import SeasonLogicMixin
 from .skill_logic import SkillLogicMixin
 from .tool_logic import ToolLogicMixin
 from .. import options
-from ..data import FishItem
-from ..data.fish_data import legendary_fish
-from ..stardew_rule import StardewRule, True_, False_, And, false_
+from ..data import FishItem, fish_data
+from ..stardew_rule import StardewRule, True_, False_, And, false_, Or
 from ..strings.fish_names import SVEFish
 from ..strings.quality_names import FishQuality
 from ..strings.region_names import Region
@@ -57,6 +56,32 @@ class FishingLogic(
             item_rule = True_()
         return quest_rule & region_rule & season_rule & difficulty_rule & item_rule
 
+    def can_catch_any_fish(self) -> StardewRule:
+        def create_rule(enabled_mods):
+            return Or(*(self.logic.fishing.can_catch_fish(fish) for fish in fish_data.get_fish_for_mods(enabled_mods)))
+
+        return self.logic.option.custom_rule(options.Mods, rule_factory=create_rule)
+
+    def can_catch_every_fish(self) -> StardewRule:
+        def create_rule(exclude_ginger_island, special_order_locations, enabled_mods):
+            rules = [self.logic.skill.has_level(Skill.fishing, 10), self.logic.tool.has_fishing_rod(4)]
+
+            exclude_island = exclude_ginger_island == options.ExcludeGingerIsland.option_true
+            exclude_extended_family = special_order_locations != options.SpecialOrderLocations.option_board_qi
+
+            for fish in fish_data.get_fish_for_mods(enabled_mods):
+                if exclude_island and fish in fish_data.island_fish:
+                    continue
+
+                if exclude_extended_family and fish in fish_data.extended_family:
+                    continue
+
+                rules.append(self.logic.fishing.can_catch_fish(fish))
+
+            return And(*rules)
+
+        return self.logic.option.custom_rule(options.ExcludeGingerIsland, options.SpecialOrderLocations, options.Mods, rule_factory=create_rule)
+
     def can_start_extended_family_quest(self) -> StardewRule:
         def has_ginger_island_and_qi_special_orders(exclude_ginger_island, special_order_locations):
             return (exclude_ginger_island == options.ExcludeGingerIsland.option_false and
@@ -65,7 +90,7 @@ class FishingLogic(
         return self.logic.option.complex_choice(options.ExcludeGingerIsland, options.SpecialOrderLocations,
                                                 condition=has_ginger_island_and_qi_special_orders,
                                                 match=(self.logic.region.can_reach(Region.qi_walnut_room) &
-                                                       And(*(self.logic.fishing.can_catch_fish(fish) for fish in legendary_fish))),
+                                                       And(*(self.logic.fishing.can_catch_fish(fish) for fish in fish_data.legendary_fish))),
                                                 no_match=false_)
 
     def can_catch_quality_fish(self, fish_quality: str) -> StardewRule:
