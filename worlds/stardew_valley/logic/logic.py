@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-
 from .ability_logic import AbilityLogicMixin
 from .action_logic import ActionLogicMixin
 from .arcade_logic import ArcadeLogicMixin
@@ -93,16 +91,22 @@ price_and_building_by_animal = {
     Animal.pig: (16000, Building.deluxe_barn)
 }
 
-sapling_prices = {Fruit.apple: 4000, Fruit.apricot: 2000, Fruit.cherry: 3400, Fruit.orange: 4000,
-                  Fruit.peach: 6000,
-                  Fruit.pomegranate: 6000, Fruit.banana: 0, Fruit.mango: 0}
+sapling_prices = {
+    Fruit.apple: 4000,
+    Fruit.apricot: 2000,
+    Fruit.cherry: 3400,
+    Fruit.orange: 4000,
+    Fruit.peach: 6000,
+    Fruit.pomegranate: 6000,
+    Fruit.banana: 0,
+    Fruit.mango: 0
+}
 
 MISSING_ITEM = "THIS ITEM IS MISSING"
 
 fishing_regions = [Region.beach, Region.town, Region.forest, Region.mountain, Region.island_south, Region.island_west]
 
 
-@dataclass(frozen=False, repr=False)
 class StardewLogic(ReceivedLogicMixin, HasLogicMixin, RegionLogicMixin, BuffLogicMixin, TravelingMerchantLogicMixin, TimeLogicMixin,
                    SeasonLogicMixin, MoneyLogicMixin, ActionLogicMixin, ArcadeLogicMixin, ArtisanLogicMixin, GiftLogicMixin,
                    BuildingLogicMixin, ShippingLogicMixin, RelationshipLogicMixin, MuseumLogicMixin, WalletLogicMixin,
@@ -721,3 +725,6 @@ class StardewLogic(ReceivedLogicMixin, HasLogicMixin, RegionLogicMixin, BuffLogi
 
     def can_fish_pond(self, fish: str) -> StardewRule:
         return self.building.has_building(Building.fish_pond) & self.has(fish)
+
+
+instance = StardewLogic()

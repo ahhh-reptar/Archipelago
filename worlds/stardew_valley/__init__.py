@@ -10,16 +10,14 @@ from .bundles.bundles import get_all_bundles
 from .early_items import setup_early_items
 from .items import item_table, create_items, ItemData, Group, items_by_group, get_all_filler_items, remove_limited_amount_packs
 from .locations import location_table, create_locations, LocationData, locations_by_tag
-from .logic.bundle_logic import BundleLogic
-from .logic.logic import StardewLogic
-from .logic.time_logic import MAX_MONTHS
+from .logic import logic as stardew_logic
 from .multi_world_adapter import PlayerMultiWorldAdapter, ContextualizedRule
 from .options import StardewValleyOptions, SeasonRandomization, Goal, BundleRandomization, BundlePrice, NumberOfLuckBuffs, NumberOfMovementBuffs, \
     BackpackProgression, BuildingProgression, ExcludeGingerIsland, TrapItems
 from .presets import sv_options_presets
 from .regions import create_regions
 from .rules import set_rules
-from .stardew_rule import True_, StardewRule, HasProgressionPercent, true_
+from .stardew_rule import True_, StardewRule, HasProgressionPercent
 from .strings.ap_names.event_names import Event
 from .strings.goal_names import Goal as GoalName
 from .strings.region_names import Region as RegionName
@@ -80,7 +78,7 @@ class StardewValleyWorld(World):
 
     options_dataclass = StardewValleyOptions
     options: StardewValleyOptions
-    logic: StardewLogic
+    logic: stardew_logic.StardewLogic = stardew_logic.instance
     multi_world_adapter: PlayerMultiWorldAdapter
 
     web = StardewWebWorld()
@@ -98,7 +96,6 @@ class StardewValleyWorld(World):
 
         self.force_change_options_if_incompatible()
 
-        self.logic = StardewLogic()
         self.modified_bundles = get_all_bundles(self.multiworld.random,
                                                 self.logic,
                                                 self.multi_world_adapter)
