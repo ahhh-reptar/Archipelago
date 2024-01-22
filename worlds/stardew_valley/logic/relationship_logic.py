@@ -1,5 +1,6 @@
 import math
-from typing import Union
+from functools import cached_property
+from typing import Union, List
 
 from Utils import cache_self1
 from .base_logic import BaseLogic, BaseLogicMixin
@@ -10,7 +11,7 @@ from .received_logic import ReceivedLogicMixin
 from .region_logic import RegionLogicMixin
 from .season_logic import SeasonLogicMixin
 from .time_logic import TimeLogicMixin
-from ..data.villagers_data import all_villagers_by_name, Villager
+from ..data.villagers_data import all_villagers_by_name, Villager, get_villagers_for_mods
 from ..options import Friendsanity
 from ..stardew_rule import StardewRule, True_, And, Or
 from ..strings.ap_names.mods.mod_items import SVEQuestItem
@@ -39,6 +40,10 @@ class RelationshipLogicMixin(BaseLogicMixin):
 
 class RelationshipLogic(BaseLogic[Union[
     RelationshipLogicMixin, BuildingLogicMixin, SeasonLogicMixin, TimeLogicMixin, GiftLogicMixin, RegionLogicMixin, ReceivedLogicMixin, HasLogicMixin]]):
+
+    @cached_property
+    def all_villagers_given_mods(self) -> List[Villager]:
+        return get_villagers_for_mods(self.options.mods.value)
 
     def can_date(self, npc: str) -> StardewRule:
         return self.logic.relationship.has_hearts(npc, 8) & self.logic.has(Gift.bouquet)
@@ -134,6 +139,8 @@ class RelationshipLogic(BaseLogic[Union[
             rules.append(scarlett_job & (scarlett_spring | scarlett_summer | scarlett_fall))
         elif npc == ModNPC.morgan:
             rules.append(self.logic.received(SVEQuestItem.morgan_schooling))
+        elif npc == ModNPC.goblin:
+            rules.append(self.logic.region.can_reach_all((Region.witch_hut, Region.wizard_tower)))
 
         return And(*rules)
 
@@ -162,6 +169,8 @@ class RelationshipLogic(BaseLogic[Union[
         villager = all_villagers_by_name[npc]
         if hearts > 2 or hearts > self.options.friendsanity_heart_size:
             rules.append(self.logic.season.has(villager.birthday))
+        if villager.birthday == Generic.any:
+            rules.append(self.logic.season.has_all() | self.logic.time.has_year_three)  # push logic back for any birthday-less villager
         if villager.bachelor:
             if hearts > 8:
                 rules.append(self.logic.relationship.can_date(npc))
@@ -173,5 +182,4 @@ class RelationshipLogic(BaseLogic[Union[
     @cache_self1
     def npc_is_in_current_slot(self, name: str) -> bool:
         npc = all_villagers_by_name[name]
-        mod = npc.mod_name
-        return mod is None or mod in self.options.mods
+        return npc in self.all_villagers_given_mods

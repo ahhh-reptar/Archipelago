@@ -15,20 +15,27 @@ from ...logic.received_logic import ReceivedLogicMixin
 from ...logic.region_logic import RegionLogicMixin
 from ...logic.relationship_logic import RelationshipLogicMixin
 from ...logic.season_logic import SeasonLogicMixin
+from ...logic.skill_logic import SkillLogicMixin
+from ...logic.time_logic import TimeLogicMixin
 from ...logic.tool_logic import ToolLogicMixin
 from ...options import Cropsanity
 from ...stardew_rule import StardewRule, True_
 from ...strings.craftable_names import ModCraftable, ModEdible, ModMachine
-from ...strings.crop_names import SVEVegetable, SVEFruit, DistantLandsCrop
-from ...strings.fish_names import DistantLandsFish
-from ...strings.food_names import SVEMeal, SVEBeverage
-from ...strings.forageable_names import SVEForage, DistantLandsForageable
+from ...strings.crop_names import SVEVegetable, SVEFruit, DistantLandsCrop, Fruit
+from ...strings.fish_names import DistantLandsFish, WaterItem, Fish
+from ...strings.flower_names import Flower
+from ...strings.food_names import SVEMeal, SVEBeverage, Meal
+from ...strings.forageable_names import SVEForage, DistantLandsForageable, Forageable
 from ...strings.gift_names import SVEGift
-from ...strings.metal_names import all_fossils, all_artifacts
-from ...strings.monster_drop_names import ModLoot
-from ...strings.region_names import Region, SVERegion
+from ...strings.ingredient_names import Ingredient
+from ...strings.material_names import Material
+from ...strings.metal_names import all_fossils, all_artifacts, Ore
+from ...strings.monster_drop_names import ModLoot, Loot
+from ...strings.performance_names import Performance
+from ...strings.region_names import Region, SVERegion, DeepWoodsRegion
 from ...strings.season_names import Season
 from ...strings.seed_names import SVESeed, DistantLandsSeed
+from ...strings.skill_names import Skill
 from ...strings.tool_names import Tool, ToolMaterial
 from ...strings.villager_names import ModNPC
 
@@ -43,7 +50,7 @@ class ModItemLogicMixin(BaseLogicMixin):
 
 
 class ModItemLogic(BaseLogic[Union[CombatLogicMixin, ReceivedLogicMixin, CropLogicMixin, CookingLogicMixin, FishingLogicMixin, HasLogicMixin, MoneyLogicMixin,
-RegionLogicMixin, SeasonLogicMixin, RelationshipLogicMixin, MuseumLogicMixin, ToolLogicMixin, CraftingLogicMixin]]):
+RegionLogicMixin, SeasonLogicMixin, RelationshipLogicMixin, MuseumLogicMixin, ToolLogicMixin, CraftingLogicMixin, SkillLogicMixin, TimeLogicMixin]]):
 
     def get_modded_item_rules(self) -> Dict[str, StardewRule]:
         items = dict()
@@ -55,11 +62,19 @@ RegionLogicMixin, SeasonLogicMixin, RelationshipLogicMixin, MuseumLogicMixin, To
             items.update(self.get_distant_lands_item_rules())
         return items
 
+    def modify_vanilla_item_rules_with_mod_additions(self, item_rule: Dict[str, StardewRule]):
+        if ModNames.sve in self.options.mods:
+            item_rule.update(self.get_modified_item_rules_for_sve(item_rule))
+        if ModNames.deepwoods in self.options.mods:
+            item_rule.update(self.get_modified_item_rules_for_deep_woods(item_rule))
+        return item_rule
+
     def get_sve_item_rules(self):
         return {SVEGift.aged_blue_moon_wine: self.logic.money.can_spend_at(SVERegion.sophias_house, 28000),
                 SVEGift.blue_moon_wine: self.logic.money.can_spend_at(SVERegion.sophias_house, 3000),
                 SVESeed.fungus_seed: self.logic.region.can_reach(SVERegion.highlands_cavern) & self.logic.combat.has_good_weapon,
-                ModLoot.green_mushroom: self.logic.region.can_reach(SVERegion.highlands_outside) & self.logic.tool.has_tool(Tool.axe, ToolMaterial.iron),
+                ModLoot.green_mushroom: self.logic.region.can_reach(SVERegion.highlands_outside) &
+                                        self.logic.tool.has_tool(Tool.axe, ToolMaterial.iron) & self.logic.season.has_any_not_winter(),
                 SVEFruit.monster_fruit: self.logic.season.has(Season.summer) & self.logic.has(SVESeed.stalk_seed),
                 SVEVegetable.monster_mushroom: self.logic.season.has(Season.fall) & self.logic.has(SVESeed.fungus_seed),
                 SVEForage.ornate_treasure_chest: self.logic.region.can_reach(SVERegion.highlands_outside) & self.logic.combat.has_galaxy_weapon &
@@ -78,7 +93,7 @@ RegionLogicMixin, SeasonLogicMixin, RelationshipLogicMixin, MuseumLogicMixin, To
                 SVEForage.red_baneberry: self.logic.region.can_reach(Region.secret_woods) & self.logic.season.has(Season.summer),
                 SVEForage.ferngill_primrose: self.logic.region.can_reach(SVERegion.summit) & self.logic.season.has(Season.spring),
                 SVEForage.goldenrod: self.logic.region.can_reach(SVERegion.summit) & (
-                            self.logic.season.has(Season.summer) | self.logic.season.has(Season.fall)),
+                        self.logic.season.has(Season.summer) | self.logic.season.has(Season.fall)),
                 SVESeed.shrub_seed: self.logic.region.can_reach(Region.secret_woods) & self.logic.tool.has_tool(Tool.hoe, ToolMaterial.basic),
                 SVEFruit.salal_berry: self.logic.crop.can_plant_and_grow_item([Season.spring, Season.summer]) & self.logic.has(SVESeed.shrub_seed),
                 ModEdible.aegis_elixir: self.logic.money.can_spend_at(SVERegion.galmoran_outpost, 28000),
@@ -105,9 +120,63 @@ RegionLogicMixin, SeasonLogicMixin, RelationshipLogicMixin, MuseumLogicMixin, To
                 "Stamina Capsule": self.logic.money.can_spend_at(Region.hospital, 4000),
                 SVEForage.thistle: self.logic.region.can_reach(SVERegion.summit),
                 SVEForage.void_pebble: self.logic.region.can_reach(SVERegion.crimson_badlands) & self.logic.combat.has_great_weapon,
-                ModLoot.void_shard: self.logic.region.can_reach(SVERegion.crimson_badlands) & self.logic.combat.has_galaxy_weapon
+                ModLoot.void_shard: self.logic.region.can_reach(SVERegion.crimson_badlands) & self.logic.combat.has_galaxy_weapon &
+                                    self.logic.skill.has_level(Skill.combat, 10) & self.logic.region.can_reach(Region.saloon) & self.logic.time.has_year_three
                 }
         # @formatter:on
+
+    def get_modified_item_rules_for_sve(self, items: Dict[str, StardewRule]):
+        return {
+            Loot.void_essence: items[Loot.void_essence] | self.logic.region.can_reach(SVERegion.highlands_cavern) | self.logic.region.can_reach(
+                SVERegion.crimson_badlands),
+            Loot.solar_essence: items[Loot.solar_essence] | self.logic.region.can_reach(SVERegion.crimson_badlands),
+            Flower.tulip: items[Flower.tulip] | self.logic.tool.can_forage(Season.spring, SVERegion.sprite_spring),
+            Flower.blue_jazz: items[Flower.blue_jazz] | self.logic.tool.can_forage(Season.spring, SVERegion.sprite_spring),
+            Flower.summer_spangle: items[Flower.summer_spangle] | self.logic.tool.can_forage(Season.summer, SVERegion.sprite_spring),
+            Flower.sunflower: items[Flower.sunflower] | self.logic.tool.can_forage((Season.summer, Season.fall), SVERegion.sprite_spring),
+            Flower.fairy_rose: items[Flower.fairy_rose] | self.logic.tool.can_forage(Season.fall, SVERegion.sprite_spring),
+            Fruit.ancient_fruit: items[Fruit.ancient_fruit] | (
+                    self.logic.tool.can_forage((Season.spring, Season.summer, Season.fall), SVERegion.sprite_spring) &
+                    self.logic.time.has_year_three) | self.logic.region.can_reach(SVERegion.sprite_spring_cave),
+            Fruit.sweet_gem_berry: items[Fruit.sweet_gem_berry] | (self.logic.tool.can_forage((Season.spring, Season.summer, Season.fall), SVERegion.sprite_spring) &
+                                   self.logic.time.has_year_three),
+            WaterItem.coral: items[WaterItem.coral] | self.logic.region.can_reach(SVERegion.fable_reef),
+            Forageable.rainbow_shell: items[Forageable.rainbow_shell] | self.logic.region.can_reach(SVERegion.fable_reef),
+            WaterItem.sea_urchin: items[WaterItem.sea_urchin] | self.logic.region.can_reach(SVERegion.fable_reef),
+            Forageable.red_mushroom: items[Forageable.red_mushroom] | self.logic.tool.can_forage((Season.summer, Season.fall), SVERegion.forest_west) |
+                                     self.logic.region.can_reach(SVERegion.sprite_spring_cave),
+            Forageable.purple_mushroom: items[Forageable.purple_mushroom] | self.logic.tool.can_forage(Season.fall, SVERegion.forest_west) |
+                                        self.logic.region.can_reach(SVERegion.sprite_spring_cave),
+            Forageable.morel: items[Forageable.morel] | self.logic.tool.can_forage(Season.fall, SVERegion.forest_west),
+            Forageable.chanterelle: items[Forageable.chanterelle] | self.logic.tool.can_forage(Season.fall, SVERegion.forest_west) |
+                                    self.logic.region.can_reach(SVERegion.sprite_spring_cave),
+            Ore.copper: items[Ore.copper] | (self.logic.tool.can_use_tool_at(Tool.pickaxe, ToolMaterial.basic, SVERegion.highlands_cavern) &
+                                             self.logic.combat.can_fight_at_level(Performance.great)),
+            Ore.iron: items[Ore.iron] | (self.logic.tool.can_use_tool_at(Tool.pickaxe, ToolMaterial.basic, SVERegion.highlands_cavern) &
+                                         self.logic.combat.can_fight_at_level(Performance.great)),
+            Ore.iridium: items[Ore.iridium] | (self.logic.tool.can_use_tool_at(Tool.pickaxe, ToolMaterial.basic, SVERegion.crimson_badlands) &
+                                               self.logic.combat.can_fight_at_level(Performance.maximum)),
+        }
+
+    def get_modified_item_rules_for_deep_woods(self, items: Dict[str, StardewRule]):
+        return {
+            Fruit.apple: items[Fruit.apple] | self.logic.region.can_reach(DeepWoodsRegion.floor_10),  # Deep enough to have seen such a tree at least once
+            Fruit.apricot: items[Fruit.apricot] | self.logic.region.can_reach(DeepWoodsRegion.floor_10),
+            Fruit.cherry: items[Fruit.cherry] | self.logic.region.can_reach(DeepWoodsRegion.floor_10),
+            Fruit.orange: items[Fruit.orange] | self.logic.region.can_reach(DeepWoodsRegion.floor_10),
+            Fruit.peach: items[Fruit.peach] | self.logic.region.can_reach(DeepWoodsRegion.floor_10),
+            Fruit.pomegranate: items[Fruit.pomegranate] | self.logic.region.can_reach(DeepWoodsRegion.floor_10),
+            Fruit.mango: items[Fruit.mango] | self.logic.region.can_reach(DeepWoodsRegion.floor_10),
+            Flower.tulip: items[Flower.tulip] | self.logic.tool.can_forage(Season.not_winter, DeepWoodsRegion.floor_10),
+            Flower.blue_jazz: items[Flower.blue_jazz] | self.logic.region.can_reach(DeepWoodsRegion.floor_10),
+            Flower.summer_spangle: items[Flower.summer_spangle] | self.logic.tool.can_forage(Season.not_winter, DeepWoodsRegion.floor_10),
+            Flower.poppy: items[Flower.poppy] | self.logic.tool.can_forage(Season.not_winter, DeepWoodsRegion.floor_10),
+            Flower.fairy_rose: items[Flower.fairy_rose] | self.logic.region.can_reach(DeepWoodsRegion.floor_10),
+            Material.hardwood: items[Material.hardwood] | self.logic.tool.can_use_tool_at(Tool.axe, ToolMaterial.iron, DeepWoodsRegion.floor_10),
+            Ore.iridium: items[Ore.iridium] | self.logic.tool.can_use_tool_at(Tool.axe, ToolMaterial.iridium, DeepWoodsRegion.floor_50),  # Iridium Tree
+            Ingredient.sugar: items[Ingredient.sugar] | self.logic.tool.can_use_tool_at(Tool.axe, ToolMaterial.gold, DeepWoodsRegion.floor_50),  # Gingerbread House
+            Ingredient.wheat_flour: items[Ingredient.wheat_flour] | self.logic.tool.can_use_tool_at(Tool.axe, ToolMaterial.gold, DeepWoodsRegion.floor_50),  # Gingerbread House
+        }
 
     def get_archaeology_item_rules(self):
         archaeology_item_rules = {}
@@ -115,7 +184,10 @@ RegionLogicMixin, SeasonLogicMixin, RelationshipLogicMixin, MuseumLogicMixin, To
         hardwood_preservation_chamber_rule = self.logic.has(ModMachine.hardwood_preservation_chamber)
         for item in display_items:
             for display_type in display_types:
-                location_name = f"{display_type}: {item}"
+                if item == "Trilobite":
+                    location_name = f"{display_type}: Trilobite Fossil"
+                else:
+                    location_name = f"{display_type}: {item}"
                 display_item_rule = self.logic.crafting.can_craft(all_crafting_recipes_by_name[display_type]) & self.logic.has(item)
                 if "Wooden" in display_type:
                     archaeology_item_rules[location_name] = display_item_rule & preservation_chamber_rule
@@ -124,10 +196,9 @@ RegionLogicMixin, SeasonLogicMixin, RelationshipLogicMixin, MuseumLogicMixin, To
         return archaeology_item_rules
 
     def get_distant_lands_item_rules(self):
-        return{
+        return {
             DistantLandsForageable.swamp_herb: self.logic.region.can_reach(Region.witch_swamp),
             DistantLandsForageable.brown_amanita: self.logic.region.can_reach(Region.witch_swamp),
-            DistantLandsFish.purple_algae: self.logic.fishing.can_fish_at(Region.witch_swamp),
             DistantLandsSeed.vile_ancient_fruit: self.logic.money.can_spend_at(Region.oasis, 50) & self.has_seed_unlocked(DistantLandsSeed.vile_ancient_fruit),
             DistantLandsSeed.void_mint: self.logic.money.can_spend_at(Region.oasis, 80) & self.has_seed_unlocked(DistantLandsSeed.void_mint),
             DistantLandsCrop.void_mint: self.logic.season.has_any_not_winter() & self.logic.has(DistantLandsSeed.void_mint),

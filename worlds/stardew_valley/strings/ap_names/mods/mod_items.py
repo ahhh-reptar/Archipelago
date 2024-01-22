@@ -8,8 +8,9 @@ class DeepWoodsItem:
     obelisk_sigil = "Progressive Woods Obelisk Sigils"
 
 
-class SkillItem:
-    luck_skill = "Luck Level"
+class SkillLevel:
+    luck = "Luck Level"
+    archaeology = "Archaeology Level"
 
 
 class SVEQuestItem:
@@ -22,8 +23,9 @@ class SVEQuestItem:
     diamond_wand = "Diamond Wand"
     marlon_boat_paddle = "Marlon's Boat Paddle"
     fable_reef_portal = "Fable Reef Portal"
+    grandpa_shed = "Grandpa's Shed"
 
-    sve_quest_items: List[str] = [aurora_vineyard_tablet, iridium_bomb, void_soul, kittyfish_spell, scarlett_job_offer, morgan_schooling]
+    sve_quest_items: List[str] = [aurora_vineyard_tablet, iridium_bomb, void_soul, kittyfish_spell, scarlett_job_offer, morgan_schooling, grandpa_shed]
     sve_quest_items_ginger_island: List[str] = [diamond_wand, marlon_boat_paddle, fable_reef_portal]
 
 
@@ -37,10 +39,12 @@ class SVELocation:
 
 class SVERunes:
     nexus_guild = "Nexus: Adventurer's Guild Runes"
-    nexus_junimo_outpost = "Nexus: Junimo and Outpost Runes"
+    nexus_junimo = "Nexus: Junimo Woods Runes"
+    nexus_outpost = "Nexus: Outpost Runes"
     nexus_aurora = "Nexus: Aurora Vineyard Runes"
     nexus_spring = "Nexus: Sprite Spring Runes"
-    nexus_farm_wizard = "Nexus: Farm and Wizard Runes"
+    nexus_farm = "Nexus: Farm Runes"
+    nexus_wizard = "Nexus: Wizard Runes"
 
-    nexus_items: List[str] = [nexus_farm_wizard, nexus_spring, nexus_aurora, nexus_guild, nexus_junimo_outpost]
+    nexus_items: List[str] = [nexus_farm, nexus_wizard, nexus_spring, nexus_aurora, nexus_guild, nexus_junimo, nexus_outpost]
 

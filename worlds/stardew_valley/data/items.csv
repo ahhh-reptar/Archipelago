@@ -81,7 +81,7 @@ id,name,classification,groups,mod_name
 95,Adventurer's Guild,progression,DEPRECATED,
 96,Club Card,progression,,
 97,Magnifying Glass,progression,,
-98,Bear's Knowledge,useful,,
+98,Bear's Knowledge,progression,,
 99,Iridium Snake Milk,useful,,
 100,JotPK: Progressive Boots,progression,ARCADE_MACHINE_BUFFS,
 101,JotPK: Progressive Gun,progression,ARCADE_MACHINE_BUFFS,
@@ -738,14 +738,14 @@ id,name,classification,groups,mod_name
 10011,Spell: Water,progression,MAGIC_SPELL,Magic
 10012,Spell: Blink,progression,MAGIC_SPELL,Magic
 10013,Spell: Evac,useful,MAGIC_SPELL,Magic
-10014,Spell: Haste,filler,MAGIC_SPELL,Magic
+10014,Spell: Haste,useful,MAGIC_SPELL,Magic
 10015,Spell: Heal,progression,MAGIC_SPELL,Magic
 10016,Spell: Buff,useful,MAGIC_SPELL,Magic
 10017,Spell: Shockwave,progression,MAGIC_SPELL,Magic
 10018,Spell: Fireball,progression,MAGIC_SPELL,Magic
 10019,Spell: Frostbolt,progression,MAGIC_SPELL,Magic
 10020,Spell: Teleport,progression,MAGIC_SPELL,Magic
-10021,Spell: Lantern,filler,MAGIC_SPELL,Magic
+10021,Spell: Lantern,useful,MAGIC_SPELL,Magic
 10022,Spell: Tendrils,progression,MAGIC_SPELL,Magic
 10023,Spell: Photosynthesis,useful,MAGIC_SPELL,Magic
 10024,Spell: Descend,progression,MAGIC_SPELL,Magic
@@ -783,7 +783,7 @@ id,name,classification,groups,mod_name
 10124,Susan <3,progression,FRIENDSANITY,Stardew Valley Expanded
 10125,Morris <3,progression,FRIENDSANITY,Stardew Valley Expanded
 10126,Alecto <3,progression,FRIENDSANITY,Alecto the Witch
-10127,Goblin <3,progression,FRIENDSANITY,Distant Lands - Witch Swamp Overhaul
+10127,Zic <3,progression,FRIENDSANITY,Distant Lands - Witch Swamp Overhaul
 10301,Progressive Woods Obelisk Sigils,progression,,DeepWoods
 10302,Progressive Skull Cavern Elevator,progression,,Skull Cavern Elevator
 10401,Baked Berry Oatmeal Recipe,progression,"CHEFSANITY,CHEFSANITY_PURCHASE",Stardew Valley Expanded
@@ -809,17 +809,17 @@ id,name,classification,groups,mod_name
 10504,Krobus' Protection,useful,,Stardew Valley Expanded
 10505,Kittyfish Spell,progression,,Stardew Valley Expanded
 10506,Nexus: Adventurer's Guild Runes,progression,MOD_WARP,Stardew Valley Expanded
-10507,Nexus: Junimo and Outpost Runes,progression,MOD_WARP,Stardew Valley Expanded
+10507,Nexus: Junimo Woods Runes,progression,MOD_WARP,Stardew Valley Expanded
 10508,Nexus: Aurora Vineyard Runes,progression,MOD_WARP,Stardew Valley Expanded
 10509,Nexus: Sprite Spring Runes,progression,MOD_WARP,Stardew Valley Expanded
-10510,Nexus: Outpost Runes,progression,DEPRECATED,Stardew Valley Expanded
-10511,Nexus: Farm and Wizard Runes,progression,MOD_WARP,Stardew Valley Expanded
-10512,Nexus: Wizard Runes,progression,DEPRECATED,Stardew Valley Expanded
+10510,Nexus: Outpost Runes,progression,MOD_WARP,Stardew Valley Expanded
+10511,Nexus: Farm Runes,progression,MOD_WARP,Stardew Valley Expanded
+10512,Nexus: Wizard Runes,progression,MOD_WARP,Stardew Valley Expanded
 10513,Fable Reef Portal,progression,GINGER_ISLAND,Stardew Valley Expanded
 10514,Tempered Galaxy Sword,filler,"WEAPON,DEPRECATED",Stardew Valley Expanded
 10515,Tempered Galaxy Dagger,filler,"WEAPON,DEPRECATED",Stardew Valley Expanded
 10516,Tempered Galaxy Hammer,filler,"WEAPON,DEPRECATED",Stardew Valley Expanded
-10517,Abandoned House Outskirts Clean-up,progression,MOD_WARP,Stardew Valley Expanded
+10517,Grandpa's Shed,progression,,Stardew Valley Expanded
 10518,Aurora Vineyard Tablet,progression,,Stardew Valley Expanded
 10519,Scarlett's Job Offer,progression,,Stardew Valley Expanded
 10520,Morgan's Schooling,progression,,Stardew Valley Expanded
@@ -828,3 +828,19 @@ id,name,classification,groups,mod_name
 10603,Haste Elixir Recipe,progression,CRAFTSANITY,Stardew Valley Expanded
 10604,Hero Elixir Recipe,progression,CRAFTSANITY,Stardew Valley Expanded
 10605,Armor Elixir Recipe,progression,CRAFTSANITY,Stardew Valley Expanded
+10701,Resource Pack: 3 Magic Elixir,filler,RESOURCE_PACK,Magic
+10702,Resource Pack: 3 Travel Core,filler,RESOURCE_PACK,Magic
+10703,Preservation Chamber,filler,"RESOURCE_PACK,RESOURCE_PACK_USEFUL",Archaeology
+10704,Hardwood Preservation Chamber,filler,"RESOURCE_PACK,RESOURCE_PACK_USEFUL",Archaeology
+10705,Resource Pack: 3 Water Shifter,filler,RESOURCE_PACK,Archaeology
+10706,Resource Pack: 5 Hardwood Display,filler,RESOURCE_PACK,Archaeology
+10707,Resource Pack: 5 Wooden Display,filler,RESOURCE_PACK,Archaeology
+10708,Grinder,filler,"RESOURCE_PACK,RESOURCE_PACK_USEFUL",Archaeology
+10709,Ancient Battery Production Station,filler,"RESOURCE_PACK,RESOURCE_PACK_USEFUL",Archaeology
+10710,Hero Elixir,filler,RESOURCE_PACK,Starde Valley Expanded
+10711,Aegis Elixir,filler,RESOURCE_PACK,Stardew Valley Expanded
+10712,Haste Elixir,filler,RESOURCE_PACK,Stardew Valley Expanded
+10713,Lightning Elixir,filler,RESOURCE_PACK,Stardew Valley Expanded
+10714,Armor Elixir,filler,RESOURCE_PACK,Stardew Valley Expanded
+10715,Gravity Elixir,filler,RESOURCE_PACK,Stardew Valley Expanded
+10716,Barbarian Elixir,filler,RESOURCE_PACK,Stardew Valley Expanded

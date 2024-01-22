@@ -15,6 +15,8 @@ from ...logic.tool_logic import ToolLogicMixin
 from ...mods.mod_data import ModNames
 from ...options import SkillProgression
 from ...stardew_rule import StardewRule, False_, True_
+from ...strings.ap_names.mods.mod_items import SkillLevel
+from ...strings.craftable_names import ModCraftable, ModMachine
 from ...strings.building_names import Building
 from ...strings.geode_names import Geode
 from ...strings.machine_names import Machine
@@ -59,8 +61,9 @@ ToolLogicMixin, FishingLogicMixin, CookingLogicMixin, MagicLogicMixin]]):
     def can_earn_luck_skill_level(self, level: int) -> StardewRule:
         if level >= 6:
             return self.logic.fishing.can_fish_chests() | self.logic.action.can_open_geode(Geode.magma)
-        else:
+        if level >= 3:
             return self.logic.fishing.can_fish_chests() | self.logic.action.can_open_geode(Geode.geode)
+        return True_()  # You can literally wake up and or get them by opening starting chests.
 
     def can_earn_magic_skill_level(self, level: int) -> StardewRule:
         spell_count = [self.logic.received(MagicSpell.clear_debris), self.logic.received(MagicSpell.water),
@@ -80,10 +83,18 @@ ToolLogicMixin, FishingLogicMixin, CookingLogicMixin, MagicLogicMixin]]):
         return self.logic.count(level * 2, *villager_count)
 
     def can_earn_archaeology_skill_level(self, level: int) -> StardewRule:
-        if level >= 6:
-            return self.logic.action.can_pan() | self.logic.tool.has_tool(Tool.hoe, ToolMaterial.gold)
-        else:
-            return self.logic.action.can_pan() | self.logic.tool.has_tool(Tool.hoe, ToolMaterial.basic)
+        shifter_rule = True_()
+        preservation_rule = True_()
+        if self.options.skill_progression == self.options.skill_progression.option_progressive:
+            shifter_rule = self.logic.has(ModCraftable.water_shifter)
+            preservation_rule = self.logic.has(ModMachine.hardwood_preservation_chamber)
+        if level >= 8:
+            return (self.logic.action.can_pan() & self.logic.tool.has_tool(Tool.hoe, ToolMaterial.gold)) & shifter_rule & preservation_rule
+        if level >= 5:
+            return (self.logic.action.can_pan() & self.logic.tool.has_tool(Tool.hoe, ToolMaterial.iron)) & shifter_rule
+        if level >= 3:
+            return self.logic.action.can_pan() | self.logic.tool.has_tool(Tool.hoe, ToolMaterial.copper)
+        return self.logic.action.can_pan() | self.logic.tool.has_tool(Tool.hoe, ToolMaterial.basic)
 
     def can_earn_cooking_skill_level(self, level: int) -> StardewRule:
         if level >= 6:
