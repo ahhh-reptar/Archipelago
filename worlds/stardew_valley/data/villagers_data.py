@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List, Tuple, Optional, Dict, Callable, Set
 
 from ..strings.food_names import Beverage
-from ..strings.region_names import Region, SVERegion, AlectoRegion
+from ..strings.region_names import Region, SVERegion, AlectoRegion, BoardingHouseRegion, LaceyRegion
 from ..mods.mod_data import ModNames
 from ..strings.generic_names import Generic
 from ..strings.season_names import Season
@@ -54,9 +54,12 @@ jojamart = (Region.jojamart,)
 railroad = (Region.railroad,)
 junimo = (SVERegion.junimo_woods,)
 
-# Witch Swamp Overhaul Location
+# Stray Locations
 witch_swamp = (Region.witch_swamp,)
 witch_attic = (AlectoRegion.witch_attic,)
+hat_house = (LaceyRegion.hat_house,)
+the_lost_valley = (BoardingHouseRegion.the_lost_valley,)
+boarding_house = (BoardingHouseRegion.boarding_house_first,)
 
 golden_pumpkin = ("Golden Pumpkin",)
 # magic_rock_candy = ("Magic Rock Candy",)
@@ -424,6 +427,12 @@ yoba = villager(ModNPC.yoba, False, secret_woods, Season.spring, universal_loves
 riley = villager(ModNPC.riley, True, town, Season.spring, universal_loves, True, ModNames.riley)
 zic = villager(ModNPC.goblin, False, witch_swamp, Season.fall, void_mayonnaise, False, ModNames.distant_lands)
 alecto = villager(ModNPC.alecto, False, witch_attic, Generic.any, universal_loves, False, ModNames.alecto)
+lacey = villager(ModNPC.lacey, True, hat_house, Season.spring, universal_loves, True, ModNames.lacey)
+
+# Boarding House Villagers
+gregory = villager(ModNPC.gregory, True, the_lost_valley, Season.fall, universal_loves, False, ModNames.boarding_house)
+sheila = villager(ModNPC.sheila, True, boarding_house, Season.spring, universal_loves, True, ModNames.boarding_house)
+joel = villager(ModNPC.joel, False, boarding_house, Season.winter, universal_loves, True, ModNames.boarding_house)
 
 # SVE Villagers
 claire = villager(ModNPC.claire, True, town + jojamart, Season.fall, universal_loves + claire_loves, True, ModNames.sve)

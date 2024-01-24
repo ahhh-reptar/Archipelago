@@ -3,12 +3,13 @@ from ..mods.mod_data import ModNames
 from .recipe_source import RecipeSource, FriendshipSource, SkillSource, QueenOfSauceSource, ShopSource, StarterSource, ShopTradeSource, ShopFriendshipSource
 from ..strings.animal_product_names import AnimalProduct
 from ..strings.artisan_good_names import ArtisanGood
+from ..strings.craftable_names import ModEdible, Edible
 from ..strings.crop_names import Fruit, Vegetable, SVEFruit, DistantLandsCrop
 from ..strings.fish_names import Fish, SVEFish, WaterItem, DistantLandsFish
 from ..strings.flower_names import Flower
 from ..strings.forageable_names import Forageable, SVEForage, DistantLandsForageable
 from ..strings.ingredient_names import Ingredient
-from ..strings.food_names import Meal, SVEMeal, Beverage, DistantLandsMeal
+from ..strings.food_names import Meal, SVEMeal, Beverage, DistantLandsMeal, BoardingHouseMeal
 from ..strings.material_names import Material
 from ..strings.metal_names import Fossil
 from ..strings.monster_drop_names import Loot
@@ -174,6 +175,8 @@ tropical_curry = shop_recipe(Meal.tropical_curry, Region.island_resort, 2000, {F
 trout_soup = queen_of_sauce_recipe(Meal.trout_soup, 1, Season.fall, 14, {Fish.rainbow_trout: 1, WaterItem.green_algae: 1})
 vegetable_medley = friendship_recipe(Meal.vegetable_medley, NPC.caroline, 7, {Vegetable.tomato: 1, Vegetable.beet: 1})
 
+magic_elixir = shop_recipe(ModEdible.magic_elixir, Region.adventurer_guild, 3000, {Edible.life_elixir: 1, Forageable.purple_mushroom: 1}, ModNames.magic)
+
 baked_berry_oatmeal = shop_recipe(SVEMeal.baked_berry_oatmeal, SVERegion.bear_shop, 0, {Forageable.salmonberry: 15, Forageable.blackberry: 15,
                                                                                             Ingredient.sugar: 1, Ingredient.wheat_flour: 2}, ModNames.sve)
 big_bark_burger = friendship_and_shop_recipe(SVEMeal.big_bark_burger, NPC.gus, 5, Region.saloon, 5500,
@@ -202,6 +205,9 @@ crayfish_soup = friendship_recipe(DistantLandsMeal.crayfish_soup, ModNPC.goblin,
                                                                                      DistantLandsFish.purple_algae: 1, WaterItem.white_algae: 1}, ModNames.distant_lands)
 pemmican = friendship_recipe(DistantLandsMeal.pemmican, ModNPC.goblin, 8, {Loot.bug_meat: 1, Fish.any: 1, Forageable.salmonberry: 3,
                                                                            Material.stone: 2}, ModNames.distant_lands)
+
+special_pumpkin_soup = friendship_recipe(BoardingHouseMeal.special_pumpkin_soup, ModNPC.joel, 6, {Vegetable.pumpkin: 2, AnimalProduct.large_goat_milk: 1,
+                                                                                                  Vegetable.garlic: 1}, ModNames.boarding_house)
 
 
 all_cooking_recipes_by_name = {recipe.meal: recipe for recipe in all_cooking_recipes}

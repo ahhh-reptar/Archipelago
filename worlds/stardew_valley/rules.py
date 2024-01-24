@@ -28,7 +28,7 @@ from .strings.calendar_names import Weekday
 from .strings.craftable_names import Bomb
 from .strings.crop_names import Fruit
 from .strings.entrance_names import dig_to_mines_floor, dig_to_skull_floor, Entrance, move_to_woods_depth, DeepWoodsEntrance, AlecEntrance, MagicEntrance, \
-    SVEEntrance
+    SVEEntrance, LaceyEntrance, BoardingHouseEntrance
 from .strings.generic_names import Generic
 from .strings.material_names import Material
 from .strings.metal_names import MetalBar
@@ -271,6 +271,9 @@ def set_bedroom_entrance_rules(logic, multiworld, player, world_options: Stardew
     if ModNames.alec in world_options.mods:
         MultiWorldRules.set_rule(multiworld.get_entrance(AlecEntrance.petshop_to_bedroom, player),
                                  (logic.relationship.has_hearts(ModNPC.alec, 2) | logic.mod.magic.can_blink()))
+    if ModNames.lacey in world_options.mods:
+        MultiWorldRules.set_rule(multiworld.get_entrance(LaceyEntrance.forest_to_hat_house, player),
+                                 logic.relationship.has_hearts(ModNPC.lacey, 2))
 
 
 def set_mines_floor_entrance_rules(logic, multiworld, player):
@@ -935,6 +938,7 @@ def set_sve_rules(logic: StardewLogic, multiworld: MultiWorld, player: int, worl
         MultiWorldRules.set_rule(multiworld.get_location(location, player),
                                  logic.registry.sve_location_rules[location])
     set_sve_ginger_island_rules(logic, multiworld, player, world_options)
+    set_boarding_house_rules(logic, multiworld, player, world_options)
 
 
 def set_sve_ginger_island_rules(logic: StardewLogic, multiworld: MultiWorld, player: int, world_options: StardewValleyOptions):
@@ -944,7 +948,12 @@ def set_sve_ginger_island_rules(logic: StardewLogic, multiworld: MultiWorld, pla
                              logic.received(SVEQuestItem.marlon_boat_paddle))
     MultiWorldRules.set_rule(multiworld.get_entrance(SVEEntrance.wizard_to_fable_reef, player),
                              logic.received(SVEQuestItem.fable_reef_portal))
-    MultiWorldRules.set_rule(multiworld.get_location(SVELocation.diamond_wand, player),
-                             logic.quest.can_complete_quest(ModQuest.MonsterCrops) & logic.region.can_reach(SVERegion.lances_house))
     MultiWorldRules.set_rule(multiworld.get_entrance(SVEEntrance.highlands_to_cave, player),
                              logic.tool.has_tool(Tool.pickaxe, ToolMaterial.iron) & logic.tool.has_tool(Tool.axe, ToolMaterial.iron))
+
+
+def set_boarding_house_rules(logic: StardewLogic, multiworld: MultiWorld, player: int, world_options: StardewValleyOptions):
+    if ModNames.boarding_house not in world_options.mods:
+        return
+    MultiWorldRules.set_rule(multiworld.get_entrance(BoardingHouseEntrance.the_lost_valley_to_lost_valley_ruins, player),
+                             logic.tool.has_tool(Tool.axe, ToolMaterial.iron))

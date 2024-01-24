@@ -16,7 +16,7 @@ from ..strings.forageable_names import Forageable, SVEForage, DistantLandsForage
 from ..strings.ingredient_names import Ingredient
 from ..strings.machine_names import Machine
 from ..strings.material_names import Material
-from ..strings.metal_names import Ore, MetalBar, Fossil, Artifact, Mineral
+from ..strings.metal_names import Ore, MetalBar, Fossil, Artifact, Mineral, ModFossil
 from ..strings.monster_drop_names import Loot
 from ..strings.quest_names import Quest
 from ..strings.region_names import Region, SVERegion
@@ -262,7 +262,6 @@ farm_computer = special_order_recipe(Craftable.farm_computer, SpecialOrder.aquat
 hopper = ap_recipe(Craftable.hopper, {Material.hardwood: 10, MetalBar.iridium: 1, MetalBar.radioactive: 1})
 cookout_kit = skill_recipe(Craftable.cookout_kit, Skill.foraging, 9, {Material.wood: 15, Material.fiber: 10, Material.coal: 3})
 
-magic_elixir = shop_recipe(ModEdible.magic_elixir, Region.adventurer_guild, 3000, {Edible.life_elixir: 1, Forageable.purple_mushroom: 1}, ModNames.magic)
 travel_charm = shop_recipe(ModCraftable.travel_core, Region.adventurer_guild, 250, {Loot.solar_essence: 1, Loot.void_essence: 1}, ModNames.magic)
 preservation_chamber = skill_recipe(ModMachine.preservation_chamber, ModSkill.archaeology, 2, {MetalBar.copper: 1, Material.wood: 15, ArtisanGood.oak_resin: 30},
                                     ModNames.archaeology)
@@ -288,5 +287,27 @@ armor_elixir = shop_recipe(ModEdible.armor_elixir, SVERegion.alesia_shop, 50000,
                                                                                   Fossil.bone_fragment: 5}, ModNames.sve)
 ginger_tincture = friendship_recipe(ModConsumable.ginger_tincture, ModNPC.goblin, 4, {DistantLandsForageable.brown_amanita: 1, Forageable.ginger: 5,
                                                                                       Material.cinder_shard: 1, DistantLandsForageable.swamp_herb: 1}, ModNames.distant_lands)
+
+neanderthal_skeleton = shop_recipe(ModCraftable.neanderthal_skeleton, Region.mines_dwarf_shop, 5000,
+                                   {ModFossil.neanderthal_skull: 1, ModFossil.neanderthal_ribs: 1, ModFossil.neanderthal_pelvis: 1, ModFossil.neanderthal_limb_bones: 1,
+                                                                                                      MetalBar.iron: 5, Material.hardwood: 10}, ModNames.boarding_house)
+pterodactyl_skeleton_l = shop_recipe(ModCraftable.pterodactyl_skeleton_l, Region.mines_dwarf_shop, 5000,
+                                     {ModFossil.pterodactyl_phalange: 1, ModFossil.pterodactyl_skull: 1, ModFossil.pterodactyl_l_wing_bone: 1,
+                                      MetalBar.iron: 10, Material.hardwood: 15}, ModNames.boarding_house)
+pterodactyl_skeleton_m = shop_recipe(ModCraftable.pterodactyl_skeleton_m, Region.mines_dwarf_shop, 5000,
+                                     {ModFossil.pterodactyl_phalange: 1, ModFossil.pterodactyl_vertebra: 1, ModFossil.pterodactyl_ribs: 1,
+                                      MetalBar.iron: 10, Material.hardwood: 15}, ModNames.boarding_house)
+pterodactyl_skeleton_r = shop_recipe(ModCraftable.pterodactyl_skeleton_r, Region.mines_dwarf_shop, 5000,
+                                     {ModFossil.pterodactyl_phalange: 1, ModFossil.pterodactyl_claw: 1, ModFossil.pterodactyl_r_wing_bone: 1,
+                                      MetalBar.iron: 10, Material.hardwood: 15}, ModNames.boarding_house)
+trex_skeleton_l = shop_recipe(ModCraftable.trex_skeleton_l, Region.mines_dwarf_shop, 5000,
+                              {ModFossil.dinosaur_vertebra: 1, ModFossil.dinosaur_tooth: 1, ModFossil.dinosaur_skull: 1,
+                               MetalBar.iron: 10, Material.hardwood: 15}, ModNames.boarding_house)
+trex_skeleton_m = shop_recipe(ModCraftable.trex_skeleton_m, Region.mines_dwarf_shop, 5000,
+                              {ModFossil.dinosaur_vertebra: 1, ModFossil.dinosaur_ribs: 1, ModFossil.dinosaur_claw: 1,
+                               MetalBar.iron: 10, Material.hardwood: 15}, ModNames.boarding_house)
+trex_skeleton_r = shop_recipe(ModCraftable.trex_skeleton_r, Region.mines_dwarf_shop, 5000,
+                              {ModFossil.dinosaur_vertebra: 1, ModFossil.dinosaur_femur: 1, ModFossil.dinosaur_pelvis: 1,
+                               MetalBar.iron: 10, Material.hardwood: 15}, ModNames.boarding_house)
 
 all_crafting_recipes_by_name = {recipe.item: recipe for recipe in all_crafting_recipes}
