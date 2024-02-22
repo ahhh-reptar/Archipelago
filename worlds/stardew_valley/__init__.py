@@ -24,6 +24,7 @@ from .strings.entrance_names import Entrance as EntranceName
 from .strings.goal_names import Goal as GoalName
 from .strings.region_names import Region as RegionName
 
+enable_hard_logic = False
 client_version = 0
 
 
