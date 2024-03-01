@@ -13,13 +13,13 @@ from ...logic.relationship_logic import RelationshipLogicMixin
 from ...logic.season_logic import SeasonLogicMixin
 from ...logic.time_logic import TimeLogicMixin
 from ...logic.tool_logic import ToolLogicMixin
+from ...stardew_rule import Or, false_
 from ...strings.ap_names.mods.mod_items import SVELocation, SVERunes, SVEQuestItem
+from ...strings.quest_names import ModQuest
 from ...strings.quest_names import Quest
 from ...strings.region_names import Region
 from ...strings.tool_names import Tool, ToolMaterial
 from ...strings.wallet_item_names import Wallet
-from ...stardew_rule import Or
-from ...strings.quest_names import ModQuest
 
 
 class SVELogicMixin(BaseLogicMixin):
@@ -29,7 +29,7 @@ class SVELogicMixin(BaseLogicMixin):
 
 
 class SVELogic(BaseLogic[Union[HasLogicMixin, ReceivedLogicMixin, QuestLogicMixin, RegionLogicMixin, RelationshipLogicMixin, TimeLogicMixin, ToolLogicMixin,
-               CookingLogicMixin, MoneyLogicMixin, CombatLogicMixin, SeasonLogicMixin, QuestLogicMixin]]):
+CookingLogicMixin, MoneyLogicMixin, CombatLogicMixin, SeasonLogicMixin, QuestLogicMixin]]):
     def initialize_rules(self):
         self.registry.sve_location_rules.update({
             SVELocation.tempered_galaxy_sword: self.logic.money.can_spend_at(SVERegion.alesia_shop, 350000),
@@ -38,12 +38,17 @@ class SVELogic(BaseLogic[Union[HasLogicMixin, ReceivedLogicMixin, QuestLogicMixi
         })
 
     def has_any_rune(self):
+        if self.options.quest_locations < 0:
+            # TODO Fix this
+            return false_
+
         rune_list = SVERunes.nexus_items
         return Or(*(self.logic.received(rune) for rune in rune_list))
 
     def has_iridium_bomb(self):
         if self.options.quest_locations < 0:
             return self.logic.quest.can_complete_quest(ModQuest.RailroadBoulder)
+
         return self.logic.received(SVEQuestItem.iridium_bomb)
 
     def can_buy_bear_recipe(self):
@@ -52,4 +57,3 @@ class SVELogic(BaseLogic[Union[HasLogicMixin, ReceivedLogicMixin, QuestLogicMixi
         forage_rule = self.logic.region.can_reach_any((Region.forest, Region.backwoods, Region.mountain))
         knowledge_rule = self.logic.received(Wallet.bears_knowledge)
         return access_rule & forage_rule & knowledge_rule
-

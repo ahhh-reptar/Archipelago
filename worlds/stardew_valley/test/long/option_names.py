@@ -1,6 +1,6 @@
 from typing import Dict
 
-from Options import NamedRange
+from Options import NamedRange, Range
 from ... import StardewValleyWorld
 
 options_to_exclude = {"profit_margin", "starting_money", "multiple_day_sleep_enabled", "multiple_day_sleep_cost",
@@ -21,10 +21,17 @@ def get_option_choices(option) -> Dict[str, int]:
     return {}
 
 
+def get_option_choices_full_range(option) -> Dict[str, int]:
+    if issubclass(option, NamedRange):
+        return option.special_range_names
+    if issubclass(option, Range):
+        return {str(val): val for val in range(option.range_start, option.range_end + 1)}
+    elif option.options:
+        return option.options
+    return {}
+
+
 all_option_choices = [(option, value)
                       for option in options_to_include
-                      if option.options
                       for value in get_option_choices(option)
                       if option.default != get_option_choices(option)[value]]
-
-assert all_option_choices

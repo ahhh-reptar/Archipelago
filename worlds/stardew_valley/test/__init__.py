@@ -287,7 +287,7 @@ pre_generated_worlds = {}
 
 
 # Mostly a copy of test.general.setup_solo_multiworld, I just don't want to change the core.
-def setup_solo_multiworld(test_options: Optional[Dict[Union[str, StardewValleyOption], str]] = None,
+def setup_solo_multiworld(test_options: Optional[Dict[Union[str, StardewValleyOption], Any]] = None,
                           seed=DEFAULT_TEST_SEED,
                           _cache: Dict[Hashable, MultiWorld] = {},  # noqa
                           _steps=gen_steps) -> MultiWorld:
@@ -334,17 +334,18 @@ def setup_solo_multiworld(test_options: Optional[Dict[Union[str, StardewValleyOp
 
 def parse_class_option_keys(test_options: dict) -> dict:
     """ Now the option class is allowed as key. """
-    parsed_options = {}
+    if not test_options:
+        return {}
 
-    if test_options:
-        for option, value in test_options.items():
-            if hasattr(option, "internal_name"):
-                assert option.internal_name not in test_options, "Defined two times by class and internal_name"
-                parsed_options[option.internal_name] = value
-            else:
-                assert option in StardewValleyOptions.type_hints, \
-                    f"All keys of world_options must be a possible Stardew Valley option, {option} is not."
-                parsed_options[option] = value
+    parsed_options = {}
+    for option, value in test_options.items():
+        if hasattr(option, "internal_name"):
+            assert option.internal_name not in test_options, "Defined two times by class and internal_name"
+            parsed_options[option.internal_name] = value
+        else:
+            assert option in StardewValleyOptions.type_hints, \
+                f"All keys of world_options must be a possible Stardew Valley option, {option} is not."
+            parsed_options[option] = value
 
     return parsed_options
 

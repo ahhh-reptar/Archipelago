@@ -2,20 +2,9 @@ import random
 from typing import Dict
 
 from BaseClasses import MultiWorld, get_seed
-from Options import NamedRange, Range
-from .option_names import options_to_include
+from .option_names import options_to_include, get_option_choices_full_range
 from .. import setup_solo_multiworld, SVTestCase
 from ..assertion import GoalAssertMixin, OptionAssertMixin, WorldAssertMixin
-
-
-def get_option_choices(option) -> Dict[str, int]:
-    if issubclass(option, NamedRange):
-        return option.special_range_names
-    if issubclass(option, Range):
-        return {f"{val}": val for val in range(option.range_start, option.range_end + 1)}
-    elif option.options:
-        return option.options
-    return {}
 
 
 def generate_random_multiworld(world_id: int):
@@ -30,7 +19,7 @@ def generate_random_world_options(seed: int) -> Dict[str, int]:
     rng = random.Random(seed)
     for option_index in range(0, num_options):
         option = options_to_include[option_index]
-        option_choices = get_option_choices(option)
+        option_choices = get_option_choices_full_range(option)
         if not option_choices:
             continue
         chosen_option_value = rng.choice(list(option_choices.values()))

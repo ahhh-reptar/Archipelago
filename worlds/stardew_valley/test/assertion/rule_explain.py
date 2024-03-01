@@ -22,6 +22,7 @@ class RuleExplanation:
         return "  " * depth + f"{str(self.rule)} -> {self.result}"
 
     def __str__(self, depth=0):
+        # We should probably display some sort of [...] when max depth is reached, but whatever
         if not self.sub_rules or depth >= max_explanation_depth:
             return self.summary(depth)
 
@@ -79,18 +80,21 @@ def _(rule: TotalReceived, state: CollectionState, expected=True) -> RuleExplana
 
 @_explain.register
 def _(rule: Reach, state: CollectionState, expected=True) -> RuleExplanation:
-    access_rules = None
     if rule.resolution_hint == 'Location':
         spot = state.multiworld.get_location(rule.spot, rule.player)
 
+        access_rules = [Reach(spot.parent_region.name, "Region", rule.player)]
+
         if isinstance(spot.access_rule, StardewRule):
-            access_rules = [spot.access_rule, Reach(spot.parent_region.name, "Region", rule.player)]
+            access_rules.append(spot.access_rule)
 
     elif rule.resolution_hint == 'Entrance':
         spot = state.multiworld.get_entrance(rule.spot, rule.player)
 
+        access_rules = [Reach(spot.parent_region.name, "Region", rule.player)]
+
         if isinstance(spot.access_rule, StardewRule):
-            access_rules = [spot.access_rule, Reach(spot.parent_region.name, "Region", rule.player)]
+            access_rules.append(spot.access_rule)
 
     else:
         spot = state.multiworld.get_region(rule.spot, rule.player)
