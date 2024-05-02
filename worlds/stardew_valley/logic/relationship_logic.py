@@ -159,7 +159,7 @@ class RelationshipLogic(BaseLogic[Union[
         if hearts <= 0:
             return True_()
 
-        previous_heart = hearts - self.options.friendsanity_heart_size
+        previous_heart = hearts - self.options.friendsanity_heart_size - 1
         previous_heart_rule = self.logic.relationship.has_hearts(npc, previous_heart)
 
         if npc not in all_villagers_by_name or not self.npc_is_in_current_slot(npc):

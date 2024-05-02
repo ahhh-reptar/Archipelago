@@ -440,7 +440,7 @@ def create_friendsanity_items(item_factory: StardewItemFactory, options: Stardew
 
 def create_babies(item_factory: StardewItemFactory, items: List[Item], random: Random):
     baby_items = [item for item in items_by_group[Group.BABY]]
-    for i in range(2):
+    for i in range(10):
         chosen_baby = random.choice(baby_items)
         items.append(item_factory(chosen_baby))
 
@@ -465,8 +465,8 @@ def create_arcade_machine_items(item_factory: StardewItemFactory, options: Stard
 def create_player_buffs(item_factory: StardewItemFactory, options: StardewValleyOptions, items: List[Item]):
     movement_buffs: int = options.movement_buff_number.value
     luck_buffs: int = options.luck_buff_number.value
-    need_all_buffs = options.special_order_locations == SpecialOrderLocations.option_board_qi
-    need_half_buffs = options.festival_locations == FestivalLocations.option_easy
+    need_all_buffs = False
+    need_half_buffs = False
     create_player_buff(item_factory, Buff.movement, movement_buffs, need_all_buffs, need_half_buffs, items)
     create_player_buff(item_factory, Buff.luck, luck_buffs, True, need_half_buffs, items)
 
@@ -733,6 +733,10 @@ def fill_with_resource_packs_and_traps(item_factory: StardewItemFactory, options
 
     while required_resource_pack > 0:
         resource_pack = random.choice(all_filler_packs)
+        if resource_pack.name == "Shuffle Trap" and random.random() < 0.8:
+            resource_pack = random.choice(all_filler_packs)
+        if resource_pack.classification != ItemClassification.trap and random.random() < 0.6:
+            resource_pack = random.choice(all_filler_packs)
         exactly_2 = Group.EXACTLY_TWO in resource_pack.groups
         while exactly_2 and required_resource_pack == 1:
             resource_pack = random.choice(all_filler_packs)

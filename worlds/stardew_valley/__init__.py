@@ -82,14 +82,15 @@ class StardewValleyWorld(World):
     modified_bundles: List[BundleRoom]
     randomized_entrances: Dict[str, str]
     total_progression_items: int
-
-    # all_progression_items: Dict[str, int] # If you need to debug total_progression_items, uncommenting this will help tremendously
+    all_progression_items: Dict[str, int] # If you need to debug total_progression_items, uncommenting this will help tremendously
+    should_increment_prog_items: bool
 
     def __init__(self, multiworld: MultiWorld, player: int):
         super().__init__(multiworld, player)
         self.filler_item_pool_names = []
         self.total_progression_items = 0
-        # self.all_progression_items = dict()
+        self.all_progression_items = dict()
+        self.should_increment_prog_items = True
 
     def generate_early(self):
         self.force_change_options_if_incompatible()
@@ -150,6 +151,7 @@ class StardewValleyWorld(World):
         setup_early_items(self.multiworld, self.options, self.player, self.random)
         self.setup_player_events()
         self.setup_victory()
+        self.should_increment_prog_items = False
 
     def precollect_starting_season(self):
         if self.options.season_randomization == SeasonRandomization.option_progressive:
@@ -269,18 +271,18 @@ class StardewValleyWorld(World):
         if override_classification is None:
             override_classification = item.classification
 
-        if override_classification == ItemClassification.progression and item.name != Event.victory:
+        if override_classification == ItemClassification.progression and item.name != Event.victory and self.should_increment_prog_items:
             self.total_progression_items += 1
-            # if item.name not in self.all_progression_items:
-            #     self.all_progression_items[item.name] = 0
-            # self.all_progression_items[item.name] += 1
+            if item.name not in self.all_progression_items:
+                self.all_progression_items[item.name] = 0
+            self.all_progression_items[item.name] += 1
         return StardewItem(item.name, override_classification, item.code, self.player)
 
     def delete_item(self, item: Item):
         if item.classification & ItemClassification.progression:
             self.total_progression_items -= 1
-            # if item.name in self.all_progression_items:
-            #     self.all_progression_items[item.name] -= 1
+            if item.name in self.all_progression_items:
+                self.all_progression_items[item.name] -= 1
 
     def create_starting_item(self, item: Union[str, ItemData]) -> StardewItem:
         if isinstance(item, str):

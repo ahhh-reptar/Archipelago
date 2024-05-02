@@ -23,7 +23,10 @@ class TimeLogic(BaseLogic[Union[TimeLogicMixin, ReceivedLogicMixin]]):
         if number <= 0:
             return True_()
         number = min(number, MAX_MONTHS)
-        return HasProgressionPercent(self.player, number * MONTH_COEFFICIENT)
+        required_percent = number * MONTH_COEFFICIENT // 3
+        if required_percent <= 0:
+            return True_()
+        return HasProgressionPercent(self.player, required_percent)
 
     @cached_property
     def has_lived_max_months(self) -> StardewRule:

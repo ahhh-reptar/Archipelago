@@ -2,8 +2,7 @@ from typing import Union
 
 from .base_logic import BaseLogicMixin, BaseLogic
 from .received_logic import ReceivedLogicMixin
-from ..stardew_rule import StardewRule
-from ..strings.ap_names.buff_names import Buff
+from ..stardew_rule import StardewRule, True_
 
 
 class BuffLogicMixin(BaseLogicMixin):
@@ -17,7 +16,7 @@ class BuffLogic(BaseLogic[Union[ReceivedLogicMixin]]):
         return self.has_max_speed() & self.has_max_luck()
 
     def has_max_speed(self) -> StardewRule:
-        return self.logic.received(Buff.movement, self.options.movement_buff_number.value)
+        return True_()
 
     def has_max_luck(self) -> StardewRule:
-        return self.logic.received(Buff.luck, self.options.luck_buff_number.value)
+        return True_()

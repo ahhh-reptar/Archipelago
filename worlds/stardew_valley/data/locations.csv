@@ -124,6 +124,8 @@ id,region,name,tags,mod_name
 124,Beach,Bamboo Pole Cutscene,"FISHING_ROD_UPGRADE,TOOL_UPGRADE",
 125,Willy's Fish Shop,Purchase Fiberglass Rod,"FISHING_ROD_UPGRADE,TOOL_UPGRADE",
 126,Willy's Fish Shop,Purchase Iridium Rod,"FISHING_ROD_UPGRADE,TOOL_UPGRADE",
+151,Pantry,Clay Farmer Bundle,"BUNDLE,COMMUNITY_CENTER_BUNDLE,PANTRY_BUNDLE",
+152,Bulletin Board,MinMaxer Bundle,"BUNDLE,COMMUNITY_CENTER_BUNDLE,BULLETIN_BOARD_BUNDLE",
 201,The Mines - Floor 10,The Mines Floor 10 Treasure,"MANDATORY,THE_MINES_TREASURE",
 202,The Mines - Floor 20,The Mines Floor 20 Treasure,"MANDATORY,THE_MINES_TREASURE",
 203,The Mines - Floor 40,The Mines Floor 40 Treasure,"MANDATORY,THE_MINES_TREASURE",

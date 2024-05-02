@@ -69,6 +69,7 @@ stone = BundleItem(Material.stone, 99)
 hardwood = BundleItem(Material.hardwood, 10)
 clay = BundleItem(Material.clay, 10)
 fiber = BundleItem(Material.fiber, 99)
+mixed_seeds = BundleItem(Seed.mixed)
 
 blue_jazz = BundleItem(Flower.blue_jazz)
 cauliflower = BundleItem(Vegetable.cauliflower)
@@ -516,12 +517,15 @@ slime_farmer_items = [slime.as_amount(99), petrified_slime.as_amount(10), blue_s
                       purple_slime_egg, green_slime_egg, tiger_slime_egg]
 slime_farmer_bundle = BundleTemplate(CCRoom.pantry, BundleName.slime_farmer, slime_farmer_items, 4, 3)
 
+clay_farmer_items = [clay.as_amount(50), clay.as_amount(50), clay.as_amount(50), clay.as_amount(50)]
+clay_farmer_bundle = BundleTemplate(CCRoom.pantry, BundleName.clay_farmer, clay_farmer_items, 4, 4)
+
 pantry_bundles_vanilla = [spring_crops_bundle_vanilla, summer_crops_bundle_vanilla, fall_crops_bundle_vanilla,
                           quality_crops_bundle_vanilla, animal_bundle_vanilla, artisan_bundle_vanilla]
 pantry_bundles_thematic = [spring_crops_bundle_thematic, summer_crops_bundle_thematic, fall_crops_bundle_thematic,
                            quality_crops_bundle_thematic, animal_bundle_thematic, artisan_bundle_thematic]
 pantry_bundles_remixed = [*pantry_bundles_thematic, rare_crops_bundle, fish_farmer_bundle, garden_bundle,
-                          brewer_bundle, orchard_bundle, island_crops_bundle, agronomist_bundle, slime_farmer_bundle]
+                          brewer_bundle, orchard_bundle, island_crops_bundle, agronomist_bundle, slime_farmer_bundle, clay_farmer_bundle]
 pantry_vanilla = BundleRoomTemplate(CCRoom.pantry, pantry_bundles_vanilla, 6)
 pantry_thematic = BundleRoomTemplate(CCRoom.pantry, pantry_bundles_thematic, 6)
 pantry_remixed = BundleRoomTemplate(CCRoom.pantry, pantry_bundles_remixed, 6)
@@ -585,7 +589,9 @@ quality_fish_bundle = BundleTemplate(CCRoom.fish_tank, BundleName.quality_fish, 
 master_fisher_items = [lava_eel, scorpion_carp, octopus, blobfish, lingcod, ice_pip, super_cucumber, stingray, void_salmon, pufferfish]
 master_fisher_bundle = BundleTemplate(CCRoom.fish_tank, BundleName.master_fisher, master_fisher_items, 4, 2)
 
-legendary_fish_items = [angler, legend, mutant_carp, crimsonfish, glacierfish]
+legendary_fish_items = [angler.as_quality(FishQuality.gold).as_amount(2), legend.as_quality(FishQuality.gold).as_amount(2),
+                        mutant_carp.as_quality(FishQuality.gold).as_amount(2),
+                        crimsonfish.as_quality(FishQuality.gold).as_amount(2), glacierfish.as_quality(FishQuality.gold).as_amount(2)]
 legendary_fish_bundle = BundleTemplate(CCRoom.fish_tank, BundleName.legendary_fish, legendary_fish_items, 4, 2)
 
 island_fish_items = [lionfish, blue_discus, stingray]
@@ -713,9 +719,13 @@ home_cook_bundle = BundleTemplate(CCRoom.bulletin_board, BundleName.home_cook, h
 bartender_items = [shrimp_cocktail, triple_shot_espresso, ginger_ale, cranberry_candy, beer, pale_ale, pina_colada]
 bartender_bundle = BundleTemplate(CCRoom.bulletin_board, BundleName.bartender, bartender_items, 3, 3)
 
+minmaxer_items = [catfish.as_amount(10), clay.as_amount(100), chub.as_quality(FishQuality.iridium).as_amount(10), mixed_seeds.as_amount(50),
+                  kale.as_amount(50), jade.as_amount(50), diamond.as_amount(20), wine.as_amount(30), triple_shot_espresso.as_amount(50)]
+minmaxer_bundle = BundleTemplate(CCRoom.bulletin_board, BundleName.minmaxer, minmaxer_items, 4, 4)
+
 bulletin_board_bundles_vanilla = [chef_bundle_vanilla, dye_bundle_vanilla, field_research_bundle_vanilla, fodder_bundle_vanilla, enchanter_bundle_vanilla]
 bulletin_board_bundles_thematic = [chef_bundle_thematic, dye_bundle_thematic, field_research_bundle_thematic, fodder_bundle_thematic, enchanter_bundle_thematic]
-bulletin_board_bundles_remixed = [*bulletin_board_bundles_thematic, children_bundle, forager_bundle, home_cook_bundle, bartender_bundle]
+bulletin_board_bundles_remixed = [*bulletin_board_bundles_thematic, children_bundle, forager_bundle, home_cook_bundle, bartender_bundle, minmaxer_bundle]
 bulletin_board_vanilla = BundleRoomTemplate(CCRoom.bulletin_board, bulletin_board_bundles_vanilla, 5)
 bulletin_board_thematic = BundleRoomTemplate(CCRoom.bulletin_board, bulletin_board_bundles_thematic, 5)
 bulletin_board_remixed = BundleRoomTemplate(CCRoom.bulletin_board, bulletin_board_bundles_remixed, 5)

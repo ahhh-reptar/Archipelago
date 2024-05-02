@@ -36,22 +36,22 @@ class MoneyLogic(BaseLogic[Union[RegionLogicMixin, MoneyLogicMixin, TimeLogicMix
         robin_rule = self.logic.region.can_reach_all((Region.carpenter, Region.secret_woods))
         shipping_rule = self.logic.received(Event.can_ship_items)
 
-        if amount < 2000:
+        if amount < 8000:
             selling_any_rule = pierre_rule | willy_rule | clint_rule | robin_rule | shipping_rule
             return selling_any_rule
 
-        if amount < 5000:
+        if amount < 20000:
             selling_all_rule = (pierre_rule & willy_rule & clint_rule & robin_rule) | shipping_rule
             return selling_all_rule
 
-        if amount < 10000:
+        if amount < 40000:
             return shipping_rule
 
         seed_rules = self.logic.received(Event.can_shop_at_pierre)
-        if amount < 40000:
+        if amount < 80000:
             return shipping_rule & seed_rules
 
-        percent_progression_items_needed = min(90, amount // 20000)
+        percent_progression_items_needed = min(90, amount // 50000)
         return shipping_rule & seed_rules & HasProgressionPercent(self.player, percent_progression_items_needed)
 
     @cache_self1

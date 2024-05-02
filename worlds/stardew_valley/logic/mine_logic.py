@@ -52,6 +52,7 @@ class MineLogic(BaseLogic[Union[MineLogicMixin, RegionLogicMixin, ReceivedLogicM
     @cache_self1
     def can_progress_in_the_mines_from_floor(self, floor: int) -> StardewRule:
         tier = floor // 40
+        tier = tier // 2
         rules = []
         weapon_rule = self.logic.mine.get_weapon_rule_for_floor_tier(tier)
         rules.append(weapon_rule)

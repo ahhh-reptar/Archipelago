@@ -9,6 +9,8 @@ class CCRoom:
 
 
 class BundleName:
+    minmaxer = "MinMaxer Bundle"
+    clay_farmer = "Clay Farmer Bundle"
     spring_foraging = "Spring Foraging Bundle"
     summer_foraging = "Summer Foraging Bundle"
     fall_foraging = "Fall Foraging Bundle"
