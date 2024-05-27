@@ -1,9 +1,11 @@
 import sys
+import typing
 from dataclasses import dataclass
 from typing import Protocol, ClassVar
 
-from Options import Range, NamedRange, Toggle, Choice, OptionSet, PerGameCommonOptions, DeathLink
+from Options import Range, NamedRange, Toggle, Choice, OptionSet, PerGameCommonOptions, DeathLink, OptionList
 from .mods.mod_data import ModNames
+from .strings.ap_names.ap_option_names import OptionName
 
 
 class StardewValleyOption(Protocol):
@@ -19,7 +21,7 @@ class Goal(Choice):
     Master Angler: Catch every fish. Adapts to Fishsanity
     Complete Collection: Complete the museum collection
     Full House: Get married and have 2 children
-    Greatest Walnut Hunter: Find 130 Golden Walnuts
+    Greatest Walnut Hunter: Find 130 Golden Walnuts. Pairs well with Walnutsanity
     Protector of the Valley: Complete the monster slayer goals. Adapts to Monstersanity
     Full Shipment: Ship every item. Adapts to Shipsanity
     Gourmet Chef: Cook every recipe. Adapts to Cooksanity
@@ -553,6 +555,29 @@ class Booksanity(Choice):
     option_all = 3
 
 
+class Walnutsanity(OptionSet):
+    """Shuffle walnuts?
+    Puzzles: Walnuts obtained from solving a special puzzle or winning a minigame
+    Bushes: Walnuts that are in a bush and can be collected by clicking it
+    Dig spots: Walnuts that are underground and must be digged up. Includes Journal scrap walnuts
+    Repeatables: Random chance walnuts from normal actions (fishing, farming, combat, etc)
+    """
+    internal_name = "walnutsanity"
+    display_name = "Walnutsanity"
+    valid_keys = {OptionName.walnutsanity_puzzles, OptionName.walnutsanity_bushes, OptionName.walnutsanity_dig_spots, OptionName.walnutsanity_repeatables, }
+    preset_none = frozenset()
+    preset_all = valid_keys
+    default = preset_none
+
+    def __eq__(self, other: typing.Any) -> bool:
+        if isinstance(other, OptionSet):
+            return set(self.value) == other.value
+        if isinstance(other, OptionList):
+            return set(self.value) == set(other.value)
+        else:
+            return typing.cast(bool, self.value == other)
+
+
 class NumberOfMovementBuffs(Range):
     """Number of movement speed buffs to the player that exist as items in the pool.
     Each movement speed buff is a +25% multiplier that stacks additively"""
@@ -754,6 +779,7 @@ class StardewValleyOptions(PerGameCommonOptions):
     friendsanity: Friendsanity
     friendsanity_heart_size: FriendsanityHeartSize
     booksanity: Booksanity
+    walnutsanity: Walnutsanity
     exclude_ginger_island: ExcludeGingerIsland
     quick_start: QuickStart
     starting_money: StartingMoney
