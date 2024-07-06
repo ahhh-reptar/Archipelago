@@ -3,6 +3,7 @@ from typing import Union, Iterable
 
 from .base_logic import BaseLogicMixin, BaseLogic
 from .book_logic import BookLogicMixin
+from .combat_logic import CombatLogicMixin
 from .has_logic import HasLogicMixin
 from .received_logic import ReceivedLogicMixin
 from .season_logic import SeasonLogicMixin
@@ -11,7 +12,7 @@ from .time_logic import TimeLogicMixin
 from .tool_logic import ToolLogicMixin
 from .walnut_logic import WalnutLogicMixin
 from ..data.game_item import Requirement
-from ..data.requirement import ToolRequirement, BookRequirement, SkillRequirement, SeasonRequirement, YearRequirement, WalnutRequirement
+from ..data.requirement import ToolRequirement, BookRequirement, SkillRequirement, SeasonRequirement, YearRequirement, CombatRequirement, WalnutRequirement
 
 
 class RequirementLogicMixin(BaseLogicMixin):
@@ -21,7 +22,7 @@ class RequirementLogicMixin(BaseLogicMixin):
 
 
 class RequirementLogic(BaseLogic[Union[RequirementLogicMixin, HasLogicMixin, ReceivedLogicMixin, ToolLogicMixin, SkillLogicMixin, BookLogicMixin,
-SeasonLogicMixin, TimeLogicMixin, WalnutLogicMixin]]):
+SeasonLogicMixin, TimeLogicMixin, CombatLogicMixin, WalnutLogicMixin]]):
 
     def meet_all_requirements(self, requirements: Iterable[Requirement]):
         if not requirements:
@@ -51,6 +52,10 @@ SeasonLogicMixin, TimeLogicMixin, WalnutLogicMixin]]):
     @meet_requirement.register
     def _(self, requirement: YearRequirement):
         return self.logic.time.has_year(requirement.year)
+
+    @meet_requirement.register
+    def _(self, requirement: CombatRequirement):
+        return self.logic.combat.can_fight_at_level(requirement.level)
 
     @meet_requirement.register
     def _(self, requirement: WalnutRequirement):

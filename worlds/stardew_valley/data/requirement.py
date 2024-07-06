@@ -32,5 +32,10 @@ class YearRequirement(Requirement):
 
 
 @dataclass(frozen=True)
+class CombatRequirement(Requirement):
+    level: str
+
+
+@dataclass(frozen=True)
 class WalnutRequirement(Requirement):
     amount: int
