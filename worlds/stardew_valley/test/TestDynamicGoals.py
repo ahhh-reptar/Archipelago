@@ -40,6 +40,7 @@ def create_and_collect(tester: SVTestBase, item_name: str) -> StardewItem:
 
 def create_and_collect_fishing_access_items(tester: SVTestBase) -> List[Tuple[StardewItem, str]]:
     items = [(create_and_collect(tester, Wallet.dark_talisman), Fish.void_salmon),
+             (create_and_collect(tester, "Beach Bridge"), Fish.crimsonfish),
              (create_and_collect(tester, Wallet.rusty_key), Fish.slimejack),
              (create_and_collect(tester, "Progressive Mine Elevator"), Fish.lava_eel),
              (create_and_collect(tester, Transportation.island_obelisk), Fish.lionfish),
@@ -98,7 +99,7 @@ class TestMasterAnglerFishsanityNoHardFish(WorldAssertMixin, SVTestBase):
         self.assert_cannot_reach_victory(self.multiworld)
         items = create_and_collect_fishing_access_items(self)
         self.assert_can_reach_victory(self.multiworld)
-        unecessary_items = [(item, fish) for (item, fish) in items if fish in [Fish.void_salmon, Fish.stingray, Fish.lava_eel]]
+        unecessary_items = [(item, fish) for (item, fish) in items if fish in [Fish.void_salmon, Fish.stingray, Fish.lava_eel, Fish.crimsonfish]]
         necessary_items = [(item, fish) for (item, fish) in items if (item, fish) not in unecessary_items]
         for item, fish in necessary_items:
             with self.subTest(f"Needed: {fish}"):
