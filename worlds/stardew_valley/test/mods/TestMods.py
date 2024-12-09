@@ -1,10 +1,11 @@
 import random
 
 from BaseClasses import get_seed
-from .. import SVTestBase, SVTestCase, allsanity_no_mods_6_x_x, allsanity_mods_6_x_x, solo_multiworld, \
+from .. import SVTestBase, SVTestCase, solo_multiworld, \
     fill_dataclass_with_default
 from ..TestGeneration import get_all_permanent_progression_items
 from ..assertion import ModAssertMixin, WorldAssertMixin
+from ..options.presets import allsanity_no_mods_6_x_x, allsanity_mods_6_x_x
 from ... import Group, create_content
 from ... import options
 from ...items import items_by_group
