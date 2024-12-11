@@ -832,7 +832,7 @@ calico_items = [calico_egg.as_amount(200), calico_egg.as_amount(200), calico_egg
                 magic_rock_candy, mega_bomb.as_amount(10), mystery_box.as_amount(10), mixed_seeds.as_amount(50),
                 strawberry_seeds.as_amount(20),
                 spicy_eel.as_amount(5), crab_cakes.as_amount(5), eggplant_parmesan.as_amount(5),
-                pumpkin_soup.as_amount(5), lucky_lunch.as_amount(5), ]
+                pumpkin_soup.as_amount(5), lucky_lunch.as_amount(5) ]
 calico_bundle = BundleTemplate(CCRoom.bulletin_board, BundleName.calico, calico_items, 2, 2)
 
 raccoon_bundle = BundleTemplate(CCRoom.bulletin_board, BundleName.raccoon, raccoon_foraging_items, 4, 4)
