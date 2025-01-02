@@ -632,6 +632,22 @@ class Moviesanity(Choice):
     option_all = 2
 
 
+class Secretsanity(Choice):
+    """Add checks for the various secrets and easter eggs present in Stardew Valley. Some of them can be very obscure. If you enable this setting, you should expect to need the wiki a lot.
+    None: None of the in-game secrets are checks
+    Reasonable: Only secrets that can reasonably be obtained quickly if you know what to do, are included
+    Reasonable + Fishing: Also includes the various secret fishable items around the world
+    All: All secrets are included. This includes some very difficult ones, generally due to very low odds of something purely RNG-based. Expect lots of grinding and hoping
+    """
+    internal_name = "secretsanity"
+    display_name = "Secretsanity"
+    default = 0
+    option_none = 0
+    option_reasonable = 1
+    option_reasonable_fish = 2
+    option_all = 3
+
+
 class NumberOfMovementBuffs(Range):
     """Number of movement speed buffs to the player that exist as items in the pool.
     Each movement speed buff is a +25% multiplier that stacks additively"""
@@ -790,6 +806,14 @@ class Gifting(Toggle):
     default = 1
 
 
+all_mods = {ModNames.deepwoods, ModNames.tractor, ModNames.big_backpack,
+            ModNames.luck_skill, ModNames.magic, ModNames.socializing_skill, ModNames.archaeology,
+            ModNames.cooking_skill, ModNames.binning_skill, ModNames.juna,
+            ModNames.jasper, ModNames.alec, ModNames.yoba, ModNames.eugene,
+            ModNames.wellwick, ModNames.ginger, ModNames.shiko, ModNames.delores,
+            ModNames.ayeisha, ModNames.riley, ModNames.skull_cavern_elevator, ModNames.sve, ModNames.distant_lands,
+            ModNames.alecto, ModNames.lacey, ModNames.boarding_house}
+
 # These mods have been disabled because either they are not updated for the current supported version of Stardew Valley,
 # or we didn't find the time to validate that they work or fix compatibility issues if they do.
 # Once a mod is validated to be functional, it can simply be removed from this list
@@ -799,21 +823,16 @@ disabled_mods = {ModNames.deepwoods, ModNames.magic,
                  ModNames.wellwick, ModNames.shiko, ModNames.delores, ModNames.riley,
                  ModNames.boarding_house}
 
-if 'unittest' in sys.modules.keys() or 'pytest' in sys.modules.keys():
-    disabled_mods = {}
-
 
 class Mods(OptionSet):
     """List of mods that will be included in the shuffling."""
     internal_name = "mods"
     display_name = "Mods"
-    valid_keys = {ModNames.deepwoods, ModNames.tractor, ModNames.big_backpack,
-                  ModNames.luck_skill, ModNames.magic, ModNames.socializing_skill, ModNames.archaeology,
-                  ModNames.cooking_skill, ModNames.binning_skill, ModNames.juna,
-                  ModNames.jasper, ModNames.alec, ModNames.yoba, ModNames.eugene,
-                  ModNames.wellwick, ModNames.ginger, ModNames.shiko, ModNames.delores,
-                  ModNames.ayeisha, ModNames.riley, ModNames.skull_cavern_elevator, ModNames.sve, ModNames.distant_lands,
-                  ModNames.alecto, ModNames.lacey, ModNames.boarding_house}.difference(disabled_mods)
+    valid_keys = all_mods.difference(disabled_mods)
+    # In tests, we keep even the disabled mods active, because we expect some of them to eventually get updated for SV 1.6
+    # In that case, we want to maintain content and logic for them, and therefore keep testing them
+    if 'unittest' in sys.modules.keys() or 'pytest' in sys.modules.keys():
+        valid_keys = all_mods
 
 
 class BundlePlando(OptionSet):
@@ -855,6 +874,7 @@ class StardewValleyOptions(PerGameCommonOptions):
     friendsanity_heart_size: FriendsanityHeartSize
     booksanity: Booksanity
     walnutsanity: Walnutsanity
+    secretsanity: Secretsanity
     exclude_ginger_island: ExcludeGingerIsland
     quick_start: QuickStart
     starting_money: StartingMoney
