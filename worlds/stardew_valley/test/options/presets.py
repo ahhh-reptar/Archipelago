@@ -113,6 +113,7 @@ def default_7_x_x():
         options.EnabledFillerBuffs.internal_name: options.EnabledFillerBuffs.default,
         options.QuestLocations.internal_name: options.QuestLocations.default,
         options.SeasonRandomization.internal_name: options.SeasonRandomization.default,
+        options.Secretsanity.internal_name: options.Secretsanity.default,
         options.Shipsanity.internal_name: options.Shipsanity.default,
         options.SkillProgression.internal_name: options.SkillProgression.default,
         options.SpecialOrderLocations.internal_name: options.SpecialOrderLocations.default,
@@ -138,6 +139,7 @@ def allsanity_no_mods_7_x_x():
         options.ElevatorProgression.internal_name: options.ElevatorProgression.option_progressive,
         options.EntranceRandomization.internal_name: options.EntranceRandomization.option_disabled,
         options.ExcludeGingerIsland.internal_name: options.ExcludeGingerIsland.option_false,
+        options.FarmType.internal_name: options.FarmType.option_beach,  # There is one extra fishing secret on the beach farm
         options.FestivalLocations.internal_name: options.FestivalLocations.option_hard,
         options.Fishsanity.internal_name: options.Fishsanity.option_all,
         options.Friendsanity.internal_name: options.Friendsanity.option_all_with_marriage,
@@ -150,6 +152,7 @@ def allsanity_no_mods_7_x_x():
         options.NumberOfMovementBuffs.internal_name: 12,
         options.QuestLocations.internal_name: 56,
         options.SeasonRandomization.internal_name: options.SeasonRandomization.option_randomized,
+        options.Secretsanity.internal_name: options.Secretsanity.option_all,
         options.Shipsanity.internal_name: options.Shipsanity.option_everything,
         options.SkillProgression.internal_name: options.SkillProgression.option_progressive_with_masteries,
         options.SpecialOrderLocations.internal_name: options.SpecialOrderLocations.option_board_qi,
@@ -160,8 +163,14 @@ def allsanity_no_mods_7_x_x():
 
 
 def allsanity_mods_7_x_x():
-    allsanity = allsanity_no_mods_6_x_x()
+    allsanity = allsanity_no_mods_7_x_x()
     allsanity.update({options.Mods.internal_name: frozenset(options.Mods.valid_keys)})
+    return allsanity
+
+
+def allsanity_mods_7_x_x_exclude_disabled():
+    allsanity = allsanity_no_mods_7_x_x()
+    allsanity.update({options.Mods.internal_name: frozenset(enabled_mods)})
     return allsanity
 
 
@@ -193,6 +202,7 @@ def get_minsanity_options():
         options.NumberOfMovementBuffs.internal_name: 0,
         options.QuestLocations.internal_name: -1,
         options.SeasonRandomization.internal_name: options.SeasonRandomization.option_disabled,
+        options.Secretsanity.internal_name: options.Secretsanity.option_none,
         options.Shipsanity.internal_name: options.Shipsanity.option_none,
         options.SkillProgression.internal_name: options.SkillProgression.option_vanilla,
         options.SpecialOrderLocations.internal_name: options.SpecialOrderLocations.option_vanilla,
@@ -230,6 +240,7 @@ def minimal_locations_maximal_items():
         options.NumberOfMovementBuffs.internal_name: 12,
         options.QuestLocations.internal_name: -1,
         options.SeasonRandomization.internal_name: options.SeasonRandomization.option_randomized,
+        options.Secretsanity.internal_name: options.Secretsanity.option_none,
         options.Shipsanity.internal_name: options.Shipsanity.option_none,
         options.SkillProgression.internal_name: options.SkillProgression.option_vanilla,
         options.SpecialOrderLocations.internal_name: options.SpecialOrderLocations.option_vanilla,
