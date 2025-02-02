@@ -7,7 +7,9 @@ from ..TestGeneration import get_all_permanent_progression_items
 from ..assertion import ModAssertMixin, WorldAssertMixin
 from ..options.presets import allsanity_mods_6_x_x
 from ..options.utils import fill_dataclass_with_default
-from ... import options, Group, create_content
+from ... import options
+from ...content import create_content
+from ...items import Group
 from ...mods.mod_data import ModNames
 from ...regions import RandomizationFlag, randomize_connections, create_final_connections_and_regions
 
