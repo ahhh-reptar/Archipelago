@@ -1,6 +1,6 @@
 from typing import List
 
-from .ItemFlags import ItemFlags
+from .item_flags import ItemFlags
 
 number_small_items = 5
 number_big_items = 2
