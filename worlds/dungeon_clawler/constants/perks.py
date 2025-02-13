@@ -3,7 +3,7 @@ from typing import List
 from .item_flags import ItemFlags
 
 
-max_perk_stack = 5
+max_perk_stack = 4
 
 
 class PerkData:
@@ -13,8 +13,6 @@ class PerkData:
 
     def __init__(self, name: str, max_stack: int, flags: List[str]):
         self.name = name
-        if max_stack > max_perk_stack:
-            max_stack = max_perk_stack
         self.max_stack = max_stack
         self.flags = flags
         all_perk_items.append(self)

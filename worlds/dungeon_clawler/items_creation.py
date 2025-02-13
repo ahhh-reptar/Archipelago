@@ -10,27 +10,35 @@ from .options import DungeonClawlerOptions, ShuffleItems, ShufflePerks, ShuffleC
 from .constants.filler_names import Filler
 
 
-def create_items(world, world_options: DungeonClawlerOptions, locations_count: int, random: Random) -> List[DungeonClawlerItem]:
+def create_items(world, world_options: DungeonClawlerOptions, locations_count: int, items_to_exclude: List[str], random: Random) -> List[DungeonClawlerItem]:
     created_items = []
-    create_characters(created_items, world, world_options, locations_count, random)
-    create_combat_items_and_perks(created_items, world, world_options, locations_count, random)
+    create_characters(created_items, world, world_options, locations_count, items_to_exclude, random)
+    create_combat_items_and_perks(created_items, world, world_options, locations_count, items_to_exclude, random)
     create_fillers(created_items, world, world_options, locations_count, random)
     return created_items
 
 
-def create_characters(created_items, world, world_options: DungeonClawlerOptions, locations_count: int, random: Random) -> None:
+def create_characters(created_items, world, world_options: DungeonClawlerOptions, locations_count: int, items_to_exclude: List[str], random: Random) -> None:
     if world_options.shuffle_characters == ShuffleCharacters.option_false:
         return
-    created_items.extend(world.create_item(character.name, ItemClassification.progression) for character in all_characters)
+    characters_to_create = [character.name for character in all_characters if character.name not in items_to_exclude]
+    created_items.extend(world.create_item(character_name, ItemClassification.progression) for character_name in characters_to_create)
 
 
-def create_combat_items_and_perks(created_items, world, world_options: DungeonClawlerOptions, locations_count: int, random: Random) -> None:
+def create_combat_items_and_perks(created_items, world, world_options: DungeonClawlerOptions, locations_count: int, items_to_exclude: List[str], random: Random) -> None:
     valid_items = []
     valid_items.extend(get_valid_combat_items(world_options))
     valid_items.extend(get_valid_perks(world_options))
+    for excluded_item in items_to_exclude:
+        if excluded_item in valid_items:
+            valid_items.remove(excluded_item)
     if not valid_items:
         return
-    chosen_items = random.sample(valid_items, k=locations_count)
+    items_to_create = locations_count - len(created_items)
+    if items_to_create > len(valid_items):
+        chosen_items = valid_items
+    else:
+        chosen_items = random.sample(valid_items, k=items_to_create)
     created_items.extend(world.create_item(item, ItemClassification.progression) for item in chosen_items)
 
 

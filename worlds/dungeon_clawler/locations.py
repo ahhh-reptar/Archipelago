@@ -3,7 +3,7 @@ from . import DungeonClawlerItem
 from .constants.character_names import all_characters
 from .constants.difficulties import all_difficulties, Difficulty
 from .constants.enemies import all_enemies, EnemyDifficulty
-from .constants.perks import all_perk_items
+from .constants.perks import all_perk_items, max_perk_stack
 from .options import DungeonClawlerOptions, Goal, Enemysanity, ShufflePerks
 from .constants.world_strings import GAME_NAME
 
@@ -75,7 +75,7 @@ for enemy in all_enemies:
 
 perk_locations = []
 for perk in all_perk_items:
-    for level in range(1, perk.max_stack+1):
+    for level in range(1, min(max_perk_stack, perk.max_stack)+1):
         if level <= 2:
             difficulty = Difficulty.normal
         elif level <= 4:

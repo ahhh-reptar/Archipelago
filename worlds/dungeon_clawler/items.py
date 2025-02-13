@@ -4,6 +4,7 @@ from BaseClasses import ItemClassification
 from .constants.character_names import all_characters
 from .constants.combat_items import all_combat_items
 from .constants.filler_names import Filler
+from .constants.perks import all_perk_items
 from .items_classes import ItemData
 
 character_items = [character.name for character in all_characters]
@@ -20,7 +21,7 @@ def create_combat_items_data(start_index: int) -> List[ItemData]:
     return [ItemData(start_index + i, combat_item, progression) for i, combat_item in enumerate(combat_items)]
 
 
-perk_items = [combat_item.name for combat_item in all_combat_items]
+perk_items = [perk_item.name for perk_item in all_perk_items]
 
 
 def create_perk_items_data(start_index: int) -> List[ItemData]:

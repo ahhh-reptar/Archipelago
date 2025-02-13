@@ -34,6 +34,7 @@ class ShuffleCharacters(Toggle):
     """
     internal_name = "shuffle_characters"
     display_name = "Shuffle Characters"
+    default = Toggle.option_true
 
 
 class ShuffleItems(Toggle):
@@ -42,6 +43,7 @@ class ShuffleItems(Toggle):
     """
     internal_name = "shuffle_items"
     display_name = "Shuffle Items"
+    default = Toggle.option_true
 
 
 class ShufflePerks(Toggle):
@@ -50,6 +52,7 @@ class ShufflePerks(Toggle):
     """
     internal_name = "shuffle_perks"
     display_name = "Shuffle Perks"
+    default = Toggle.option_true
 
 
 class Enemysanity(Toggle):
@@ -58,6 +61,7 @@ class Enemysanity(Toggle):
     """
     internal_name = "enemysanity"
     display_name = "EnemySanity"
+    default = Toggle.option_true
 
 
 class DungeonClawlerDeathlink(Choice):

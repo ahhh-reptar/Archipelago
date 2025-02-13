@@ -1,7 +1,7 @@
 import math
 from typing import Union
 
-from BaseClasses import Tutorial, ItemClassification
+from BaseClasses import Tutorial, ItemClassification, MultiWorld
 from worlds.AutoWorld import WebWorld, World
 from .constants.character_names import all_characters
 from .constants.combat_items import combat_items_by_name
@@ -45,6 +45,10 @@ class DungeonClawlerWorld(World):
     options_dataclass = DungeonClawlerOptions
     options: DungeonClawlerOptions
 
+    def __init__(self, multiworld: MultiWorld, player: int):
+        super().__init__(multiworld, player)
+        self.generated_items = []
+
     def generate_early(self) -> None:
         self.precollect_starting_items()
 
@@ -64,7 +68,7 @@ class DungeonClawlerWorld(World):
             starting_items.append(starting_character.name)
 
         for starting_item in starting_items:
-            created_item = DungeonClawlerItem(starting_item, ItemClassification.progression, offset + item_table[starting_item].code_without_offset, self.player)
+            created_item = self.create_item(starting_item)
             self.multiworld.push_precollected(created_item)
 
     def create_regions(self):
@@ -72,7 +76,7 @@ class DungeonClawlerWorld(World):
         create_locations(self.multiworld, self.player, self.options)
 
     def set_rules(self):
-        set_rules(self.multiworld, self.player, self.options)
+        set_rules(self.multiworld, self.player, self.options, self.generated_items)
 
     def create_event(self, event: str):
         return DungeonClawlerItem(event, ItemClassification.progression_skip_balancing, None, self.player)
@@ -82,13 +86,9 @@ class DungeonClawlerWorld(World):
 
         items_to_exclude = [excluded_items for excluded_items in self.multiworld.precollected_items[self.player]]
 
-        created_items = create_items(self, self.options, locations_count + len(items_to_exclude), self.multiworld.random)
+        created_items = create_items(self, self.options, locations_count, [item.name for item in items_to_exclude], self.multiworld.random)
 
         self.multiworld.itempool += created_items
-
-        for item in items_to_exclude:
-            if item in self.multiworld.itempool:
-                self.multiworld.itempool.remove(item)
 
         self.setup_victory()
 
@@ -98,6 +98,7 @@ class DungeonClawlerWorld(World):
         if classification is None:
             classification = item.classification
 
+        self.generated_items.append(item.name)
         return DungeonClawlerItem(item.name, classification, item.code, self.player)
 
     def setup_victory(self):

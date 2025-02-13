@@ -20,7 +20,8 @@ def assert_victory_exists(tester: DungeonClawlerTestBase, multiworld: MultiWorld
 def collect_all_then_assert_can_win(tester: DungeonClawlerTestBase, multiworld: MultiWorld):
     for item in multiworld.get_items():
         multiworld.state.collect(item)
-    tester.assertTrue(multiworld.find_item("Victory", 1).can_reach(multiworld.state))
+    can_win = multiworld.find_item("Victory", 1).can_reach(multiworld.state)
+    tester.assertTrue(can_win)
 
 
 def assert_can_win(tester: DungeonClawlerTestBase, multiworld: MultiWorld):
