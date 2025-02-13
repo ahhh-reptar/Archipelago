@@ -19,3 +19,5 @@ class ItemFlags:
     pets = "Pets"
     poison = "Poison"
     added_by_other = "Added By Other"
+    metal = "Metal"
+    wood = "Wood"

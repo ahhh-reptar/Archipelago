@@ -1,22 +1,26 @@
 from typing import List
 
-from .ItemFlags import ItemFlags
+from .item_flags import ItemFlags
 
-all_combat_items = []
+
+max_perk_stack = 5
 
 
 class PerkData:
     name: str
     max_stack: int
     flags: List[str]
-    upgradeable: bool
 
-    def __init__(self, name: str, max_stack: int, flags: List[str], upgradeable: bool = True):
+    def __init__(self, name: str, max_stack: int, flags: List[str]):
         self.name = name
+        if max_stack > max_perk_stack:
+            max_stack = max_perk_stack
         self.max_stack = max_stack
         self.flags = flags
-        self.upgradeable = upgradeable
-        all_combat_items.append(self)
+        all_perk_items.append(self)
+
+
+all_perk_items: List[PerkData] = []
 
 
 class Perk:

@@ -26,7 +26,7 @@ class DungeonClawlerTestBase(WorldTestBase):
             self.world = self.multiworld.worlds[self.player]  # noqa
 
 
-def setup_kindergarten_solo_multiworld_with_fill(test_options=None, seed=None, fill=False, _cache: Dict[FrozenSet[Tuple[str, Any]], MultiWorld] = {}) -> MultiWorld: #noqa
+def setup_dungeon_clawler_solo_multiworld_with_fill(test_options=None, seed=None, fill=False, _cache: Dict[FrozenSet[Tuple[str, Any]], MultiWorld] = {}) -> MultiWorld: #noqa
     if fill:
         gen_steps = ("generate_early", "create_regions", "create_items", "set_rules", "generate_basic", "pre_fill", "post_fill")
     else:

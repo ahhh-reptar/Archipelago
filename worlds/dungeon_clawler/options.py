@@ -26,13 +26,14 @@ class Goal(Choice):
     option_beat_floor_50 = 13
 
 
-class UnlockCharacters(Toggle):
+class ShuffleCharacters(Toggle):
     """
     If enabled, all characters will be unlockable items
     If disabled, all characters will start unlocked
+    There will be one location for finishing a run with each character
     """
-    internal_name = "shuffle_items"
-    display_name = "Shuffle Items"
+    internal_name = "shuffle_characters"
+    display_name = "Shuffle Characters"
 
 
 class ShuffleItems(Toggle):
@@ -51,12 +52,12 @@ class ShufflePerks(Toggle):
     display_name = "Shuffle Perks"
 
 
-class Monstersanity(Toggle):
+class Enemysanity(Toggle):
     """
     Killing each monster type is a check
     """
-    internal_name = "monstersanity"
-    display_name = "Monstersanity"
+    internal_name = "enemysanity"
+    display_name = "EnemySanity"
 
 
 class DungeonClawlerDeathlink(Choice):
@@ -76,8 +77,8 @@ class DungeonClawlerDeathlink(Choice):
 @dataclass
 class DungeonClawlerOptions(PerGameCommonOptions):
     goal: Goal
-    unlock_characters: UnlockCharacters
+    shuffle_characters: ShuffleCharacters
     shuffle_items: ShuffleItems
     shuffle_perks: ShufflePerks
-    monstersanity: Monstersanity
+    enemysanity: Enemysanity
     death_link: DungeonClawlerDeathlink

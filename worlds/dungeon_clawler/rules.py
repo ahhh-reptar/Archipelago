@@ -1,210 +1,74 @@
-import math
 from typing import List, Callable, Any
 
 from BaseClasses import ItemClassification, MultiWorld
-from worlds.generic.Rules import set_rule
+from worlds.generic.Rules import add_rule
+from . import ItemFlags, all_characters
+from .constants.combat_items import all_combat_items
+from .constants.difficulties import all_difficulties, Difficulty
+from .constants.perks import all_perk_items
 from .items_classes import DungeonClawlerItem
-from .options import DungeonClawlerOptions, Goal, ShuffleMonstermon
-from .constants.inventory_item_names import InventoryItem
-from .constants.mission_names import start_mission, Mission, win_mission
-from .constants.money import Cost
-from .constants.money import Money
-from .constants.monstermon_card_names import all_cards
-
-
-def create_event_item(player, event: str) -> DungeonClawlerItem:
-    return DungeonClawlerItem(event, ItemClassification.progression, None, player)
+from .locations import beat_floor_entrance_name, character_location_name
+from .options import DungeonClawlerOptions, ShuffleItems, ShufflePerks, ShuffleCharacters
 
 
 def set_rules(multiworld: MultiWorld, player, world_options: DungeonClawlerOptions):
-    set_extra_locations_rules(multiworld, player, world_options)
-    set_mission_rules(multiworld, player, world_options)
-    set_extra_entrance_rules(multiworld, player, world_options)
-    set_monstermon_card_rules(multiworld, player, world_options)
-    set_outfit_rules(multiworld, player, world_options)
+    set_floor_entrance_rules(multiworld, player, world_options)
+    set_character_win_rules(multiworld, player, world_options)
 
 
-def set_extra_locations_rules(multiworld: MultiWorld, player, world_options: DungeonClawlerOptions):
-    set_rule(multiworld.get_location("Win A Bet With Carla", player),
-             has_starting_money(Cost.monty_push, player, world_options))
+def set_floor_entrance_rules(multiworld: MultiWorld, player, world_options: DungeonClawlerOptions):
+    for floor in range(1, 50):
+        for difficulty in all_difficulties:
+            floor_entrance_name = beat_floor_entrance_name(floor, difficulty)
+            floor_entrance = multiworld.get_entrance(floor_entrance_name, player)
+            required_combat_items = floor * 4
+            if difficulty == Difficulty.hard:
+                required_combat_items += 4
+            elif difficulty == Difficulty.very_hard:
+                required_combat_items += 8
+            elif difficulty == Difficulty.nightmare:
+                required_combat_items += 12
+            if world_options.shuffle_items == ShuffleItems.option_true:
+                add_rule(floor_entrance, has_count_combat_items(required_combat_items, player))
+            if world_options.shuffle_perks == ShufflePerks.option_true:
+                add_rule(floor_entrance, has_count_perks(required_combat_items // 4, player))
 
 
-def set_mission_rules(multiworld: MultiWorld, player, world_options: DungeonClawlerOptions):
-    set_start_mission_rules(multiworld, player, world_options)
-    set_complete_mission_rules(multiworld, player, world_options)
-
-    all_missions = [Mission.tale_of_janitors,
-                    Mission.flowers_for_diana,
-                    Mission.hitman_guard,
-                    Mission.breaking_sad,
-                    Mission.dodge_a_nugget,
-                    Mission.cain_not_able,
-                    Mission.opposites_attract,
-                    Mission.things_go_boom,
-                    Mission.creature_feature,
-                    ]
-    if world_options.goal == Goal.option_all_missions:
-        set_rule(multiworld.get_location("Victory", player),
-                 lambda state: all([state.can_reach_location(mission, player) for mission in all_missions]))
-
-    # elif world_options.goal == Goal.option_all_missions_and_secret_ending:
-    #     set_rule(multiworld.get_location("Victory", player),
-    #              lambda state: all([state.can_reach_location(mission, player) for mission in all_missions]) and
-    #                            has_monstermon_cards(state, 50, player, world_options))
+def has_count_combat_items(number: int, player: int) -> Callable[[Any], bool]:
+    combat_items = []
+    combat_items.extend(all_combat_items)
+    damage_items = [item for item in combat_items if ItemFlags.damage in item.flags]
+    combat_item_names = [item.name for item in combat_items]
+    damage_items_names = [item.name for item in damage_items]
+    return lambda state: has_count(state, number, player, combat_item_names) and has_count(state, number//4, player, damage_items_names)
 
 
-def set_start_mission_rules(multiworld: MultiWorld, player: int, world_options: DungeonClawlerOptions) -> None:
-    set_rule(multiworld.get_entrance(start_mission(Mission.opposites_attract), player),
-             has_items([InventoryItem.bob_toolbelt, InventoryItem.an_a_plus], player))
-    set_rule(multiworld.get_entrance(start_mission(Mission.dodge_a_nugget), player),
-             has_items([InventoryItem.bob_toolbelt, InventoryItem.prestigious_pin], player))
-    set_rule(multiworld.get_entrance(start_mission(Mission.cain_not_able), player),
-             has_items([InventoryItem.an_a_plus, InventoryItem.prestigious_pin], player))
-
-    set_rule(multiworld.get_entrance(start_mission(Mission.things_go_boom), player),
-             has_items([InventoryItem.laser_beam, InventoryItem.an_a_plus, InventoryItem.monstermon_plushie], player))
-    set_rule(multiworld.get_entrance(start_mission(Mission.breaking_sad), player),
-             has_items([InventoryItem.monstermon_plushie, InventoryItem.strange_chemical], player))
-
-    set_rule(multiworld.get_entrance(start_mission(Mission.creature_feature), player),
-             has_items([InventoryItem.laser_bomb, InventoryItem.monstermon_plushie, InventoryItem.faculty_remote], player))
-
-    set_rule(multiworld.get_entrance(start_mission(Mission.secret_ending), player),
-             has_monstermon_cards_rule(50, player, world_options))
+def has_count_perks(number: int, player: int) -> Callable[[Any], bool]:
+    perks = []
+    perks.extend(all_perk_items)
+    perks_names = [item.name for item in perks]
+    return lambda state: has_count(state, number, player, perks_names)
 
 
-def set_complete_mission_rules(multiworld: MultiWorld, player: int, world_options: DungeonClawlerOptions) -> None:
-    set_rule(multiworld.get_entrance(win_mission(Mission.tale_of_janitors), player),
-             has_starting_money(Cost.carla_distract_lunch_lady, player, world_options))
-    set_rule(multiworld.get_entrance(win_mission(Mission.flowers_for_diana), player),
-             has_starting_money(Cost.monty_push + Cost.carla_distract_steve + Cost.science_class, player, world_options))
-    set_rule(multiworld.get_entrance(win_mission(Mission.hitman_guard), player),
-             has_starting_money(Cost.battery + Cost.burger + Cost.science_class, player, world_options))
-
-    set_rule(multiworld.get_entrance(win_mission(Mission.opposites_attract), player),
-             has_starting_money(Cost.science_class, player, world_options))
-    set_rule(multiworld.get_entrance(win_mission(Mission.dodge_a_nugget), player),
-             has_starting_money(Cost.lighter_into_school + Cost.burger + Cost.soda_machine, player, world_options))
-    set_rule(multiworld.get_entrance(win_mission(Mission.cain_not_able), player),
-             has_starting_money(Cost.hand_sanitizer + Cost.monty_read, player, world_options))
-
-    set_rule(multiworld.get_entrance(win_mission(Mission.things_go_boom), player),
-             has_starting_money(Cost.burger + Cost.science_class, player, world_options))
-    set_rule(multiworld.get_entrance(win_mission(Mission.breaking_sad), player),
-             has_starting_money(Cost.monty_push + Cost.scissors + Cost.burger + Cost.science_class, player, world_options))
-
-    set_rule(multiworld.get_entrance(win_mission(Mission.creature_feature), player),
-             has_starting_money(Cost.battery, player, world_options))
+def set_character_win_rules(multiworld: MultiWorld, player, world_options: DungeonClawlerOptions):
+    for character in all_characters:
+        character_win_location_name = character_location_name(character.name)
+        character_win_location =  multiworld.get_location(character_win_location_name, player)
+        if world_options.shuffle_characters == ShuffleCharacters.option_true:
+            add_rule(character_win_location, lambda state: state.has(character.name, player))
+        synergy_items = []
+        for good_flag in character.good_item_flags:
+            if world_options.shuffle_items == ShuffleItems.option_true:
+                synergy_items.extend([item.name for item in all_combat_items if good_flag in item.flags])
+            if world_options.shuffle_perks == ShufflePerks.option_true:
+                synergy_items.extend([item.name for item in all_perk_items if good_flag in item.flags])
+        if synergy_items:
+            add_rule(character_win_location, has_count_rule(8, player, synergy_items))
 
 
-def set_extra_entrance_rules(multiworld: MultiWorld, player, world_options: DungeonClawlerOptions):
-    set_rule(multiworld.get_entrance("Go To School With A+", player),
-             has_item(InventoryItem.an_a_plus, player))
-    set_rule(multiworld.get_entrance("Go To School With A+ And Laser", player),
-             has_items([InventoryItem.an_a_plus, InventoryItem.laser_beam], player))
-    set_rule(multiworld.get_entrance("Push Monty Up The Ramp", player),
-             has_starting_money(Cost.monty_push, player, world_options))
-    set_rule(multiworld.get_entrance("Enter Weapons Closet For Chainsaw", player),
-             has_starting_money(Cost.carla_distract_lunch_lady, player, world_options))
-    set_rule(multiworld.get_entrance("Enter Weapons Closet For Murder Shovel", player),
-             has_starting_money(Cost.hand_sanitizer + Cost.monty_read, player, world_options))
-    set_rule(multiworld.get_entrance("Smuggle Lighter Into The School", player),
-             has_starting_money(Cost.lighter_into_school, player, world_options))
-    set_rule(multiworld.get_entrance("Enter Weapons Closet For Device", player),
-             has_starting_money(Cost.burger, player, world_options))
-    set_rule(multiworld.get_entrance("Enter Weapons Closet With A Bomb", player),
-             has_starting_money(Cost.battery, player, world_options))
-    set_rule(multiworld.get_entrance("Give Bugs A Soda", player),
-             has_starting_money(Cost.cherry_soda, player, world_options))
-    set_rule(multiworld.get_entrance("Go To Science Class", player),
-             has_starting_money(Cost.science_class, player, world_options))
-    set_rule(multiworld.get_entrance("Go To Science Class With A Leg", player),
-             has_starting_money(Cost.science_class, player, world_options))
-    set_rule(multiworld.get_entrance("Play Monstermon", player),
-             has_monstermon_cards_rule(10, player, world_options))
-    set_rule(multiworld.get_entrance("Applegate Meltdown", player),
-             has_starting_money(Cost.monty_push, player, world_options))
-    set_rule(multiworld.get_entrance("Enter Lockdown", player),
-             has_starting_money(Cost.battery, player, world_options))
-    set_rule(multiworld.get_entrance("Give Smoky To Hall Monitor", player),
-             has_starting_money(Cost.burger, player, world_options))
-    set_rule(multiworld.get_entrance("Shake Beehive On Penny", player),
-             has_starting_money(Cost.monty_push + Cost.carla_distract_steve, player, world_options))
-    set_rule(multiworld.get_entrance("Replace Yellow Flower With Blue", player),
-             has_starting_money(Cost.monty_push + Cost.carla_distract_steve, player, world_options))
-    set_rule(multiworld.get_entrance("Negociate With Monty", player),
-             has_starting_money(Cost.monty_push + Cost.carla_distract_steve, player, world_options))
-    set_rule(multiworld.get_entrance("Give Toilet Paper To Ozzy", player),
-             has_starting_money(Cost.burger, player, world_options))
-    set_rule(multiworld.get_entrance("Buy All Burgers", player),
-             has_starting_money(Cost.burger, player, world_options))
-    set_rule(multiworld.get_entrance("Ask For Vegan Lunch", player),
-             has_starting_money(Cost.monty_push, player, world_options))
-    set_rule(multiworld.get_entrance("Give Gravy To Cindy", player),
-             has_starting_money(Cost.monty_push, player, world_options))
-    set_rule(multiworld.get_entrance("Enter Secret Lab", player),
-             has_starting_money(Cost.battery, player, world_options))
-    set_rule(multiworld.get_entrance("Show Ted The Contract", player),
-             has_starting_money(Cost.hand_sanitizer + Cost.monty_read, player, world_options))
-    set_rule(multiworld.get_entrance("Check Billy's Box", player),
-             has_starting_money(Cost.battery, player, world_options))
-    set_rule(multiworld.get_entrance("Give Love Letter", player),
-             has_starting_money(Cost.monty_push, player, world_options))
-    set_rule(multiworld.get_entrance("Sell Inhaler", player),
-             has_starting_money(Cost.battery + Cost.burger, player, world_options))
-    set_rule(multiworld.get_entrance("Borrow Money", player),
-             has_starting_money(Cost.hand_sanitizer, player, world_options))
-    set_rule(multiworld.get_entrance("Enter Nugget Cave", player),
-             has_starting_money(Cost.blueberry_soda, player, world_options))
-    set_rule(multiworld.get_entrance("Escape Lunch After Bob Died", player),
-             has_starting_money(Cost.carla_distract_lunch_lady, player, world_options))
+def has_count_rule(number: int, player: int, items: List[str]) -> Callable[[Any], bool]:
+    return lambda state: has_count(state, number, player, items)
 
 
-def set_monstermon_card_rules(multiworld: MultiWorld, player, world_options: DungeonClawlerOptions):
-    pass
-
-
-def set_outfit_rules(multiworld: MultiWorld, player, world_options: DungeonClawlerOptions):
-    pass
-
-
-def lambda_or(lambda_1: Callable[[Any], bool], lambda_2: Callable[[Any], bool]) -> Callable[[Any], bool]:
-    return lambda state: lambda_1(state) or lambda_2(state)
-
-
-def has_item(item: str, player: int) -> Callable[[Any], bool]:
-    return lambda state: state.has(item, player)
-
-
-def has_items(items: List[str], player: int) -> Callable[[Any], bool]:
-    return lambda state: all([state.has(item, player) for item in items])
-
-
-def has_starting_money(amount: float, player: int, world_options: DungeonClawlerOptions) -> Callable[[Any], bool]:
-    if world_options.shuffle_money > 0:
-        return lambda state: state.has(Money.starting_money, player, math.ceil(amount / world_options.shuffle_money))
-    return lambda state: True
-
-
-def has_monstermon_cards_rule(number: int, player: int, world_options: DungeonClawlerOptions) -> Callable[[Any], bool]:
-    return lambda state: has_monstermon_cards(state, number, player, world_options)
-
-
-def has_monstermon_cards(state, number: int, player: int, world_options: DungeonClawlerOptions) -> bool:
-    if world_options.shuffle_monstermon == ShuffleMonstermon.option_true:
-        return state.has_from_list(all_cards, player, number)
-    # Cards that are always accessible:
-    #   - Climbing The Rock Wall
-    #   - Couch in the girl's bathroom
-    #   - Swing Puzzle
-    #   - Help Jerome get the ball at gym
-    #   - Give Nugget A Fidget Spinner
-    #   - Red Book In Principal's Office
-    #   - Tell Bob About Janitor's Plan
-    #   - Ozzy's Lunch Bag
-    #   - Toy Chest During Gym
-    if number <= 9:
-        return True
-
-    # The items still exist, but as events
-    return state.has_from_list(all_cards, player, number)
+def has_count(state, number: int, player: int, items: List[str]) -> bool:
+    return state.has_from_list(items, player, number)

@@ -1,13 +1,10 @@
-from typing import List
+from typing import List, Dict
 
 from .item_flags import ItemFlags
 
-number_small_items = 5
-number_big_items = 2
+number_small_items = 8
+number_big_items = 3
 number_buff_items = 1
-
-
-all_combat_items = []
 
 
 class CombatItemData:
@@ -22,6 +19,11 @@ class CombatItemData:
         self.flags = flags
         self.upgradeable = upgradeable
         all_combat_items.append(self)
+        combat_items_by_name[self.name] = self
+
+
+all_combat_items: List[CombatItemData] = []
+combat_items_by_name: Dict[str, CombatItemData] = {}
 
 
 class CombatItem:
@@ -91,12 +93,12 @@ class CombatItem:
     strength_potion = CombatItemData("Strength Potion", number_buff_items, [ItemFlags.strength])
     wooden_bracelet = CombatItemData("Wooden Bracelet", number_big_items, [ItemFlags.strength, ItemFlags.block])
     battery = CombatItemData("Battery", number_buff_items, [ItemFlags.damage, ItemFlags.water])
-    lava_bathbomb = CombatItemData("Lava Bathbomb", number_buff_items, [ItemFlags.more_items, ItemFlags.water, CombatItemFlags.fluff], False)
-    toy_piranha = CombatItemData("Toy Piranha", number_buff_items, [CombatItemFlags.water, CombatItemFlags.damage, CombatItemFlags.fluff])
-    poison_bathbomb = CombatItemData("Poison Bathbomb", number_buff_items, [CombatItemFlags.more_items, CombatItemFlags.water, CombatItemFlags.fluff], False)
-    sponge = CombatItemData("Sponge", number_big_items, [CombatItemFlags.damage, CombatItemFlags.water])
-    treasure_chest = CombatItemData("Treasure Chest", number_buff_items, [CombatItemFlags.damage, CombatItemFlags.water])
-    open_treasure_chest = CombatItemData("Open Treasure Chest", number_big_items, [CombatItemFlags.damage, CombatItemFlags.water, CombatItemFlags.added_by_other])
-    water_bottle = CombatItemData("Water Bottle", number_buff_items, [CombatItemFlags.water, CombatItemFlags.more_items], False)
-    waterpistol = CombatItemData("Waterpistol", number_buff_items, [CombatItemFlags.damage, CombatItemFlags.water], False)
+    lava_bathbomb = CombatItemData("Lava Bathbomb", number_buff_items, [ItemFlags.more_items, ItemFlags.water, ItemFlags.fluff], False)
+    toy_piranha = CombatItemData("Toy Piranha", number_buff_items, [ItemFlags.water, ItemFlags.damage, ItemFlags.fluff])
+    poison_bathbomb = CombatItemData("Poison Bathbomb", number_buff_items, [ItemFlags.more_items, ItemFlags.water, ItemFlags.fluff], False)
+    sponge = CombatItemData("Sponge", number_big_items, [ItemFlags.damage, ItemFlags.water])
+    treasure_chest = CombatItemData("Treasure Chest", number_buff_items, [ItemFlags.damage, ItemFlags.water])
+    open_treasure_chest = CombatItemData("Open Treasure Chest", number_big_items, [ItemFlags.damage, ItemFlags.water, ItemFlags.added_by_other])
+    water_bottle = CombatItemData("Water Bottle", number_buff_items, [ItemFlags.water, ItemFlags.more_items], False)
+    waterpistol = CombatItemData("Waterpistol", number_buff_items, [ItemFlags.damage, ItemFlags.water], False)
     healing_potion = CombatItemData("Healing Potion", number_big_items, [], False)

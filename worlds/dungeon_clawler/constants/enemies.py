@@ -1,3 +1,6 @@
+from typing import List
+
+
 class EnemyDifficulty:
     easy = "Easy"
     medium = "Medium"
@@ -6,9 +9,6 @@ class EnemyDifficulty:
     medium_boss = "MediumBoss"
     hard_boss = "HardBoss"
     final_boss = "Final Boss"
-
-
-all_enemies = []
 
 
 class EnemyData:
@@ -21,6 +21,9 @@ class EnemyData:
         self.difficulty = difficulty
         self.is_boss = is_boss
         all_enemies.append(self)
+
+
+all_enemies: List[EnemyData] = []
 
 
 class Enemy:

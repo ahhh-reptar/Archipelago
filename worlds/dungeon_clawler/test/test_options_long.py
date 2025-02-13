@@ -3,7 +3,7 @@ from typing import Dict
 
 from BaseClasses import MultiWorld, get_seed
 from Options import NamedRange, Range
-from . import DungeonClawlerTestBase, setup_kindergarten_solo_multiworld_with_fill
+from . import DungeonClawlerTestBase, setup_dungeon_clawler_solo_multiworld_with_fill, setup_dungeon_clawler_solo_multiworld_with_fill
 from .option_names import options_to_include
 from .checks.world_checks import assert_can_win, assert_same_number_items_locations
 
@@ -37,7 +37,7 @@ class TestGenerateDynamicOptions(DungeonClawlerTestBase):
                         with self.subTest(f"{option1.internal_name}: {key1}, {option2.internal_name}: {key2}"):
                             choices = {option1.internal_name: option1_choices[key1],
                                        option2.internal_name: option2_choices[key2]}
-                            multiworld = setup_kindergarten_solo_multiworld_with_fill(choices)
+                            multiworld = setup_dungeon_clawler_solo_multiworld_with_fill(choices)
                             basic_checks(self, multiworld)
 
     def test_given_option_truple_when_generate_then_basic_checks(self):
@@ -58,7 +58,7 @@ class TestGenerateDynamicOptions(DungeonClawlerTestBase):
                                     choices = {option1.internal_name: option1_choices[key1],
                                                option2.internal_name: option2_choices[key2],
                                                option3.internal_name: option3_choices[key3]}
-                                    multiworld = setup_kindergarten_solo_multiworld_with_fill(choices)
+                                    multiworld = setup_dungeon_clawler_solo_multiworld_with_fill(choices)
                                     basic_checks(self, multiworld)
 
     def test_given_option_quartet_when_generate_then_basic_checks(self):
@@ -85,7 +85,7 @@ class TestGenerateDynamicOptions(DungeonClawlerTestBase):
                                                        option2.internal_name: option2_choices[key2],
                                                        option3.internal_name: option3_choices[key3],
                                                        option4.internal_name: option4_choices[key4]}
-                                            multiworld = setup_kindergarten_solo_multiworld_with_fill(choices)
+                                            multiworld = setup_dungeon_clawler_solo_multiworld_with_fill(choices)
                                             basic_checks(self, multiworld)
 
 
@@ -136,17 +136,17 @@ class TestGenerateManyWorlds(DungeonClawlerTestBase):
 
         fill_message = "with Fill" if fill else "without Fill"
 
-        print(f"Generating {number_worlds} Solo Multiworlds {fill_message} [Start Seed: {seed}] for Kindergarten 2...")
+        print(f"Generating {number_worlds} Solo Multiworlds {fill_message} [Start Seed: {seed}] for Dungeon Clawler...")
         for world_number in range(0, number_worlds + 1):
 
             world_seed = world_number + seed
             world_options = generate_random_world_options(world_seed)
 
             with self.subTest(f"Multiworld: {world_seed}"):
-                multiworld = setup_kindergarten_solo_multiworld_with_fill(world_options, seed=seed, fill=fill)
+                multiworld = setup_dungeon_clawler_solo_multiworld_with_fill(world_options, seed=seed, fill=fill)
                 basic_checks(self, multiworld)
 
             if world_number > 0 and world_number % log_step == 0:
                 print(f"Generated and Verified {world_number}/{number_worlds} worlds {fill_message} [{(world_number * 100) // number_worlds}%]")
 
-        print(f"Finished generating and verifying {number_worlds} Solo Multiworlds {fill_message} for Kindergarten 2")
+        print(f"Finished generating and verifying {number_worlds} Solo Multiworlds {fill_message} for Dungeon Clawler")

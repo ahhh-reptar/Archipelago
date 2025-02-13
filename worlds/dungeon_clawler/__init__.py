@@ -3,11 +3,15 @@ from typing import Union
 
 from BaseClasses import Tutorial, ItemClassification
 from worlds.AutoWorld import WebWorld, World
-from .items import item_table, items_by_group
-from .items_creation import create_items
-from .items_classes import ItemData, DungeonClawlerItem, Group
-from .locations import DungeonClawlerLocation, location_table, create_locations
-from .options import DungeonClawlerOptions, Goal, ShuffleMoney, ShuffleMonstermon, ShuffleOutfits
+from .constants.character_names import all_characters
+from .constants.combat_items import combat_items_by_name
+from .constants.filler_names import Filler
+from .constants.item_flags import ItemFlags
+from .items import item_table
+from .items_creation import create_items, get_valid_combat_items
+from .items_classes import ItemData, DungeonClawlerItem
+from .locations import DungeonClawlerLocation, location_table, create_locations, offset
+from .options import DungeonClawlerOptions, Goal, ShuffleItems, ShuffleCharacters, ShufflePerks, DungeonClawlerDeathlink, Enemysanity
 from .regions import create_regions
 from .rules import set_rules
 from .constants.world_strings import GAME_NAME
@@ -45,16 +49,23 @@ class DungeonClawlerWorld(World):
         self.precollect_starting_items()
 
     def precollect_starting_items(self) -> None:
-        if self.options.shuffle_outfits == ShuffleOutfits.option_false:
-            return
+        starting_items = []
+        if self.options.shuffle_items == ShuffleItems.option_true:
+            valid_combat_items = get_valid_combat_items(self.options)
+            number_starting_items = 5
+            starting_combat_items = self.random.sample(valid_combat_items, k=number_starting_items)
+            damage_items = [item for item in valid_combat_items if ItemFlags.damage in combat_items_by_name[item].flags]
+            while not any([damage_item in starting_combat_items for damage_item in damage_items]):
+                starting_combat_items.append(self.random.choice(valid_combat_items))
+            starting_items.extend(starting_combat_items)
 
-        if [item for item in self.multiworld.precollected_items[self.player]
-            if item.name in {outfit.name for outfit in items_by_group[Group.Outfit]}]:
-            return
+        if self.options.shuffle_characters == ShuffleCharacters.option_true:
+            starting_character = self.random.choice(all_characters)
+            starting_items.append(starting_character.name)
 
-        chosen_outfit = self.random.choice(items_by_group[Group.Outfit])
-        starting_outfit = DungeonClawlerItem(chosen_outfit.name, chosen_outfit.classification, chosen_outfit.code, self.player)
-        self.multiworld.push_precollected(starting_outfit)
+        for starting_item in starting_items:
+            created_item = DungeonClawlerItem(starting_item, ItemClassification.progression, offset + item_table[starting_item].code_without_offset, self.player)
+            self.multiworld.push_precollected(created_item)
 
     def create_regions(self):
         create_regions(self.multiworld, self.player, self.options)
@@ -79,11 +90,6 @@ class DungeonClawlerWorld(World):
             if item in self.multiworld.itempool:
                 self.multiworld.itempool.remove(item)
 
-        if self.options.shuffle_money > 0:
-            self.multiworld.early_items[self.player][Money.starting_money] = math.ceil(3 / self.options.shuffle_money)
-
-        # self.multiworld.exclude_locations[self.player].value.add()
-
         self.setup_victory()
 
     def create_item(self, item: Union[str, ItemData], classification: ItemClassification = None) -> DungeonClawlerItem:
@@ -99,15 +105,16 @@ class DungeonClawlerWorld(World):
 
     def get_filler_item_name(self) -> str:
         # trap = self.multiworld.random.choice(items_by_group[Group.Trap])
-        return Money.starting_money
+        return Filler.starting_money
 
     def fill_slot_data(self):
         options_dict = self.options.as_dict(
             Goal.internal_name,
-            ShuffleMoney.internal_name,
-            ShuffleMonstermon.internal_name,
-            ShuffleOutfits.internal_name,
-            "death_link"
+            ShuffleCharacters.internal_name,
+            ShuffleItems.internal_name,
+            ShufflePerks.internal_name,
+            Enemysanity.internal_name,
+            DungeonClawlerDeathlink.internal_name
         )
         options_dict.update({
             "seed": self.random.randrange(99999999),
