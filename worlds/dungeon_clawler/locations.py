@@ -31,6 +31,10 @@ def character_location_name(character: str) -> str:
     return f"Win a game with {character}"
 
 
+def perk_location_name(perk_name: str, level: int) -> str:
+    return f"{perk_name} - Level {level}"
+
+
 def floor_region_name(floor: int, difficulty: str) -> str:
     return f"Floor {floor} - {difficulty}"
 
@@ -85,24 +89,24 @@ for perk in all_perk_items:
         else:
             difficulty = Difficulty.nightmare
         region = f"Floor {level*4} - {difficulty}"
-        perk_locations.append(LocationData(f"{perk.name} - Level {level}", region))
+        perk_locations.append(LocationData(perk_location_name(perk.name, level), region))
 
 all_locations = []
 for i, mission_location in enumerate(floor_locations):
     mission_location.id_without_offset = 1 + i
     all_locations.append(mission_location)
 
-for i, extra_location in enumerate(character_win_locations):
-    extra_location.id_without_offset = 501 + i
-    all_locations.append(extra_location)
+for i, character_win_location in enumerate(character_win_locations):
+    character_win_location.id_without_offset = 501 + i
+    all_locations.append(character_win_location)
 
-for i, money_location in enumerate(enemy_locations):
-    money_location.id_without_offset = 1001 + i
-    all_locations.append(money_location)
+for i, enemy_location in enumerate(enemy_locations):
+    enemy_location.id_without_offset = 1001 + i
+    all_locations.append(enemy_location)
 
-for i, monstermon_location in enumerate(perk_locations):
-    monstermon_location.id_without_offset = 1501 + i
-    all_locations.append(monstermon_location)
+for i, perk_location in enumerate(perk_locations):
+    perk_location.id_without_offset = 1501 + i
+    all_locations.append(perk_location)
 
 location_table = dict()
 
@@ -173,7 +177,7 @@ def create_character_win_locations(multiworld: MultiWorld, player: int) -> None:
 
 
 def create_enemy_locations(multiworld: MultiWorld, player: int, world_options: DungeonClawlerOptions) -> None:
-    if world_options.enemysanity == Enemysanity.option_true:
+    if world_options.enemysanity == Enemysanity.option_false:
         return
 
     for location_data in enemy_locations:
@@ -184,7 +188,7 @@ def create_enemy_locations(multiworld: MultiWorld, player: int, world_options: D
 
 
 def create_perk_locations(multiworld: MultiWorld, player: int, world_options: DungeonClawlerOptions) -> None:
-    if world_options.shuffle_perks == ShufflePerks.option_true:
+    if world_options.shuffle_perks == ShufflePerks.option_false:
         return
 
     for location_data in perk_locations:

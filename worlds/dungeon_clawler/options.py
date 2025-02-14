@@ -9,7 +9,7 @@ class Goal(Choice):
     """
     internal_name = "goal"
     display_name = "Goal"
-    default = 0
+    default = 3
     option_beat_normal = 0
     option_beat_hard = 1
     option_beat_very_hard = 2
@@ -70,7 +70,7 @@ class DungeonClawlerDeathlink(Choice):
     If set to "Claw", receiving a deathlink will simply skip your next next claw, instead of killing you, because dying is very punishing in Dungeon Clawler
     You send a deathlink when you die, and also when you fail at using a claw and grab zero items
     """
-    internal_name = "dc_deathlink"
+    internal_name = "death_link"
     display_name = "DeathLink"
     default = 0
     option_disabled = 0
