@@ -13,6 +13,7 @@ from .constants.filler_names import Filler
 def create_items(world, world_options: DungeonClawlerOptions, locations_count: int, items_to_exclude: List[str], random: Random) -> List[DungeonClawlerItem]:
     created_items = []
     create_characters(created_items, world, world_options, locations_count, items_to_exclude, random)
+    create_inventory_sizes(created_items, world, world_options, locations_count, random)
     create_combat_items_and_perks(created_items, world, world_options, locations_count, items_to_exclude, random)
     create_fillers(created_items, world, world_options, locations_count, random)
     return created_items
@@ -23,6 +24,11 @@ def create_characters(created_items, world, world_options: DungeonClawlerOptions
         return
     characters_to_create = [character.name for character in all_characters if character.name not in items_to_exclude]
     created_items.extend(world.create_item(character_name, ItemClassification.progression) for character_name in characters_to_create)
+
+
+def create_inventory_sizes(created_items, world, world_options: DungeonClawlerOptions, locations_count: int, random: Random) -> None:
+    created_items.extend([world.create_item("Combat Inventory Size", ItemClassification.useful) for i in range(world_options.extra_inventory_sizes.value)])
+    created_items.extend([world.create_item("Perk Inventory Size", ItemClassification.useful) for i in range(world_options.extra_inventory_sizes.value)])
 
 
 def create_combat_items_and_perks(created_items, world, world_options: DungeonClawlerOptions, locations_count: int, items_to_exclude: List[str], random: Random) -> None:

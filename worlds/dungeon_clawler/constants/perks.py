@@ -58,7 +58,7 @@ class Perk:
     greedy = PerkData("Greedy", 2, [ItemFlags.coins])
     lucky = PerkData("Lucky", 1, [])
     magic_mirror = PerkData("Magic Mirror", 1, [ItemFlags.less_items])
-    magnetism = PerkData("Magnetism", 10, [ItemFlags.magnetism])
+    magnetism = PerkData("Magnetism", 10, [ItemFlags.magnetism, ItemFlags.metal])
     weaklings = PerkData("Weaklings", 1, [])
     hedgehog = PerkData("Hedgehog", 10, [ItemFlags.indirect_damage])
     spikes = PerkData("Spikes", 10, [ItemFlags.indirect_damage])

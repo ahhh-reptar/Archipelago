@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from Options import Choice, PerGameCommonOptions, Toggle
+from Options import Choice, PerGameCommonOptions, Toggle, NamedRange, Range
 
 
 class Goal(Choice):
@@ -29,7 +29,7 @@ class Goal(Choice):
 class ShuffleCharacters(Toggle):
     """
     If enabled, all characters will be unlockable items
-    If disabled, all characters will start unlocked
+    If disabled, all characters will start unlocked except a random one
     There will be one location for finishing a run with each character
     """
     internal_name = "shuffle_characters"
@@ -48,11 +48,22 @@ class ShuffleItems(Toggle):
 
 class ShufflePerks(Toggle):
     """
-    You start with no Perks, and will unlock some, but not all of them, to be permanently active
+    You start with no Perks, and will unlock some, but not all of them, depending on check count
     """
     internal_name = "shuffle_perks"
     display_name = "Shuffle Perks"
     default = Toggle.option_true
+
+
+class ExtraInventorySizes(Range):
+    """
+    You will start with a limited inventory size for starting items and perks, and earn this many extras from your item pool
+    """
+    internal_name = "extra_inventory_sizes"
+    display_name = "Extra Inventory Sizes"
+    default = 5
+    range_start = 0
+    range_end = 20
 
 
 class Enemysanity(Toggle):
@@ -84,5 +95,6 @@ class DungeonClawlerOptions(PerGameCommonOptions):
     shuffle_characters: ShuffleCharacters
     shuffle_items: ShuffleItems
     shuffle_perks: ShufflePerks
+    extra_inventory_sizes: ExtraInventorySizes
     enemysanity: Enemysanity
     death_link: DungeonClawlerDeathlink

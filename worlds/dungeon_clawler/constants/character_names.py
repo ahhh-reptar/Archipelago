@@ -27,6 +27,6 @@ class Character:
     squiddy = CharacterData("Squiddy", [ItemFlags.water])
     garbage_greg = CharacterData("Garbage Greg", [ItemFlags.more_items])
     anne_bunny = CharacterData("Anne Bunny", [ItemFlags.less_items])
-    hare_l_quinn = CharacterData("Hare L. Quinn", [ItemFlags.damage, ItemFlags.less_items, ItemFlags.metal])
+    hare_l_quinn = CharacterData("Hare L. Quinn", [ItemFlags.damage, ItemFlags.metal])
     chief_bunner = CharacterData("Chief Bunner", [ItemFlags.block])
     cuddline_floofington = CharacterData("Cuddline Floofington", [ItemFlags.fluff])

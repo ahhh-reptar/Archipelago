@@ -28,12 +28,18 @@ def create_perk_items_data(start_index: int) -> List[ItemData]:
     return [ItemData(start_index + i, perk_item, progression) for i, perk_item in enumerate(perk_items)]
 
 
+def create_inventory_size_items_data(start_index: int) -> List[ItemData]:
+    return [ItemData(start_index + 0, "Combat Inventory Size", progression),
+            ItemData(start_index + 1, "Perk Inventory Size", progression)]
+
+
 progression = ItemClassification.progression
 
 all_items: List[ItemData] = [
     *create_character_items_data(1),
     *create_combat_items_data(201),
     *create_perk_items_data(401),
+    *create_inventory_size_items_data(401),
     ItemData(601, Filler.starting_money, ItemClassification.filler),
 ]
 

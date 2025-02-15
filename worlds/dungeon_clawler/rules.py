@@ -26,7 +26,7 @@ def set_floor_entrance_rules(multiworld: MultiWorld, player, world_options: Dung
             floor_entrance_name = beat_floor_entrance_name(floor, difficulty)
             floor_entrance = multiworld.get_entrance(floor_entrance_name, player)
             required_combat_items = get_required_combat_items(floor, difficulty, world_options)
-            required_perks = (required_combat_items - 4) // 2
+            required_perks = (required_combat_items - 4)
             if world_options.shuffle_items == ShuffleItems.option_true:
                 required_combat_items = min(len(generated_combat_items), required_combat_items)
                 add_rule(floor_entrance, has_count_combat_items(required_combat_items, player))
@@ -36,7 +36,7 @@ def set_floor_entrance_rules(multiworld: MultiWorld, player, world_options: Dung
 
 
 def get_required_combat_items(floor: int, difficulty: str, world_options: DungeonClawlerOptions):
-    required_combat_items = 3
+    required_combat_items = 2
     if difficulty == Difficulty.normal:
         required_combat_items += floor * 0.75
     elif difficulty == Difficulty.hard:
@@ -47,18 +47,18 @@ def get_required_combat_items(floor: int, difficulty: str, world_options: Dungeo
         required_combat_items += floor * 1.5
     if world_options.shuffle_perks == ShufflePerks.option_true:
         if floor > 5:
-            required_combat_items += 10
+            required_combat_items += 5
         if floor > 10:
-            required_combat_items += 10
+            required_combat_items += 5
         if floor > 15:
-            required_combat_items += 10
+            required_combat_items += 5
     if world_options.enemysanity == Enemysanity.option_true:
         if difficulty == Difficulty.hard:
-            required_combat_items += 10
+            required_combat_items += 5
         if difficulty == Difficulty.very_hard:
-            required_combat_items += 20
+            required_combat_items += 5
         if difficulty == Difficulty.nightmare:
-            required_combat_items += 30
+            required_combat_items += 5
     return round(required_combat_items)
 
 
@@ -81,9 +81,9 @@ def has_count_perks(number: int, player: int) -> Callable[[Any], bool]:
 def set_character_win_rules(multiworld: MultiWorld, player, world_options: DungeonClawlerOptions, generated_items: List[str]):
     for character in all_characters:
         character_win_location_name = character_location_name(character.name)
-        character_win_location =  multiworld.get_location(character_win_location_name, player)
+        character_win_location = multiworld.get_location(character_win_location_name, player)
         if world_options.shuffle_characters == ShuffleCharacters.option_true:
-            add_rule(character_win_location, lambda state: state.has(character.name, player))
+            add_rule(character_win_location, lambda state, name=character.name: state.has(name, player))
         synergy_items = []
         for good_flag in character.good_item_flags:
             if world_options.shuffle_items == ShuffleItems.option_true:
@@ -92,7 +92,7 @@ def set_character_win_rules(multiworld: MultiWorld, player, world_options: Dunge
                 synergy_items.extend([item.name for item in all_perk_items if good_flag in item.flags])
         generated_synergy_items = [item for item in generated_items if item in [synergy_item for synergy_item in synergy_items]]
         if synergy_items:
-            required_synergy_items = min(8, len(generated_synergy_items))
+            required_synergy_items = min(5, len(generated_synergy_items))
             add_rule(character_win_location, has_count_rule(required_synergy_items, player, synergy_items))
 
 
