@@ -2,11 +2,12 @@ from random import Random
 from typing import List
 
 from BaseClasses import ItemClassification
-from .constants.character_names import all_characters
+from .constants.fighters import all_fighters
 from .constants.combat_items import all_combat_items
+from .constants.lucky_paws import all_lucky_paws
 from .constants.perks import all_perk_items
 from .items_classes import DungeonClawlerItem
-from .options import DungeonClawlerOptions, ShuffleItems, ShufflePerks, ShuffleCharacters
+from .options import DungeonClawlerOptions, ShuffleCombatItems, ShufflePerks, ShuffleFighters
 from .constants.filler_names import Filler
 
 
@@ -20,10 +21,14 @@ def create_items(world, world_options: DungeonClawlerOptions, locations_count: i
 
 
 def create_characters(created_items, world, world_options: DungeonClawlerOptions, locations_count: int, items_to_exclude: List[str], random: Random) -> None:
-    if world_options.shuffle_characters == ShuffleCharacters.option_false:
+    if world_options.shuffle_fighters == ShuffleFighters.option_none:
         return
-    characters_to_create = [character.name for character in all_characters if character.name not in items_to_exclude]
+    characters_to_create = [character.name for character in all_fighters if character.name not in items_to_exclude]
     created_items.extend(world.create_item(character_name, ItemClassification.progression) for character_name in characters_to_create)
+    if world_options.shuffle_fighters != ShuffleFighters.option_fighters_and_paws:
+        return
+    paw_to_create = [paw for paw in all_lucky_paws]
+    created_items.extend(world.create_item(paw_name, ItemClassification.progression) for paw_name in paw_to_create)
 
 
 def create_inventory_sizes(created_items, world, world_options: DungeonClawlerOptions, locations_count: int, random: Random) -> None:
@@ -33,8 +38,8 @@ def create_inventory_sizes(created_items, world, world_options: DungeonClawlerOp
 
 def create_combat_items_and_perks(created_items, world, world_options: DungeonClawlerOptions, locations_count: int, items_to_exclude: List[str], random: Random) -> None:
     valid_items = []
-    valid_items.extend(get_valid_combat_items(world_options))
-    valid_items.extend(get_valid_perks(world_options))
+    valid_items.extend(get_valid_combat_items(world_options, random))
+    valid_items.extend(get_valid_perks(world_options, random))
     for excluded_item in items_to_exclude:
         if excluded_item in valid_items:
             valid_items.remove(excluded_item)
@@ -48,25 +53,31 @@ def create_combat_items_and_perks(created_items, world, world_options: DungeonCl
     created_items.extend(world.create_item(item, ItemClassification.progression) for item in chosen_items)
 
 
-def get_valid_combat_items(world_options: DungeonClawlerOptions) -> List[str]:
-    if world_options.shuffle_items == ShuffleItems.option_false:
+def get_valid_combat_items(world_options: DungeonClawlerOptions, random: Random) -> List[str]:
+    if world_options.shuffle_combat_items == ShuffleCombatItems.option_false:
         return []
     valid_combat_items = []
     for combat_item in all_combat_items:
-        valid_combat_items.append(combat_item.name)
+        valid_combat_items.extend([combat_item.name] * combat_item.max_stack)
         if combat_item.upgradeable:
             valid_combat_items.append(combat_item.name)
-            if combat_item.max_stack > 1:
-                valid_combat_items.extend([combat_item.name] * combat_item.max_stack)
+    maximum = world_options.maximum_combat_items.value
+    if maximum >= len(valid_combat_items):
+        return valid_combat_items
+    valid_combat_items = random.sample(valid_combat_items, k=maximum)
     return valid_combat_items
 
 
-def get_valid_perks(world_options: DungeonClawlerOptions) -> List[str]:
+def get_valid_perks(world_options: DungeonClawlerOptions, random: Random) -> List[str]:
     if world_options.shuffle_perks == ShufflePerks.option_false:
         return []
     valid_perks = []
     for perk in all_perk_items:
         valid_perks.extend([perk.name] * perk.max_stack)
+    maximum = world_options.maximum_perks.value
+    if maximum >= len(valid_perks):
+        return valid_perks
+    valid_perks = random.sample(valid_perks, k=maximum)
     return valid_perks
 
 

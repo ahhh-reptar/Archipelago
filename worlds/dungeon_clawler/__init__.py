@@ -3,7 +3,7 @@ from typing import Union
 
 from BaseClasses import Tutorial, ItemClassification, MultiWorld
 from worlds.AutoWorld import WebWorld, World
-from .constants.character_names import all_characters
+from .constants.fighters import all_fighters
 from .constants.combat_items import combat_items_by_name
 from .constants.filler_names import Filler
 from .constants.item_flags import ItemFlags
@@ -11,7 +11,7 @@ from .items import item_table
 from .items_creation import create_items, get_valid_combat_items
 from .items_classes import ItemData, DungeonClawlerItem
 from .locations import DungeonClawlerLocation, location_table, create_locations, offset
-from .options import DungeonClawlerOptions, Goal, ShuffleItems, ShuffleCharacters, ShufflePerks, DungeonClawlerDeathlink, Enemysanity
+from .options import DungeonClawlerOptions, Goal, ShuffleCombatItems, ShuffleFighters, ShufflePerks, DungeonClawlerDeathlink, Enemysanity
 from .regions import create_regions
 from .rules import set_rules
 from .constants.world_strings import GAME_NAME
@@ -54,17 +54,15 @@ class DungeonClawlerWorld(World):
 
     def precollect_starting_items(self) -> None:
         starting_items = []
-        if self.options.shuffle_items == ShuffleItems.option_true:
-            valid_combat_items = get_valid_combat_items(self.options)
-            number_starting_items = 5
-            starting_combat_items = self.random.sample(valid_combat_items, k=number_starting_items)
+        if self.options.shuffle_combat_items == ShuffleCombatItems.option_true:
+            valid_combat_items = get_valid_combat_items(self.options, self.random)
             damage_items = [item for item in valid_combat_items if ItemFlags.damage in combat_items_by_name[item].flags]
-            while not any([damage_item in starting_combat_items for damage_item in damage_items]):
-                starting_combat_items.append(self.random.choice(valid_combat_items))
-            starting_items.extend(starting_combat_items)
+            starting_items.extend(self.random.sample(damage_items, k=2))
+            number_starting_items = 3
+            starting_items.extend(self.random.sample(valid_combat_items, k=number_starting_items))
 
-        if self.options.shuffle_characters == ShuffleCharacters.option_true:
-            starting_character = self.random.choice(all_characters)
+        if self.options.shuffle_fighters != ShuffleFighters.option_none:
+            starting_character = self.random.choice(all_fighters)
             starting_items.append(starting_character.name)
 
         for starting_item in starting_items:
@@ -111,8 +109,8 @@ class DungeonClawlerWorld(World):
     def fill_slot_data(self):
         options_dict = self.options.as_dict(
             Goal.internal_name,
-            ShuffleCharacters.internal_name,
-            ShuffleItems.internal_name,
+            ShuffleFighters.internal_name,
+            ShuffleCombatItems.internal_name,
             ShufflePerks.internal_name,
             Enemysanity.internal_name,
             DungeonClawlerDeathlink.internal_name

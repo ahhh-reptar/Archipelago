@@ -1,10 +1,10 @@
 from BaseClasses import Location, MultiWorld, Region, ItemClassification
 from . import DungeonClawlerItem
-from .constants.character_names import all_characters
+from .constants.fighters import all_fighters
 from .constants.difficulties import all_difficulties, Difficulty
 from .constants.enemies import all_enemies, EnemyDifficulty
 from .constants.perks import all_perk_items, max_perk_stack
-from .options import DungeonClawlerOptions, Goal, Enemysanity, ShufflePerks
+from .options import DungeonClawlerOptions, Goal, Enemysanity, ShufflePerks, ShuffleFighters
 from .constants.world_strings import GAME_NAME
 
 
@@ -51,7 +51,7 @@ for floor in range(1, 21):
         floor_locations.append(LocationData(floor_location_name(floor, difficulty), floor_region_name(floor+1, difficulty)))
 
 character_win_locations = []
-for character in all_characters:
+for character in all_fighters:
     character_win_locations.append(LocationData(character_location_name(character.name), floor_region_name(21, Difficulty.hard)))
 
 
@@ -151,7 +151,7 @@ def create_locations(multiworld: MultiWorld, player: int, world_options: Dungeon
         create_victory_event(region_victory, player)
 
     create_floor_locations(multiworld, player, victory_location)
-    create_character_win_locations(multiworld, player)
+    create_character_win_locations(multiworld, player, world_options)
     create_enemy_locations(multiworld, player, world_options)
     create_perk_locations(multiworld, player, world_options)
 
@@ -168,7 +168,9 @@ def create_floor_locations(multiworld: MultiWorld, player: int, victory_location
         region.locations.append(location)
 
 
-def create_character_win_locations(multiworld: MultiWorld, player: int) -> None:
+def create_character_win_locations(multiworld: MultiWorld, player: int, world_options: DungeonClawlerOptions) -> None:
+    if world_options.shuffle_fighters == ShuffleFighters.option_none:
+        return
     for location_data in character_win_locations:
         region = multiworld.get_region(location_data.region, player)
         name = location_data.name

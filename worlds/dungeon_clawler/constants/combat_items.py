@@ -2,8 +2,8 @@ from typing import List, Dict
 
 from .item_flags import ItemFlags
 
-number_small_items = 8
-number_big_items = 3
+number_small_items = 4
+number_big_items = 2
 number_buff_items = 1
 
 
@@ -69,7 +69,7 @@ class CombatItem:
     honey_ball = CombatItemData("Honey Ball", number_small_items, [ItemFlags.water], False)
     spike = CombatItemData("Spike", number_small_items, [ItemFlags.metal], False)
     meli_bomb = CombatItemData("Meli-Bomb", number_big_items, [ItemFlags.added_by_enemies], False)
-    poisonous_spore = CombatItemData("Poisonous Spore", number_big_items, [ItemFlags.added_by_enemies], False)
+    # poisonous_spore = CombatItemData("Poisonous Spore", number_big_items, [ItemFlags.added_by_enemies], False)
     healing_flask = CombatItemData("Healing Flask", number_small_items, [ItemFlags.healing])
     magic_wand = CombatItemData("Magic Wand", number_big_items, [ItemFlags.healing, ItemFlags.wood])
     teddy = CombatItemData("Teddy", number_big_items, [ItemFlags.healing, ItemFlags.fluff])

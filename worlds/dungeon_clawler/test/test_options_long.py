@@ -17,7 +17,7 @@ def get_option_choices(option) -> Dict[str, int]:
     if issubclass(option, NamedRange):
         return option.special_range_names
     if issubclass(option, Range):
-        return {f"{val}": val for val in range(option.range_start, option.range_end + 1)}
+        return {f"{val}": val for val in range(option.range_start, option.range_end + 1, 10)}
     elif option.options:
         return option.options
     return {}

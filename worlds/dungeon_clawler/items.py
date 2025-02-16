@@ -1,17 +1,25 @@
 from typing import Dict, List
 
 from BaseClasses import ItemClassification
-from .constants.character_names import all_characters
+from .constants.fighters import all_fighters
 from .constants.combat_items import all_combat_items
 from .constants.filler_names import Filler
+from .constants.lucky_paws import all_lucky_paws
 from .constants.perks import all_perk_items
 from .items_classes import ItemData
 
-character_items = [character.name for character in all_characters]
+character_items = [character.name for character in all_fighters]
 
 
 def create_character_items_data(start_index: int) -> List[ItemData]:
     return [ItemData(start_index + i, inventory_item, progression) for i, inventory_item in enumerate(character_items)]
+
+
+lucky_paw_items = [paw for paw in all_lucky_paws]
+
+
+def create_lucky_paws_items_data(start_index: int) -> List[ItemData]:
+    return [ItemData(start_index + i, paw_item, progression) for i, paw_item in enumerate(lucky_paw_items)]
 
 
 combat_items = [combat_item.name for combat_item in all_combat_items]
@@ -37,6 +45,7 @@ progression = ItemClassification.progression
 
 all_items: List[ItemData] = [
     *create_character_items_data(1),
+    *create_lucky_paws_items_data(101),
     *create_combat_items_data(201),
     *create_perk_items_data(401),
     *create_inventory_size_items_data(401),
