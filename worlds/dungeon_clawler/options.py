@@ -65,6 +65,7 @@ class ShufflePerks(Toggle):
 class ExtraInventorySizes(Range):
     """
     You will start with a limited inventory size for starting items and perks, and earn this many extras from your item pool
+    If you set a too low value, and get unlucky and have bad items, you might be unable to beat your game.
     """
     internal_name = "extra_inventory_sizes"
     display_name = "Extra Inventory Sizes"
@@ -75,7 +76,7 @@ class ExtraInventorySizes(Range):
 
 class Enemysanity(Toggle):
     """
-    Killing each monster type is a check
+    Killing each monster type is a check. Turning this off significantly reduces the number of checks, and subsequently increases difficulty by a lot.
     """
     internal_name = "enemysanity"
     display_name = "EnemySanity"
