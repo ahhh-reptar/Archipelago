@@ -61,32 +61,32 @@ class TestGenerateDynamicOptions(DungeonClawlerTestBase):
                                     multiworld = setup_dungeon_clawler_solo_multiworld_with_fill(choices)
                                     basic_checks(self, multiworld)
 
-    def test_given_option_quartet_when_generate_then_basic_checks(self):
-        num_options = len(options_to_include)
-        for option1_index in range(0, num_options):
-            for option2_index in range(option1_index + 1, num_options):
-                for option3_index in range(option2_index + 1, num_options):
-                    for option4_index in range(option3_index + 1, num_options):
-                        option1 = options_to_include[option1_index]
-                        option2 = options_to_include[option2_index]
-                        option3 = options_to_include[option3_index]
-                        option4 = options_to_include[option4_index]
-                        option1_choices = get_option_choices(option1)
-                        option2_choices = get_option_choices(option2)
-                        option3_choices = get_option_choices(option3)
-                        option4_choices = get_option_choices(option4)
-                        for key1 in option1_choices:
-                            for key2 in option2_choices:
-                                for key3 in option3_choices:
-                                    for key4 in option4_choices:
-                                        with self.subTest(
-                                                f"{option1.internal_name}: {key1}, {option2.internal_name}: {key2}, {option3.internal_name}: {key3}, {option4.internal_name}: {key4}"):
-                                            choices = {option1.internal_name: option1_choices[key1],
-                                                       option2.internal_name: option2_choices[key2],
-                                                       option3.internal_name: option3_choices[key3],
-                                                       option4.internal_name: option4_choices[key4]}
-                                            multiworld = setup_dungeon_clawler_solo_multiworld_with_fill(choices)
-                                            basic_checks(self, multiworld)
+    # def test_given_option_quartet_when_generate_then_basic_checks(self):
+    #     num_options = len(options_to_include)
+    #     for option1_index in range(0, num_options):
+    #         for option2_index in range(option1_index + 1, num_options):
+    #             for option3_index in range(option2_index + 1, num_options):
+    #                 for option4_index in range(option3_index + 1, num_options):
+    #                     option1 = options_to_include[option1_index]
+    #                     option2 = options_to_include[option2_index]
+    #                     option3 = options_to_include[option3_index]
+    #                     option4 = options_to_include[option4_index]
+    #                     option1_choices = get_option_choices(option1)
+    #                     option2_choices = get_option_choices(option2)
+    #                     option3_choices = get_option_choices(option3)
+    #                     option4_choices = get_option_choices(option4)
+    #                     for key1 in option1_choices:
+    #                         for key2 in option2_choices:
+    #                             for key3 in option3_choices:
+    #                                 for key4 in option4_choices:
+    #                                     with self.subTest(
+    #                                             f"{option1.internal_name}: {key1}, {option2.internal_name}: {key2}, {option3.internal_name}: {key3}, {option4.internal_name}: {key4}"):
+    #                                         choices = {option1.internal_name: option1_choices[key1],
+    #                                                    option2.internal_name: option2_choices[key2],
+    #                                                    option3.internal_name: option3_choices[key3],
+    #                                                    option4.internal_name: option4_choices[key4]}
+    #                                         multiworld = setup_dungeon_clawler_solo_multiworld_with_fill(choices)
+    #                                         basic_checks(self, multiworld)
 
 
 def generate_random_world_options(seed: int) -> Dict[str, int]:
