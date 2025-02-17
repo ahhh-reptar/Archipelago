@@ -11,7 +11,7 @@ from .items import item_table
 from .items_creation import create_items, get_valid_combat_items
 from .items_classes import ItemData, DungeonClawlerItem
 from .locations import DungeonClawlerLocation, location_table, create_locations, offset
-from .options import DungeonClawlerOptions, Goal, ShuffleCombatItems, ShuffleFighters, ShufflePerks, DungeonClawlerDeathlink, Enemysanity
+from .options import DungeonClawlerOptions, Goal, ShuffleCombatItems, ShuffleFighters, ShufflePerks, DungeonClawlerDeathlink, Enemysanity, TrapDifficulty
 from .regions import create_regions
 from .rules import set_rules
 from .constants.world_strings import GAME_NAME
@@ -113,6 +113,7 @@ class DungeonClawlerWorld(World):
             ShuffleCombatItems.internal_name,
             ShufflePerks.internal_name,
             Enemysanity.internal_name,
+            TrapDifficulty.internal_name,
             DungeonClawlerDeathlink.internal_name
         )
         options_dict.update({
