@@ -3,7 +3,7 @@ from typing import Dict, List
 from BaseClasses import ItemClassification
 from .constants.fighters import all_fighters
 from .constants.combat_items import all_combat_items
-from .constants.filler_names import Filler
+from .constants.filler_names import Filler, all_fillers, all_traps
 from .constants.lucky_paws import all_lucky_paws
 from .constants.perks import all_perk_items
 from .items_classes import ItemData
@@ -37,8 +37,22 @@ def create_perk_items_data(start_index: int) -> List[ItemData]:
 
 
 def create_inventory_size_items_data(start_index: int) -> List[ItemData]:
-    return [ItemData(start_index + 0, "Combat Inventory Size", progression),
-            ItemData(start_index + 1, "Perk Inventory Size", progression)]
+    return [ItemData(start_index + 0, "Combat Inventory Size", ItemClassification.useful),
+            ItemData(start_index + 1, "Perk Inventory Size", ItemClassification.useful)]
+
+
+filler_items = [filler_item for filler_item in all_fillers]
+
+
+def create_filler_items_data(start_index: int) -> List[ItemData]:
+    return [ItemData(start_index + i, filler_item, ItemClassification.filler) for i, filler_item in enumerate(filler_items)]
+
+
+trap_items = [trap_item for trap_item in all_traps]
+
+
+def create_trap_items_data(start_index: int) -> List[ItemData]:
+    return [ItemData(start_index + i, trap_item, progression) for i, trap_item in enumerate(trap_items)]
 
 
 progression = ItemClassification.progression
@@ -48,8 +62,9 @@ all_items: List[ItemData] = [
     *create_lucky_paws_items_data(101),
     *create_combat_items_data(201),
     *create_perk_items_data(401),
-    *create_inventory_size_items_data(401),
-    ItemData(601, Filler.starting_money, ItemClassification.filler),
+    *create_inventory_size_items_data(601),
+    *create_filler_items_data(801),
+    *create_trap_items_data(1001),
 ]
 
 

@@ -7,8 +7,8 @@ from .constants.combat_items import all_combat_items
 from .constants.lucky_paws import all_lucky_paws
 from .constants.perks import all_perk_items
 from .items_classes import DungeonClawlerItem
-from .options import DungeonClawlerOptions, ShuffleCombatItems, ShufflePerks, ShuffleFighters
-from .constants.filler_names import Filler
+from .options import DungeonClawlerOptions, ShuffleCombatItems, ShufflePerks, ShuffleFighters, TrapDifficulty
+from .constants.filler_names import all_fillers, all_traps
 
 
 def create_items(world, world_options: DungeonClawlerOptions, locations_count: int, items_to_exclude: List[str], random: Random) -> List[DungeonClawlerItem]:
@@ -92,5 +92,7 @@ def create_fillers(created_items, world, world_options: DungeonClawlerOptions, l
 
 
 def get_valid_filler_items(world_options: DungeonClawlerOptions) -> List[str]:
-    valid_filler = [Filler.starting_money]
+    valid_filler = [filler_item for filler_item in all_fillers]
+    if world_options.trap_difficulty > TrapDifficulty.option_no_traps:
+        valid_filler.extend([trap_item for trap_item in all_traps])
     return valid_filler
