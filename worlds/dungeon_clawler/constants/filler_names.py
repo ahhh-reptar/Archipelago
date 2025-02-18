@@ -17,7 +17,7 @@ class Filler:
 
 
 class Trap:
-    spike_trap = create_filler("Spike Trap")
-    meli_bomb_trap = create_filler("Meli-Bomb Trap")
-    poisonous_spore_trap = create_filler("Poisonous Spore Trap")
-    ink_trap = create_filler("Ink Trap")
+    spike_trap = create_trap("Spike Trap")
+    meli_bomb_trap = create_trap("Meli-Bomb Trap")
+    poisonous_spore_trap = create_trap("Poisonous Spore Trap")
+    ink_trap = create_trap("Ink Trap")
