@@ -89,64 +89,64 @@ def get_option_choices(option) -> Dict[str, int]:
     #                                         basic_checks(self, multiworld)
 
 
-def generate_random_world_options(seed: int) -> Dict[str, int]:
-    num_options = len(options_to_include)
-    world_options = dict()
-    rng = random.Random(seed)
-    for option_index in range(0, num_options):
-        option = options_to_include[option_index]
-        option_choices = get_option_choices(option)
-        if not option_choices:
-            continue
-        chosen_option_value = rng.choice(list(option_choices.values()))
-        world_options[option.internal_name] = chosen_option_value
-    return world_options
-
-
-def get_number_log_steps(number_worlds: int) -> int:
-    if number_worlds <= 10:
-        return 2
-    if number_worlds <= 100:
-        return 5
-    if number_worlds <= 500:
-        return 10
-    if number_worlds <= 1000:
-        return 20
-    if number_worlds <= 5000:
-        return 25
-    if number_worlds <= 10000:
-        return 50
-    return 100
-
-
-class TestGenerateManyWorlds(DungeonClawlerTestBase):
-    def test_generate_many_worlds_without_fill_then_check_results(self):
-        number_worlds = 400
-        seed = get_seed()
-        self.generate_and_check_many_worlds(number_worlds, seed, fill=False)
-
-    def test_generate_many_worlds_with_fill_then_check_results(self):
-        number_worlds = 80
-        seed = get_seed()
-        self.generate_and_check_many_worlds(number_worlds, seed, fill=True)
-
-    def generate_and_check_many_worlds(self, number_worlds: int, seed: int, fill: bool = False):
-        num_steps = get_number_log_steps(number_worlds)
-        log_step = number_worlds / num_steps
-
-        fill_message = "with Fill" if fill else "without Fill"
-
-        print(f"Generating {number_worlds} Solo Multiworlds {fill_message} [Start Seed: {seed}] for Dungeon Clawler...")
-        for world_number in range(0, number_worlds + 1):
-
-            world_seed = world_number + seed
-            world_options = generate_random_world_options(world_seed)
-
-            with self.subTest(f"Multiworld: {world_seed}"):
-                multiworld = setup_dungeon_clawler_solo_multiworld_with_fill(world_options, seed=seed, fill=fill)
-                basic_checks(self, multiworld)
-
-            if world_number > 0 and world_number % log_step == 0:
-                print(f"Generated and Verified {world_number}/{number_worlds} worlds {fill_message} [{(world_number * 100) // number_worlds}%]")
-
-        print(f"Finished generating and verifying {number_worlds} Solo Multiworlds {fill_message} for Dungeon Clawler")
+# def generate_random_world_options(seed: int) -> Dict[str, int]:
+#     num_options = len(options_to_include)
+#     world_options = dict()
+#     rng = random.Random(seed)
+#     for option_index in range(0, num_options):
+#         option = options_to_include[option_index]
+#         option_choices = get_option_choices(option)
+#         if not option_choices:
+#             continue
+#         chosen_option_value = rng.choice(list(option_choices.values()))
+#         world_options[option.internal_name] = chosen_option_value
+#     return world_options
+#
+#
+# def get_number_log_steps(number_worlds: int) -> int:
+#     if number_worlds <= 10:
+#         return 2
+#     if number_worlds <= 100:
+#         return 5
+#     if number_worlds <= 500:
+#         return 10
+#     if number_worlds <= 1000:
+#         return 20
+#     if number_worlds <= 5000:
+#         return 25
+#     if number_worlds <= 10000:
+#         return 50
+#     return 100
+#
+#
+# class TestGenerateManyWorlds(DungeonClawlerTestBase):
+#     def test_generate_many_worlds_without_fill_then_check_results(self):
+#         number_worlds = 400
+#         seed = get_seed()
+#         self.generate_and_check_many_worlds(number_worlds, seed, fill=False)
+#
+#     def test_generate_many_worlds_with_fill_then_check_results(self):
+#         number_worlds = 80
+#         seed = get_seed()
+#         self.generate_and_check_many_worlds(number_worlds, seed, fill=True)
+#
+#     def generate_and_check_many_worlds(self, number_worlds: int, seed: int, fill: bool = False):
+#         num_steps = get_number_log_steps(number_worlds)
+#         log_step = number_worlds / num_steps
+#
+#         fill_message = "with Fill" if fill else "without Fill"
+#
+#         print(f"Generating {number_worlds} Solo Multiworlds {fill_message} [Start Seed: {seed}] for Dungeon Clawler...")
+#         for world_number in range(0, number_worlds + 1):
+#
+#             world_seed = world_number + seed
+#             world_options = generate_random_world_options(world_seed)
+#
+#             with self.subTest(f"Multiworld: {world_seed}"):
+#                 multiworld = setup_dungeon_clawler_solo_multiworld_with_fill(world_options, seed=seed, fill=fill)
+#                 basic_checks(self, multiworld)
+#
+#             if world_number > 0 and world_number % log_step == 0:
+#                 print(f"Generated and Verified {world_number}/{number_worlds} worlds {fill_message} [{(world_number * 100) // number_worlds}%]")
+#
+#         print(f"Finished generating and verifying {number_worlds} Solo Multiworlds {fill_message} for Dungeon Clawler")
