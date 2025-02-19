@@ -91,7 +91,7 @@ class MaximumCombatItems(Range):
     """
     internal_name = "max_combat_items"
     display_name = "Maximum Combat Items"
-    default = 150
+    default = 100
     range_start = 20
     range_end = 250
 
@@ -104,7 +104,7 @@ class MaximumPerks(Range):
     """
     internal_name = "max_perks"
     display_name = "Maximum Perks"
-    default = 150
+    default = 100
     range_start = 20
     range_end = 250
 
