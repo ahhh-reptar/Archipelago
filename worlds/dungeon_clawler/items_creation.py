@@ -32,8 +32,10 @@ def create_characters(created_items, world, world_options: DungeonClawlerOptions
 
 
 def create_inventory_sizes(created_items, world, world_options: DungeonClawlerOptions, locations_count: int, random: Random) -> None:
-    created_items.extend([world.create_item("Combat Inventory Size", ItemClassification.useful) for i in range(world_options.extra_inventory_sizes.value)])
-    created_items.extend([world.create_item("Perk Inventory Size", ItemClassification.useful) for i in range(world_options.extra_inventory_sizes.value)])
+    if world_options.shuffle_combat_items == ShuffleCombatItems.option_true:
+        created_items.extend([world.create_item("Combat Inventory Size", ItemClassification.useful) for i in range(world_options.extra_inventory_sizes.value)])
+    if world_options.shuffle_combat_items == ShufflePerks.option_true:
+        created_items.extend([world.create_item("Perk Inventory Size", ItemClassification.useful) for i in range(world_options.extra_inventory_sizes.value)])
 
 
 def create_combat_items_and_perks(created_items, world, world_options: DungeonClawlerOptions, locations_count: int, items_to_exclude: List[str], random: Random) -> None:
