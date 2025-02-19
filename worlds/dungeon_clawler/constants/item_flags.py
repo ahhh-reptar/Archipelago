@@ -21,3 +21,4 @@ class ItemFlags:
     added_by_other = "Added By Other"
     metal = "Metal"
     wood = "Wood"
+    ethereal = "Ethereal"

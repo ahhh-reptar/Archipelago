@@ -56,9 +56,11 @@ class DungeonClawlerWorld(World):
         starting_items = []
         if self.options.shuffle_combat_items == ShuffleCombatItems.option_true:
             valid_combat_items = get_valid_combat_items(self.options, self.random)
-            damage_items = [item for item in valid_combat_items if ItemFlags.damage in combat_items_by_name[item].flags]
+            repeatable_items = [item for item in valid_combat_items if ItemFlags.ethereal not in combat_items_by_name[item].flags]
+            damage_items = [item for item in repeatable_items if ItemFlags.damage in combat_items_by_name[item].flags]
             starting_items.extend(self.random.sample(damage_items, k=2))
-            number_starting_items = 3
+            starting_items.extend(self.random.sample(repeatable_items, k=1))
+            number_starting_items = 2
             starting_items.extend(self.random.sample(valid_combat_items, k=number_starting_items))
 
         if self.options.shuffle_fighters != ShuffleFighters.option_none:
