@@ -52,7 +52,7 @@ trap_items = [trap_item for trap_item in all_traps]
 
 
 def create_trap_items_data(start_index: int) -> List[ItemData]:
-    return [ItemData(start_index + i, trap_item, progression) for i, trap_item in enumerate(trap_items)]
+    return [ItemData(start_index + i, trap_item, ItemClassification.trap) for i, trap_item in enumerate(trap_items)]
 
 
 progression = ItemClassification.progression
