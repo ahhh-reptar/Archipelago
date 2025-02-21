@@ -81,7 +81,7 @@ class CombatItem:
     poison_grenade = CombatItemData("Poison Grenade", number_big_items, [ItemFlags.damage, ItemFlags.poison])
     shuriken = CombatItemData("Shuriken", number_big_items, [ItemFlags.poison, ItemFlags.metal])
     cactus = CombatItemData("Cactus", number_big_items, [ItemFlags.self_damage, ItemFlags.block])
-    stressball_spikes = CombatItemData("Stressball Spikes", number_small_items, [ItemFlags.self_damage, ItemFlags.added_by_other], False)
+    # stressball_spikes = CombatItemData("Stressball Spikes", number_small_items, [ItemFlags.self_damage, ItemFlags.added_by_other], False)
     spiky_stressball = CombatItemData("Spiky Stressball", number_big_items, [ItemFlags.strength, ItemFlags.self_damage])
     glass_cleaner = CombatItemData("Glass Cleaner", number_buff_items, [ItemFlags.ethereal], False)
     heat_gun = CombatItemData("Heat Gun", number_buff_items, [ItemFlags.more_items])
