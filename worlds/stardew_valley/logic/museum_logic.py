@@ -9,6 +9,8 @@ from ..strings.tool_names import ToolMaterial
 
 gems = (Mineral.amethyst, Mineral.aquamarine, Mineral.emerald, Mineral.ruby, Mineral.topaz)
 
+gems = (Mineral.amethyst, Mineral.aquamarine, Mineral.emerald, Mineral.ruby, Mineral.topaz)
+
 
 class MuseumLogicMixin(BaseLogicMixin):
     def __init__(self, *args, **kwargs):
