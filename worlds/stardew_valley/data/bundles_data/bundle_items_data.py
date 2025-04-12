@@ -422,5 +422,5 @@ mystery_box = BundleItem(Consumable.mystery_box)
 gold_mystery_box = BundleItem(Consumable.gold_mystery_box, source=BundleItem.Sources.masteries)
 calico_egg = BundleItem(Currency.calico_egg)
 
-# apple_slices = BundleItem(ArtisanGood.specific_dried_fruit(Fruit.apple))
-# infinity_crown = BundleItem(Hat.infinity_crown)
+apple_slices = BundleItem(ArtisanGood.specific_dried_fruit(Fruit.apple))
+infinity_crown = BundleItem(Hat.infinity_crown)
