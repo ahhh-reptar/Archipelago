@@ -14,11 +14,15 @@ from .logic.logic import StardewLogic
 from .stardew_rule.rule_explain import explain, ExplainMode, RuleExplanation
 
 try:
-    from worlds.tracker.TrackerClient import TrackerGameContext, TrackerCommandProcessor as ClientCommandProcessor, UT_VERSION, updateTracker  # noqa
+    from worlds.tracker.TrackerClient import TrackerGameContext, TrackerCommandProcessor, UT_VERSION, updateTracker  # noqa
 
     tracker_loaded = True
 except ImportError:
     from CommonClient import CommonContext, ClientCommandProcessor
+
+
+    class TrackerCommandProcessor(ClientCommandProcessor):
+        pass
 
 
     class TrackerGameContextMixin:
@@ -26,14 +30,9 @@ except ImportError:
         multiworld: MultiWorld
         player_id: int
 
-        def build_gui(self, manager):
-            ...
-
-        def run_generator(self):
-            ...
-
-        def load_kv(self):
-            ...
+        @staticmethod
+        def run_generator():
+            logger.warning("Could not find Universal Tracker.")
 
 
     class TrackerGameContext(CommonContext, TrackerGameContextMixin):
@@ -44,7 +43,7 @@ except ImportError:
     UT_VERSION = "Not found"
 
 
-class StardewCommandProcessor(ClientCommandProcessor):
+class StardewCommandProcessor(TrackerCommandProcessor):
     ctx: StardewClientContext
 
     @mark_raw
@@ -64,6 +63,7 @@ class StardewCommandProcessor(ClientCommandProcessor):
                 rule = logic.region.can_reach_location(result)
                 expl = explain(rule, get_updated_state(self.ctx), expected=None, mode=ExplainMode.CLIENT)
             else:
+                self.ctx.ui.last_autofillable_command = "/explain"
                 logger.warning(response)
                 return
 
@@ -82,6 +82,7 @@ class StardewCommandProcessor(ClientCommandProcessor):
             rule = logic.has(result)
             expl = explain(rule, get_updated_state(self.ctx), expected=None, mode=ExplainMode.CLIENT)
         else:
+            self.ctx.ui.last_autofillable_command = "/explain_item"
             logger.warning(response)
             return
 
@@ -91,11 +92,13 @@ class StardewCommandProcessor(ClientCommandProcessor):
     @mark_raw
     def _cmd_explain_missing(self, location: str = ""):
         """Explain what is missing for a location to be in logic. It explains the logic behind a location, while skipping the rules that are already satisfied."""
+        self.ctx.ui.last_autofillable_command = "/explain_missing"
         self.__explain(location, expected=True)
 
     @mark_raw
     def _cmd_explain_how(self, location: str = ""):
         """Explain how a location is in logic. It explains the logic behind the location, while skipping the rules that are not satisfied."""
+        self.ctx.ui.last_autofillable_command = "/explain_how"
         self.__explain(location, expected=False)
 
     def __explain(self, location: str = "", expected: bool | None = None):
@@ -137,14 +140,11 @@ class StardewCommandProcessor(ClientCommandProcessor):
         self.ctx.previous_explanation = expl
         self.ctx.ui.print_json(parse_explanation(expl))
 
-    if not tracker_loaded:
-        del _cmd_explain
-        del _cmd_explain_missing
-
 
 class StardewClientContext(TrackerGameContext):
     game = "Stardew Valley"
-    command_processor = StardewCommandProcessor
+    if tracker_loaded:
+        command_processor = StardewCommandProcessor
     previous_explanation: RuleExplanation | None = None
 
     def make_gui(self):
@@ -226,14 +226,9 @@ def get_updated_state(ctx: TrackerGameContext) -> CollectionState:
 
 async def main(args):
     ctx = StardewClientContext(args.connect, args.password)
-
     ctx.auth = args.name
     ctx.server_task = asyncio.create_task(server_loop(ctx), name="server loop")
-
-    if tracker_loaded:
-        ctx.run_generator()
-    else:
-        logger.warning("Could not find Universal Tracker.")
+    ctx.run_generator()
 
     if gui_enabled:
         ctx.run_gui()
