@@ -445,27 +445,27 @@ def set_walnut_puzzle_rules(logic: StardewLogic, multiworld, player, world_optio
     if WalnutsanityOptionName.puzzles not in world_options.walnutsanity:
         return
 
-    set_location_rule(multiworld, player, "Open Golden Coconut", logic.has(Geode.golden_coconut))
-    set_location_rule(multiworld, player, "Banana Altar", logic.has(Fruit.banana))
-    set_location_rule(multiworld, player, "Leo's Tree", logic.tool.has_tool(Tool.axe))
-    set_location_rule(multiworld, player, "Gem Birds Shrine",
+    set_location_rule(multiworld, player, "Walnutsanity: Open Golden Coconut", logic.has(Geode.golden_coconut))
+    set_location_rule(multiworld, player, "Walnutsanity: Banana Altar", logic.has(Fruit.banana))
+    set_location_rule(multiworld, player, "Walnutsanity: Leo's Tree", logic.tool.has_tool(Tool.axe))
+    set_location_rule(multiworld, player, "Walnutsanity: Gem Birds Shrine",
                       logic.has_all(Mineral.amethyst, Mineral.aquamarine, Mineral.emerald, Mineral.ruby, Mineral.topaz)
                       & logic.region.can_reach_all(Region.island_north, Region.island_west, Region.island_east, Region.island_south))
-    set_location_rule(multiworld, player, "Gourmand Frog Melon", logic.has(Fruit.melon) & logic.region.can_reach(Region.island_west))
-    set_location_rule(multiworld, player, "Gourmand Frog Wheat",
-                      logic.has(Vegetable.wheat) & logic.region.can_reach(Region.island_west) & logic.region.can_reach_location("Gourmand Frog Melon"))
-    set_location_rule(multiworld, player, "Gourmand Frog Garlic",
-                      logic.has(Vegetable.garlic) & logic.region.can_reach(Region.island_west) & logic.region.can_reach_location("Gourmand Frog Wheat"))
-    set_location_rule(multiworld, player, "Whack A Mole", logic.tool.has_tool(Tool.watering_can, ToolMaterial.iridium))
-    set_location_rule(multiworld, player, "Complete Large Animal Collection", logic.walnut.can_complete_large_animal_collection())
-    set_location_rule(multiworld, player, "Complete Snake Collection", logic.walnut.can_complete_snake_collection())
-    set_location_rule(multiworld, player, "Complete Mummified Frog Collection", logic.walnut.can_complete_frog_collection())
-    set_location_rule(multiworld, player, "Complete Mummified Bat Collection", logic.walnut.can_complete_bat_collection())
-    set_location_rule(multiworld, player, "Purple Flowers Island Survey", logic.walnut.can_start_field_office)
-    set_location_rule(multiworld, player, "Purple Starfish Island Survey", logic.walnut.can_start_field_office)
-    set_location_rule(multiworld, player, "Protruding Tree Walnut", logic.combat.has_slingshot)
-    set_location_rule(multiworld, player, "Starfish Tide Pool", logic.tool.has_fishing_rod())
-    set_location_rule(multiworld, player, "Mermaid Song", logic.has(Furniture.flute_block))
+    set_location_rule(multiworld, player, "Walnutsanity: Gourmand Frog Melon", logic.has(Fruit.melon) & logic.region.can_reach(Region.island_west))
+    set_location_rule(multiworld, player, "Walnutsanity: Gourmand Frog Wheat",
+                      logic.has(Vegetable.wheat) & logic.region.can_reach(Region.island_west) & logic.region.can_reach_location("Walnutsanity: Gourmand Frog Melon"))
+    set_location_rule(multiworld, player, "Walnutsanity: Gourmand Frog Garlic",
+                      logic.has(Vegetable.garlic) & logic.region.can_reach(Region.island_west) & logic.region.can_reach_location("Walnutsanity: Gourmand Frog Wheat"))
+    set_location_rule(multiworld, player, "Walnutsanity: Whack A Mole", logic.tool.has_tool(Tool.watering_can, ToolMaterial.iridium))
+    set_location_rule(multiworld, player, "Walnutsanity: Complete Large Animal Collection", logic.walnut.can_complete_large_animal_collection())
+    set_location_rule(multiworld, player, "Walnutsanity: Complete Snake Collection", logic.walnut.can_complete_snake_collection())
+    set_location_rule(multiworld, player, "Walnutsanity: Complete Mummified Frog Collection", logic.walnut.can_complete_frog_collection())
+    set_location_rule(multiworld, player, "Walnutsanity: Complete Mummified Bat Collection", logic.walnut.can_complete_bat_collection())
+    set_location_rule(multiworld, player, "Walnutsanity: Purple Flowers Island Survey", logic.walnut.can_start_field_office)
+    set_location_rule(multiworld, player, "Walnutsanity: Purple Starfish Island Survey", logic.walnut.can_start_field_office)
+    set_location_rule(multiworld, player, "Walnutsanity: Protruding Tree Walnut", logic.combat.has_slingshot)
+    set_location_rule(multiworld, player, "Walnutsanity: Starfish Tide Pool", logic.tool.has_fishing_rod())
+    set_location_rule(multiworld, player, "Walnutsanity: Mermaid Song", logic.has(Furniture.flute_block))
 
 
 def set_walnut_bushes_rules(logic, multiworld, player, world_options):
@@ -492,13 +492,13 @@ def set_walnut_repeatable_rules(logic, multiworld, player, world_options):
     if WalnutsanityOptionName.repeatables not in world_options.walnutsanity:
         return
     for i in range(1, 6):
-        set_rule(multiworld.get_location(f"Fishing Walnut {i}", player), logic.tool.has_fishing_rod())
-        set_rule(multiworld.get_location(f"Harvesting Walnut {i}", player), logic.skill.can_get_farming_xp)
-        set_rule(multiworld.get_location(f"Mussel Node Walnut {i}", player), logic.tool.has_tool(Tool.pickaxe))
-        set_rule(multiworld.get_location(f"Volcano Rocks Walnut {i}", player), logic.tool.has_tool(Tool.pickaxe))
-        set_rule(multiworld.get_location(f"Volcano Monsters Walnut {i}", player), logic.combat.has_galaxy_weapon)
-        set_rule(multiworld.get_location(f"Volcano Crates Walnut {i}", player), logic.combat.has_any_weapon)
-    set_rule(multiworld.get_location(f"Tiger Slime Walnut", player), logic.monster.can_kill(Monster.tiger_slime))
+        set_rule(multiworld.get_location(f"Walnutsanity: Fishing Walnut {i}", player), logic.tool.has_fishing_rod())
+        set_rule(multiworld.get_location(f"Walnutsanity: Harvesting Walnut {i}", player), logic.skill.can_get_farming_xp)
+        set_rule(multiworld.get_location(f"Walnutsanity: Mussel Node Walnut {i}", player), logic.tool.has_tool(Tool.pickaxe))
+        set_rule(multiworld.get_location(f"Walnutsanity: Volcano Rocks Walnut {i}", player), logic.tool.has_tool(Tool.pickaxe))
+        set_rule(multiworld.get_location(f"Walnutsanity: Volcano Monsters Walnut {i}", player), logic.combat.has_galaxy_weapon)
+        set_rule(multiworld.get_location(f"Walnutsanity: Volcano Crates Walnut {i}", player), logic.combat.has_any_weapon)
+    set_rule(multiworld.get_location(f"Walnutsanity: Tiger Slime Walnut", player), logic.monster.can_kill(Monster.tiger_slime))
 
 
 def set_cropsanity_rules(logic: StardewLogic, multiworld, player, world_content: StardewContent):
