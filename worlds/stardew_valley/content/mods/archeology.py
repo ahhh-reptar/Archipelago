@@ -38,7 +38,7 @@ register_mod_content_pack(ArchaeologyContentPack(
         Book.digging_like_worms: (
             Tag(ItemTag.BOOK, ItemTag.BOOK_SKILL),
             ArtifactSpotSource(amount=22),  #I'm just copying Jack Be Nimble's chances for now -reptar
- #           other_requirements=(SkillRequirement(ModSkill.archaeology, 2)),
+            other_requirements=(SkillRequirement(ModSkill.archaeology, 2)),
         )
     }
 
