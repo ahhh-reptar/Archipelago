@@ -166,12 +166,16 @@ class TestBooksanityAll(SVTestBase):
         read_location = self.world.get_location("Read Digging Like Worms")
         ship_location = self.world.get_location("Shipsanity: Digging Like Worms")
         self.collect("Shipping Bin")
+        self.collect_months(2)
 
-        self.assertFalse(state.can_reach(read_location))
-        self.assertFalse(state.can_reach(ship_location))
+        self.assertFalse(state.can_reach("Read Digging Like Worms"))
+        self.assertFalse(state.can_reach("Shipsanity: Digging Like Worms"))
 
         self.collect("Archaeology Level")
         self.collect("Archaeology Level")
+
+        self.assertTrue(state.can_reach("Read Digging Like Worms"))
+        self.assertTrue(state.can_reach("Shipsanity: Digging Like Worms"))
 
         self.assert_cannot_reach_location("Read Digging Like Worms")
         self.assert_cannot_reach_location("Shipsanity: Digging Like Worms")

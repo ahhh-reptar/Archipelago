@@ -1,9 +1,8 @@
 from ..game_content import ContentPack, StardewContent
 from ..mod_registry import register_mod_content_pack
 from ...data.artisan import MachineSource
-from ...data.game_item import ItemTag, Tag
 from ...data.harvest import ArtifactSpotSource
-from ...data.requirement import SkillRequirement
+from ...data.requirement import ToolRequirement, BookRequirement, SkillRequirement
 from ...data.skill import Skill
 from ...mods.mod_data import ModNames
 from ...strings.book_names import Book
@@ -11,6 +10,7 @@ from ...strings.craftable_names import ModMachine
 from ...strings.fish_names import ModTrash
 from ...strings.metal_names import all_artifacts, all_fossils
 from ...strings.skill_names import ModSkill
+from ...data.game_item import GenericSource, ItemTag, Tag, CustomRuleSource
 
 
 class ArchaeologyContentPack(ContentPack):
@@ -37,8 +37,8 @@ register_mod_content_pack(ArchaeologyContentPack(
     harvest_sources={
         Book.digging_like_worms: (
             Tag(ItemTag.BOOK, ItemTag.BOOK_SKILL),
-            ArtifactSpotSource(amount=22),            #I'm just copying Jack Be Nimble's chances for now -reptar
-#            SkillRequirement(ModSkill.archaeology, 2),
+            ArtifactSpotSource(amount=22),  #I'm just copying Jack Be Nimble's chances for now -reptar
+            other_requirements=(SkillRequirement(ModSkill.archaeology, 2)),
         )
     }
 
