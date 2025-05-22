@@ -25,6 +25,8 @@ class Book:
     queen_of_sauce_cookbook = "Queen Of Sauce Cookbook"
     price_catalogue = "Price Catalogue"
     the_diamond_hunter = "The Diamond Hunter"
+    # Mod books
+    digging_like_worms = "Digging Like Worms"
 
 
 ordered_lost_books = []
