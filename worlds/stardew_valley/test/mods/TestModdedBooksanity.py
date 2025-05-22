@@ -1,3 +1,4 @@
+from worlds.hk.Extractor import locations
 from worlds.stardew_valley.test.bases import SVTestBase
 from worlds.stardew_valley.options import ExcludeGingerIsland, Booksanity, Shipsanity, Mods
 from worlds.stardew_valley.strings.book_names import Book
@@ -6,21 +7,6 @@ ModSkillBooks = [Book.digging_like_worms]
 ModPowerBooks = []
 #ModLostBooks = [] Gonna comment out all the lost book references
 
-def test_digging_with_worms_require_2_levels(self):
-    state = self.state
-    read_location = self.world.get_location("Read Digging With Worms")
-    ship_location = self.world.get_location("Ship Digging With Worms")
-    self.collect("Shipping Bin")
-
-    self.assertFalse(state.can_reach(read_location))
-    self.assertFalse(state.can_reach(ship_location))
-
-    self.collect("Archaeology Level")
-    self.collect("Archaeology Level")
-
-    self.assertTrue(state.can_reach(read_location))
-    self.assertTrue(state.can_reach(ship_location))
-
 class TestModBooksanityNone(SVTestBase):
     options = {
         ExcludeGingerIsland: ExcludeGingerIsland.option_false,
@@ -28,6 +14,25 @@ class TestModBooksanityNone(SVTestBase):
         Booksanity: Booksanity.option_none,
         Mods: frozenset(Mods.valid_keys)
     }
+
+    def __init__(self, methodName: str = "runTest"):
+        super().__init__(methodName)
+        self.state = locations
+
+    def test_digging_like_worms_require_2_levels(self):
+        state = self.state
+        read_location = self.world.get_location("Read Digging Like Worms")
+        ship_location = self.world.get_location("Shipsanity: Digging Like Worms")
+        self.collect("Shipping Bin")
+
+        self.assertFalse(state.can_reach(read_location))
+        self.assertFalse(state.can_reach(ship_location))
+
+        self.collect("Archaeology Level")
+        self.collect("Archaeology Level")
+
+        self.assertTrue(state.can_reach(read_location))
+        self.assertTrue(state.can_reach(ship_location))
 
     def test_no_ModPowerBooks_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
@@ -78,6 +83,24 @@ class TestModBooksanityPowers(SVTestBase):
         Mods: frozenset(Mods.valid_keys)
     }
 
+    def __init__(self, methodName: str = "runTest"):
+        super().__init__(methodName)
+        self.state = locations
+
+    def test_digging_like_worms_require_2_levels(self):
+        state = self.state
+        read_location = self.world.get_location("Read Digging Like Worms")
+        ship_location = self.world.get_location("Shipsanity: Digging Like Worms")
+        self.collect("Shipping Bin")
+
+        self.assertFalse(state.can_reach(ship_location))
+
+        self.collect("Archaeology Level")
+        self.collect("Archaeology Level")
+
+        self.assertTrue(state.can_reach(read_location))
+        self.assertTrue(state.can_reach(ship_location))
+
     def test_all_ModPowerBooks_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
         for book in ModPowerBooks:
@@ -127,6 +150,25 @@ class TestBooksanityPowersAndSkills(SVTestBase):
         Mods: frozenset(Mods.valid_keys)
     }
 
+    def __init__(self, methodName: str = "runTest"):
+        super().__init__(methodName)
+        self.state = locations
+
+    def test_digging_like_worms_require_2_levels(self):
+        state = self.state
+        read_location = self.world.get_location("Read Digging Like Worms")
+        ship_location = self.world.get_location("Shipsanity: Digging Like Worms")
+        self.collect("Shipping Bin")
+
+        self.assertFalse(state.can_reach(read_location))
+        self.assertFalse(state.can_reach(ship_location))
+
+        self.collect("Archaeology Level")
+        self.collect("Archaeology Level")
+
+        self.assertTrue(state.can_reach(read_location))
+        self.assertTrue(state.can_reach(ship_location))
+
     def test_all_ModPowerBooks_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
         for book in ModPowerBooks:
@@ -175,6 +217,25 @@ class TestBooksanityAll(SVTestBase):
         Booksanity: Booksanity.option_all,
         Mods: frozenset(Mods.valid_keys)
     }
+
+    def __init__(self, methodName: str = "runTest"):
+        super().__init__(methodName)
+        self.state = locations
+
+    def test_digging_like_worms_require_2_levels(self):
+        state = self.state
+        read_location = self.world.get_location("Read Digging Like Worms")
+        ship_location = self.world.get_location("Shipsanity: Digging Like Worms")
+        self.collect("Shipping Bin")
+
+        self.assertFalse(state.can_reach(read_location))
+        self.assertFalse(state.can_reach(ship_location))
+
+        self.collect("Archaeology Level")
+        self.collect("Archaeology Level")
+
+        self.assertTrue(state.can_reach(read_location))
+        self.assertTrue(state.can_reach(ship_location))
 
     def test_all_ModPowerBooks_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
