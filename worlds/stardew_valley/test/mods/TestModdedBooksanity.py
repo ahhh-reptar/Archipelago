@@ -162,23 +162,19 @@ class TestBooksanityAll(SVTestBase):
     }
 
     def test_digging_like_worms_require_2_levels(self):
-        state = self.multiworld.state
         read_location = self.world.get_location("Read Digging Like Worms")
         ship_location = self.world.get_location("Shipsanity: Digging Like Worms")
         self.collect("Shipping Bin")
         self.collect_months(2)
 
-        self.assertFalse(state.can_reach("Read Digging Like Worms"))
-        self.assertFalse(state.can_reach("Shipsanity: Digging Like Worms"))
+        self.assert_cannot_reach_location(read_location)
+        self.assert_cannot_reach_location(ship_location)
 
         self.collect("Archaeology Level")
         self.collect("Archaeology Level")
 
-        self.assertTrue(state.can_reach("Read Digging Like Worms"))
-        self.assertTrue(state.can_reach("Shipsanity: Digging Like Worms"))
-
-        self.assert_cannot_reach_location("Read Digging Like Worms")
-        self.assert_cannot_reach_location("Shipsanity: Digging Like Worms")
+        self.assert_can_reach_location(read_location)
+        self.assert_can_reach_location(ship_location)
 
     def test_all_ModPowerBooks_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
