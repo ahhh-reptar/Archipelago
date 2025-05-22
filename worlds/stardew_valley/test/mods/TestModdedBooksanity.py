@@ -1,5 +1,5 @@
 from worlds.stardew_valley.test.bases import SVTestBase
-from worlds.stardew_valley.options import ExcludeGingerIsland, Booksanity, Shipsanity
+from worlds.stardew_valley.options import ExcludeGingerIsland, Booksanity, Shipsanity, Mods
 from worlds.stardew_valley.strings.book_names import Book
 
 ModSkillBooks = [Book.digging_like_worms]
@@ -60,6 +60,7 @@ class TestModBooksanityPowers(SVTestBase):
         ExcludeGingerIsland: ExcludeGingerIsland.option_false,
         Shipsanity: Shipsanity.option_everything,
         Booksanity: Booksanity.option_power,
+        Mods: frozenset(Mods.valid_keys)
     }
 
     def test_all_ModPowerBooks_locations(self):
@@ -108,6 +109,7 @@ class TestBooksanityPowersAndSkills(SVTestBase):
         ExcludeGingerIsland: ExcludeGingerIsland.option_false,
         Shipsanity: Shipsanity.option_everything,
         Booksanity: Booksanity.option_power_skill,
+        Mods: frozenset(Mods.valid_keys)
     }
 
     def test_all_ModPowerBooks_locations(self):
@@ -156,6 +158,7 @@ class TestBooksanityAll(SVTestBase):
         ExcludeGingerIsland: ExcludeGingerIsland.option_false,
         Shipsanity: Shipsanity.option_everything,
         Booksanity: Booksanity.option_all,
+        Mods: frozenset(Mods.valid_keys)
     }
 
     def test_all_ModPowerBooks_locations(self):
