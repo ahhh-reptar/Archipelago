@@ -173,8 +173,8 @@ class TestBooksanityAll(SVTestBase):
         self.collect("Archaeology Level")
         self.collect("Archaeology Level")
 
-        self.assertTrue(state.can_reach(read_location))
-        self.assertTrue(state.can_reach(ship_location))
+        self.assert_cannot_reach_location("Read Digging Like Worms")
+        self.assert_cannot_reach_location("Shipsanity: Digging Like Worms")
 
     def test_all_ModPowerBooks_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
