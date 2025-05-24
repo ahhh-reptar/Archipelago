@@ -1,10 +1,10 @@
+from worlds.stardew_valley.strings.ap_names.mods.mod_items import ModBooks
 from worlds.stardew_valley.test.bases import SVTestBase
 from worlds.stardew_valley.options import ExcludeGingerIsland, Booksanity, Shipsanity, Mods
 from worlds.stardew_valley.strings.book_names import Book
 
-ModSkillBooks = [Book.digging_like_worms]
+ModSkillBooks = [ModBooks.digging_like_worms]
 ModPowerBooks = []
-#ModLostBooks = [] Gonna comment out all the lost book references
 
 class TestModBooksanityNone(SVTestBase):
     options = {
@@ -14,31 +14,23 @@ class TestModBooksanityNone(SVTestBase):
         Mods: frozenset(Mods.valid_keys)
     }
 
-    def test_no_ModPowerBooks_locations(self):
+    def test_no_modpowerbooks_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
         for book in ModPowerBooks:
             with self.subTest(book):
                 self.assertNotIn(f"Read {book}", location_names)
 
-    def test_no_ModSkillBooks_locations(self):
+    def test_no_modskillbooks_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
         for book in ModSkillBooks:
             with self.subTest(book):
                 self.assertNotIn(f"Read {book}", location_names)
-
-#    def test_no_ModLostBooks_locations(self):
-#        location_names = {location.name for location in self.multiworld.get_locations()}
-#        for book in ModLostBooks:
-#            with self.subTest(book):
-#                self.assertNotIn(f"Read {book}", location_names)
 
     def test_no_power_items(self):
         item_names = {location.name for location in self.multiworld.get_items()}
         for book in ModPowerBooks:
             with self.subTest(book):
                 self.assertNotIn(f"Power: {book}", item_names)
-#        with self.subTest(lost_book):
-#            self.assertNotIn(lost_book, item_names)
 
     def test_can_ship_all_modbooks(self):
         self.collect_everything()
@@ -63,31 +55,23 @@ class TestModBooksanityPowers(SVTestBase):
         Mods: frozenset(Mods.valid_keys)
     }
 
-    def test_all_ModPowerBooks_locations(self):
+    def test_all_modpowerbooks_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
         for book in ModPowerBooks:
             with self.subTest(book):
                 self.assertIn(f"Read {book}", location_names)
 
-    def test_no_ModSkillBooks_locations(self):
+    def test_no_modskillbooks_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
         for book in ModSkillBooks:
             with self.subTest(book):
                 self.assertNotIn(f"Read {book}", location_names)
-
- #   def test_no_ModLostBooks_locations(self):
- #       location_names = {location.name for location in self.multiworld.get_locations()}
- #       for book in ModLostBooks:
- #           with self.subTest(book):
- #               self.assertNotIn(f"Read {book}", location_names)
 
     def test_all_power_items(self):
         item_names = {location.name for location in self.multiworld.get_items()}
         for book in ModPowerBooks:
             with self.subTest(book):
                 self.assertIn(f"Power: {book}", item_names)
-#        with self.subTest(lost_book):
-#            self.assertNotIn(lost_book, item_names)
 
     def test_can_ship_all_books(self):
         self.collect_everything()
@@ -112,31 +96,23 @@ class TestBooksanityPowersAndSkills(SVTestBase):
         Mods: frozenset(Mods.valid_keys)
     }
 
-    def test_all_ModPowerBooks_locations(self):
+    def test_all_modpowerbooks_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
         for book in ModPowerBooks:
             with self.subTest(book):
                 self.assertIn(f"Read {book}", location_names)
 
-    def test_all_ModSkillBooks_locations(self):
+    def test_all_modskillbooks_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
         for book in ModSkillBooks:
             with self.subTest(book):
                 self.assertIn(f"Read {book}", location_names)
-
-#    def test_no_ModLostBooks_locations(self):
-#        location_names = {location.name for location in self.multiworld.get_locations()}
-#        for book in ModLostBooks:
-#            with self.subTest(book):
-#                self.assertNotIn(f"Read {book}", location_names)
 
     def test_all_power_items(self):
         item_names = {location.name for location in self.multiworld.get_items()}
         for book in ModPowerBooks:
             with self.subTest(book):
                 self.assertIn(f"Power: {book}", item_names)
-#        with self.subTest(lost_book):
-#            self.assertNotIn(lost_book, item_names)
 
     def test_can_ship_all_books(self):
         self.collect_everything()
@@ -176,31 +152,23 @@ class TestBooksanityAll(SVTestBase):
         self.assert_can_reach_location(read_location)
         self.assert_can_reach_location(ship_location)
 
-    def test_all_ModPowerBooks_locations(self):
+    def test_all_modpowerbooks_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
         for book in ModPowerBooks:
             with self.subTest(book):
                 self.assertIn(f"Read {book}", location_names)
 
-    def test_all_ModSkillBooks_locations(self):
+    def test_all_modskillbooks_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
         for book in ModSkillBooks:
             with self.subTest(book):
                 self.assertIn(f"Read {book}", location_names)
-
-#    def test_all_ModLostBooks_locations(self):
-#        location_names = {location.name for location in self.multiworld.get_locations()}
-#        for book in ModLostBooks:
-#            with self.subTest(book):
-#                self.assertIn(f"Read {book}", location_names)
 
     def test_all_power_items(self):
         item_names = {location.name for location in self.multiworld.get_items()}
         for book in ModPowerBooks:
             with self.subTest(book):
                 self.assertIn(f"Power: {book}", item_names)
-#        with self.subTest(lost_book):
-#            self.assertIn(lost_book, item_names)
 
     def test_can_ship_all_books(self):
         self.collect_everything()
