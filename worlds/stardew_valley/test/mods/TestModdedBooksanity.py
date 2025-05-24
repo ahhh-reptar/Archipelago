@@ -14,13 +14,13 @@ class TestModBooksanityNone(SVTestBase):
         Mods: frozenset(Mods.valid_keys)
     }
 
-    def test_no_modpowerbooks_locations(self):
+    def test_no_mod_power_books_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
         for book in ModPowerBooks:
             with self.subTest(book):
                 self.assertNotIn(f"Read {book}", location_names)
 
-    def test_no_modskillbooks_locations(self):
+    def test_no_mod_skill_books_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
         for book in ModSkillBooks:
             with self.subTest(book):
@@ -32,7 +32,7 @@ class TestModBooksanityNone(SVTestBase):
             with self.subTest(book):
                 self.assertNotIn(f"Power: {book}", item_names)
 
-    def test_can_ship_all_modbooks(self):
+    def test_can_ship_all_mod_books(self):
         self.collect_everything()
         shipsanity_prefix = "Shipsanity: "
         for location in self.multiworld.get_locations():
@@ -55,13 +55,13 @@ class TestModBooksanityPowers(SVTestBase):
         Mods: frozenset(Mods.valid_keys)
     }
 
-    def test_all_modpowerbooks_locations(self):
+    def test_all_modp_ower_books_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
         for book in ModPowerBooks:
             with self.subTest(book):
                 self.assertIn(f"Read {book}", location_names)
 
-    def test_no_modskillbooks_locations(self):
+    def test_no_mod_skill_books_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
         for book in ModSkillBooks:
             with self.subTest(book):
@@ -96,13 +96,13 @@ class TestBooksanityPowersAndSkills(SVTestBase):
         Mods: frozenset(Mods.valid_keys)
     }
 
-    def test_all_modpowerbooks_locations(self):
+    def test_all_mod_power_books_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
         for book in ModPowerBooks:
             with self.subTest(book):
                 self.assertIn(f"Read {book}", location_names)
 
-    def test_all_modskillbooks_locations(self):
+    def test_all_mod_skill_books_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
         for book in ModSkillBooks:
             with self.subTest(book):
@@ -152,13 +152,13 @@ class TestBooksanityAll(SVTestBase):
         self.assert_can_reach_location(read_location)
         self.assert_can_reach_location(ship_location)
 
-    def test_all_modpowerbooks_locations(self):
+    def test_all_mod_power_books_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
         for book in ModPowerBooks:
             with self.subTest(book):
                 self.assertIn(f"Read {book}", location_names)
 
-    def test_all_modskillbooks_locations(self):
+    def test_all_mod_skill_books_locations(self):
         location_names = {location.name for location in self.multiworld.get_locations()}
         for book in ModSkillBooks:
             with self.subTest(book):
