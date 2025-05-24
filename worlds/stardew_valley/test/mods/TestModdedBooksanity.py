@@ -1,7 +1,6 @@
-from worlds.stardew_valley.strings.ap_names.mods.mod_items import ModBooks
-from worlds.stardew_valley.test.bases import SVTestBase
-from worlds.stardew_valley.options import ExcludeGingerIsland, Booksanity, Shipsanity, Mods
-from worlds.stardew_valley.strings.book_names import Book
+from ...strings.ap_names.mods.mod_items import ModBooks
+from ..bases import SVTestBase
+from ...options import ExcludeGingerIsland, Booksanity, Shipsanity, Mods
 
 ModSkillBooks = [ModBooks.digging_like_worms]
 ModPowerBooks = []
