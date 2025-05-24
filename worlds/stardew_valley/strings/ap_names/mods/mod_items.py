@@ -60,5 +60,5 @@ class SVERunes:
 
     nexus_items: List[str] = [nexus_farm, nexus_wizard, nexus_spring, nexus_aurora, nexus_guild, nexus_junimo, nexus_outpost]
 
-class ModBooks:  #this absolutely does nothing right now
+class ModBooks:
     digging_like_worms = "Digging Like Worms"
