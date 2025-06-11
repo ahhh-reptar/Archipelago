@@ -14,7 +14,7 @@ class TestAuroraVineyard(SVTestBase):
 
     def test_need_tablet_to_do_quest(self):
         self.collect("Starfruit Seeds")
-        self.collect("Bus Repair")
+        self.collect(Transportation.bus_repair)
         self.collect("Shipping Bin")
         self.collect("Summer")
         location_name = ModQuest.AuroraVineyard
