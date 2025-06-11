@@ -1,5 +1,6 @@
 from ..bases import SVTestBase
 from ...options import SeasonRandomization, Fishsanity, ExcludeGingerIsland, SkillProgression, ToolProgression, ElevatorProgression, SpecialOrderLocations
+from ...strings.ap_names.transport_names import Transportation
 from ...strings.fish_names import Fish
 
 
