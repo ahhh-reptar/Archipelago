@@ -3986,3 +3986,115 @@ id,region,name,tags,content_packs
 58247,Shipping,Shipsanity: Snatcher Worm,SHIPSANITY,Stardew Valley Expanded
 58248,Shipping,Shipsanity: Digging Like Worms,SHIPSANITY,Archaeology
 59000,Farm,Read Digging Like Worms,"BOOKSANITY,BOOKSANITY_SKILL",Archaeology
+60000,Farm,Drink Aegis Elixir,"EATSANITY,EATSANITY_SHOP",Stardew Valley Expanded
+60001,Farm,Drink Aged Blue Moon Wine,"EATSANITY,EATSANITY_SHOP",Stardew Valley Expanded
+60002,Farm,Eat Alligator,"EATSANITY,EATSANITY_FISHING",Stardew Valley Expanded
+60003,Farm,Eat Ancient Fiber,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
+60004,Farm,Drink Armor Elixir,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60005,Farm,Eat Arrowhead Shark,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60006,Farm,Eat Baby Lunaloo,"EATSANITY,EATSANITY_FISH,GINGER_ISLAND", Stardew Valley Expanded
+60007,Farm,Eat Baked Berry Oatmeal,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60008,Farm,Eat Baked Potato,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60009,Farm,Drink Barbarian Elixir,"EATSANITY,EATSANITY_SHOP",Stardew Valley Expanded
+60010,Farm,Eat Barred Knifejaw,"EATSANITY,EATSANITY_FISH,GINGER_ISLAND",Stardew Valley Expanded
+60011,Farm,Eat Bearberry,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
+60012,Farm,Eat Big Bark Burger,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60013,Farm,Drink Birch Water,"EATSANITY,EATSANITY_ARTISAN",Stardew Valley Expanded
+60014,Farm,Drink Birch Syrup,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60015,Farm,Drink Bombardier Elixir,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60016,Farm,Drink Blue Moon Wine,"EATSANITY,EATSANITY_SHOP",Stardew Valley Expanded
+60017,Farm,Eat Blue Tang,"EATSANITY,EATSANITY_FISH,GINGER_ISLAND",Stardew Valley Expanded
+60018,Farm,Eat Bonefish,"EATSANTIY,EATSANITY_FISH",Stardew Valley Expanded
+60019,Farm,Eat Bull Trout,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60020,Farm,Eat Butter,"EATSANITY,EATSANITY_ARTISAN",Stardew Valley Expanded
+60021,Farm,Eat Butterfish,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60022,Farm,Eat Butternut Squash,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
+60023,Farm,Eat Candy,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60024,Farm,Eat Cheese Charcuterie,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60025,Farm,Eat Chocolate Truffle Bar,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60026,Farm,Eat Clownfish,"EATSANITY,EATSANITY_FISH,GINGER_ISLAND",Stardew Valley Expanded
+60027,Farm,Eat Cucumber,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
+60028,Farm,Eat Daggerfish,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60029,Farm,Eat Dewdrop Berry,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
+60030,Farm,Eat Dulse Seaweed,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60031,Farm,Eat Ferngill Primrose,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
+60032,Farm,Eat Fiber Goby,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60033,Farm,Eat Fish Dumpling,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60034,Farm,Eat Flower Cookie,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60035,Farm,Eat Frog,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60036,Farm,Eat Frog Legs,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60037,Farm,Eat Gar,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60038,Farm,Eat Gingerbread Man,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60039,Farm,Eat Glazed Butterfish,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60040,Farm,Eat Glazed Pear,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60041,Farm,Eat Gold Carrot,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
+60042,Farm,Eat Golden Goose Egg,"EATSANITY,EATSANITY_ARTISAN",Stardew Valley Expanded
+60043,Farm,Eat Goldenfish,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60044,Farm,Eat Goldenrod,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
+60045,Farm,Eat Goldfish,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60046,Farm,Eat Goose Egg,"EATSANITY,EATSANITY_ARTISAN",Stardew Valley Expanded
+60047,Farm,Eat Goose Mayonnaise,"EATSANITY,EATSANITY_ARTISAN",Stardew Valley Expanded
+60048,Farm,Eat Grampleton Orange Chicken,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60049,Farm,Eat Grass Carp,"EATSANTIY,EATSANITY_FISH",Stardew Valley Expanded
+60050,Farm,Drink Gravity Elixir,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60051,Farm,Eat Green Mushroom,EATSANITY,Stardew Valley Expanded
+60052,Farm,Eat Grilled Cheese Sandwich,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60053,Farm,Drink Haste Elixir,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60054,Farm,Drink Hero Elixir,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60055,Farm,Eat Highlands Bass,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60056,Farm,Eat Honey Jar,"EATSANITY,EATSANITY_ARTISAN",Stardew Valley Expanded
+60057,Farm,Eat Ice Cream Sundae,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60058,Farm,Eat King Salmon,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60059,Farm,Eat Kittyfish,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60060,Farm,Drink Lightning Elixir,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60061,Farm,Eat Lunaloo,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60062,Farm,Drink Marsh Tonic,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60063,Farm,Eat Mega Purple Mushroom,EATSANITY,Stardew Valley Expanded
+60064,Farm,Eat Minnow,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60065,Farm,Eat Mixed Berry Pie,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60066,Farm,Eat Monster Fruit,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
+60067,Farm,Eat Monster Mushroom,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
+60068,Farm,Eat Mushroom Berry Rice,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60069,Farm,Eat Mushroom Colony,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
+60070,Farm,Eat Nectarine,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
+60071,Farm,Eat Nectarine Fruit Bread,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60072,Farm,Eat Ocean Sunfish,"EATSANITY,EATSANITY_FISH,GINGER_ISLAND",Stardew Valley Expanded
+60073,Farm,Eat Pear,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
+60074,Farm,Eat Persimmon,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
+60075,Farm,Eat Pineapple Custard Crepe,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60076,Farm,Eat Puppyfish,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60077,Farm,Eat Prismatic Pop,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60078,Farm,Eat Ramen,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60079,Farm,Eat Salal Berry,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
+60080,Farm,Eat Sea Sponge,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60081,Farm,Eat Seahorse,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60082,Farm,Eat Seaweed Salad,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60083,Farm,Eat Seed Cookie,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60084,Farm,Eat Shark,"EATSANITY,EATSANITY_FISH,GINGER_ISLAND",Stardew Valley Expanded
+60085,Farm,Eat Snatcher Worm,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60086,Farm,Drink Sports Drink,"EATSANITY,EATSANITY_SHOP",Stardew Valley Expanded
+60087,Farm,Eat Stamina Capsule,"EATSANITY,EATSANITY_SHOP",Stardew Valley Expanded
+60088,Farm,Eat Stuffed Persimmon,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60089,Farm,Eat Swamp Crab,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60090,Farm,Eat Sweet Potato,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
+60091,Farm,Eat Tadpole,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60092,Farm,Eat Thistle,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
+60093,Farm,Eat Vegan Cone,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60094,Farm,Eat Void Delight,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60095,Farm,Eat Void Salmon Sushi,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60096,Farm,Eat Water Grub,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60097,Farm,Eat Winter Star Rose,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
+60098,Farm,Eat Wolf Snapper,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
+60099,Farm,Eat Diamond Carp,"EATSANITY,EATSANITY_FISH,EATSANITY_POISONOUS",Stardew Valley Expanded
+60100,Farm,Eat Meteor Carp,"EATSANITY,EATSANITY_FISH,EATSANITY_POISONOUS",Stardew Valley Expanded
+60101,Farm,Eat Poison Mushroom,"EATSANITY,EATSANITY_FISH,EATSANITY_POISONOUS",Stardew Valley Expanded
+60102,Farm,Eat Radioactive Bass,"EATSANITY,EATSANITY_FISH,EATSANITY_POISONOUS",Stardew Valley Expanded
+60103,Farm,Eat Red Baneberry,"EATSANITY,EATSANITY_FISH,EATSANITY_POISONOUS",Stardew Valley Expanded
+60104,Farm,Eat Shiny Lunaloo,"EATSANITY,EATSANITY_FISH,EATSANITY_POISONOUS",Stardew Valley Expanded
+60105,Farm,Eat Slime Berry,"EATSANITY,EATSANITY_CROP,EATSANITY_POISONOUS",Stardew Valley Expanded
+60106,Farm,Eat Starffish,"EATSANITY,EATSANITY_FISH,EATSANITY_POISONOUS",Stardew Valley Expanded
+60107,Farm,Eat Torpedo Trout,"EATSANITY,EATSANITY_FISH,EATSANITY_POISONOUS",Stardew Valley Expanded
+60108,Farm,Eat Undeadfish,"EATSANITY,EATSANITY_FISH,EATSANITY_POISONOUS",Stardew Valley Expanded
+60109,Farm,Eat Viper Eel,"EATSANITY,EATSANITY_FISH,EATSANITY_POISONOUS",Stardew Valley Expanded
+60110,Farm,Eat Void Eel,"EATSANITY,EATSANITY_FISH,EATSANITY_POISONOUS",Stardew Valley Expanded
+60111,Farm,Eat Void Root,"EATSANITY,EATSANITY_CROP,EATSANITY_POISONOUS",Stardew Valley Expanded
