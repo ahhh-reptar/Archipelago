@@ -178,7 +178,7 @@ starfish = create_fish(SVEFish.starfish, ginger_island_ocean + ocean, season.all
 swamp_crab = create_fish(SVEFish.swamp_crab, forbidden_maze, season.all_seasons, 35, mod_name=ModNames.sve)
 tadpole = create_fish(SVEFish.tadpole, mountain_lake, season.spring + season.summer, 3, mod_name=ModNames.sve)
 torpedo_trout = create_fish(SVEFish.torpedo_trout, fable_reef, season.all_seasons, 70, mod_name=ModNames.sve)
-turretfish = create_fish(SVEFish.turretfish, fable_reef, season.all_seasons, 999, mod_name=ModNames.sve)
+turretfish = create_fish(SVEFish.turretfish, fable_reef, season.all_seasons, 999, True, False, mod_name=ModNames.sve)
 undeadfish = create_fish(SVEFish.undeadfish, crimson_badlands, season.all_seasons, 80, mod_name=ModNames.sve)
 viper_eel = create_fish(SVEFish.viper_eel, fable_reef, season.all_seasons, 80, mod_name=ModNames.sve)
 void_eel = create_fish(SVEFish.void_eel, witch_swamp, season.all_seasons, 100, mod_name=ModNames.sve)
