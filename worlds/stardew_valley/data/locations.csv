@@ -4037,7 +4037,7 @@ id,region,name,tags,content_packs
 60048,Farm,Eat Grampleton Orange Chicken,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
 60049,Farm,Eat Grass Carp,"EATSANTIY,EATSANITY_FISH",Stardew Valley Expanded
 60050,Farm,Drink Gravity Elixir,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
-60051,Farm,Eat Green Mushroom,EATSANITY,Stardew Valley Expanded
+60051,Farm,Eat Green Mushroom,"EATSANITY,EATSANITY_MONSTER_DROPS",Stardew Valley Expanded
 60052,Farm,Eat Grilled Cheese Sandwich,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
 60053,Farm,Drink Haste Elixir,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
 60054,Farm,Drink Hero Elixir,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
@@ -4049,7 +4049,7 @@ id,region,name,tags,content_packs
 60060,Farm,Drink Lightning Elixir,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
 60061,Farm,Eat Lunaloo,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
 60062,Farm,Drink Marsh Tonic,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
-60063,Farm,Eat Mega Purple Mushroom,EATSANITY,Stardew Valley Expanded
+60063,Farm,Eat Mega Purple Mushroom,"EATSANITY,EATSANITY_MONSTER_DROPS",Stardew Valley Expanded
 60064,Farm,Eat Minnow,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
 60065,Farm,Eat Mixed Berry Pie,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
 60066,Farm,Eat Monster Fruit,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
