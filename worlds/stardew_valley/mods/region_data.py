@@ -196,6 +196,7 @@ sve_main_land_regions = [
     RegionData(Region.witch_warp_cave, (SVEEntrance.witch_warp_cave_to_forbidden_maze,)),
     RegionData(Region.witch_swamp, (Entrance.enter_witch_warp_cave,), flag=MergeFlag.REMOVE_EXITS),
     RegionData(Region.witch_swamp, (SVEEntrance.witch_swamp_to_forbidden_maze,)),
+    RegionData(SVERegion.henchman_backyard, (SVEEntrance.henchman_backyard_to_forbidden_maze,)),
 ]
 
 sve_ginger_island_regions = [
@@ -275,6 +276,12 @@ sve_main_land_connections = [
     ConnectionData(SVEEntrance.fish_shop_to_willy_bedroom, SVERegion.willy_bedroom, flag=RandomizationFlag.BUILDINGS),
     ConnectionData(SVEEntrance.museum_to_gunther_bedroom, SVERegion.gunther_bedroom, flag=RandomizationFlag.BUILDINGS),
     ConnectionData(SVEEntrance.highlands_to_pond, SVERegion.highlands_pond),
+    ConnectionData(SVEEntrance.witch_warp_cave_to_forbidden_maze, SVERegion.forbidden_maze, flag=RandomizationFlag.BUILDINGS),
+    ConnectionData(SVEEntrance.forbidden_maze_to_witch_warp_cave, Region.witch_warp_cave, flag=RandomizationFlag.BUILDINGS),
+    ConnectionData(SVEEntrance.forbidden_maze_to_witch_swamp, Region.witch_swamp, flag=RandomizationFlag.BUILDINGS),
+    ConnectionData(SVEEntrance.witch_swamp_to_forbidden_maze, SVERegion.forbidden_maze, flag=RandomizationFlag.BUILDINGS),
+    ConnectionData(SVEEntrance.forbidden_maze_to_henchman_backyard, SVERegion.henchman_backyard, flag=RandomizationFlag.BUILDINGS),
+    ConnectionData(SVEEntrance.henchman_backyard_to_forbidden_maze, SVERegion.forbidden_maze, flag=RandomizationFlag.BUILDINGS),
 ]
 
 sve_ginger_island_connections = [
@@ -284,6 +291,8 @@ sve_ginger_island_connections = [
     ConnectionData(SVEEntrance.lance_to_ladder, SVERegion.lances_ladder),
     ConnectionData(SVEEntrance.lance_ladder_to_highlands, SVERegion.highlands_outside, flag=RandomizationFlag.BUILDINGS),
     ConnectionData(SVEEntrance.highlands_to_cave, SVERegion.highlands_cavern, flag=RandomizationFlag.BUILDINGS),
+    ConnectionData(SVEEntrance.highlands_to_diamond_cavern, SVERegion.diamond_cavern, flag=RandomizationFlag.BUILDINGS),
+    ConnectionData(SVEEntrance.diamond_cavern_to_highlands, SVERegion.highlands_outside, flag=RandomizationFlag.BUILDINGS),
     ConnectionData(SVEEntrance.to_dwarf_prison, SVERegion.dwarf_prison, flag=RandomizationFlag.BUILDINGS),
     ConnectionData(SVEEntrance.first_slash_guild_to_hallway, SVERegion.first_slash_hallway, flag=RandomizationFlag.BUILDINGS),
     ConnectionData(SVEEntrance.first_slash_hallway_to_room, SVERegion.first_slash_spare_room, flag=RandomizationFlag.BUILDINGS),
