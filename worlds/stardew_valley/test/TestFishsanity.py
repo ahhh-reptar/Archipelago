@@ -29,22 +29,19 @@ ginger_island_hard_fishes = {Fish.pufferfish, Fish.stingray, Fish.super_cucumber
 ginger_island_medium_fishes = {Fish.blue_discus, Fish.lionfish, Fish.tilapia, Fish.tuna, }
 qi_board_legendary_fishes = {Fish.ms_angler, Fish.son_of_crimsonfish, Fish.glacierfish_jr, Fish.legend_ii, Fish.radioactive_carp, }
 
-sve_pelican_town_hard_fishes = {SVEFish.grass_carp, SVEFish.king_salmon, SVEFish.kittyfish, SVEFish.meteor_carp, SVEFish.puppyfish, SVEFish.radioactive_bass, SVEFish.void_eel, SVEFish.wolf_snapper, }
-sve_pelican_town_medium_fishes = {SVEFish.butterfish, SVEFish.frog, SVEFish.gar, SVEFish.goldenfish, SVEFish.snatcher_worm, SVEFish.water_grub, }
-sve_pelican_town_easy_fishes = {SVEFish.bull_trout, SVEFish.goldfish, SVEFish.minnow, SVEFish.tadpole, }
-sve_ginger_island_easy_fishes = {SVEFish.clownfish, }
-
-sve_diamond_cavern_hard_fishes = {SVEFish.diamond_carp, }
-sve_highlands_pond_medium_fishes = {SVEFish.daggerfish, SVEFish.fiber_goby, }
-sve_highlands_outside_medium_fishes = {SVEFish.highlands_bass, }
-
-sve_crimson_badlands_hard_fishes = {SVEFish.bonefish, SVEFish.undeadfish, }
-sve_forbidden_maze_hard_fishes = {SVEFish.alligator, SVEFish.swamp_crab, }
-
-sve_fable_reef_legendary_fishes = {SVEFish.turretfish, }
-sve_fable_reef_hard_fishes = {SVEFish.arrowhead_shark, SVEFish.barred_knifejaw, SVEFish.gemfish, SVEFish.shark, SVEFish.shiny_lunaloo, SVEFish.viper_eel, }
-sve_fable_reef_medium_fishes = {SVEFish.lunaloo, SVEFish.ocean_sunfish, SVEFish.starfish, SVEFish.torpedo_trout, }
-sve_fable_reef_easy_fishes = {SVEFish.baby_lunaloo, SVEFish.blue_tang, SVEFish.seahorse, SVEFish.sea_sponge, }
+sve_pelican_town_hard_fishes = {
+    SVEFish.alligator, SVEFish.grass_carp, SVEFish.king_salmon, SVEFish.kittyfish, SVEFish.meteor_carp, SVEFish.puppyfish, SVEFish.radioactive_bass,
+    SVEFish.undeadfish, SVEFish.void_eel, SVEFish.wolf_snapper,
+}
+sve_pelican_town_medium_fishes = {
+    SVEFish.bonefish, SVEFish.butterfish, SVEFish.frog, SVEFish.gar, SVEFish.goldenfish, SVEFish.snatcher_worm, SVEFish.water_grub,
+}
+sve_pelican_town_easy_fishes = {SVEFish.bull_trout, SVEFish.goldfish, SVEFish.minnow, SVEFish.swamp_crab, SVEFish.tadpole, }
+sve_ginger_island_legendary_fishes = {SVEFish.turretfish, }
+sve_ginger_island_hard_fishes = {SVEFish.arrowhead_shark, SVEFish.gemfish, SVEFish.ocean_sunfish, SVEFish.shark, SVEFish.shiny_lunaloo, SVEFish.viper_eel, }
+sve_ginger_island_medium_fishes = {SVEFish.barred_knifejaw, SVEFish.daggerfish, SVEFish.diamond_carp, SVEFish.fiber_goby, SVEFish.lunaloo, SVEFish.starfish,
+                                   SVEFish.torpedo_trout, }
+sve_ginger_island_easy_fishes = {SVEFish.baby_lunaloo, SVEFish.clownfish, SVEFish.highlands_bass, SVEFish.seahorse, SVEFish.sea_sponge, }
 
 distant_lands_hard_fishes = {DistantLandsFish.giant_horsehoe_crab, }
 distant_lands_easy_fishes = {DistantLandsFish.void_minnow, DistantLandsFish.purple_algae, DistantLandsFish.swamp_leech, }
@@ -158,19 +155,21 @@ class TestFishsanityAll_SVE(SVFishsanityTestBase):
         Mods: ModNames.sve,
     })
     expected_fishes = (
+            pelican_town_legendary_fishes |
+            pelican_town_hard_special_fishes |
+            pelican_town_medium_special_fishes |
+            pelican_town_hard_normal_fishes |
+            pelican_town_medium_normal_fishes |
+            pelican_town_easy_normal_fishes |
+            pelican_town_crab_pot_fishes |
+            ginger_island_hard_fishes |
+            ginger_island_medium_fishes |
             sve_pelican_town_hard_fishes |
             sve_pelican_town_medium_fishes |
             sve_pelican_town_easy_fishes |
-            sve_ginger_island_easy_fishes |
-            sve_diamond_cavern_hard_fishes |
-            sve_highlands_pond_medium_fishes |
-            sve_highlands_outside_medium_fishes |
-            sve_crimson_badlands_hard_fishes |
-            sve_forbidden_maze_hard_fishes |
-            sve_fable_reef_legendary_fishes |
-            sve_fable_reef_hard_fishes |
-            sve_fable_reef_medium_fishes |
-            sve_fable_reef_easy_fishes
+            sve_ginger_island_hard_fishes |
+            sve_ginger_island_medium_fishes |
+            sve_ginger_island_easy_fishes
     )
 
 
@@ -181,19 +180,16 @@ class TestFishsanityAll_ExcludeGingerIsland_SVE(SVFishsanityTestBase):
         Mods: ModNames.sve,
     })
     expected_fishes = (
+            pelican_town_legendary_fishes |
+            pelican_town_hard_special_fishes |
+            pelican_town_medium_special_fishes |
+            pelican_town_hard_normal_fishes |
+            pelican_town_medium_normal_fishes |
+            pelican_town_easy_normal_fishes |
+            pelican_town_crab_pot_fishes |
             sve_pelican_town_hard_fishes |
             sve_pelican_town_medium_fishes |
-            sve_pelican_town_easy_fishes |
-            sve_ginger_island_easy_fishes |
-            sve_diamond_cavern_hard_fishes |
-            sve_highlands_pond_medium_fishes |
-            sve_highlands_outside_medium_fishes |
-            sve_crimson_badlands_hard_fishes |
-            sve_forbidden_maze_hard_fishes |
-            sve_fable_reef_legendary_fishes |
-            sve_fable_reef_hard_fishes |
-            sve_fable_reef_medium_fishes |
-            sve_fable_reef_easy_fishes
+            sve_pelican_town_easy_fishes
     )
 
 
@@ -307,14 +303,15 @@ class TestFishsanityExcludeHardFishes_SVE(SVFishsanityTestBase):
         Mods: ModNames.sve,
     })
     expected_fishes = (
-            sve_pelican_town_hard_fishes |
+            pelican_town_medium_special_fishes |
+            pelican_town_medium_normal_fishes |
+            pelican_town_easy_normal_fishes |
+            pelican_town_crab_pot_fishes |
+            ginger_island_medium_fishes |
             sve_pelican_town_medium_fishes |
             sve_pelican_town_easy_fishes |
-            sve_ginger_island_easy_fishes |
-            sve_highlands_pond_medium_fishes |
-            sve_highlands_outside_medium_fishes |
-            sve_fable_reef_medium_fishes |
-            sve_fable_reef_easy_fishes
+            sve_ginger_island_medium_fishes |
+            sve_ginger_island_easy_fishes
     )
 
 
@@ -367,8 +364,7 @@ class TestFishsanityOnlyEasyFishes_SVE(SVFishsanityTestBase):
             pelican_town_easy_normal_fishes |
             pelican_town_crab_pot_fishes |
             sve_pelican_town_easy_fishes |
-            sve_ginger_island_easy_fishes |
-            sve_fable_reef_easy_fishes
+            sve_ginger_island_easy_fishes
     )
 
 
