@@ -41,7 +41,7 @@ sve_ginger_island_legendary_fishes = {SVEFish.turretfish, }
 sve_ginger_island_hard_fishes = {SVEFish.arrowhead_shark, SVEFish.gemfish, SVEFish.ocean_sunfish, SVEFish.shark, SVEFish.shiny_lunaloo, SVEFish.viper_eel, }
 sve_ginger_island_medium_fishes = {SVEFish.barred_knifejaw, SVEFish.daggerfish, SVEFish.diamond_carp, SVEFish.fiber_goby, SVEFish.lunaloo, SVEFish.starfish,
                                    SVEFish.torpedo_trout, }
-sve_ginger_island_easy_fishes = {SVEFish.baby_lunaloo, SVEFish.clownfish, SVEFish.highlands_bass, SVEFish.seahorse, SVEFish.sea_sponge, }
+sve_ginger_island_easy_fishes = {SVEFish.baby_lunaloo, SVEFish.blue_tang, SVEFish.clownfish, SVEFish.highlands_bass, SVEFish.seahorse, SVEFish.sea_sponge, }
 
 distant_lands_hard_fishes = {DistantLandsFish.giant_horsehoe_crab, }
 distant_lands_easy_fishes = {DistantLandsFish.void_minnow, DistantLandsFish.purple_algae, DistantLandsFish.swamp_leech, }
