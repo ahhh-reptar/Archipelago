@@ -1210,9 +1210,9 @@ def set_sve_rules(logic: StardewLogic, multiworld: MultiWorld, player: int, cont
     set_entrance_rule(multiworld, player, SVEEntrance.railroad_to_grampleton_station, logic.received(SVEQuestItem.scarlett_job_offer))
     set_entrance_rule(multiworld, player, SVEEntrance.museum_to_gunther_bedroom, logic.relationship.has_hearts(ModNPC.gunther, 2))
     set_entrance_rule(multiworld, player, SVEEntrance.to_aurora_basement, logic.mod.quest.has_completed_aurora_vineyard_bundle())
-    set_entrance_rule(multiworld, player, SVEEntrance.forbidden_maze_to_henchman_backyard, (logic.quest.can_complete_quest(Quest.goblin_problem) & logic.has("Aegis Elixir")) | (logic.quest.can_complete_quest(Quest.goblin_problem) & logic.combat.can_fight_at_level(Performance.galaxy)))
-    set_entrance_rule(multiworld, player, SVEEntrance.forbidden_maze_to_witch_swamp, (logic.quest.can_complete_quest(Quest.goblin_problem) & logic.has("Aegis Elixir")) | (logic.quest.can_complete_quest(Quest.goblin_problem) & logic.combat.can_fight_at_level(Performance.galaxy)))
-    set_entrance_rule(multiworld, player, SVEEntrance.highlands_to_diamond_cavern, (logic.tool.has_tool(Tool.pickaxe, ToolMaterial.iron) & logic.mod.sve.has_marlon_boat() & logic.combat.can_fight_at_level(Performance.great)) | logic.mod.sve.has_marlon_boat() & (logic.mod.magic.can_blink() & logic.combat.can_fight_at_level(Performance.great)))
+    set_entrance_rule(multiworld, player, SVEEntrance.forbidden_maze_to_henchman_backyard, (logic.quest.can_complete_quest(Quest.goblin_problem) & (logic.has("Aegis Elixir") |logic.combat.can_fight_at_level(Performance.galaxy))))
+    set_entrance_rule(multiworld, player, SVEEntrance.forbidden_maze_to_witch_swamp, (logic.quest.can_complete_quest(Quest.goblin_problem) & (logic.has("Aegis Elixir") |logic.combat.can_fight_at_level(Performance.galaxy))))
+    set_entrance_rule(multiworld, player, SVEEntrance.highlands_to_diamond_cavern, ((logic.tool.has_tool(Tool.pickaxe, ToolMaterial.iron)|logic.mod.magic.can_blink()) & logic.mod.sve.has_marlon_boat() & logic.combat.can_fight_at_level(Performance.great)))
     logic.mod.sve.initialize_rules()
     for location in logic.registry.sve_location_rules:
         set_rule(multiworld.get_location(location, player),
