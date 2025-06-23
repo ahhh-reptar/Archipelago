@@ -189,6 +189,13 @@ sve_main_land_regions = [
     RegionData(SVERegion.isaac_shop),
     RegionData(SVERegion.summit),
     RegionData(SVERegion.susans_house),
+    RegionData(SVERegion.forbidden_maze,
+               (SVEEntrance.forbidden_maze_to_witch_warp_cave, SVEEntrance.forbidden_maze_to_witch_swamp,
+                SVEEntrance.forbidden_maze_to_henchman_backyard)),
+    RegionData(Region.witch_warp_cave, (Entrance.enter_witch_swamp,), flag=MergeFlag.REMOVE_EXITS),
+    RegionData(Region.witch_warp_cave, (SVEEntrance.witch_warp_cave_to_forbidden_maze,)),
+    RegionData(Region.witch_swamp, (Entrance.enter_witch_warp_cave,), flag=MergeFlag.REMOVE_EXITS),
+    RegionData(Region.witch_swamp, (SVEEntrance.witch_swamp_to_forbidden_maze,)),
 ]
 
 sve_ginger_island_regions = [
@@ -199,8 +206,9 @@ sve_ginger_island_regions = [
     RegionData(SVERegion.first_slash_hallway, (SVEEntrance.first_slash_hallway_to_room,)),
     RegionData(SVERegion.first_slash_spare_room),
     RegionData(SVERegion.guild_summit, (SVEEntrance.summit_to_highlands,)),
-    RegionData(SVERegion.highlands_outside, (SVEEntrance.highlands_to_lance, SVEEntrance.highlands_to_cave, SVEEntrance.highlands_to_pond), ),
+    RegionData(SVERegion.highlands_outside, (SVEEntrance.highlands_to_lance, SVEEntrance.highlands_to_cave, SVEEntrance.highlands_to_pond, SVEEntrance.highlands_to_diamond_cavern), ),
     RegionData(SVERegion.highlands_pond),
+    RegionData(SVERegion.diamond_cavern, (SVEEntrance.diamond_cavern_to_highlands,)),
     RegionData(SVERegion.highlands_cavern, (SVEEntrance.to_dwarf_prison,)),
     RegionData(SVERegion.dwarf_prison),
     RegionData(SVERegion.lances_house, (SVEEntrance.lance_to_ladder,)),
