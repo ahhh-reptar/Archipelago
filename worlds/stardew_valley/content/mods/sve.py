@@ -52,6 +52,7 @@ class SVEContentPack(ContentPack):
             content.fishes.pop(fish_data.highlands_bass.name)
 
             # Remove Fable Reef fishes at it requires 8 Lance hearts for the event to access it
+            content.fishes.pop(fish_data.arrowhead_shark.name)
             content.fishes.pop(fish_data.torpedo_trout.name)
             content.fishes.pop(fish_data.turretfish.name)
             content.fishes.pop(fish_data.viper_eel.name)
