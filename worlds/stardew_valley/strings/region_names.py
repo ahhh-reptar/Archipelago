@@ -260,6 +260,7 @@ class RileyRegion:
 
 
 class SVERegion:
+    henchman_backyard = "Henchman Backyard"
     diamond_cavern = "Diamond Cavern"
     forbidden_maze = "Forbidden Maze"
     grandpas_shed = "Grandpa's Shed"
