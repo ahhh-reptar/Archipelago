@@ -33,19 +33,28 @@ class SVEContentPack(ContentPack):
     def fish_hook(self, content: StardewContent):
         if ginger_island_content_pack.name not in content.registered_packs:
             content.fishes.pop(fish_data.baby_lunaloo.name)
+            content.fishes.pop(fish_data.barred_knifejaw.name)
+            content.fishes.pop(fish_data.blue_tang.name)
             content.fishes.pop(fish_data.clownfish.name)
             content.fishes.pop(fish_data.lunaloo.name)
+            content.fishes.pop(fish_data.ocean_sunfish.name)
             content.fishes.pop(fish_data.seahorse.name)
+            content.fishes.pop(fish_data.shark.name)
             content.fishes.pop(fish_data.shiny_lunaloo.name)
             content.fishes.pop(fish_data.starfish.name)
             content.fishes.pop(fish_data.sea_sponge.name)
 
             # Remove Highlands fishes at it requires 2 Lance hearts for the quest to access it
             content.fishes.pop(fish_data.daggerfish.name)
+            content.fishes.pop(fish_data.diamond_carp.name)
+            content.fishes.pop(fish_data.fiber_goby.name)
             content.fishes.pop(fish_data.gemfish.name)
+            content.fishes.pop(fish_data.highlands_bass.name)
 
             # Remove Fable Reef fishes at it requires 8 Lance hearts for the event to access it
             content.fishes.pop(fish_data.torpedo_trout.name)
+            content.fishes.pop(fish_data.turretfish.name)
+            content.fishes.pop(fish_data.viper_eel.name)
 
     def villager_hook(self, content: StardewContent):
         if ginger_island_content_pack.name not in content.registered_packs:
@@ -173,31 +182,47 @@ register_mod_content_pack(SVEContentPack(
 
     },
     fishes=(
+        fish_data.alligator,
+        fish_data.arrowhead_shark, #removed when no ginger island
         fish_data.baby_lunaloo,  # Removed when no ginger island
+        fish_data.barred_knifejaw,
+        fish_data.blue_tang,
         fish_data.bonefish,
         fish_data.bull_trout,
         fish_data.butterfish,
         fish_data.clownfish,  # Removed when no ginger island
         fish_data.daggerfish,
+        fish_data.diamond_carp, #removed when no ginger island
+        fish_data.fiber_goby,
         fish_data.frog,
+        fish_data.gar,
         fish_data.gemfish,
         fish_data.goldenfish,
+        fish_data.goldfish,
         fish_data.grass_carp,
+        fish_data.highlands_bass,
         fish_data.king_salmon,
         fish_data.kittyfish,
         fish_data.lunaloo,  # Removed when no ginger island
         fish_data.meteor_carp,
         fish_data.minnow,
+        fish_data.ocean_sunfish, #removed when no ginger island
         fish_data.puppyfish,
         fish_data.radioactive_bass,
         fish_data.seahorse,  # Removed when no ginger island
+        fish_data.shark, #removed when no ginger island
         fish_data.shiny_lunaloo,  # Removed when no ginger island
         fish_data.snatcher_worm,
         fish_data.starfish,  # Removed when no ginger island
+        fish_data.swamp_crab,
+        fish_data.tadpole,
         fish_data.torpedo_trout,
+        fish_data.turretfish,  #removed when no ginger island
         fish_data.undeadfish,
+        fish_data.viper_eel,  #removed when no ginger island
         fish_data.void_eel,
         fish_data.water_grub,
+        fish_data.wolf_snapper,
         fish_data.sea_sponge,  # Removed when no ginger island
 
     ),
