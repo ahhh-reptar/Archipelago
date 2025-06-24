@@ -11,7 +11,7 @@ from ...data.harvest import ForagingSource, HarvestCropSource
 from ...data.requirement import YearRequirement, CombatRequirement, SpecificFriendRequirement, ToolRequirement, SkillRequirement, FishingRequirement
 from ...data.shop import ShopSource
 from ...mods.mod_data import ModNames
-from ...strings.animal_product_names import ModAnimalProduct
+from ...strings.animal_product_names import AnimalProduct
 from ...strings.artisan_good_names import ArtisanGood, ModArtisanGood
 from ...strings.building_names import ModBuilding
 from ...strings.craftable_names import ModEdible
