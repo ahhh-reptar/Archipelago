@@ -30,11 +30,11 @@ ginger_island_medium_fishes = {Fish.blue_discus, Fish.lionfish, Fish.tilapia, Fi
 qi_board_legendary_fishes = {Fish.ms_angler, Fish.son_of_crimsonfish, Fish.glacierfish_jr, Fish.legend_ii, Fish.radioactive_carp, }
 
 sve_pelican_town_hard_fishes = {
-    SVEFish.alligator, SVEFish.grass_carp, SVEFish.king_salmon, SVEFish.kittyfish, SVEFish.meteor_carp, SVEFish.puppyfish, SVEFish.radioactive_bass,
-    SVEFish.undeadfish, SVEFish.void_eel, SVEFish.wolf_snapper,
+    SVEFish.alligator, SVEFish.butterfish, SVEFish.grass_carp, SVEFish.king_salmon, SVEFish.kittyfish, SVEFish.meteor_carp, SVEFish.puppyfish,
+    SVEFish.radioactive_bass, SVEFish.undeadfish, SVEFish.void_eel, SVEFish.wolf_snapper,
 }
 sve_pelican_town_medium_fishes = {
-    SVEFish.bonefish, SVEFish.butterfish, SVEFish.frog, SVEFish.gar, SVEFish.goldenfish, SVEFish.snatcher_worm, SVEFish.water_grub,
+    SVEFish.bonefish, SVEFish.frog, SVEFish.gar, SVEFish.goldenfish, SVEFish.snatcher_worm, SVEFish.water_grub,
 }
 sve_pelican_town_easy_fishes = {SVEFish.bull_trout, SVEFish.goldfish, SVEFish.minnow, SVEFish.swamp_crab, SVEFish.tadpole, }
 sve_ginger_island_legendary_fishes = {SVEFish.turretfish, }
