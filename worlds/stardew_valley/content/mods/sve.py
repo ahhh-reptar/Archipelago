@@ -15,6 +15,7 @@ from ...strings.flower_names import Flower
 from ...strings.food_names import SVEMeal, SVEBeverage
 from ...strings.forageable_names import Mushroom, Forageable, SVEForage
 from ...strings.gift_names import SVEGift
+from ...strings.metal_names import MetalBar
 from ...strings.monster_drop_names import ModLoot
 from ...strings.performance_names import Performance
 from ...strings.region_names import Region, SVERegion
@@ -104,6 +105,14 @@ register_mod_content_pack(SVEContentPack(
         ModEdible.aegis_elixir: (ShopSource(price=28000, shop_region=SVERegion.galmoran_outpost),),
         SVEBeverage.sports_drink: (ShopSource(price=750, shop_region=Region.hospital),),
         SVEMeal.stamina_capsule: (ShopSource(price=4000, shop_region=Region.hospital),),
+        SVESeed.butternut_squash: (ShopSource(price=90, shop_region=Region.pierre_store),),
+        SVESeed.cucumber: (ShopSource(price=150, shop_region=Region.pierre_store),),
+        SVESeed.nectarine: (ShopSource(price=6000, shop_region=Region.pierre_store),),
+        SVESeed.pear: (ShopSource(price=3200, shop_region=Region.pierre_store),),
+        SVESeed.persimmon: (ShopSource(price=8000, shop_region=Region.pierre_store),),
+        SVESeed.sweet_potato: (ShopSource(price=134, shop_region=Region.pierre_store),),
+        SVESeed.gold_carrot: (ShopSource(items_price=((3, MetalBar.gold),), shop_region=Region.desert),),
+        SVESeed.tree_coin: (ShopSource(items_price=((20, ModLoot.supernatural_goo),), shop_region=SVERegion.henchman_backyard),),
     },
     harvest_sources={
         Mushroom.red: (
@@ -160,6 +169,9 @@ register_mod_content_pack(SVEContentPack(
                                             other_requirements=(CombatRequirement(Performance.galaxy),
                                                                 SkillRequirement(Skill.combat, 10),
                                                                 YearRequirement(3),)),),
+        ModLoot.supernatural_goo: (ForagingSource(regions=(SVERegion.forbidden_maze,),
+                                                  other_requirements=(CombatRequirement(Performance.galaxy),
+                                                                      SkillRequirement(Skill.combat, 10),)),),
         SVEWaterItem.dulse_seaweed: (ForagingSource(regions=(Region.beach,), other_requirements=(FishingRequirement(Region.beach),)),),
 
         # Fable Reef
@@ -180,6 +192,14 @@ register_mod_content_pack(SVEContentPack(
         SVEVegetable.monster_mushroom: (Tag(ItemTag.VEGETABLE), HarvestCropSource(seed=SVESeed.fungus, seasons=(Season.fall,)),),
         SVESeed.void: (ForagingSource(regions=(SVERegion.highlands_cavern,), other_requirements=(CombatRequirement(Performance.good),)),),
         SVEVegetable.void_root: (Tag(ItemTag.VEGETABLE), HarvestCropSource(seed=SVESeed.void, seasons=(Season.winter,)),),
+        SVEVegetable.butternut_squash: (Tag(ItemTag.VEGETABLE), HarvestCropSource(seed=SVESeed.butternut_squash, seasons=(Season.summer,)),),
+        SVEVegetable.cucumber: (Tag(ItemTag.VEGETABLE), HarvestCropSource(seed=SVESeed.cucumber, seasons=(Season.spring,)),),
+        SVEFruit.nectarine: (Tag(ItemTag.FRUIT), HarvestCropSource(seed=SVESeed.nectarine, seasons=(Season.summer,)),),
+        SVEFruit.pear: (Tag(ItemTag.FRUIT), HarvestCropSource(seed=SVESeed.pear, seasons=(Season.spring,)),),
+        SVEFruit.persimmon: (Tag(ItemTag.FRUIT), HarvestCropSource(seed=SVESeed.persimmon, seasons=(Season.fall,)),),
+        SVEVegetable.sweet_potato: (Tag(ItemTag.VEGETABLE), HarvestCropSource(seed=SVESeed.sweet_potato, seasons=(Season.fall,)),),
+        SVEVegetable.gold_carrot: (Tag(ItemTag.VEGETABLE), HarvestCropSource(seed=SVESeed.gold_carrot, seasons=(Season.spring,Season.summer,Season.fall,)),),
+        SVEFruit.money_bag: (HarvestCropSource(seed=SVESeed.tree_coin, seasons=(Season.spring,Season.summer,Season.fall,Season.winter,)),),
 
     },
     fishes=(

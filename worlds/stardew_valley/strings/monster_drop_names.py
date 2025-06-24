@@ -7,6 +7,7 @@ class Loot:
 
 
 class ModLoot:
+    supernatural_goo = "Supernatural Goo"
     void_shard = "Void Shard"
     green_mushroom = "Green Mushroom"
     ornate_treasure_chest = "Ornate Treasure Chest"  

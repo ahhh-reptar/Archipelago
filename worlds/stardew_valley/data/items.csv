@@ -1052,3 +1052,11 @@ id,name,classification,groups,content_packs
 10720,Recycling Bin,filler,"RESOURCE_PACK,RESOURCE_PACK_USEFUL",Binning Skill
 10721,Advanced Recycling Machine,filler,"RESOURCE_PACK,RESOURCE_PACK_USEFUL",Binning Skill
 10722,Digging Like Worms,filler,"RESOURCE_PACK,RESOURCE_PACK_USEFUL",Archaeology
+11000,Butternut Squash Seeds,progression,CROPSANITY,Stardew Valley Expanded
+11001,Cucumber Seeds,progression,CROPSANITY,Stardew Valley Expanded
+11002,Sweet Potato Seeds,progression,CROPSANITY,Stardew Valley Expanded
+11003,Gold Carrot Seeds,progression,CROPSANITY,Stardew Valley Expanded
+11004,Nectarine Sapling,progression,"RESOURCE_PACK,RESOURCE_PACK_USEFUL,CROPSANITY",Stardew Valley Expanded
+11005,Pear Sapling,progression,"RESOURCE_PACK,RESOURCE_PACK_USEFUL,CROPSANITY",Stardew Valley Expanded
+11006,Persimmon Sapling,progression,"RESOURCE_PACK,RESOURCE_PACK_USEFUL,CROPSANITY",Stardew Valley Expanded
+11007,Tree Coin,progression,"RESOURCE_PACK,RESOURCE_PACK_USEFUL,CROPSANITY",Stardew Valley Expanded
