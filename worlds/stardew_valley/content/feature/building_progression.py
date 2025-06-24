@@ -24,6 +24,8 @@ def to_progressive_item(building: str) -> Tuple[str, int]:
         return f"Progressive {building[building.index(' ') + 1:]}", 2
     elif building.startswith("Deluxe"):
         return f"Progressive {building[building.index(' ') + 1:]}", 3
+    elif building.startswith("Premium"):
+        return f"Progressive {building[building.index(' ') + 1:]}", 4
     elif building in progressive_house_by_upgrade_name:
         return progressive_house, progressive_house_by_upgrade_name[building]
 
