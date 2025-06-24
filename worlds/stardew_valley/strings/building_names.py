@@ -32,5 +32,7 @@ class WizardBuilding:
 
 
 class ModBuilding:
+    sve_premium_coop = "Premium Coop"
+    sve_premium_barn = "Premium Barn"
     sve_winery = "Winery"
     tractor_garage = "Tractor Garage"
