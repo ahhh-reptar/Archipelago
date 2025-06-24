@@ -61,6 +61,14 @@ class TreeSeed:
 
 
 class SVESeed:
+    gold_carrot = "Gold Carrot Seeds"
+    sweet_potato = "Sweet Potato Seeds"
+    persimmon = "Persimmon Sapling"
+    pear = "Pear Sapling"
+    nectarine = "Nectarine Sapling"
+    tree_coin = "Tree Coin"
+    cucumber = "Cucumber Seeds"
+    butternut_squash = "Butternut Squash Seeds"
     stalk = "Stalk Seed"
     fungus = "Fungus Seed"
     slime = "Slime Seed"

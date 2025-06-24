@@ -53,12 +53,20 @@ class Vegetable:
 
 
 class SVEFruit:
+    money_bag = "Money Bag"
+    persimmon = "Persimmon"
+    pear = "Pear"
+    nectarine = "Nectarine"
     slime_berry = "Slime Berry"
     monster_fruit = "Monster Fruit"
     salal_berry = "Salal Berry"
 
 
 class SVEVegetable:
+    gold_carrot = "Gold Carrot"
+    sweet_potato = "Sweet Potato"
+    cucumber = "Cucumber"
+    butternut_squash = "Butternut Squash"
     monster_mushroom = "Monster Mushroom"
     void_root = "Void Root"
     ancient_fiber = "Ancient Fiber"
