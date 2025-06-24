@@ -3,11 +3,14 @@ from ..mod_registry import register_mod_content_pack
 from ..override import override
 from ..vanilla.ginger_island import ginger_island_content_pack as ginger_island_content_pack
 from ...data import villagers_data, fish_data
+from ...data.building import Building
 from ...data.game_item import ItemTag, Tag
 from ...data.harvest import ForagingSource, HarvestCropSource
 from ...data.requirement import YearRequirement, CombatRequirement, SpecificFriendRequirement, ToolRequirement, SkillRequirement, FishingRequirement
 from ...data.shop import ShopSource
 from ...mods.mod_data import ModNames
+from ...strings.artisan_good_names import ArtisanGood
+from ...strings.building_names import ModBuilding
 from ...strings.craftable_names import ModEdible
 from ...strings.crop_names import Fruit, SVEVegetable, SVEFruit
 from ...strings.fish_names import WaterItem, SVEWaterItem
@@ -15,6 +18,8 @@ from ...strings.flower_names import Flower
 from ...strings.food_names import SVEMeal, SVEBeverage
 from ...strings.forageable_names import Mushroom, Forageable, SVEForage
 from ...strings.gift_names import SVEGift
+from ...strings.machine_names import Machine
+from ...strings.material_names import Material
 from ...strings.metal_names import MetalBar
 from ...strings.monster_drop_names import ModLoot
 from ...strings.performance_names import Performance
@@ -263,5 +268,18 @@ register_mod_content_pack(SVEContentPack(
         villagers_data.susan,
         villagers_data.morris,
         override(villagers_data.wizard, bachelor=True, mod_name=ModNames.sve),
-    )
+    ),
+    farm_buildings=(
+        Building(
+            ModBuilding.sve_winery,
+            sources=(
+                ShopSource(
+                    shop_region=Region.carpenter,
+                    price=1_000_000,
+                    items_price=((30, MetalBar.iridium), (200, Material.hardwood), (50, Machine.keg)),
+                    other_requirements=(logic.shipping.can_ship(ArtisanGood.wine) & logic.time.has_lived_months(8)),
+                ),
+            ),
+        ),
+    ),
 ))
