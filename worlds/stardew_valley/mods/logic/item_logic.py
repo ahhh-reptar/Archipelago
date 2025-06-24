@@ -3,6 +3,8 @@ from typing import Dict
 from ..mod_data import ModNames
 from ...logic.base_logic import BaseLogicMixin, BaseLogic
 from ...stardew_rule import StardewRule
+from ...strings.animal_names import Animal
+from ...strings.animal_product_names import ModAnimalProduct
 from ...strings.artisan_good_names import ModArtisanGood
 from ...strings.craftable_names import ModCraftable
 from ...strings.ingredient_names import Ingredient
@@ -49,6 +51,7 @@ class ModItemLogic(BaseLogic):
                                          self.logic.combat.can_fight_at_level(Performance.great)),
             Ore.iridium: items[Ore.iridium] | (self.logic.tool.can_use_tool_at(Tool.pickaxe, ToolMaterial.basic, SVERegion.crimson_badlands) &
                                                self.logic.combat.can_fight_at_level(Performance.maximum)),
+            ModAnimalProduct.sve_goose_egg: items[ModAnimalProduct.sve_goose_egg] | self.animal.has_animal(Animal.sve_goose),
 
         }
 
