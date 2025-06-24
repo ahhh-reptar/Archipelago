@@ -167,6 +167,7 @@ class TestFishsanityAll_SVE(SVFishsanityTestBase):
             sve_pelican_town_hard_fishes |
             sve_pelican_town_medium_fishes |
             sve_pelican_town_easy_fishes |
+            sve_ginger_island_legendary_fishes |
             sve_ginger_island_hard_fishes |
             sve_ginger_island_medium_fishes |
             sve_ginger_island_easy_fishes
