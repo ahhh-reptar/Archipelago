@@ -76,4 +76,5 @@ class ArtisanGood:
 
 
 class ModArtisanGood:
+    sve_fir_wax = "Fir Wax"
     pterodactyl_egg = "Pterodactyl Egg"

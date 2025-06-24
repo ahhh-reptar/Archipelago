@@ -2,14 +2,17 @@ from ..game_content import ContentPack, StardewContent
 from ..mod_registry import register_mod_content_pack
 from ..override import override
 from ..vanilla.ginger_island import ginger_island_content_pack as ginger_island_content_pack
+from ..vanilla.pelican_town import BuildingNames
 from ...data import villagers_data, fish_data
+from ...data.animal import Animal, AnimalName
 from ...data.building import Building
-from ...data.game_item import ItemTag, Tag
+from ...data.game_item import ItemTag, Tag, CustomRuleSource
 from ...data.harvest import ForagingSource, HarvestCropSource
 from ...data.requirement import YearRequirement, CombatRequirement, SpecificFriendRequirement, ToolRequirement, SkillRequirement, FishingRequirement
 from ...data.shop import ShopSource
 from ...mods.mod_data import ModNames
-from ...strings.artisan_good_names import ArtisanGood
+from ...strings.animal_product_names import ModAnimalProduct
+from ...strings.artisan_good_names import ArtisanGood, ModArtisanGood
 from ...strings.building_names import ModBuilding
 from ...strings.craftable_names import ModEdible
 from ...strings.crop_names import Fruit, SVEVegetable, SVEFruit
@@ -29,6 +32,7 @@ from ...strings.seed_names import SVESeed
 from ...strings.skill_names import Skill
 from ...strings.tool_names import Tool, ToolMaterial
 from ...strings.villager_names import ModNPC
+from ...strings.wallet_item_names import Wallet
 
 # Used to adapt content not yet moved to content packs to easily detect when SVE and Ginger Island are both enabled.
 SVE_GINGER_ISLAND_PACK = ModNames.sve + "+" + ginger_island_content_pack.name
@@ -273,13 +277,54 @@ register_mod_content_pack(SVEContentPack(
         Building(
             ModBuilding.sve_winery,
             sources=(
+                CustomRuleSource(create_rule=lambda logic: logic.shipping.can_ship(ArtisanGood.wine) & logic.time.has_lived_months(8)),
                 ShopSource(
                     shop_region=Region.carpenter,
                     price=1_000_000,
                     items_price=((30, MetalBar.iridium), (200, Material.hardwood), (50, Machine.keg)),
-                    other_requirements=(logic.shipping.can_ship(ArtisanGood.wine) & logic.time.has_lived_months(8)),
                 ),
             ),
         ),
+        Building(
+            ModBuilding.sve_premium_barn,
+            sources=(
+                ShopSource(
+                    shop_region=Region.carpenter,
+                    price=250_000,
+                    items_price=((30, ModArtisanGood.sve_fir_wax), (200, Material.hardwood), (950, Material.stone))
+                ),
+            ),
+            upgrade_from=BuildingNames.deluxe_barn,
+        ),
+        Building(
+            ModBuilding.sve_premium_coop,
+            sources=(
+                ShopSource(
+                    shop_region=Region.carpenter,
+                    price=200_000,
+                    items_price=((20, ModArtisanGood.sve_fir_wax), (125, Material.hardwood), (600, Material.stone))
+                ),
+            ),
+            upgrade_from=BuildingNames.deluxe_coop,
+        ),
     ),
+    animals=(
+        Animal(AnimalName.sve_camel,
+               required_building=ModBuilding.sve_premium_barn,
+               sources=(
+                   ShopSource(shop_region=Region.ranch, price=24000),
+               )),
+        Animal(AnimalName.sve_bear,
+               required_building=ModBuilding.sve_premium_barn,
+               sources=(
+                    CustomRuleSource(create_rule=lambda logic: logic.received(Wallet.bears_knowledge) & logic.bundle.can_complete_community_center
+                                                               & logic.money.can_have_earned_total(5000000)),
+                    ShopSource(shop_region=Region.ranch, price=28000),
+               )),
+        Animal(AnimalName.sve_goose,
+               required_building=ModBuilding.sve_premium_coop,
+               sources=(
+                   ShopSource(shop_region=Region.ranch, price=12000),
+               )),
+    )
 ))

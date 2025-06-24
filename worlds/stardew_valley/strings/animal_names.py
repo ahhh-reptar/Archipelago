@@ -10,3 +10,6 @@ class Animal:
     ostrich = "Ostrich"
     void_chicken = "Void Chicken"
     golden_chicken = "Golden Chicken"
+    sve_camel = "Camel"
+    sve_bear = "Bear"
+    sve_goose = "Goose"

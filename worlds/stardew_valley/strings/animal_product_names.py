@@ -46,6 +46,12 @@ class AnimalProduct:
     void_egg = "Void Egg"
     wool = "Wool"
 
+class ModAnimalProduct:
+    sve_goose_egg = "Goose Egg"
+    sve_golden_goose_egg = "Golden Goose Egg"
+    sve_camel_fur = "Camel Fur"
+    sve_honey_jar = "Honey Jar"
+
     @classmethod
     def specific_roe(cls, fish: str) -> str:
         return f"{cls.roe} [{fish}]"
