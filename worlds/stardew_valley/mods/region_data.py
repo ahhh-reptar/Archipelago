@@ -277,11 +277,8 @@ sve_main_land_connections = [
     ConnectionData(SVEEntrance.museum_to_gunther_bedroom, SVERegion.gunther_bedroom, flag=RandomizationFlag.BUILDINGS),
     ConnectionData(SVEEntrance.highlands_to_pond, SVERegion.highlands_pond),
     ConnectionData(SVEEntrance.witch_warp_cave_to_forbidden_maze, SVERegion.forbidden_maze, flag=RandomizationFlag.BUILDINGS),
-    ConnectionData(SVEEntrance.forbidden_maze_to_witch_warp_cave, Region.witch_warp_cave, flag=RandomizationFlag.BUILDINGS),
     ConnectionData(SVEEntrance.forbidden_maze_to_witch_swamp, Region.witch_swamp, flag=RandomizationFlag.BUILDINGS),
-    ConnectionData(SVEEntrance.witch_swamp_to_forbidden_maze, SVERegion.forbidden_maze, flag=RandomizationFlag.BUILDINGS),
     ConnectionData(SVEEntrance.forbidden_maze_to_henchman_backyard, SVERegion.henchman_backyard, flag=RandomizationFlag.BUILDINGS),
-    ConnectionData(SVEEntrance.henchman_backyard_to_forbidden_maze, SVERegion.forbidden_maze, flag=RandomizationFlag.BUILDINGS),
 ]
 
 sve_ginger_island_connections = [
