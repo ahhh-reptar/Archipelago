@@ -286,7 +286,6 @@ sve_ginger_island_connections = [
     ConnectionData(SVEEntrance.lance_ladder_to_highlands, SVERegion.highlands_outside, flag=RandomizationFlag.BUILDINGS),
     ConnectionData(SVEEntrance.highlands_to_cave, SVERegion.highlands_cavern, flag=RandomizationFlag.BUILDINGS),
     ConnectionData(SVEEntrance.highlands_to_diamond_cavern, SVERegion.diamond_cavern, flag=RandomizationFlag.BUILDINGS),
-    ConnectionData(SVEEntrance.diamond_cavern_to_highlands, SVERegion.highlands_outside, flag=RandomizationFlag.BUILDINGS),
     ConnectionData(SVEEntrance.to_dwarf_prison, SVERegion.dwarf_prison, flag=RandomizationFlag.BUILDINGS),
     ConnectionData(SVEEntrance.first_slash_guild_to_hallway, SVERegion.first_slash_hallway, flag=RandomizationFlag.BUILDINGS),
     ConnectionData(SVEEntrance.first_slash_hallway_to_room, SVERegion.first_slash_spare_room, flag=RandomizationFlag.BUILDINGS),
