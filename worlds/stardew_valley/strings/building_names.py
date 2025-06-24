@@ -32,4 +32,5 @@ class WizardBuilding:
 
 
 class ModBuilding:
+    sve_winery = "Winery"
     tractor_garage = "Tractor Garage"
