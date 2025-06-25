@@ -166,6 +166,10 @@ class Craftable:
 
 
 class ModEdible:
+    seed_cookie = "Seed Cookie"
+    svedl_marsh_tonic = "Marsh Tonic"
+    sve_marsh_tonic = "Marsh Tonic"
+    sve_bombardier_elixir = "Bombardier Elixir"
     magic_elixir = "Magic Elixir"
     aegis_elixir = "Aegis Elixir"
     armor_elixir = "Armor Elixir"
@@ -177,6 +181,11 @@ class ModEdible:
 
 
 class ModCraftable:
+    yarn_spooler = "Yarn Spooler"
+    wind_totem = "Wind Totem"
+    sun_totem = "Sun Totem"
+    small_hardwood_fence = "Small Hardwood Fence"
+    sve_hedge_fence = "Hedge Fence"
     travel_core = "Travel Core"
     glass_brazier = "Glass Brazier"
     water_sifter = "Water Sifter"
@@ -195,6 +204,7 @@ class ModCraftable:
 
 
 class ModMachine:
+    sve_butter_churner = "Butter Churner"
     preservation_chamber = "Preservation Chamber"
     hardwood_preservation_chamber = "Hardwood Preservation Chamber"
     grinder = "Grinder"

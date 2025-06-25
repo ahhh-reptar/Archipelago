@@ -54,6 +54,7 @@ museum = (Region.museum,)
 jojamart = (Region.jojamart,)
 railroad = (Region.railroad,)
 junimo = (SVERegion.junimo_woods,)
+henchman_backyard = (SVERegion.henchman_backyard,)
 
 # Stray Locations
 witch_swamp = (Region.witch_swamp,)
@@ -332,6 +333,10 @@ goat_milk = ("Goat Milk",)
 maple_syrup = ("Maple Syrup",)
 cookie = ("Cookie",)
 blueberry_tart = ("Blueberry Tart",)
+golden_goose_egg = ("Golden Goof Egg",)
+golden_ocean_flower = ("Golden Ocean Flower",)
+supernatural_goo = ("Supernatural Goo",)
+void_root = ("Void Root",)
 
 claire_loves = green_tea + sunflower + energy_tonic + bruschetta + apricot + ocean_stone + glazed_butterfish
 lance_loves = aged_blue_moon_wine + daggerfish + gemfish + golden_pumpkin + \
@@ -355,6 +360,8 @@ scarlett_loves = goat_cheese + duck_feather + goat_milk + cherry + maple_syrup +
                  chocolate_cake + pink_cake + jade + glazed_yams  # actually large milk but meh
 susan_loves = pancakes + chocolate_cake + pink_cake + ice_cream + cookie + pumpkin_pie + rhubarb_pie + \
               blueberry_tart + blackberry_cobbler + cranberry_candy + red_plate
+henchman_loves = golden_goose_egg + golden_ocean_flower + supernatural_goo + swirl_stone + void_delight + \
+                void_mayonnaise + void_pebble + void_root + void_salmon_sushi + void_shard
 
 
 def villager(name: str, bachelor: bool, locations: Tuple[str, ...], birthday: str, gifts: Tuple[str, ...],
@@ -430,6 +437,7 @@ gunther = villager(ModNPC.gunther, False, museum, Season.winter, universal_loves
 martin = villager(ModNPC.martin, False, town + jojamart, Season.summer, universal_loves + martin_loves, True, ModNames.sve)
 marlon = villager(ModNPC.marlon, False, adventurer, Season.winter, universal_loves + marlon_loves, False, ModNames.sve)
 morgan = villager(ModNPC.morgan, False, forest, Season.fall, universal_loves_no_rabbit_foot + morgan_loves, False, ModNames.sve)
-scarlett = villager(ModNPC.scarlett, False, bluemoon, Season.summer, universal_loves + scarlett_loves, False, ModNames.sve)
+scarlett = villager(ModNPC.scarlett, True, bluemoon, Season.summer, universal_loves + scarlett_loves, False, ModNames.sve)
 susan = villager(ModNPC.susan, False, railroad, Season.fall, universal_loves + susan_loves, False, ModNames.sve)
 morris = villager(ModNPC.morris, False, jojamart, Season.spring, universal_loves + morris_loves, True, ModNames.sve)
+henchman = villager(ModNPC.henchman, False, witch_swamp + henchman_backyard, Season.fall, universal_loves + henchman_loves, False, ModNames.sve)

@@ -4,7 +4,7 @@ from .recipe_source import RecipeSource, StarterSource, QueenOfSauceSource, Shop
     ArchipelagoSource, LogicSource, SpecialOrderSource, FestivalShopSource, QuestSource, MasterySource, SkillCraftsanitySource
 from ..mods.mod_data import ModNames
 from ..strings.animal_product_names import AnimalProduct
-from ..strings.artisan_good_names import ArtisanGood
+from ..strings.artisan_good_names import ArtisanGood, ModArtisanGood
 from ..strings.craftable_names import Bomb, Fence, Sprinkler, WildSeeds, Floor, Fishing, Ring, Consumable, Edible, Lighting, Storage, Furniture, Sign, \
     Craftable, \
     ModEdible, ModCraftable, ModMachine, ModFloor, ModConsumable, Statue
@@ -14,7 +14,7 @@ from ..strings.fertilizer_names import Fertilizer, RetainingSoil, SpeedGro
 from ..strings.fish_names import Fish, WaterItem, ModTrash, Trash
 from ..strings.flower_names import Flower
 from ..strings.food_names import Meal
-from ..strings.forageable_names import Forageable, DistantLandsForageable, Mushroom
+from ..strings.forageable_names import Forageable, DistantLandsForageable, Mushroom, SVEForage
 from ..strings.gift_names import Gift
 from ..strings.ingredient_names import Ingredient
 from ..strings.machine_names import Machine
@@ -23,7 +23,7 @@ from ..strings.metal_names import Ore, MetalBar, Fossil, Artifact, Mineral, ModF
 from ..strings.monster_drop_names import Loot, ModLoot
 from ..strings.quest_names import Quest
 from ..strings.region_names import Region, SVERegion, LogicRegion
-from ..strings.seed_names import Seed, TreeSeed
+from ..strings.seed_names import Seed, TreeSeed, SVESeed
 from ..strings.skill_names import Skill, ModSkill
 from ..strings.special_order_names import SpecialOrder
 from ..strings.villager_names import NPC, ModNPC
@@ -341,12 +341,34 @@ lucky_ring = skill_recipe(Ring.lucky_ring, ModSkill.archaeology, 8, {Artifact.el
                           ModNames.archaeology)
 volcano_totem = skill_recipe(ModConsumable.volcano_totem, ModSkill.archaeology, 9, {Material.cinder_shard: 5, Artifact.rare_disc: 1, Artifact.dwarf_gadget: 1},
                              ModNames.archaeology)
+
 haste_elixir = shop_recipe(ModEdible.haste_elixir, SVERegion.alesia_shop, 35000, {Loot.void_essence: 35, ModLoot.void_soul: 5, Ingredient.sugar: 1,
                                                                                   Meal.spicy_eel: 1}, ModNames.sve)
 hero_elixir = shop_recipe(ModEdible.hero_elixir, SVERegion.isaac_shop, 65000, {ModLoot.void_pebble: 3, ModLoot.void_soul: 5, Ingredient.oil: 1,
                                                                                Loot.slime: 10}, ModNames.sve)
 armor_elixir = shop_recipe(ModEdible.armor_elixir, SVERegion.alesia_shop, 50000, {Loot.solar_essence: 30, ModLoot.void_soul: 5, Ingredient.vinegar: 5,
                                                                                   Fossil.bone_fragment: 5}, ModNames.sve)
+bombardier_elixir = skill_recipe(ModEdible.sve_bombardier_elixir, Skill.combat, 9,
+                                  {Bomb.bomb: 5, Loot.solar_essence: 30, Loot.void_essence: 30, ModLoot.void_pebble: 20, ModLoot.void_soul: 10}, ModNames.sve)
+butter_churner = skill_recipe(ModMachine.sve_butter_churner, Skill.farming, 3,
+                              {Mineral.frozen_tear: 1, MetalBar.iron: 1, Material.stone: 25, Material.wood: 25}, ModNames.sve)
+hedge_fence = skill_recipe(ModCraftable.sve_hedge_fence, Skill.farming, 6,
+                           {Material.fiber: 3, Material.wood: 1}, ModNames.sve)
+sve_marsh_tonic = friendship_recipe(ModEdible.sve_marsh_tonic, ModNPC.henchman, 4,
+                                    {Loot.slime: 30, Ingredient.sugar: 1, ModLoot.swamp_essence: 15, SVEForage.swamp_flower: 10}, ModNames.sve)
+svedl_marsh_tonic = friendship_recipe(ModEdible.svedl_marsh_tonic, ModNPC.goblin, 4,
+                                    {Loot.slime: 30, Ingredient.sugar: 1, ModLoot.swamp_essence: 15, SVEForage.swamp_flower: 10}, ModNames.sve)
+seed_cookie = skill_recipe(ModEdible.seed_cookie, Skill.foraging, 3,
+                           {TreeSeed.acorn: 1, TreeSeed.maple: 1, TreeSeed.pine: 1, SVESeed.sve_birch_seed: 1, SVESeed.sve_fir_cone: 1}, ModNames.sve)
+small_hardwood_fence = shop_recipe(ModCraftable.small_hardwood_fence, Region.carpenter, 7000,
+                                   {Material.hardwood: 1}, ModNames.sve)
+sun_totem = skill_recipe(ModCraftable.sun_totem, Skill.foraging, 9,
+                         {ModArtisanGood.sve_birch_water: 1, Material.hardwood: 1, Loot.solar_essence: 10}, ModNames.sve)
+wind_totem = skill_recipe(ModCraftable.wind_totem, Skill.foraging, 9,
+                          {Loot.bat_wing: 10, ModArtisanGood.sve_fir_wax: 1, Material.hardwood: 1}, ModNames.sve)
+yarn_spooler = skill_recipe(ModCraftable.yarn_spooler, Skill.farming, 9,
+                            {ArtisanGood.battery_pack: 1, ModArtisanGood.sve_fir_wax: 1, Material.hardwood: 25, ArtisanGood.pine_tar: 1}, ModNames.sve)
+
 ginger_tincture = friendship_recipe(ModConsumable.ginger_tincture, ModNPC.goblin, 4, {DistantLandsForageable.brown_amanita: 1, Forageable.ginger: 5,
                                                                                       Material.cinder_shard: 1, DistantLandsForageable.swamp_herb: 1},
                                     ModNames.distant_lands)
