@@ -356,7 +356,7 @@ hedge_fence = skill_recipe(ModCraftable.sve_hedge_fence, Skill.farming, 6,
                            {Material.fiber: 3, Material.wood: 1}, ModNames.sve)
 sve_marsh_tonic = friendship_recipe(ModEdible.sve_marsh_tonic, ModNPC.henchman, 4,
                                     {Loot.slime: 30, Ingredient.sugar: 1, ModLoot.swamp_essence: 15, SVEForage.swamp_flower: 10}, ModNames.sve)
-svedl_marsh_tonic = friendship_recipe(ModEdible.svedl_marsh_tonic, ModNPC.goblin, 4,
+svedl_marsh_tonic = friendship_recipe(ModEdible.sve_marsh_tonic, ModNPC.goblin, 4,
                                     {Loot.slime: 30, Ingredient.sugar: 1, ModLoot.swamp_essence: 15, SVEForage.swamp_flower: 10}, ModNames.sve)
 seed_cookie = skill_recipe(ModEdible.seed_cookie, Skill.foraging, 3,
                            {TreeSeed.acorn: 1, TreeSeed.maple: 1, TreeSeed.pine: 1, SVESeed.sve_birch_seed: 1, SVESeed.sve_fir_cone: 1}, ModNames.sve)
