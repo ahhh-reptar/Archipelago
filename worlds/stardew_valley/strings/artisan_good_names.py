@@ -76,6 +76,8 @@ class ArtisanGood:
 
 
 class ModArtisanGood:
+    goose_mayonnaise = "Goose Mayonnaise"
+    yarn = "Yarn"
     butter = "Butter"
     sve_birch_water = "Birch Water"
     sve_fir_wax = "Fir Wax"
