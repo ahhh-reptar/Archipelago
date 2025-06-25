@@ -36,6 +36,7 @@ class NPC:
     pet = "Pet"
 
 class ModNPC:
+    henchman = "Henchman"
     alec = "Alec"
     ayeisha = "Ayeisha"
     delores = "Delores"

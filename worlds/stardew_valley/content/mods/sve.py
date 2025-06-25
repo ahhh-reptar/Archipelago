@@ -1,3 +1,6 @@
+from kivy import modname
+
+from ..content_packs import mod_module
 from ..game_content import ContentPack, StardewContent
 from ..mod_registry import register_mod_content_pack
 from ..override import override
@@ -70,6 +73,17 @@ class SVEContentPack(ContentPack):
         if ginger_island_content_pack.name not in content.registered_packs:
             # Remove Lance if Ginger Island is not in content since he is first encountered in Volcano Forge
             content.villagers.pop(villagers_data.lance.name)
+            # Remove Henchman if Distant Lands is loaded because SVE automates this behavior
+        if ModNames.distant_lands in content.registered_packs:
+            content.villagers.pop(villagers_data.henchman.name)
+
+    def recipe_hook(self, content: StardewContent):
+        if ModNames.distant_lands in content.registered_packs:
+            content.game_items.pop(ModEdible.sve_marsh_tonic)
+
+    def recipe_hook(self, content: StardewContent):
+        if not ModNames.distant_lands in content.registered_packs:
+            content.game_items.pop(ModEdible.svedl_marsh_tonic)
 
     def harvest_source_hook(self, content: StardewContent):
         content.untag_item(SVESeed.shrub, tag=ItemTag.CROPSANITY_SEED)
@@ -106,6 +120,7 @@ register_mod_content_pack(SVEContentPack(
     weak_dependencies=(
         ginger_island_content_pack.name,
         ModNames.jasper,  # To override Marlon and Gunther
+        #ModNames.distant_lands, # for the marsh tonic recipe
     ),
     shop_sources={
         SVEGift.aged_blue_moon_wine: (ShopSource(price=28000, shop_region=SVERegion.blue_moon_vineyard),),
@@ -188,6 +203,9 @@ register_mod_content_pack(SVEContentPack(
                                                                 SkillRequirement(Skill.combat, 10),
                                                                 YearRequirement(3),)),),
         ModLoot.supernatural_goo: (ForagingSource(regions=(SVERegion.forbidden_maze,),
+                                                  other_requirements=(CombatRequirement(Performance.galaxy),
+                                                                      SkillRequirement(Skill.combat, 10),)),),
+        ModLoot.swamp_essence: (ForagingSource(regions=(SVERegion.forbidden_maze,),
                                                   other_requirements=(CombatRequirement(Performance.galaxy),
                                                                       SkillRequirement(Skill.combat, 10),)),),
         SVEWaterItem.dulse_seaweed: (ForagingSource(regions=(Region.beach,), other_requirements=(FishingRequirement(Region.beach),)),),
@@ -280,6 +298,7 @@ register_mod_content_pack(SVEContentPack(
         villagers_data.scarlett,
         villagers_data.susan,
         villagers_data.morris,
+        villagers_data.henchman,
         override(villagers_data.wizard, bachelor=True, mod_name=ModNames.sve),
     ),
     farm_buildings=(

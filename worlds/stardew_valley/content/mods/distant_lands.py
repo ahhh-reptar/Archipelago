@@ -1,5 +1,6 @@
 from ..game_content import ContentPack, StardewContent
 from ..mod_registry import register_mod_content_pack
+from ..override import override
 from ...data import villagers_data, fish_data
 from ...data.game_item import ItemTag, Tag
 from ...data.harvest import ForagingSource, HarvestCropSource
