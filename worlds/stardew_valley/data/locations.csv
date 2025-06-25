@@ -3731,7 +3731,7 @@ id,region,name,tags,content_packs
 57718,Island West,Fishsanity: Sea Sponge,"FISHSANITY,GINGER_ISLAND",Stardew Valley Expanded
 57719,Island South,Fishsanity: Shiny Lunaloo,"FISHSANITY,GINGER_ISLAND",Stardew Valley Expanded
 57720,Mutant Bug Lair,Fishsanity: Snatcher Worm,FISHSANITY,Stardew Valley Expanded
-57721,Beach,Fishsanity: Starfish,"FISHSANITY,GINGER_ISLAND",Stardew Valley Expanded
+57721,Beach,Fishsanity: Starfish,FISHSANITY,Stardew Valley Expanded
 57722,Fable Reef,Fishsanity: Torpedo Trout,"FISHSANITY,GINGER_ISLAND",Stardew Valley Expanded
 57723,Witch's Swamp,Fishsanity: Void Eel,FISHSANITY,Stardew Valley Expanded
 57724,Mutant Bug Lair,Fishsanity: Water Grub,FISHSANITY,Stardew Valley Expanded
@@ -4092,7 +4092,7 @@ id,region,name,tags,content_packs
 60103,Farm,Eat Red Baneberry,"EATSANITY,EATSANITY_FISH,EATSANITY_POISONOUS",Stardew Valley Expanded
 60104,Farm,Eat Shiny Lunaloo,"EATSANITY,EATSANITY_FISH,EATSANITY_POISONOUS,GINGER_ISLAND",Stardew Valley Expanded
 60105,Farm,Eat Slime Berry,"EATSANITY,EATSANITY_CROP,EATSANITY_POISONOUS,GINGER_ISLAND",Stardew Valley Expanded
-60106,Farm,Eat Starffish,"EATSANITY,EATSANITY_FISH,EATSANITY_POISONOUS",Stardew Valley Expanded
+60106,Farm,Eat Starfish,"EATSANITY,EATSANITY_FISH,EATSANITY_POISONOUS",Stardew Valley Expanded
 60107,Farm,Eat Torpedo Trout,"EATSANITY,EATSANITY_FISH,EATSANITY_POISONOUS,GINGER_ISLAND",Stardew Valley Expanded
 60108,Farm,Eat Undeadfish,"EATSANITY,EATSANITY_FISH,EATSANITY_POISONOUS",Stardew Valley Expanded
 60109,Farm,Eat Viper Eel,"EATSANITY,EATSANITY_FISH,EATSANITY_POISONOUS,GINGER_ISLAND",Stardew Valley Expanded

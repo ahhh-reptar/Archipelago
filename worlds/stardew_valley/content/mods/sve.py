@@ -77,10 +77,11 @@ class SVEContentPack(ContentPack):
         if ModNames.distant_lands in content.registered_packs:
             content.villagers.pop(villagers_data.henchman.name)
 
-    def recipe_hook(self, content: StardewContent):
+    def dl_yes_recipe_hook(self, content: StardewContent):
         if ModNames.distant_lands in content.registered_packs:
             content.game_items.pop(ModEdible.sve_marsh_tonic)
 
+    def dl_no_recipe_hook(self, content: StardewContent):
         if not ModNames.distant_lands in content.registered_packs:
             content.game_items.pop(ModEdible.svedl_marsh_tonic)
 
@@ -206,6 +207,9 @@ register_mod_content_pack(SVEContentPack(
                                                                       SkillRequirement(Skill.combat, 10),)),),
         ModLoot.swamp_essence: (ForagingSource(regions=(SVERegion.forbidden_maze,),
                                                   other_requirements=(CombatRequirement(Performance.galaxy),
+                                                                      SkillRequirement(Skill.combat, 10),)),),
+        ModLoot.mega_purple_mushroom: (ForagingSource(regions=(SVERegion.forbidden_maze,),
+                                                  other_requirements=(CombatRequirement(Performance.maximum),
                                                                       SkillRequirement(Skill.combat, 10),)),),
         SVEWaterItem.dulse_seaweed: (ForagingSource(regions=(Region.beach,), other_requirements=(FishingRequirement(Region.beach),)),),
 
