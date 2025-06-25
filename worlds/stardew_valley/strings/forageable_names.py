@@ -46,6 +46,9 @@ class Forageable:
 
 
 class SVEForage:
+    swamp_flower = "Swamp Flower"
+    diamond_flower = "Diamond Flower"
+    shark_tooth = "Shark Tooth"
     ferngill_primrose = "Ferngill Primrose"
     goldenrod = "Goldenrod"
     winter_star_rose = "Winter Star Rose"

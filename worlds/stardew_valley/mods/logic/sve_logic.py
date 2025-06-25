@@ -6,6 +6,8 @@ from ...strings.artisan_good_names import ModArtisanGood
 from ...strings.machine_names import Machine
 from ...strings.quest_names import Quest, ModQuest
 from ...strings.region_names import Region, SVERegion
+from ...strings.seed_names import SVESeed
+from ...strings.skill_names import Skill
 from ...strings.tool_names import Tool
 from ...strings.wallet_item_names import Wallet
 
@@ -22,12 +24,16 @@ class SVELogic(BaseLogic):
             SVELocation.tempered_galaxy_sword: self.logic.money.can_spend_at(SVERegion.alesia_shop, 350000),
             SVELocation.tempered_galaxy_dagger: self.logic.money.can_spend_at(SVERegion.isaac_shop, 600000),
             SVELocation.tempered_galaxy_hammer: self.logic.money.can_spend_at(SVERegion.isaac_shop, 400000),
+        })
+        self.registry.item_rules.update({
             AnimalProduct.sve_goose_egg: self.logic.animal.has_animal(Animal.sve_goose),
             AnimalProduct.sve_golden_goose_egg: self.logic.animal.has_animal(Animal.sve_goose),
             AnimalProduct.sve_honey_jar: self.logic.animal.has_animal(Animal.sve_bear),
             AnimalProduct.sve_camel_fur: self.logic.animal.has_animal(Animal.sve_camel),
             ModArtisanGood.sve_fir_wax: self.logic.has(Machine.tapper),
             ModArtisanGood.sve_birch_water: self.logic.has(Machine.tapper),
+            SVESeed.sve_birch_seed: self.logic.skill.has_level(Skill.foraging, 1) & self.logic.ability.can_chop_trees(),
+            SVESeed.sve_fir_cone: self.logic.skill.has_level(Skill.foraging, 1) & self.logic.ability.can_chop_trees(),
         })
 
     def has_any_rune(self):

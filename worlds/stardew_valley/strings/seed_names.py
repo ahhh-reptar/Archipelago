@@ -61,6 +61,8 @@ class TreeSeed:
 
 
 class SVESeed:
+    sve_birch_seed = "Birch Seed"
+    sve_fir_cone = "Fir Cone"
     gold_carrot = "Gold Carrot Seeds"
     sweet_potato = "Sweet Potato Seeds"
     persimmon = "Persimmon Sapling"

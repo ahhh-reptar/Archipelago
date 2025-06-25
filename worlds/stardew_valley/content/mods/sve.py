@@ -11,7 +11,6 @@ from ...data.harvest import ForagingSource, HarvestCropSource
 from ...data.requirement import YearRequirement, CombatRequirement, SpecificFriendRequirement, ToolRequirement, SkillRequirement, FishingRequirement
 from ...data.shop import ShopSource
 from ...mods.mod_data import ModNames
-from ...strings.animal_product_names import AnimalProduct
 from ...strings.artisan_good_names import ArtisanGood, ModArtisanGood
 from ...strings.building_names import ModBuilding
 from ...strings.craftable_names import ModEdible
@@ -89,6 +88,13 @@ class SVEContentPack(ContentPack):
             content.game_items.pop(SVEVegetable.monster_mushroom)
             content.game_items.pop(SVESeed.slime)
             content.game_items.pop(SVEFruit.slime_berry)
+
+    def forage_source_hook(selfself, content: StardewContent):
+        #content.untag_item(SVEForage.shark_tooth, tag=ItemTag.)  #commenting this line for now because I don't know what tags shark tooth will have
+        if ginger_island_content_pack.name not in content.registered_packs:
+            # remove highlands/fable reef forage because Lance doesn't exist
+            content.game_items.pop(SVEForage.shark_tooth)
+            content.game_items.pop(SVEForage.diamond_flower)
 
     def finalize_hook(self, content: StardewContent):
         if ginger_island_content_pack.name in content.registered_packs:
@@ -173,6 +179,9 @@ register_mod_content_pack(SVEContentPack(
         SVEForage.rusty_blade: (ForagingSource(regions=(SVERegion.crimson_badlands,), other_requirements=(CombatRequirement(Performance.great),)),),
         SVEForage.rafflesia: (ForagingSource(regions=(Region.secret_woods,), seasons=Season.not_winter),),
         SVEForage.thistle: (ForagingSource(regions=(SVERegion.summit,)),),
+        SVEForage.shark_tooth: (ForagingSource(regions=(SVERegion.fable_reef,)),),
+        SVEForage.diamond_flower: (ForagingSource(regions=(SVERegion.diamond_cavern,)),),
+        SVEForage.swamp_flower: (ForagingSource(regions=(SVERegion.forbidden_maze,)),),
         ModLoot.void_pebble: (ForagingSource(regions=(SVERegion.crimson_badlands,), other_requirements=(CombatRequirement(Performance.great),)),),
         ModLoot.void_shard: (ForagingSource(regions=(SVERegion.crimson_badlands,),
                                             other_requirements=(CombatRequirement(Performance.galaxy),
