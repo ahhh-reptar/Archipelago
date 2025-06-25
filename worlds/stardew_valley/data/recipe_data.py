@@ -4,7 +4,7 @@ from .recipe_source import RecipeSource, FriendshipSource, SkillSource, QueenOfS
 from ..content.content_packs import ginger_island_content_pack
 from ..mods.mod_data import ModNames
 from ..strings.animal_product_names import AnimalProduct
-from ..strings.artisan_good_names import ArtisanGood
+from ..strings.artisan_good_names import ArtisanGood, ModArtisanGood
 from ..strings.craftable_names import ModEdible, Edible
 from ..strings.crop_names import Fruit, Vegetable, SVEFruit, DistantLandsCrop
 from ..strings.fish_names import Fish, SVEFish, WaterItem, DistantLandsFish, SVEWaterItem
@@ -13,9 +13,9 @@ from ..strings.food_names import Meal, SVEMeal, Beverage, DistantLandsMeal, Boar
 from ..strings.forageable_names import Forageable, SVEForage, Mushroom
 from ..strings.ingredient_names import Ingredient
 from ..strings.material_names import Material
-from ..strings.metal_names import Fossil, Artifact
+from ..strings.metal_names import Fossil, Artifact, Mineral
 from ..strings.monster_drop_names import Loot
-from ..strings.region_names import Region, SVERegion
+from ..strings.region_names import Region, SVERegion, LogicRegion
 from ..strings.season_names import Season
 from ..strings.seed_names import Seed
 from ..strings.skill_names import Skill, ModSkill
@@ -212,6 +212,33 @@ void_delight = friendship_and_shop_recipe(SVEMeal.void_delight, NPC.krobus, 10, 
                                           {SVEFish.void_eel: 1, Loot.void_essence: 50, Loot.solar_essence: 20}, content_pack=ModNames.sve)
 void_salmon_sushi = friendship_and_shop_recipe(SVEMeal.void_salmon_sushi, NPC.krobus, 10, Region.sewer, 5000,
                                                {Fish.void_salmon: 1, ArtisanGood.void_mayonnaise: 1, WaterItem.seaweed: 3}, content_pack=ModNames.sve)
+baked_potato = friendship_recipe(SVEMeal.baked_potato, ModNPC.marlon, 3, {Vegetable.potato: 1, ModArtisanGood.butter: 1}, content_pack=ModNames.sve)
+birch_syrup = shop_recipe(SVEMeal.birch_syrup, Region.pierre_store, 5000, {ModArtisanGood.sve_birch_water: 3, Material.sap: 25}, content_pack=ModNames.sve)
+candy = shop_recipe(SVEMeal.candy, Region.saloon, 10000, {SVEMeal.birch_syrup: 1, ModArtisanGood.sve_birch_water: 1, Ingredient.sugar: 1}, content_pack=ModNames.sve)
+cheese_charcuterie = friendship_recipe(SVEMeal.cheese_charcuterie, ModNPC.scarlett, 3,
+                                       {ModArtisanGood.butter: 1, ArtisanGood.cheese: 1, ArtisanGood.goat_cheese: 1, Ingredient.wheat_flour: 1}, content_pack=ModNames.sve)
+chocolate_truffle_bar = shop_recipe(SVEMeal.chocolate_truffle_bar, LogicRegion.festival_of_ice, 12000,
+                                    {Forageable.hazelnut: 1, AnimalProduct.truffle: 1, AnimalProduct.any_milk: 1, Ingredient.sugar: 1}, content_pack=ModNames.sve)
+fish_dumpling = friendship_recipe(SVEMeal.fish_dumpling, ModNPC.olivia, 3, {Fish.any: 1, Ingredient.oil: 1, Ingredient.wheat_flour: 1}, content_pack=ModNames.sve)
+gingerbread_man = friendship_recipe(SVEMeal.gingerbread_man, ModNPC.susan, 3, {Forageable.ginger: 1, Ingredient.sugar: 1, Ingredient.wheat_flour: 1}, content_pack=ModNames.sve)
+glazed_pear = friendship_recipe(SVEMeal.glazed_pear, ModNPC.morgan, 3,
+                                {ModArtisanGood.butter: 1, SVEFruit.pear: 1, Ingredient.sugar: 1, Ingredient.wheat_flour: 1}, content_pack=ModNames.sve)
+grilled_cheese_sandwich = friendship_recipe(SVEMeal.grilled_cheese_sandwich, ModNPC.martin, 3,
+                                            {Meal.bread: 1, ModArtisanGood.butter: 1, Meal.cheese_cauliflower: 1}, content_pack=ModNames.sve)
+ice_cream_sundae = shop_recipe(SVEMeal.ice_cream_sundae, LogicRegion.luau, 500,
+                               {Fruit.cherry: 1, Forageable.hazelnut: 1, AnimalProduct.any_milk: 1, Ingredient.sugar: 1}, content_pack=ModNames.sve)
+necatrine_fruit_bread = friendship_recipe(SVEMeal.necatrine_fruit_bread, ModNPC.claire, 3,
+                                          {SVEFruit.nectarine: 1, Ingredient.sugar: 1, Ingredient.wheat_flour: 1}, content_pack=ModNames.sve)
+pineapple_custard_crepe = friendship_recipe(SVEMeal.pineapple_custard_crepe, ModNPC.lance,3,
+                                        {ModArtisanGood.butter: 1, Fruit.pineapple: 1, Ingredient.sugar: 1, Ingredient.wheat_flour: 1}, content_pack=ModNames.sve)
+prismatic_pop = shop_recipe(SVEMeal.prismatic_pop, LogicRegion.fair, 0, #actually 3k tokens but that's trivial
+                            {AnimalProduct.any_milk: 1, Mineral.prismatic_shard: 1, Ingredient.sugar: 1}, content_pack=ModNames.sve)
+ramen = friendship_recipe(SVEMeal.ramen, ModNPC.victor, 3,
+                          {AnimalProduct.any_egg: 1, Ingredient.oil: 1, WaterItem.seaweed: 1, Ingredient.wheat_flour: 1}, content_pack=ModNames.sve)
+stuffed_persimmon = friendship_recipe(SVEMeal.stuffed_persimmon, ModNPC.andy, 3,
+                                      {Meal.bread: 1, ModArtisanGood.butter: 1, SVEFruit.persimmon: 1, Meal.stuffing: 1}, content_pack=ModNames.sve)
+vegan_cone = shop_recipe(SVEMeal.vegan_cone, Region.oasis, 700,
+                         {Forageable.coconut: 1, Ingredient.sugar: 1}, content_pack=ModNames.sve)
 
 mushroom_kebab = friendship_recipe(DistantLandsMeal.mushroom_kebab, ModNPC.goblin, 2, {Mushroom.chanterelle: 1, Mushroom.common: 1,
                                                                                        Mushroom.red: 1, Material.wood: 1}, content_pack=ModNames.distant_lands)

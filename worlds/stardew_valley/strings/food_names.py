@@ -91,6 +91,22 @@ class Beverage:
 
 
 class SVEMeal:
+    vegan_cone = "Vegan Cone"
+    stuffed_persimmon = "Stuffed Persimmon"
+    ramen = "Ramen"
+    prismatic_pop = "Prismatic Pop"
+    pineapple_custard_crepe = "Pineapple Custard Crepe"
+    necatrine_fruit_bread = "Nectarine Fruit Bread"
+    ice_cream_sundae = "Ice Cream Sundae"
+    grilled_cheese_sandwich = "Grilled Cheese Sandwich"
+    glazed_pear = "Glazed Pear"
+    gingerbread_man = "Gingerbread Man"
+    fish_dumpling = "Fish Dumpling"
+    chocolate_truffle_bar = "Chocolate Truffle Bar"
+    cheese_charcuterie = "Cheese Charcuterie"
+    candy = "Candy"
+    birch_syrup = "Birch Syrup"
+    baked_potato = "Baked Potato"
     baked_berry_oatmeal = "Baked Berry Oatmeal"
     big_bark_burger = "Big Bark Burger"
     flower_cookie = "Flower Cookie"
