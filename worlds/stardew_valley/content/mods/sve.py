@@ -81,7 +81,6 @@ class SVEContentPack(ContentPack):
         if ModNames.distant_lands in content.registered_packs:
             content.game_items.pop(ModEdible.sve_marsh_tonic)
 
-    def recipe_hook(self, content: StardewContent):
         if not ModNames.distant_lands in content.registered_packs:
             content.game_items.pop(ModEdible.svedl_marsh_tonic)
 
