@@ -366,7 +366,7 @@ sun_totem = skill_recipe(ModCraftable.sun_totem, Skill.foraging, 9,
                          {ModArtisanGood.sve_birch_water: 1, Material.hardwood: 1, Loot.solar_essence: 10}, ModNames.sve)
 wind_totem = skill_recipe(ModCraftable.wind_totem, Skill.foraging, 9,
                           {Loot.bat_wing: 10, ModArtisanGood.sve_fir_wax: 1, Material.hardwood: 1}, ModNames.sve)
-yarn_spooler = skill_recipe(ModCraftable.yarn_spooler, Skill.farming, 9,
+yarn_spooler = skill_recipe(ModMachine.yarn_spooler, Skill.farming, 9,
                             {ArtisanGood.battery_pack: 1, ModArtisanGood.sve_fir_wax: 1, Material.hardwood: 25, ArtisanGood.pine_tar: 1}, ModNames.sve)
 
 ginger_tincture = friendship_recipe(ModConsumable.ginger_tincture, ModNPC.goblin, 4, {DistantLandsForageable.brown_amanita: 1, Forageable.ginger: 5,

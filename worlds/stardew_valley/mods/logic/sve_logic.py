@@ -3,6 +3,7 @@ from ...strings.animal_names import Animal
 from ...strings.animal_product_names import AnimalProduct
 from ...strings.ap_names.mods.mod_items import SVELocation, SVERunes, SVEQuestItem
 from ...strings.artisan_good_names import ModArtisanGood
+from ...strings.craftable_names import ModMachine
 from ...strings.machine_names import Machine
 from ...strings.quest_names import Quest, ModQuest
 from ...strings.region_names import Region, SVERegion
@@ -32,6 +33,9 @@ class SVELogic(BaseLogic):
             AnimalProduct.sve_camel_fur: self.logic.animal.has_animal(Animal.sve_camel),
             ModArtisanGood.sve_fir_wax: self.logic.has(Machine.tapper),
             ModArtisanGood.sve_birch_water: self.logic.has(Machine.tapper),
+            ModArtisanGood.butter: self.logic.animal.has_animal(Animal.cow) & self.logic.has(ModMachine.sve_butter_churner),
+            ModArtisanGood.yarn: self.logic.animal.has_animal(Animal.sve_camel) & self.logic.has(ModMachine.yarn_spooler),
+            ModArtisanGood.goose_mayonnaise: self.logic.animal.has_animal(Animal.sve_goose) & self.logic.has(Machine.mayonnaise_machine),
             SVESeed.sve_birch_seed: self.logic.skill.has_level(Skill.foraging, 1) & self.logic.ability.can_chop_trees(),
             SVESeed.sve_fir_cone: self.logic.skill.has_level(Skill.foraging, 1) & self.logic.ability.can_chop_trees(),
         })
