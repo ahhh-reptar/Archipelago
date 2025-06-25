@@ -372,6 +372,7 @@ vanilla_connections_to_remove_by_content_pack: dict[str, tuple[str, ...]] = {
     ModNames.sve: (
         Entrance.mountain_to_the_mines,
         Entrance.mountain_to_adventurer_guild,
+        Entrance.enter_witch_swamp,
     )
 }
 

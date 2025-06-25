@@ -1,24 +1,36 @@
+from worlds.oot.Options import world_options
 from ..TestGeneration import get_all_permanent_progression_items
 from ..assertion import ModAssertMixin, WorldAssertMixin
 from ..bases import SVTestCase, SVTestBase, solo_multiworld
 from ..options.presets import allsanity_mods_7_x_x
 from ... import options
+from ...data.craftable_data import all_crafting_recipes
+from ...data.recipe_data import all_cooking_recipes
 from ...items import Group
 from ...mods.mod_data import invalid_mod_combinations
 from ...options.options import all_mods
 
 
+class TestAllsanityModdedRecipes(SVTestBase):
+    options = allsanity_mods_7_x_x()
+
+    def test_can_craft_all_recipes(self):
+        self.collect_everything()
+        for location in self.multiworld.get_locations():
+            with self.subTest(f"Location: {location.name}"):
+                self.assert_can_reach_location(location.name)
+
 class TestCanGenerateAllsanityWithMods(WorldAssertMixin, ModAssertMixin, SVTestCase):
 
     def test_allsanity_all_mods_when_generate_then_basic_checks(self):
         with solo_multiworld(allsanity_mods_7_x_x()) as (multi_world, _):
-            self.assert_basic_checks(multi_world)
+            self.assert_basic_checks_with_subtests(multi_world)
 
     def test_allsanity_all_mods_exclude_island_when_generate_then_basic_checks(self):
         world_options = allsanity_mods_7_x_x()
         world_options.update({options.ExcludeGingerIsland.internal_name: options.ExcludeGingerIsland.option_true})
         with solo_multiworld(world_options) as (multi_world, _):
-            self.assert_basic_checks(multi_world)
+            self.assert_basic_checks_with_subtests(multi_world)
 
 
 class TestCanGenerateWithEachMod(WorldAssertMixin, ModAssertMixin, SVTestCase):

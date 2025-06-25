@@ -7,6 +7,7 @@ class Loot:
 
 
 class ModLoot:
+    mega_purple_mushroom = "Mega Purple Mushroom"
     swamp_essence = "Swamp Essence"
     supernatural_goo = "Supernatural Goo"
     void_shard = "Void Shard"
