@@ -167,7 +167,6 @@ class Craftable:
 
 class ModEdible:
     seed_cookie = "Seed Cookie"
-    svedl_marsh_tonic = "Marsh Tonic"
     sve_marsh_tonic = "Marsh Tonic"
     sve_bombardier_elixir = "Bombardier Elixir"
     magic_elixir = "Magic Elixir"
