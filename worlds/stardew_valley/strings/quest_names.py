@@ -54,6 +54,7 @@ class Quest:
 
 
 class ModQuest:
+    LegendaryTrio = "Legendary Trio"
     MrGinger = "Mr.Ginger's request"
     AyeishaEnvelope = "Missing Envelope"
     AyeishaRing = "Ayeisha's Lost Ring"
