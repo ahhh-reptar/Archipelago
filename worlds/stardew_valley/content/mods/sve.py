@@ -77,13 +77,13 @@ class SVEContentPack(ContentPack):
         if ModNames.distant_lands in content.registered_packs:
             content.villagers.pop(villagers_data.henchman.name)
 
-    def dl_yes_recipe_hook(self, content: StardewContent):
-        if ModNames.distant_lands in content.registered_packs:
-            content.game_items.pop(ModEdible.sve_marsh_tonic)
+#    def dl_yes_recipe_hook(self, content: StardewContent):
+#        if ModNames.distant_lands in content.registered_packs:
+#            content.game_items.pop(ModEdible.sve_marsh_tonic)
 
-    def dl_no_recipe_hook(self, content: StardewContent):
-        if not ModNames.distant_lands in content.registered_packs:
-            content.game_items.pop(ModEdible.svedl_marsh_tonic)
+#    def dl_no_recipe_hook(self, content: StardewContent):
+#        if not ModNames.distant_lands in content.registered_packs:
+#            content.game_items.pop(ModEdible.svedl_marsh_tonic)
 
     def harvest_source_hook(self, content: StardewContent):
         content.untag_item(SVESeed.shrub, tag=ItemTag.CROPSANITY_SEED)
