@@ -45,7 +45,6 @@ def force_change_options_if_banned(world_options: options.StardewValleyOptions, 
         message = f"Stardew Valley Expanded {message_template} Removed from Mods."
         logger.warning(message)
 
-
 def force_change_options_if_incompatible(world_options: options.StardewValleyOptions, player: int, player_name: str) -> None:
     force_no_jojapocalypse_without_being_sure(world_options, player, player_name)
     force_eatsanity_no_enzymes_if_no_other_eatsanity(world_options, player, player_name)
@@ -54,7 +53,7 @@ def force_change_options_if_incompatible(world_options: options.StardewValleyOpt
     force_walnutsanity_deactivation_when_ginger_island_is_excluded(world_options, player, player_name)
     force_qi_special_orders_deactivation_when_ginger_island_is_excluded(world_options, player, player_name)
     force_accessibility_to_full_when_goal_requires_all_locations(player, player_name, world_options)
-
+    force_no_sve_and_distant_lands_together(world_options, player, player_name)
 
 def force_no_jojapocalypse_without_being_sure(world_options: options.StardewValleyOptions, player: int, player_name: str) -> None:
     has_jojapocalypse = world_options.jojapocalypse.value >= Jojapocalypse.option_allowed
@@ -141,3 +140,9 @@ def force_accessibility_to_full_when_goal_requires_all_locations(player, player_
         goal_name = world_options.goal.current_option_name
         logger.warning(f"Goal '{goal_name}' requires full accessibility. "
                        f"Accessibility option forced to 'Full' for player {player} ({player_name})")
+
+def force_no_sve_and_distant_lands_together(world_options: options.StardewValleyOptions, player: int, player_name: str) -> None:
+    if ModNames.sve in world_options.mods and ModNames.distant_lands in world_options.mods:
+        message = f"Stardew Valley Expanded cannot be randomized with Distant Lands.  Player {player} ({player_name}) must change their settings.  Generation Aborted."
+        logger.error(message)
+        raise ap_options.OptionError(message)
