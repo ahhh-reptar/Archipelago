@@ -5,6 +5,8 @@ from ...strings.ap_names.mods.mod_items import SVELocation, SVERunes, SVEQuestIt
 from ...strings.artisan_good_names import ModArtisanGood
 from ...strings.craftable_names import ModMachine
 from ...strings.machine_names import Machine
+from ...strings.metal_names import ModMineral
+from ...strings.performance_names import Performance
 from ...strings.quest_names import Quest, ModQuest
 from ...strings.region_names import Region, SVERegion
 from ...strings.seed_names import SVESeed
@@ -38,6 +40,7 @@ class SVELogic(BaseLogic):
             ModArtisanGood.goose_mayonnaise: self.logic.animal.has_animal(Animal.sve_goose) & self.logic.has(Machine.mayonnaise_machine),
             SVESeed.sve_birch_seed: self.logic.skill.has_level(Skill.foraging, 1) & self.logic.ability.can_chop_trees(),
             SVESeed.sve_fir_cone: self.logic.skill.has_level(Skill.foraging, 1) & self.logic.ability.can_chop_trees(),
+            ModMineral.sve_galdoran_gem: self.logic.combat.can_fight_at_level(Performance.maximum) & self.logic.region.can_reach(SVERegion.crimson_badlands),
         })
 
     def has_any_rune(self):
