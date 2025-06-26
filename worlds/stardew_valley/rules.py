@@ -1216,7 +1216,7 @@ def set_sve_ginger_island_rules(logic: StardewLogic, multiworld: MultiWorld, pla
     set_entrance_rule(multiworld, player, SVEEntrance.wizard_to_fable_reef, logic.received(SVEQuestItem.fable_reef_portal))
     set_entrance_rule(multiworld, player, SVEEntrance.highlands_to_cave,
                       logic.tool.has_tool(Tool.pickaxe, ToolMaterial.iron) & logic.tool.has_tool(Tool.axe, ToolMaterial.iron))
-    set_entrance_rule(multiworld, player, SVEEntrance.highlands_to_diamond_cavern, ((logic.tool.has_tool(Tool.pickaxe, ToolMaterial.iron)|logic.mod.magic.can_blink())
+    set_entrance_rule(multiworld, player, SVEEntrance.highlands_to_diamond_cavern, (((logic.tool.has_tool(Tool.pickaxe, ToolMaterial.iron)) & (logic.tool.has_tool(Tool.axe, ToolMaterial.iron))|logic.mod.magic.can_blink())
                                                                                     & logic.mod.sve.has_marlon_boat() & logic.combat.can_fight_at_level(Performance.great)))
     set_entrance_rule(multiworld, player, SVEEntrance.highlands_to_pond, logic.tool.has_tool(Tool.axe, ToolMaterial.iron))
 
