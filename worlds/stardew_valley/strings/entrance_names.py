@@ -313,6 +313,7 @@ class RileyEntrance:
 
 
 class SVEEntrance:
+    forbidden_maze_to_henchman_house = "Forbidden Maze to Henchman House"
     forbidden_maze_to_witch_swamp = "Forbidden Maze to Witch Swamp"
     forbidden_maze_to_henchman_backyard = "Forbidden Maze to Henchman Backyard"
     highlands_to_diamond_cavern = "Highlands to Diamond Cavern"
