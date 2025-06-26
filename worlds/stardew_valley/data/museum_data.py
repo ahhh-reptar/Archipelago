@@ -9,8 +9,7 @@ from ..strings.forageable_names import Forageable
 from ..strings.geode_names import Geode
 from ..strings.metal_names import Mineral, Artifact, Fossil
 from ..strings.monster_names import Monster
-from ..strings.region_names import Region
-
+from ..strings.region_names import Region, SVERegion
 
 @dataclass(frozen=True)
 class MuseumItem:
@@ -170,6 +169,24 @@ class Artifact:
                                   (Region.dig_site, Region.desert, Region.forest, Region.beach))
     trilobite = create_artifact("Trilobite", 7.4, (Region.dig_site, Region.desert, Region.forest, Region.beach))
 
+    #sve starts here
+    amber = create_artifact("Amber", 33, (Region.mountain, Region.railroad, Region.forest,
+                                          SVERegion.guild_summit, SVERegion.forest_west, SVERegion.blue_moon_vineyard, Region.farm, Region.mines),
+                                     monsters=unlikely)
+    boomerang = create_artifact("Boomerang", 5, (Region.forest, Region.mountain, Region.railroad, SVERegion.guild_summit, SVERegion.forest_west),
+                                     monsters=unlikely)
+    faded_button = create_artifact("Faded Button", 10, (Region.forest, Region.mountain, Region.railroad, SVERegion.guild_summit, SVERegion.forest_west),
+                                     monsters=unlikely)
+    fossilized_apple = create_artifact("Fossilized Apple", 3, (Region.farm, SVERegion.blue_moon_vineyard, SVERegion.forest_west),
+                                     monsters=unlikely)
+    old_coin = create_artifact("Old Coin", 10, (Region.town, Region.bus_stop, SVERegion.forest_west, SVERegion.unclaimed_plot),
+                                     monsters=unlikely)
+    rusty_shield = create_artifact("Rusty Shield", 5, (Region.forest, Region.mountain, SVERegion.forest_west, SVERegion.guild_summit),
+                                     monsters=unlikely)
+    stone_of_yoba = create_artifact("Stone of Yoba", 5, (Region.desert, Region.railroad, Region.farm, Region.mines, SVERegion.guild_summit),
+                                     monsters=unlikely)
+
+
 
 class Mineral:
     quartz = create_mineral(Mineral.quartz, Region.mines_floor_20, difficulty=100.0 / 5.0)
@@ -280,6 +297,9 @@ class Mineral:
     slate = create_mineral("Slate", geodes=(Geode.geode, Geode.omni))
     fairy_stone = create_mineral("Fairy Stone", geodes=(Geode.frozen, Geode.omni))
     star_shards = create_mineral("Star Shards", geodes=(Geode.magma, Geode.omni))
+
+    #sve starts here
+    galdoran_gem = create_mineral("Galdoran Gem",)  #drops from a boss monster
 
 
 dwarf_scrolls = (Artifact.dwarf_scroll_i, Artifact.dwarf_scroll_ii, Artifact.dwarf_scroll_iii, Artifact.dwarf_scroll_iv)
