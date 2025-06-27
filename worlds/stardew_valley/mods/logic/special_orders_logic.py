@@ -7,10 +7,12 @@ from ...strings.craftable_names import Consumable, Edible, Bomb
 from ...strings.crop_names import Fruit
 from ...strings.fertilizer_names import Fertilizer
 from ...strings.food_names import Meal
+from ...strings.forageable_names import Forageable, Mushroom, SVEForage
 from ...strings.geode_names import Geode
 from ...strings.material_names import Material
 from ...strings.metal_names import MetalBar, Artifact
 from ...strings.monster_drop_names import Loot
+from ...strings.quest_names import Quest
 from ...strings.region_names import Region, SVERegion
 from ...strings.special_order_names import SpecialOrder, ModSpecialOrder
 from ...strings.villager_names import ModNPC
@@ -48,6 +50,8 @@ class ModSpecialOrderLogic(BaseLogic):
                                               self.logic.region.can_reach(Region.island_south) & (
                                                       self.logic.action.can_open_geode(Geode.frozen) | self.logic.action.can_open_geode(Geode.omni)) &
                                               self.logic.region.can_reach(SVERegion.blue_moon_vineyard),
+                ModSpecialOrder.goblin_in_need: self.logic.has(SVEForage.swamp_flower) & self.logic.has(Mushroom.red) & self.logic.has(Mushroom.purple) &
+                                                self.logic.has(Mushroom.morel) & self.logic.has(Mushroom.chanterelle) & self.logic.quest.can_complete_quest(Quest.magic_ink),
                 ModSpecialOrder.homemade_fertilizer: self.logic.crafting.can_craft(all_crafting_recipes_by_name[Fertilizer.quality]) &
                                                      self.logic.region.can_reach(SVERegion.susans_house)  # quest requires you make the fertilizer
             })

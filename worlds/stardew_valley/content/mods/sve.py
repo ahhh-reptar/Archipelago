@@ -1,6 +1,3 @@
-from kivy import modname
-
-from ..content_packs import mod_module
 from ..game_content import ContentPack, StardewContent
 from ..mod_registry import register_mod_content_pack
 from ..override import override

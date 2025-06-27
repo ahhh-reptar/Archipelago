@@ -30,6 +30,7 @@ class SpecialOrder:
 
 
 class ModSpecialOrder:
+    goblin_in_need = "Goblin in Need"
     junas_monster_mash = "Juna's Monster Mash"
     andys_cellar = "Andy's Cellar"
     a_mysterious_venture = "A Mysterious Venture"
