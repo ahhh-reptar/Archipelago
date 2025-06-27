@@ -10,8 +10,10 @@ from ..strings.ap_names.mods.mod_items import SVEQuestItem
 from ..strings.building_names import Building
 from ..strings.generic_names import Generic
 from ..strings.gift_names import Gift
+from ..strings.quest_names import Quest
 from ..strings.region_names import Region, LogicRegion
 from ..strings.season_names import Season
+from ..strings.special_order_names import ModSpecialOrder
 from ..strings.villager_names import NPC, ModNPC
 
 possible_kids = ("Cute Baby", "Ugly Baby")
@@ -136,6 +138,9 @@ class RelationshipLogic(BaseLogic):
 
         elif npc == ModNPC.apples:
             rules.append(self.logic.mod.quest.has_completed_aurora_vineyard_bundle())
+
+        elif npc == ModNPC.henchman:
+            rules.append(self.logic.quest.can_complete_quest(Quest.magic_ink) & self.logic.quest.can_complete_quest(ModSpecialOrder.goblin_in_need))
 
         elif npc == ModNPC.scarlett:
             scarlett_job = self.logic.received(SVEQuestItem.scarlett_job_offer)

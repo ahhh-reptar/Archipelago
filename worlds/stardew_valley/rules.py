@@ -63,6 +63,7 @@ from .strings.region_names import Region, LogicRegion
 from .strings.season_names import Season
 from .strings.skill_names import Skill
 from .strings.special_item_names import SpecialItem
+from .strings.special_order_names import ModSpecialOrder
 from .strings.tool_names import Tool, ToolMaterial, FishingRod
 from .strings.tv_channel_names import Channel
 from .strings.villager_names import NPC, ModNPC
@@ -1210,12 +1211,15 @@ def set_sve_rules(logic: StardewLogic, multiworld: MultiWorld, player: int, cont
     set_entrance_rule(multiworld, player, SVEEntrance.railroad_to_grampleton_station, logic.received(SVEQuestItem.scarlett_job_offer))
     set_entrance_rule(multiworld, player, SVEEntrance.museum_to_gunther_bedroom, logic.relationship.has_hearts(ModNPC.gunther, 2))
     set_entrance_rule(multiworld, player, SVEEntrance.to_aurora_basement, logic.mod.quest.has_completed_aurora_vineyard_bundle())
-    set_entrance_rule(multiworld, player, SVEEntrance.forbidden_maze_to_henchman_house, (logic.quest.can_complete_quest(Quest.goblin_problem) &
+    set_entrance_rule(multiworld, player, SVEEntrance.forbidden_maze_to_henchman_house, (logic.quest.can_complete_quest(Quest.magic_ink) &
+                                                        logic.quest.can_complete_quest(ModSpecialOrder.goblin_in_need) &
                                                         (logic.has("Aegis Elixir") & logic.combat.can_fight_at_level(Performance.great)) |logic.combat.can_fight_at_level(Performance.galaxy)))
-    set_entrance_rule(multiworld, player, SVEEntrance.forbidden_maze_to_henchman_backyard, (logic.quest.can_complete_quest(Quest.goblin_problem) &
+    set_entrance_rule(multiworld, player, SVEEntrance.forbidden_maze_to_henchman_backyard, (logic.quest.can_complete_quest(Quest.magic_ink) &
+                                                        logic.quest.can_complete_quest(ModSpecialOrder.goblin_in_need) &
                                                         (logic.has("Aegis Elixir") & logic.combat.can_fight_at_level(Performance.great)) |logic.combat.can_fight_at_level(Performance.galaxy) &
                                                         logic.relationship.has_hearts(ModNPC.henchman, 8)))
-    set_entrance_rule(multiworld, player, SVEEntrance.forbidden_maze_to_witch_swamp, (logic.has("Aegis Elixir") | logic.combat.can_fight_at_level(Performance.galaxy)))
+    set_entrance_rule(multiworld, player, SVEEntrance.forbidden_maze_to_witch_swamp, (logic.has("Aegis Elixir") & logic.combat.can_fight_at_level(Performance.great)
+                                                                                      | logic.combat.can_fight_at_level(Performance.galaxy)))
     logic.mod.sve.initialize_rules()
     for location in logic.registry.sve_location_rules:
         set_rule(multiworld.get_location(location, player),
