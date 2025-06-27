@@ -13,6 +13,8 @@ class TestBundlesLogic(SVTestBase):
     def test_vault_2500g_bundle(self):
         self.assert_cannot_reach_location("2,500g Bundle")
 
+        self.collect("Community Center Key")
+        self.collect("Forest Magic")
         self.collect_lots_of_money()
         self.assert_can_reach_location("2,500g Bundle")
 
@@ -27,6 +29,8 @@ class TestRemixedBundlesLogic(SVTestBase):
     def test_sticky_bundle_has_grind_rules(self):
         self.assert_cannot_reach_location("Sticky Bundle")
 
+        self.collect("Community Center Key")
+        self.collect("Forest Magic")
         self.collect_all_the_money()
         self.assert_can_reach_location("Sticky Bundle")
 
@@ -40,6 +44,8 @@ class TestRaccoonBundlesLogic(SVTestBase):
     seed = 2  # Magic seed that does what I want. Might need to get changed if we change the randomness behavior of raccoon bundles
 
     def test_raccoon_bundles_rely_on_previous_ones(self):
+        self.collect("Forest Magic")
+        self.collect("Landslide Removed")
         self.collect("Progressive Raccoon", 6)
         self.collect("Progressive Mine Elevator", 24)
         self.collect("Mining Level", 12)

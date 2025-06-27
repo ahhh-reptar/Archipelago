@@ -267,15 +267,15 @@ class Mineral:
                              geodes=(Geode.geode, Geode.omni))
     basalt = create_mineral("Basalt",
                             geodes=(Geode.magma, Geode.omni))
-    limestone = create_mineral("Limestone",
+    limestone = create_mineral(Mineral.limestone,
                                geodes=(Geode.geode, Geode.omni))
     soapstone = create_mineral("Soapstone",
                                geodes=(Geode.frozen, Geode.omni))
     hematite = create_mineral("Hematite",
                               geodes=(Geode.frozen, Geode.omni))
-    mudstone = create_mineral("Mudstone",
+    mudstone = create_mineral(Mineral.mudstone,
                               geodes=(Geode.geode, Geode.omni))
-    obsidian = create_mineral("Obsidian",
+    obsidian = create_mineral(Mineral.obsidian,
                               geodes=(Geode.magma, Geode.omni))
     slate = create_mineral("Slate", geodes=(Geode.geode, Geode.omni))
     fairy_stone = create_mineral("Fairy Stone", geodes=(Geode.frozen, Geode.omni))

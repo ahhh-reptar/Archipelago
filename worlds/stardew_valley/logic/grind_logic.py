@@ -1,12 +1,6 @@
-from typing import Union, TYPE_CHECKING
-
 from Utils import cache_self1
 from .base_logic import BaseLogic, BaseLogicMixin
-from .book_logic import BookLogicMixin
-from .has_logic import HasLogicMixin
-from .received_logic import ReceivedLogicMixin
-from .region_logic import RegionLogicMixin
-from .time_logic import TimeLogicMixin
+from ..options import ExcludeGingerIsland
 from ..stardew_rule import StardewRule, HasProgressionPercent
 from ..strings.book_names import Book
 from ..strings.craftable_names import Consumable
@@ -16,11 +10,6 @@ from ..strings.geode_names import Geode
 from ..strings.material_names import Material
 from ..strings.region_names import Region
 from ..strings.tool_names import Tool
-
-if TYPE_CHECKING:
-    from .tool_logic import ToolLogicMixin
-else:
-    ToolLogicMixin = object
 
 MIN_MEDIUM_ITEMS = 10
 MAX_MEDIUM_ITEMS = 999
@@ -72,6 +61,15 @@ class GrindLogic(BaseLogic):
         return self.logic.and_(self.logic.tool.has_tool(Tool.hoe),
                                # Assuming twelve per month if the player does not grind it.
                                self.logic.time.has_lived_months(quantity // 12))
+
+    def can_grind_weeds(self, quantity: int) -> StardewRule:
+        regions = [Region.farm, Region.town, Region.forest, Region.secret_woods, Region.backwoods, Region.mountain, Region.railroad, Region.mutant_bug_lair]
+        if self.options.exclude_ginger_island == ExcludeGingerIsland.option_false:
+            regions.extend([Region.island_east, Region.island_west])
+        return self.logic.and_(self.logic.tool.has_scythe(),
+                               self.logic.region.can_reach_all(*regions),
+                               # Assuming 1000 per month if the player does not grind it
+                               self.logic.time.has_lived_months(quantity // 1000))
 
     def can_grind_item(self, quantity: int, item: str | None = None) -> StardewRule:
         if item in EASY_ITEMS:

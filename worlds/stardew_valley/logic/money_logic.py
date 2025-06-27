@@ -1,10 +1,16 @@
+from Options import DeathLink
 from Utils import cache_self1
 from .base_logic import BaseLogicMixin, BaseLogic
-from ..data.shop import ShopSource
-from ..options import SpecialOrderLocations
+from ..content.vanilla.qi_board import qi_board_content_pack
+from ..data.shop import ShopSource, HatMouseSource
 from ..stardew_rule import StardewRule, True_, HasProgressionPercent, False_, true_
-from ..strings.currency_names import Currency
+from ..strings.artisan_good_names import ArtisanGood
+from ..strings.building_names import Building
+from ..strings.crop_names import Vegetable
+from ..strings.currency_names import Currency, MemeCurrency
+from ..strings.food_names import Beverage
 from ..strings.region_names import Region, LogicRegion
+from ..strings.season_names import Season
 
 qi_gem_rewards = ("100 Qi Gems", "50 Qi Gems", "40 Qi Gems", "35 Qi Gems", "25 Qi Gems",
                   "20 Qi Gems", "15 Qi Gems", "10 Qi Gems")
@@ -23,10 +29,10 @@ class MoneyLogic(BaseLogic):
         if amount <= 1000:
             return self.logic.true_
 
-        pierre_rule = self.logic.region.can_reach_all((Region.pierre_store, Region.forest))
-        willy_rule = self.logic.region.can_reach_all((Region.fish_shop, LogicRegion.fishing))
-        clint_rule = self.logic.region.can_reach_all((Region.blacksmith, Region.mines_floor_5))
-        robin_rule = self.logic.region.can_reach_all((Region.carpenter, Region.secret_woods))
+        pierre_rule = self.logic.region.can_reach_all(Region.pierre_store, Region.forest)
+        willy_rule = self.logic.region.can_reach_all(Region.fish_shop, LogicRegion.fishing)
+        clint_rule = self.logic.region.can_reach_all(Region.blacksmith, Region.mines_floor_5)
+        robin_rule = self.logic.region.can_reach_all(Region.carpenter, Region.secret_woods)
         shipping_rule = self.logic.shipping.can_use_shipping_bin
 
         if amount <= 2500:
@@ -57,10 +63,19 @@ class MoneyLogic(BaseLogic):
     def can_spend_at(self, region: str, amount: int) -> StardewRule:
         return self.logic.region.can_reach(region) & self.logic.money.can_spend(amount)
 
+    def can_shop_from_hat_mouse(self, source: HatMouseSource) -> StardewRule:
+        money_rule = self.logic.money.can_spend(source.price) if source.price is not None else true_
+        region_rule = self.logic.region.can_reach(LogicRegion.hat_mouse)
+        requirements_rule = self.logic.requirement.meet_all_requirements(source.unlock_requirements) if source.unlock_requirements is not None else true_
+        return money_rule & region_rule & requirements_rule
+
     @cache_self1
     def can_shop_from(self, source: ShopSource) -> StardewRule:
         season_rule = self.logic.season.has_any(source.seasons)
-        money_rule = self.logic.money.can_spend(source.money_price) if source.money_price is not None else true_
+        if source.currency == Currency.money:
+            money_rule = self.logic.money.can_spend(source.price) if source.price is not None else true_
+        else:
+            money_rule = self.logic.money.can_trade_at(source.shop_region, source.currency, source.price) if source.price is not None else true_
 
         item_rules = []
         if source.items_price is not None:
@@ -75,21 +90,58 @@ class MoneyLogic(BaseLogic):
     def can_trade(self, currency: str, amount: int) -> StardewRule:
         if amount == 0:
             return True_()
-        if currency == Currency.money:
+        if currency == Currency.money or currency == MemeCurrency.bank_money:
             return self.can_spend(amount)
         if currency == Currency.star_token:
             return self.logic.region.can_reach(LogicRegion.fair)
         if currency == Currency.qi_coin:
             return self.logic.region.can_reach(Region.casino) & self.logic.time.has_lived_months(amount // 1000)
         if currency == Currency.qi_gem:
-            if self.options.special_order_locations & SpecialOrderLocations.value_qi:
+            if self.content.is_enabled(qi_board_content_pack):
                 number_rewards = min(len(qi_gem_rewards), max(1, (amount // 10)))
                 return self.logic.received_n(*qi_gem_rewards, count=number_rewards)
             number_rewards = 2
-            return self.logic.received_n(*qi_gem_rewards, count=number_rewards) & self.logic.region.can_reach(Region.qi_walnut_room) & \
+            return self.logic.region.can_reach(Region.qi_walnut_room) & \
                 self.logic.region.can_reach(Region.saloon) & self.can_have_earned_total(5000)
         if currency == Currency.golden_walnut:
             return self.can_spend_walnut(amount)
+        if currency == MemeCurrency.code or currency == MemeCurrency.energy or currency == MemeCurrency.blood:
+            return self.logic.true_
+        if (currency == MemeCurrency.clic or currency == MemeCurrency.steps) and amount < 100:
+            return self.logic.true_
+        if currency == MemeCurrency.clic or currency == MemeCurrency.steps or currency == MemeCurrency.time:
+            return self.logic.time.has_lived_months(1)
+        if currency == MemeCurrency.cookies:
+            return self.logic.time.has_lived_months(amount // 10000)
+        if currency == MemeCurrency.child:
+            return self.logic.relationship.has_children(1)
+        if currency == MemeCurrency.dead_crops:
+            return self.logic.season.has_all() & self.logic.skill.can_get_farming_xp & self.logic.money.can_spend(amount * 100)
+        if currency == MemeCurrency.dead_pumpkins:
+            return self.logic.season.has(Season.fall) & self.logic.season.has_any([Season.spring, Season.summer, Season.winter]) & \
+                self.logic.has(Vegetable.pumpkin) & self.logic.money.can_spend(amount * 100)
+        if currency == MemeCurrency.missed_fish:
+            return self.logic.fishing.can_catch_many_fish(amount)
+        if currency == MemeCurrency.honeywell:
+            return self.logic.has(ArtisanGood.honey) & self.logic.building.has_building(Building.well)
+        if currency == MemeCurrency.sleep_days:
+            if not self.options.multiple_day_sleep_enabled.value:
+                return self.logic.false_
+            if amount > 200:
+                return self.logic.region.can_reach(Region.farm_house) & self.logic.season.has(Season.winter)
+            return self.logic.region.can_reach(Region.farm_house)
+        if currency == MemeCurrency.time_elapsed:
+            if amount <= 1000:
+                return self.logic.true_
+            if amount <= 1400:
+                return self.logic.has(Beverage.coffee)
+            if amount <= 1800:
+                return self.logic.building.has_building(Building.stable)
+            return self.logic.has(Beverage.coffee) & self.logic.building.has_building(Building.stable)
+        if currency == MemeCurrency.deathlinks:
+            if self.options.death_link == DeathLink.option_true:
+                return self.logic.time.has_lived_months(amount)
+            return self.logic.false_
 
         return self.logic.has(currency) & self.logic.grind.can_grind_item(amount)
 

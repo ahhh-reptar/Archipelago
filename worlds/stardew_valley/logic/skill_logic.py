@@ -2,17 +2,15 @@ from functools import cached_property
 
 from Utils import cache_self1
 from .base_logic import BaseLogicMixin, BaseLogic
+from ..content.vanilla.base import base_game
 from ..data.harvest import HarvestCropSource
-from ..mods.logic.mod_skills_levels import get_mod_skill_levels
 from ..stardew_rule import StardewRule, true_, True_, False_
 from ..strings.performance_names import Performance
 from ..strings.quality_names import ForageQuality
 from ..strings.region_names import Region
 from ..strings.skill_names import Skill, all_mod_skills, all_vanilla_skills
-from ..strings.tool_names import ToolMaterial, Tool
+from ..strings.tool_names import ToolMaterial, Tool, FishingRod
 from ..strings.wallet_item_names import Wallet
-
-vanilla_skill_items = ("Farming Level", "Mining Level", "Foraging Level", "Fishing Level", "Combat Level")
 
 
 class SkillLogicMixin(BaseLogicMixin):
@@ -25,17 +23,18 @@ class SkillLogic(BaseLogic):
 
     # Should be cached
     def can_earn_level(self, skill: str, level: int) -> StardewRule:
-        if level <= 0:
-            return True_()
+        assert level > 0, "There is no level before level 0."
 
-        tool_level = min(4, (level - 1) // 2)
+        tool_level = min(5, (level + 1) // 2)
         tool_material = ToolMaterial.tiers[tool_level]
 
         previous_level_rule = self.logic.skill.has_previous_level(skill, level)
 
         if skill == Skill.fishing:
             # Not checking crab pot as this is used for not randomized skills logic, for which players need a fishing rod to start gaining xp.
-            xp_rule = self.logic.tool.has_fishing_rod(max(tool_level, 3)) & self.logic.fishing.can_fish_anywhere()
+            # We want to cap the tool level at 4, because the advanced iridium rod is excluded from logic.
+            tool_level = min(4, tool_level)
+            xp_rule = self.logic.tool.has_fishing_rod(FishingRod.tiers[tool_level]) & self.logic.fishing.can_fish_anywhere()
         elif skill == Skill.farming:
             xp_rule = self.can_get_farming_xp & self.logic.tool.has_tool(Tool.hoe, tool_material) & self.logic.tool.can_water(tool_level)
         elif skill == Skill.foraging:
@@ -46,7 +45,8 @@ class SkillLogic(BaseLogic):
                       self.logic.magic.can_use_clear_debris_instead_of_tool_level(tool_level)
             xp_rule = xp_rule & self.logic.region.can_reach(Region.mines_floor_5)
         elif skill == Skill.combat:
-            combat_tier = Performance.tiers[tool_level]
+            # Tool level starts at 1, so we need to subtract 1 to get the correct performance tier.
+            combat_tier = Performance.tiers[tool_level - 1]
             xp_rule = self.logic.combat.can_fight_at_level(combat_tier)
             xp_rule = xp_rule & self.logic.region.can_reach(Region.mines_floor_5)
         elif skill in all_mod_skills:
@@ -59,7 +59,7 @@ class SkillLogic(BaseLogic):
 
     # Should be cached
     def has_level(self, skill: str, level: int) -> StardewRule:
-        assert level >= 0, f"There is no level before level 0."
+        assert level >= 0, "There is no level before level 0."
         if level == 0:
             return true_
 
@@ -69,7 +69,7 @@ class SkillLogic(BaseLogic):
         return self.logic.skill.can_earn_level(skill, level)
 
     def has_previous_level(self, skill: str, level: int) -> StardewRule:
-        assert level > 0, f"There is no level before level 0."
+        assert level > 0, "There is no level before level 0."
         if level == 1:
             return true_
 
@@ -89,10 +89,12 @@ class SkillLogic(BaseLogic):
             return True_()
 
         if self.content.features.skill_progression.is_progressive:
-            skills_items = vanilla_skill_items
+            skills = base_game.skills
             if allow_modded_skills:
-                skills_items += get_mod_skill_levels(self.options.mods)
-            return self.logic.received_n(*skills_items, count=level)
+                skills = self.content.skills.values()
+            skill_items = [skill.level_name for skill in skills]
+
+            return self.logic.received_n(*skill_items, count=level)
 
         months_with_4_skills = max(1, (level // 4) - 1)
         months_with_5_skills = max(1, (level // 5) - 1)
@@ -123,13 +125,13 @@ class SkillLogic(BaseLogic):
     @cached_property
     def can_get_mining_xp(self) -> StardewRule:
         tool_rule = self.logic.tool.has_tool(Tool.pickaxe)
-        stone_rule = self.logic.region.can_reach_any((Region.mines_floor_5, Region.quarry, Region.skull_cavern_25, Region.volcano_floor_5))
+        stone_rule = self.logic.region.can_reach_any(Region.mines_floor_5, Region.quarry, Region.skull_cavern_25, Region.volcano_floor_5)
         return tool_rule & stone_rule
 
     @cached_property
     def can_get_combat_xp(self) -> StardewRule:
         tool_rule = self.logic.combat.has_any_weapon()
-        enemy_rule = self.logic.region.can_reach_any((Region.mines_floor_5, Region.skull_cavern_25, Region.volcano_floor_5))
+        enemy_rule = self.logic.region.can_reach_any(Region.mines_floor_5, Region.skull_cavern_25, Region.volcano_floor_5)
         return tool_rule & enemy_rule
 
     @cached_property
