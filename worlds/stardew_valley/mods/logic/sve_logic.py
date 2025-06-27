@@ -1,7 +1,7 @@
 from ...logic.base_logic import BaseLogicMixin, BaseLogic
 from ...strings.animal_names import Animal
 from ...strings.animal_product_names import AnimalProduct
-from ...strings.ap_names.mods.mod_items import SVELocation, SVERunes, SVEQuestItem
+from ...strings.ap_names.mods.mod_items import SVELocation, SVERunes, SVEQuestItem, ModVendorLoot
 from ...strings.artisan_good_names import ModArtisanGood
 from ...strings.craftable_names import ModMachine
 from ...strings.machine_names import Machine
@@ -12,6 +12,7 @@ from ...strings.region_names import Region, SVERegion
 from ...strings.seed_names import SVESeed
 from ...strings.skill_names import Skill
 from ...strings.tool_names import Tool
+from ...strings.villager_names import ModNPC
 from ...strings.wallet_item_names import Wallet
 
 
@@ -41,6 +42,7 @@ class SVELogic(BaseLogic):
             SVESeed.sve_birch_seed: self.logic.skill.has_level(Skill.foraging, 1) & self.logic.ability.can_chop_trees(),
             SVESeed.sve_fir_cone: self.logic.skill.has_level(Skill.foraging, 1) & self.logic.ability.can_chop_trees(),
             ModMineral.sve_galdoran_gem: self.logic.combat.can_fight_at_level(Performance.maximum) & self.logic.region.can_reach(SVERegion.crimson_badlands),
+            ModVendorLoot.sve_super_starfruit: self.logic.relationship.has_hearts(ModNPC.apples, 10) & self.logic.money.can_spend_at(SVERegion.junimo_woods, 80000),
         })
 
     def has_any_rune(self):

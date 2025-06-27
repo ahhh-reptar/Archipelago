@@ -62,3 +62,6 @@ class SVERunes:
 
 class ModBooks:
     digging_like_worms = "Digging Like Worms"
+
+class ModVendorLoot:
+    sve_super_starfruit = "Super Starfruit"
