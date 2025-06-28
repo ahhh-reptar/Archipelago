@@ -191,11 +191,12 @@ sve_main_land_regions = [
     RegionData(SVERegion.susans_house),
     RegionData(SVERegion.forbidden_maze,
                (SVEEntrance.forbidden_maze_to_witch_swamp,
-                SVEEntrance.forbidden_maze_to_henchman_backyard)),
+                SVEEntrance.forbidden_maze_to_henchman_backyard,
+                SVEEntrance.forbidden_maze_to_henchman_house,)),
     RegionData(SVERegion.henchman_backyard),
+    RegionData(SVERegion.henchman_house),
     RegionData(Region.witch_warp_cave, (Entrance.enter_witch_swamp,), flag=MergeFlag.REMOVE_EXITS),
     RegionData(Region.witch_warp_cave, (SVEEntrance.witch_warp_cave_to_forbidden_maze,)),
-    RegionData(Region.witch_swamp, (Entrance.enter_witch_warp_cave,), flag=MergeFlag.REMOVE_EXITS),
 ]
 
 sve_ginger_island_regions = [
@@ -279,6 +280,7 @@ sve_main_land_connections = [
     ConnectionData(SVEEntrance.witch_warp_cave_to_forbidden_maze, SVERegion.forbidden_maze, flag=RandomizationFlag.BUILDINGS),
     ConnectionData(SVEEntrance.forbidden_maze_to_witch_swamp, Region.witch_swamp, flag=RandomizationFlag.BUILDINGS),
     ConnectionData(SVEEntrance.forbidden_maze_to_henchman_backyard, SVERegion.henchman_backyard, flag=RandomizationFlag.BUILDINGS),
+    ConnectionData(SVEEntrance.forbidden_maze_to_henchman_house, SVERegion.henchman_house, flag=RandomizationFlag.BUILDINGS),
 ]
 
 sve_ginger_island_connections = [
