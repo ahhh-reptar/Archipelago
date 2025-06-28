@@ -7,6 +7,7 @@ from typing import Optional, Dict, Protocol, List, Iterable
 from . import data, content
 from .bundles.bundle_room import BundleRoom
 from .content.game_content import StardewContent
+from .content.mods.hardmodcombat import HardModCombatBosses, HardModCombatElites, HardModCombatResources
 from .content.vanilla.ginger_island import ginger_island_content_pack
 from .content.vanilla.qi_board import qi_board_content_pack
 from .data.game_item import ItemTag
@@ -754,8 +755,8 @@ def filter_modded_locations(locations: Iterable[LocationData], content: StardewC
     return (location for location in locations if content.are_all_enabled(location.content_packs))
 
 def filter_hard_mod_combat_bosses_locations(content: StardewContent, locations: Iterable[LocationData]) -> Iterable[LocationData]:
-    bosses_enabled = content.is_enabled(boss_combat)
-    return (location for location in locations if LocationTags.HARD_MOD_COMBAT_BOSSES not in location.tags)
+    mod_bosses_disabled = content.is_enabled(HardModCombatBosses)
+    return (location for location in locations if mod_bosses_disabled or LocationTags.HARD_MOD_COMBAT_BOSSES not in location.tags)
 
 def filter_hard_mod_combat_elites_locations(locations: Iterable[LocationData]) -> Iterable[LocationData]:
     return (location for location in locations if LocationTags.HARD_MOD_COMBAT_BOSSES or LocationTags.HARD_MOD_COMBAT_ELITES not in location.tags)
@@ -767,5 +768,5 @@ def filter_disabled_locations(options: StardewValleyOptions, content: StardewCon
     locations_qi_filter = filter_qi_order_locations(content, locations_island_filter)
     locations_masteries_filter = filter_masteries_locations(content, locations_qi_filter)
     locations_mod_filter = filter_modded_locations(locations_masteries_filter, content)
-    locations_hard_mod_combat_bosses_filter = filter_hard_mod_combat_bosses_locations(options, locations_hard_mod_combat_bosses_filter)
+    locations_hard_mod_combat_bosses_filter = filter_hard_mod_combat_bosses_locations(locations)
     return locations_mod_filter

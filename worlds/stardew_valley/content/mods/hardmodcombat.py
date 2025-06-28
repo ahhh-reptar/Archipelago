@@ -12,7 +12,7 @@ from ...strings.seed_names import SVESeed
 from ...strings.special_order_names import ModSpecialOrder
 
 
-class HardModCombatResources(ContentPack):
+class HardModCombatContentPack(ContentPack):
     def sve_resources_hook(self, content: StardewContent):
         if ModNames.sve in content.registered_packs:
             content.game_items.pop(SVEForage.swamp_flower)
@@ -42,15 +42,13 @@ class HardModCombatResources(ContentPack):
             content.game_items.pop(SVEVegetable.void_root)
             content.game_items.pop(SVEFruit.money_bag) #FIXME add to frontier farm section when that's supported
             content.quests.pop(ModSpecialOrder.goblin_in_need)
+            content.recipe.pop
 
-
-class HardModCombatElites(ContentPack):
     def elite_drops_hook(self, content: StardewContent):
         if ModNames.sve in content.registered_packs:
             content.game_items.pop(SVEForage.rusty_blade)
             content.game_items.pop(ModLoot.swirl_stone)
 
-class HardModCombatBosses(ContentPack):
     def boss_drops_hook(self, content: StardewContent):
         if ModNames.sve in content.registered_packs:
             content.game_items.pop(Mineral.galdoran_gem.name)
@@ -58,3 +56,8 @@ class HardModCombatBosses(ContentPack):
             content.game_items.pop(ModLoot.gold_slime_egg)
             content.game_items.pop(ModLoot.mega_purple_mushroom)
             content.quests.pop(ModQuest.LegendaryTrio)
+
+hard_mod_combat_content_pack = HardModCombatContentPack(
+    "Hard Mod Combat Exclusions",
+    weak_dependencies=(ModNames.sve,),
+)
