@@ -51,7 +51,8 @@ class ModSpecialOrderLogic(BaseLogic):
                                                       self.logic.action.can_open_geode(Geode.frozen) | self.logic.action.can_open_geode(Geode.omni)) &
                                               self.logic.region.can_reach(SVERegion.blue_moon_vineyard),
                 ModSpecialOrder.goblin_in_need: self.logic.has(SVEForage.swamp_flower) & self.logic.has(Mushroom.red) & self.logic.has(Mushroom.purple) &
-                                                self.logic.has(Mushroom.morel) & self.logic.has(Mushroom.chanterelle) & self.logic.quest.can_complete_quest(Quest.magic_ink),
+                                                self.logic.has(Mushroom.morel) & self.logic.has(Mushroom.chanterelle) & self.logic.quest.can_complete_quest(Quest.magic_ink) &
+                                                self.logic.region.can_reach(SVERegion.forbidden_maze),
                 ModSpecialOrder.homemade_fertilizer: self.logic.crafting.can_craft(all_crafting_recipes_by_name[Fertilizer.quality]) &
                                                      self.logic.region.can_reach(SVERegion.susans_house)  # quest requires you make the fertilizer
             })

@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from random import Random
 from typing import Optional, Dict, Protocol, List, Iterable
 
-from . import data
+from . import data, content
 from .bundles.bundle_room import BundleRoom
 from .content.game_content import StardewContent
 from .content.vanilla.ginger_island import ginger_island_content_pack
@@ -13,7 +13,7 @@ from .data.game_item import ItemTag
 from .data.museum_data import all_museum_items
 from .mods.mod_data import ModNames
 from .options import ArcadeMachineLocations, SpecialOrderLocations, Museumsanity, \
-    FestivalLocations, ElevatorProgression, BackpackProgression, FarmType
+    FestivalLocations, ElevatorProgression, BackpackProgression, FarmType, options
 from .options import StardewValleyOptions, Craftsanity, Chefsanity, Cooksanity, Shipsanity, Monstersanity
 from .options.options import BackpackSize, Moviesanity, Eatsanity, IncludeEndgameLocations, Friendsanity, ToolProgression
 from .strings.ap_names.ap_option_names import WalnutsanityOptionName, SecretsanityOptionName, EatsanityOptionName
@@ -27,6 +27,8 @@ LOCATION_CODE_OFFSET = 717000
 
 
 class LocationTags(enum.Enum):
+    HARD_MOD_COMBAT_ELITES = enum.auto()
+    HARD_MOD_COMBAT_BOSSES = enum.auto()
     MANDATORY = enum.auto()
     BUNDLE = enum.auto()
     TRASH_BEAR = enum.auto()
@@ -751,6 +753,12 @@ def filter_masteries_locations(content: StardewContent, locations: Iterable[Loca
 def filter_modded_locations(locations: Iterable[LocationData], content: StardewContent) -> Iterable[LocationData]:
     return (location for location in locations if content.are_all_enabled(location.content_packs))
 
+def filter_hard_mod_combat_bosses_locations(content: StardewContent, locations: Iterable[LocationData]) -> Iterable[LocationData]:
+    bosses_enabled = content.is_enabled(boss_combat)
+    return (location for location in locations if LocationTags.HARD_MOD_COMBAT_BOSSES not in location.tags)
+
+def filter_hard_mod_combat_elites_locations(locations: Iterable[LocationData]) -> Iterable[LocationData]:
+    return (location for location in locations if LocationTags.HARD_MOD_COMBAT_BOSSES or LocationTags.HARD_MOD_COMBAT_ELITES not in location.tags)
 
 def filter_disabled_locations(options: StardewValleyOptions, content: StardewContent, locations: Iterable[LocationData]) -> Iterable[LocationData]:
     locations_deprecated_filter = filter_deprecated_locations(locations)
@@ -759,4 +767,5 @@ def filter_disabled_locations(options: StardewValleyOptions, content: StardewCon
     locations_qi_filter = filter_qi_order_locations(content, locations_island_filter)
     locations_masteries_filter = filter_masteries_locations(content, locations_qi_filter)
     locations_mod_filter = filter_modded_locations(locations_masteries_filter, content)
+    locations_hard_mod_combat_bosses_filter = filter_hard_mod_combat_bosses_locations(options, locations_hard_mod_combat_bosses_filter)
     return locations_mod_filter

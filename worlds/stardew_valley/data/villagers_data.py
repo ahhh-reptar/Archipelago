@@ -54,7 +54,7 @@ museum = (Region.museum,)
 jojamart = (Region.jojamart,)
 railroad = (Region.railroad,)
 junimo = (SVERegion.junimo_woods,)
-henchman_backyard = (SVERegion.henchman_backyard,)
+henchman_house = (SVERegion.henchman_house,)
 
 # Stray Locations
 witch_swamp = (Region.witch_swamp,)
@@ -440,4 +440,4 @@ morgan = villager(ModNPC.morgan, False, forest, Season.fall, universal_loves_no_
 scarlett = villager(ModNPC.scarlett, True, bluemoon, Season.summer, universal_loves + scarlett_loves, False, ModNames.sve)
 susan = villager(ModNPC.susan, False, railroad, Season.fall, universal_loves + susan_loves, False, ModNames.sve)
 morris = villager(ModNPC.morris, False, jojamart, Season.spring, universal_loves + morris_loves, True, ModNames.sve)
-henchman = villager(ModNPC.henchman, False, witch_swamp + henchman_backyard, Season.fall, universal_loves + henchman_loves, False, ModNames.sve)
+henchman = villager(ModNPC.henchman, False, henchman_house, Season.fall, universal_loves + henchman_loves, False, ModNames.sve)

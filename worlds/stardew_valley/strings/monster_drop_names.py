@@ -7,6 +7,8 @@ class Loot:
 
 
 class ModLoot:
+    gold_slime_egg = "Gold Slime Egg"
+    magic_lamp = "Magic Lamp"
     mega_purple_mushroom = "Mega Purple Mushroom"
     swamp_essence = "Swamp Essence"
     supernatural_goo = "Supernatural Goo"

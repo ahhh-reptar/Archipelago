@@ -1015,6 +1015,21 @@ class Mods(OptionSet):
     if 'unittest' in sys.modules.keys() or 'pytest' in sys.modules.keys():
         valid_keys = all_mods
 
+class HardModCombatExclusions(Choice):
+    """If playing with mods, this option will disable checks locked behind difficult combat encounters.
+    Each version contains all the settings from above it.
+    Bosses: Disables having to fight bosses.
+    Elites: Disables having to fight in difficult regions.
+    Collecting: Disables having to collect in difficult regions."""
+    internal_name = "hard_mod_combat_exclusions"
+    display_name = "Hard Mod Combat Exclusions"
+    visibility = Visibility.template | Visibility.spoiler
+    default = 0
+    option_none = 0
+    option_bosses = 1
+    option_elites = 2
+    option_collecting = 3
+
 
 class BundlePlando(OptionSet):
     """If using Remixed or Meme bundles, this guarantees some of them will show up in your community center.

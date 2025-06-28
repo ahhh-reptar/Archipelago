@@ -75,12 +75,14 @@ class ModQuestLogic(BaseLogic):
                                       self.logic.region.can_reach(Region.blacksmith) & self.logic.region.can_reach(Region.railroad),
             ModQuest.GrandpasShed: self.logic.has_all(*(Material.hardwood, MetalBar.iron, ArtisanGood.battery_pack, Material.stone)) &
                                    self.logic.region.can_reach(SVERegion.grandpas_shed),
-            ModQuest.LegendaryTrio: self.logic.region.can_reach(SVERegion.crimson_badlands) & self.logic.region.can_reach(SVERegion.highlands_outside) &
-                                    self.logic.region.can_reach(SVERegion.forbidden_maze) & self.logic.combat.can_fight_at_level(Performance.maximum) &
-                                    self.logic.tool.has_tool(Tool.pickaxe, ToolMaterial.iron) & self.logic.tool.has_tool(Tool.axe, ToolMaterial.iron) &
-                                    self.logic.region.can_reach(SVERegion.dwarf_prison) & self.logic.quest.can_complete_quest(Quest.magic_ink) &
-                                    self.logic.region.can_reach(SVERegion.badlands_cave) & self.logic.relationship.has_hearts(ModNPC.marlon, 4) &
-                                    self.logic.region.can_reach(SVERegion.henchman_house),
+            ModQuest.LegendaryTrio: self.logic.combat.can_fight_at_level(Performance.maximum) & self.logic.tool.has_tool(Tool.pickaxe, ToolMaterial.iron) &
+                                    self.logic.tool.has_tool(Tool.axe, ToolMaterial.iron) & self.logic.quest.can_complete_quest(Quest.magic_ink) &
+                                    self.logic.relationship.has_hearts(ModNPC.marlon, 4) & self.logic.region.can_reach_all(SVERegion.crimson_badlands,
+                                                                                                                           SVERegion.highlands_outside,
+                                                                                                                           SVERegion.forbidden_maze,
+                                                                                                                           SVERegion.dwarf_prison,
+                                                                                                                           SVERegion.badlands_cave,
+                                                                                                                           SVERegion.henchman_house),
             ModQuest.MarlonsBoat: self.logic.has_all(*(Loot.void_essence, Loot.solar_essence, Loot.slime, Loot.bat_wing, Loot.bug_meat)) &
                                   self.logic.relationship.can_meet(ModNPC.lance) & self.logic.region.can_reach(SVERegion.guild_summit),
             ModQuest.AuroraVineyard: self.logic.region.can_reach(SVERegion.aurora_vineyard) & self.logic.received(SVEQuestItem.aurora_vineyard_tablet) &
