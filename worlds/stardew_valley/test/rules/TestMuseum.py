@@ -8,6 +8,18 @@ from ...logic.museum_logic import MuseumLogic
 from ...stardew_rule import true_, LiteralStardewRule
 
 
+class TestMuseumMilestones(SVTestBase):
+    options = {
+        options.Museumsanity: options.Museumsanity.option_milestones
+    }
+
+    def test_50_milestone(self):
+        self.multiworld.state.prog_items = {1: Counter()}
+
+        milestone_rule = self.world.logic.museum.can_find_museum_items(50)
+        self.assert_rule_false(milestone_rule, self.multiworld.state)
+
+
 class DisabledMuseumRule(LiteralStardewRule):
     value = False
 
@@ -19,18 +31,6 @@ class DisabledMuseumRule(LiteralStardewRule):
 
     def __repr__(self):
         return "Disabled Museum Rule"
-
-
-class TestMuseumMilestones(SVTestBase):
-    options = {
-        options.Museumsanity: options.Museumsanity.option_milestones
-    }
-
-    def test_50_milestone(self):
-        self.multiworld.state.prog_items = {1: Counter()}
-
-        milestone_rule = self.world.logic.museum.can_find_museum_items(50)
-        self.assert_rule_false(milestone_rule, self.multiworld.state)
 
 
 class TestMuseumsanityDisabledExcludesMuseumDonationsFromOtherLocations(SVTestBase):
