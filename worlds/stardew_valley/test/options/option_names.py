@@ -14,6 +14,7 @@ options_to_exclude = {"profit_margin", "starting_money",
                       "progression_balancing", "accessibility",
                       "start_inventory", "local_items", "non_local_items", "exclude_locations", "priority_locations",
                       "start_hints", "start_location_hints", "item_links", "plando_items",
+                      "hard_mod_combat_exclusions"
                       "death_link",
                       "jojapocalypse", "joja_start_price", "joja_end_price", "joja_pricing_pattern", "joja_purchases_for_membership", "joja_are_you_sure"}
 
