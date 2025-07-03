@@ -1111,6 +1111,7 @@ class StardewValleyOptions(PerGameCommonOptions):
     multiple_day_sleep_cost: MultipleDaySleepCost
     gifting: Gifting
     mods: Mods
+    hard_mod_combat_exclusions: HardModCombatExclusions
     bundle_plando: BundlePlando
     death_link: DeathLink
 
