@@ -1,15 +1,15 @@
-from ... import StardewContent
-from .. import ContentPack
-from ...data import fish_data
-from ...data.game_item import GameItem
-from ...data.museum_data import Mineral
-from ...mods.mod_data import ModNames
-from ...strings.crop_names import SVEFruit, SVEVegetable
-from ...strings.forageable_names import SVEForage
-from ...strings.monster_drop_names import ModLoot
-from ...strings.quest_names import ModQuest
-from ...strings.seed_names import SVESeed
-from ...strings.special_order_names import ModSpecialOrder
+#from ... import StardewContent
+#from .. import ContentPack
+#from ...data import fish_data
+#from ...data.game_item import GameItem
+#from ...data.museum_data import Mineral
+#from ...mods.mod_data import ModNames
+#from ...strings.crop_names import SVEFruit, SVEVegetable
+#from ...strings.forageable_names import SVEForage
+#from ...strings.monster_drop_names import ModLoot
+#from ...strings.quest_names import ModQuest
+#from ...strings.seed_names import SVESeed
+#from ...strings.special_order_names import ModSpecialOrder
 
 
 #class HardModCombatContentPack(ContentPack):
