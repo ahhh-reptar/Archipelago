@@ -8,8 +8,11 @@ from ...data.animal import Animal, AnimalName
 from ...data.building import Building
 from ...data.game_item import ItemTag, Tag, CustomRuleSource
 from ...data.harvest import ForagingSource, HarvestCropSource
-from ...data.requirement import YearRequirement, CombatRequirement, SpecificFriendRequirement, ToolRequirement, SkillRequirement, FishingRequirement
+from ...data.monster_data import MonsterSource
+from ...data.requirement import YearRequirement, CombatRequirement, SpecificFriendRequirement, ToolRequirement, \
+    SkillRequirement, FishingRequirement, QuestRequirement
 from ...data.shop import ShopSource
+from ...logic.time_logic import MAX_MONTHS
 from ...mods.mod_data import ModNames
 from ...strings.artisan_good_names import ArtisanGood, ModArtisanGood
 from ...strings.building_names import ModBuilding
@@ -22,13 +25,15 @@ from ...strings.forageable_names import Mushroom, Forageable, SVEForage
 from ...strings.gift_names import SVEGift
 from ...strings.machine_names import Machine
 from ...strings.material_names import Material
-from ...strings.metal_names import MetalBar
+from ...strings.metal_names import MetalBar, ModMineral
 from ...strings.monster_drop_names import ModLoot
 from ...strings.performance_names import Performance
+from ...strings.quest_names import ModQuest
 from ...strings.region_names import Region, SVERegion
 from ...strings.season_names import Season
 from ...strings.seed_names import SVESeed
 from ...strings.skill_names import Skill
+from ...strings.monster_names import ModMonster
 from ...strings.tool_names import Tool, ToolMaterial
 from ...strings.villager_names import ModNPC
 from ...strings.wallet_item_names import Wallet
@@ -199,15 +204,14 @@ register_mod_content_pack(SVEContentPack(
                                             other_requirements=(CombatRequirement(Performance.galaxy),
                                                                 SkillRequirement(Skill.combat, 10),
                                                                 YearRequirement(3),)),),
-        ModLoot.supernatural_goo: (ForagingSource(regions=(SVERegion.forbidden_maze,),
-                                                  other_requirements=(CombatRequirement(Performance.galaxy),
-                                                                      SkillRequirement(Skill.combat, 10),)),),
-        ModLoot.swamp_essence: (ForagingSource(regions=(SVERegion.forbidden_maze,),
-                                                  other_requirements=(CombatRequirement(Performance.galaxy),
-                                                                      SkillRequirement(Skill.combat, 10),)),),
-        ModLoot.mega_purple_mushroom: (ForagingSource(regions=(SVERegion.forbidden_maze,),
-                                                  other_requirements=(CombatRequirement(Performance.maximum),
-                                                                      SkillRequirement(Skill.combat, 10),)),),
+        ModLoot.supernatural_goo: (MonsterSource(monsters=(ModMonster.sve_swamp_poltergeist,), amount_tier=MAX_MONTHS),),
+        ModLoot.sludge: (MonsterSource(monsters=(ModMonster.sve_swamp_golem, ModMonster.sve_swamp_lurk, ModMonster.sve_toxic_bubble,), amount_tier=3),),
+        ModLoot.swamp_essence: (MonsterSource(Monsters=(ModMonster.sve_swamp_putrid_ghost,), amount_tier=3,)),
+        ModLoot.mega_purple_mushroom: (MonsterSource(monsters=(ModMonster.sve_legendary_purple_mushroom,), amount_tier=MAX_MONTHS,)),
+        #ModLoot.mega_purple_mushroom: (ForagingSource(regions=(SVERegion.forbidden_maze,),  holdiing onto this to give this to whatever I tag the legendary purple mushroom with
+        #                                          other_requirements=(CombatRequirement(Performance.maximum),
+        #                                                              SkillRequirement(Skill.combat, 10),
+        #                                                              QuestRequirement(ModQuest.LegendaryTrio),)),),
         SVEWaterItem.dulse_seaweed: (ForagingSource(regions=(Region.beach,), other_requirements=(FishingRequirement(Region.beach),)),),
 
         # Fable Reef
@@ -308,8 +312,8 @@ register_mod_content_pack(SVEContentPack(
                 CustomRuleSource(create_rule=lambda logic: logic.shipping.can_ship(ArtisanGood.wine) & logic.time.has_lived_months(8)),
                 ShopSource(
                     shop_region=Region.carpenter,
-                    price=1_000_000,
-                    items_price=((30, MetalBar.iridium), (200, Material.hardwood), (50, Machine.keg)),
+                    price=500_000,
+                    items_price=((25, MetalBar.iridium), (200, Material.hardwood), (30, Machine.keg)),
                 ),
             ),
         ),

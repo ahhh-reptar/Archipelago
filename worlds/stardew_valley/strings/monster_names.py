@@ -68,3 +68,9 @@ class MonsterCategory:
     metal_heads = "Metal Heads"
 
 
+class ModMonster:
+    sve_legendary_purple_mushroom = "Legendary Purple Mushroom"
+    sve_toxic_bubble = "Toxic Bubble"
+    sve_swamp_lurk = "Swamp Lurk"
+    sve_swamp_golem = "Swamp Golem"
+    sve_swamp_poltergeist = "Swamp Poltergeist"
