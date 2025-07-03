@@ -150,8 +150,8 @@ def force_accessibility_to_full_when_goal_requires_all_locations(player, player_
         logger.warning(f"Goal '{goal_name}' requires full accessibility. "
                        f"Accessibility option forced to 'Full' for player {player} ({player_name})")
 
-def force_no_sve_and_distant_lands_together(world_options: options.StardewValleyOptions, player: int, player_name: str) -> None:
-    if ModNames.sve in world_options.mods and ModNames.distant_lands in world_options.mods:
-        message = f"Stardew Valley Expanded cannot be randomized with Distant Lands.  Player {player} ({player_name}) must change their settings.  Generation Aborted."
-        logger.error(message)
-        raise ap_options.OptionError(message)
+#def force_no_sve_and_distant_lands_together(world_options: options.StardewValleyOptions, player: int, player_name: str) -> None:
+#    if ModNames.sve in world_options.mods and ModNames.distant_lands in world_options.mods:
+#        message = f"Stardew Valley Expanded cannot be randomized with Distant Lands.  Player {player} ({player_name}) must change their settings.  Generation Aborted."
+#        logger.error(message)
+#        raise ap_options.OptionError(message)
