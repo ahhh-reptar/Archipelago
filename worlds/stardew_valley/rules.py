@@ -1212,11 +1212,11 @@ def set_sve_rules(logic: StardewLogic, multiworld: MultiWorld, player: int, cont
     set_entrance_rule(multiworld, player, SVEEntrance.museum_to_gunther_bedroom, logic.relationship.has_hearts(ModNPC.gunther, 2))
     set_entrance_rule(multiworld, player, SVEEntrance.to_aurora_basement, logic.mod.quest.has_completed_aurora_vineyard_bundle())
     set_entrance_rule(multiworld, player, SVEEntrance.forbidden_maze_to_henchman_house, (logic.quest.can_complete_quest(Quest.magic_ink) &
-                                                        logic.quest.can_complete_quest(ModSpecialOrder.goblin_in_need) &
+                                                        logic.special_order.can_complete_special_order(ModSpecialOrder.goblin_in_need) &
                                                         (logic.has("Aegis Elixir") & logic.combat.can_fight_at_level(Performance.great)) |
                                                                                          logic.combat.can_fight_at_level(Performance.galaxy)))
     set_entrance_rule(multiworld, player, SVEEntrance.forbidden_maze_to_henchman_backyard, (logic.quest.can_complete_quest(Quest.magic_ink) &
-                                                        logic.quest.can_complete_quest(ModSpecialOrder.goblin_in_need) &
+                                                        logic.special_order.can_complete_special_order(ModSpecialOrder.goblin_in_need) &
                                                         (logic.has("Aegis Elixir") & logic.combat.can_fight_at_level(Performance.great)) |
                                                         logic.combat.can_fight_at_level(Performance.galaxy) & logic.relationship.has_hearts(ModNPC.henchman, 8)))
     set_entrance_rule(multiworld, player, SVEEntrance.forbidden_maze_to_witch_swamp, (logic.has("Aegis Elixir") & logic.combat.can_fight_at_level(Performance.great)|
