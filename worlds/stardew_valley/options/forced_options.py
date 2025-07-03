@@ -53,7 +53,7 @@ def force_change_options_if_incompatible(world_options: options.StardewValleyOpt
     force_walnutsanity_deactivation_when_ginger_island_is_excluded(world_options, player, player_name)
     force_qi_special_orders_deactivation_when_ginger_island_is_excluded(world_options, player, player_name)
     force_accessibility_to_full_when_goal_requires_all_locations(player, player_name, world_options)
-    force_no_sve_and_distant_lands_together(world_options, player, player_name)
+#    force_no_sve_and_distant_lands_together(world_options, player, player_name)
 
 def force_no_jojapocalypse_without_being_sure(world_options: options.StardewValleyOptions, player: int, player_name: str) -> None:
     has_jojapocalypse = world_options.jojapocalypse.value >= Jojapocalypse.option_allowed
