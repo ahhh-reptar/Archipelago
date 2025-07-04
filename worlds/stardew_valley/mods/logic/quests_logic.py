@@ -1,6 +1,7 @@
 from typing import Dict
 
 from ..mod_data import ModNames
+from ...content.mods.sve import sve_legendary_gold_slime, sve_legendary_purple_mushroom
 from ...logic.base_logic import BaseLogic, BaseLogicMixin
 from ...stardew_rule import StardewRule
 from ...strings.animal_product_names import AnimalProduct
@@ -12,7 +13,7 @@ from ...strings.food_names import Meal, Beverage
 from ...strings.material_names import Material
 from ...strings.metal_names import Ore, MetalBar
 from ...strings.monster_drop_names import Loot, ModLoot
-from ...strings.monster_names import Monster
+from ...strings.monster_names import Monster, ModMonster
 from ...strings.performance_names import Performance
 from ...strings.quest_names import Quest, ModQuest
 from ...strings.region_names import Region, SVERegion, BoardingHouseRegion
@@ -75,14 +76,11 @@ class ModQuestLogic(BaseLogic):
                                       self.logic.region.can_reach(Region.blacksmith) & self.logic.region.can_reach(Region.railroad),
             ModQuest.GrandpasShed: self.logic.has_all(*(Material.hardwood, MetalBar.iron, ArtisanGood.battery_pack, Material.stone)) &
                                    self.logic.region.can_reach(SVERegion.grandpas_shed),
-            ModQuest.LegendaryTrio: self.logic.combat.can_fight_at_level(Performance.maximum) & self.logic.tool.has_tool(Tool.pickaxe, ToolMaterial.iron) &
-                                    self.logic.tool.has_tool(Tool.axe, ToolMaterial.iron) & self.logic.quest.can_complete_quest(Quest.magic_ink) &
-                                    self.logic.relationship.has_hearts(ModNPC.marlon, 4) & self.logic.region.can_reach_all(SVERegion.crimson_badlands,
-                                                                                                                           SVERegion.highlands_outside,
-                                                                                                                           SVERegion.forbidden_maze,
-                                                                                                                           SVERegion.dwarf_prison,
-                                                                                                                           SVERegion.badlands_cave,
-                                                                                                                           SVERegion.henchman_house),
+            ModQuest.LegendaryTrio: self.logic.monster.can_kill_all(ModMonster.sve_legendary_sand_scorpion,
+                                                                    ModMonster.sve_legendary_gold_slime,
+                                                                    ModMonster.sve_legendary_purple_mushroom) &
+                                    self.logic.quest.can_complete_quest(Quest.magic_ink) & self.logic.relationship.has_hearts(ModNPC.marlon, 4) & #FIXME check if magic ink still required once progressive henchman property is added, or if it's just knowing the Henchman that's required
+                                    self.logic.region.can_reach_all(SVERegion.dwarf_prison, SVERegion.badlands_cave, SVERegion.henchman_house),
             ModQuest.MarlonsBoat: self.logic.has_all(*(Loot.void_essence, Loot.solar_essence, Loot.slime, Loot.bat_wing, Loot.bug_meat)) &
                                   self.logic.relationship.can_meet(ModNPC.lance) & self.logic.region.can_reach(SVERegion.guild_summit),
             ModQuest.AuroraVineyard: self.logic.region.can_reach(SVERegion.aurora_vineyard) & self.logic.received(SVEQuestItem.aurora_vineyard_tablet) &
