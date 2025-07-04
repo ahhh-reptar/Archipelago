@@ -236,10 +236,12 @@ register_mod_content_pack(SVEContentPack(
                                             other_requirements=(CombatRequirement(Performance.galaxy),
                                                                 SkillRequirement(Skill.combat, 10),
                                                                 YearRequirement(3),)),),
-        ModLoot.supernatural_goo: (MonsterSource(monsters=(ModMonster.sve_swamp_poltergeist,), amount_tier=MAX_MONTHS),),
-        ModLoot.sludge: (MonsterSource(monsters=(ModMonster.sve_swamp_golem, ModMonster.sve_swamp_lurk, ModMonster.sve_toxic_bubble,), amount_tier=3),),
-        ModLoot.swamp_essence: (MonsterSource(Monsters=(ModMonster.sve_swamp_putrid_ghost,), amount_tier=3,)),
+        ModLoot.supernatural_goo: (MonsterSource(monsters=(ModMonster.sve_swamp_poltergeist,), amount_tier=MAX_MONTHS)),
+        ModLoot.sludge: (MonsterSource(monsters=(ModMonster.sve_swamp_golem, ModMonster.sve_swamp_lurk, ModMonster.sve_toxic_bubble,), amount_tier=3,)),
+        ModLoot.swamp_essence: (MonsterSource(monsters=(ModMonster.sve_swamp_putrid_ghost,), amount_tier=3,)),
         ModLoot.mega_purple_mushroom: (MonsterSource(monsters=(ModMonster.sve_legendary_purple_mushroom,), amount_tier=MAX_MONTHS,)),
+        ModLoot.gold_slime_egg: (MonsterSource(monsters=(sve_legendary_gold_slime,), amount_tier=MAX_MONTHS,)),
+        ModLoot.magic_lamp: (MonsterSource(monsters=(ModMonster.sve_legendary_sand_scorpion,), amount_tier=MAX_MONTHS,)),
         SVEWaterItem.dulse_seaweed: (ForagingSource(regions=(Region.beach,), other_requirements=(FishingRequirement(Region.beach),)),),
 
         # Fable Reef
