@@ -96,4 +96,4 @@ class ModMonster:
     sve_toxic_bubble = "Toxic Bubble"
     sve_swamp_lurk = "Swamp Lurk"
     sve_swamp_golem = "Swamp Golem"
-    sve_swamp_poltergeist = "Swamp Poltergeist"
+    sve_poltergeist = "Poltergeist"
