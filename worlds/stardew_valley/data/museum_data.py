@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Tuple, Union, Optional
 
+from ..mods.mod_data import ModNames
 from ..strings.animal_product_names import AnimalProduct
 from ..strings.fish_names import WaterChest
 from ..strings.forageable_names import Forageable
@@ -18,13 +19,15 @@ class MuseumItem:
     geodes: Tuple[str, ...]
     monsters: Tuple[str, ...]
     difficulty: float
+    content_pack: str | None
 
     @staticmethod
     def of(item_name: str,
            difficulty: float,
            artifact_spot_locations: Union[str, Tuple[str, ...]],
            geodes: Union[str, Tuple[str, ...]],
-           monsters: Union[str, Tuple[str, ...]]) -> MuseumItem:
+           monsters: Union[str, Tuple[str, ...]],
+           content_pack: str | None) -> MuseumItem:
         if isinstance(artifact_spot_locations, str):
             artifact_spot_locations = (artifact_spot_locations,)
 
@@ -54,8 +57,9 @@ def create_artifact(name: str,
                     difficulty: float,
                     artifact_spot_locations: Union[str, Tuple[str, ...]] = (),
                     geodes: Union[str, Tuple[str, ...]] = (),
-                    monsters: Union[str, Tuple[str, ...]] = ()) -> MuseumItem:
-    artifact_item = MuseumItem.of(name, difficulty, artifact_spot_locations, geodes, monsters)
+                    monsters: Union[str, Tuple[str, ...]] = (),
+                    content_pack: str | None = None) -> MuseumItem:
+    artifact_item = MuseumItem.of(name, difficulty, artifact_spot_locations, geodes, monsters, content_pack)
     all_museum_artifacts.append(artifact_item)
     all_museum_items.append(artifact_item)
     return artifact_item
@@ -65,7 +69,8 @@ def create_mineral(name: str,
                    artifact_spot_locations: Union[str, Tuple[str, ...]] = (),
                    geodes: Union[str, Tuple[str, ...]] = (),
                    monsters: Union[str, Tuple[str, ...]] = (),
-                   difficulty: Optional[float] = None) -> MuseumItem:
+                   difficulty: Optional[float] = None,
+                   content_pack: str | None = None )-> MuseumItem:
     if difficulty is None:
         difficulty = 0
         if "Geode" in geodes:
@@ -79,7 +84,7 @@ def create_mineral(name: str,
         if "Fishing Chest" in geodes:
             difficulty += 4.3
 
-    mineral_item = MuseumItem.of(name, difficulty, artifact_spot_locations, geodes, monsters)
+    mineral_item = MuseumItem.of(name, difficulty, artifact_spot_locations, geodes, monsters, content_pack)
     all_museum_minerals.append(mineral_item)
     all_museum_items.append(mineral_item)
     return mineral_item
@@ -171,13 +176,13 @@ class Artifact:
 
     #sve starts here FIXME move this to SVE content pack as soon as I know how, this shit doesn't belong here
     amber = create_artifact("Amber", 33, (Region.mountain, Region.railroad, Region.forest,
-                                          SVERegion.guild_summit, SVERegion.forest_west, SVERegion.blue_moon_vineyard, Region.farm, Region.mines,),)
-    boomerang = create_artifact("Boomerang", 5, (Region.forest, Region.mountain, Region.railroad, SVERegion.guild_summit, SVERegion.forest_west,),)
-    faded_button = create_artifact("Faded Button", 10, (Region.forest, Region.mountain, Region.railroad, SVERegion.guild_summit, SVERegion.forest_west,),)
-    fossilized_apple = create_artifact("Fossilized Apple", 3, (Region.farm, SVERegion.blue_moon_vineyard, SVERegion.forest_west,),)
-    old_coin = create_artifact("Old Coin", 10, (Region.town, Region.bus_stop, SVERegion.forest_west, SVERegion.unclaimed_plot,),)
-    rusty_shield = create_artifact("Rusty Shield", 5, (Region.forest, Region.mountain, SVERegion.forest_west, SVERegion.guild_summit,),)
-    stone_of_yoba = create_artifact("Stone of Yoba", 5, (Region.desert, Region.railroad, Region.farm, Region.mines, SVERegion.guild_summit,),)
+                                          SVERegion.guild_summit, SVERegion.forest_west, SVERegion.blue_moon_vineyard, Region.farm, Region.mines,), content_pack=ModNames.sve)
+    boomerang = create_artifact("Boomerang", 5, (Region.forest, Region.mountain, Region.railroad, SVERegion.guild_summit, SVERegion.forest_west,), content_pack=ModNames.sve)
+    faded_button = create_artifact("Faded Button", 10, (Region.forest, Region.mountain, Region.railroad, SVERegion.guild_summit, SVERegion.forest_west,), content_pack=ModNames.sve)
+    fossilized_apple = create_artifact("Fossilized Apple", 3, (Region.farm, SVERegion.blue_moon_vineyard, SVERegion.forest_west,), content_pack=ModNames.sve)
+    old_coin = create_artifact("Old Coin", 10, (Region.town, Region.bus_stop, SVERegion.forest_west, SVERegion.unclaimed_plot,), content_pack=ModNames.sve)
+    rusty_shield = create_artifact("Rusty Shield", 5, (Region.forest, Region.mountain, SVERegion.forest_west, SVERegion.guild_summit,), content_pack=ModNames.sve)
+    stone_of_yoba = create_artifact("Stone of Yoba", 5, (Region.desert, Region.railroad, Region.farm, Region.mines, SVERegion.guild_summit,), content_pack=ModNames.sve)
 
 
 
@@ -292,7 +297,7 @@ class Mineral:
     star_shards = create_mineral("Star Shards", geodes=(Geode.magma, Geode.omni))
 
     #sve starts here FIXME move this to SVE content pack as soon as I know how, this shit doesn't belong here
-    galdoran_gem = create_mineral("Galdoran Gem",)  #drops from a boss monster
+    galdoran_gem = create_mineral("Galdoran Gem", content_pack=ModNames.sve)  #drops from a boss monster
 
 
 dwarf_scrolls = (Artifact.dwarf_scroll_i, Artifact.dwarf_scroll_ii, Artifact.dwarf_scroll_iii, Artifact.dwarf_scroll_iv)
