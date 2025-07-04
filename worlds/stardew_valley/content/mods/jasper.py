@@ -8,7 +8,7 @@ register_mod_content_pack(ContentPack(
     ModNames.jasper,
     villagers=(
         villagers_data.jasper,
-        villagers_data.marlon,
-        villagers_data.gunther,
+        override(villagers_data.gunther, mod_name=ModNames.sve),
+        override(villagers_data.marlon, mod_name=ModNames.sve),
     )
 ))
