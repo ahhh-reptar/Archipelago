@@ -8,7 +8,7 @@ from ...data.animal import Animal, AnimalName
 from ...data.building import Building
 from ...data.game_item import ItemTag, Tag, CustomRuleSource
 from ...data.harvest import ForagingSource, HarvestCropSource
-from ...data.monster_data import MonsterSource
+from ...data.monster_data import MonsterSource, register_monster_modification, create_monster
 from ...data.requirement import YearRequirement, CombatRequirement, SpecificFriendRequirement, ToolRequirement, \
     SkillRequirement, FishingRequirement, QuestRequirement
 from ...data.shop import ShopSource
@@ -33,7 +33,7 @@ from ...strings.region_names import Region, SVERegion
 from ...strings.season_names import Season
 from ...strings.seed_names import SVESeed
 from ...strings.skill_names import Skill
-from ...strings.monster_names import ModMonster
+from ...strings.monster_names import ModMonster, MonsterCategory
 from ...strings.tool_names import Tool, ToolMaterial
 from ...strings.villager_names import ModNPC
 from ...strings.wallet_item_names import Wallet
@@ -116,6 +116,20 @@ class SVEContentPack(ContentPack):
         if ginger_island_content_pack.name in content.registered_packs:
             content.registered_packs.add(SVE_GINGER_ISLAND_PACK)
 
+#elites
+sve_swamp_golem = create_monster(ModMonster.sve_swamp_golem, MonsterCategory.modded, SVERegion.forbidden_maze, Performance.galaxy)
+sve_swamp_lurk = create_monster(ModMonster.sve_swamp_lurk, MonsterCategory.modded, SVERegion.forbidden_maze, Performance.galaxy)
+sve_swamp_putrid_ghost = create_monster(ModMonster.sve_swamp_putrid_ghost, MonsterCategory.modded, SVERegion.forbidden_maze, Performance.galaxy)
+sve_swamp_crab = create_monster(ModMonster.sve_swamp_rock_crab, MonsterCategory.modded, SVERegion.forbidden_maze, Performance.galaxy)
+sve_poltergeist = create_monster(ModMonster.sve_swamp_poltergeist, MonsterCategory.modded, SVERegion.forbidden_maze, Performance.galaxy)
+sve_toxic_bubble = create_monster(ModMonster.sve_toxic_bubble, MonsterCategory.modded, SVERegion.forbidden_maze, Performance.galaxy)
+sve_fallen_adventurer = create_monster(ModMonster.sve_fallen_adventurer, MonsterCategory.modded, SVERegion.crimson_badlands, Performance.galaxy)
+
+#bosses
+sve_bully_rex = create_monster(ModMonster.sve_bully_rex, MonsterCategory.modded, SVERegion.highlands_pond, Performance.maximum)
+sve_legendary_purple_mushroom = create_monster(ModMonster.sve_legendary_purple_mushroom, MonsterCategory.modded, SVERegion.forbidden_maze, Performance.maximum)
+sve_legendary_gold_slime = create_monster(ModMonster.sve_legendary_gold_slime, MonsterCategory.modded, SVERegion.highlands_pond, Performance.maximum)
+sve_legendary_sand_scorpion = create_monster(ModMonster.sve_legendary_sand_scorpion, MonsterCategory.modded, SVERegion.crimson_badlands, Performance.maximum)
 
 register_mod_content_pack(SVEContentPack(
     ModNames.sve,

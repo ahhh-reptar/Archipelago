@@ -53,6 +53,7 @@ class Monster:
 
 
 class MonsterCategory:
+    modded = "Modded Monsters"
     slime = "Slimes"
     void_spirits = "Void Spirits"
     bats = "Bats"
@@ -69,6 +70,12 @@ class MonsterCategory:
 
 
 class ModMonster:
+    sve_bully_rex = "Bully Rex"
+    sve_legendary_sand_scorpion = "Legendary Sand Scorpion"
+    sve_legendary_gold_slime = "Legendary Gold Slime"
+    sve_fallen_adventurer = "Fallen Adventurer"
+    sve_swamp_rock_crab = "Swamp Rock Crab"
+    sve_swamp_putrid_ghost = "Swamp Putrid Ghost"
     sve_legendary_purple_mushroom = "Legendary Purple Mushroom"
     sve_toxic_bubble = "Toxic Bubble"
     sve_swamp_lurk = "Swamp Lurk"
