@@ -5,6 +5,7 @@ from ...strings.ap_names.mods.mod_items import SVELocation, SVERunes, SVEQuestIt
 from ...strings.artisan_good_names import ModArtisanGood
 from ...strings.craftable_names import ModMachine
 from ...strings.machine_names import Machine
+from ...strings.metal_names import ModMineral
 from ...strings.monster_drop_names import ModLoot
 from ...strings.monster_names import ModMonster
 from ...strings.quest_names import Quest, ModQuest
@@ -43,9 +44,10 @@ class SVELogic(BaseLogic):
             SVESeed.sve_fir_cone: self.logic.skill.has_level(Skill.foraging, 1) & self.logic.ability.can_chop_trees(),
             ModVendorLoot.sve_super_starfruit: self.logic.relationship.has_hearts(ModNPC.apples, 10) & self.logic.money.can_spend_at(SVERegion.junimo_woods, 80000),
             ModLoot.supernatural_goo: self.logic.monster.can_kill(ModMonster.sve_poltergeist),
-            ModLoot.sludge: self.logic.monster.can_kill_any(ModMonster.sve_swamp_golem, ModMonster.sve_swamp_lurk, ModMonster.sve_toxic_bubble,),
+            ModLoot.sludge: self.logic.monster.can_kill_any((ModMonster.sve_swamp_golem, ModMonster.sve_swamp_lurk, ModMonster.sve_toxic_bubble,)),
             ModLoot.swamp_essence: self.logic.monster.can_kill(ModMonster.sve_swamp_putrid_ghost,),
             ModLoot.mega_purple_mushroom: self.logic.monster.can_kill(ModMonster.sve_legendary_purple_mushroom,),
+            ModMineral.sve_galdoran_gem: self.logic.monster.can_kill(ModMonster.sve_legendary_sand_scorpion,),
             ModLoot.gold_slime_egg: self.logic.monster.can_kill(ModMonster.sve_legendary_gold_slime,),
             ModLoot.magic_lamp: self.logic.monster.can_kill(ModMonster.sve_legendary_sand_scorpion,),
         })
