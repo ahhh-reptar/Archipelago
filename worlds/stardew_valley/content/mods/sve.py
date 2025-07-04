@@ -119,35 +119,35 @@ class SVEContentPack(ContentPack):
 #elites
 # some of these are technically already accounted for in monster_data.py, but I'll probs try to make these unique kills too instead of just adding new locations for them
 # commenting them out for now
-sve_swamp_golem = create_monster(ModMonster.sve_swamp_golem, MonsterCategory.modded, SVERegion.forbidden_maze, Performance.galaxy)
-sve_swamp_lurk = create_monster(ModMonster.sve_swamp_lurk, MonsterCategory.modded, SVERegion.forbidden_maze, Performance.galaxy)
-sve_swamp_putrid_ghost = create_monster(ModMonster.sve_swamp_putrid_ghost, MonsterCategory.modded, SVERegion.forbidden_maze, Performance.galaxy)
-sve_swamp_flower_crab = create_monster(ModMonster.sve_swamp_flower_crab, MonsterCategory.modded, SVERegion.forbidden_maze, Performance.galaxy)
-sve_poltergeist = create_monster(ModMonster.sve_poltergeist, MonsterCategory.modded, SVERegion.forbidden_maze, Performance.galaxy)
-sve_toxic_bubble = create_monster(ModMonster.sve_toxic_bubble, MonsterCategory.modded, SVERegion.forbidden_maze, Performance.galaxy)
-sve_fallen_adventurer = create_monster(ModMonster.sve_fallen_adventurer, MonsterCategory.modded, SVERegion.crimson_badlands, Performance.galaxy)
-sve_badlands_serpent = create_monster(ModMonster.sve_badlands_serpent, MonsterCategory.modded, SVERegion.crimson_badlands, Performance.galaxy)
-#sve_corrupt_mummy = create_monster(ModMonster.sve_corrupt_mummy, MonsterCategory.modded, SVERegion.crimson_badlands, Performance.galaxy) #mummy dangerous I think
-#sve_corrupt_spirit = create_monster(ModMonster.sve_corrupt_spirit, MonsterCategory.modded, SVERegion.crimson_badlands, Performance.galaxy)
-sve_corrupt_serpent = create_monster(ModMonster.sve_corrupt_serpent, MonsterCategory.modded, SVERegion.crimson_badlands, Performance.galaxy)
-#sve_royal_badlands_serpent = create_monster(ModMonster.sve_royal_badlands_serpent, MonsterCategory.modded, SVERegion.crimson_badlands, Performance.galaxy)
-sve_sand_scorpion = create_monster(ModMonster.sve_sand_scorpion, MonsterCategory.modded, SVERegion.crimson_badlands, Performance.galaxy)
-#sve_dust_spirit = create_monster(ModMonster.sve_dust_spirit, MonsterCategory.modded, SVERegion.crimson_badlands, Performance.galaxy) #this doesn't look like a dust spirit anymore, probs needs a rename
-#sve_badlands_skeleton = create_monster(ModMonster.sve_badlands_skeleton, MonsterCategory.modded, SVERegion.crimson_badlands, Performance.galaxy) #from sprite to stone golem I cut the word dangerous because there weren't other versions anyways
-#sve_badlands_skeleton_mage = create_monster(ModMonster.sve_badlands_skeleton_mage, MonsterCategory.modded, SVERegion.crimson_badlands, Performance.galaxy)
-#sve_highlands_shadow_brute = create_monster(ModMonster.sve_highlands_shadow_brute, MonsterCategory.modded, SVERegion.highlands_cavern, Performance.galaxy)
-#sve_highlands_shadow_shaman = create_monster(ModMonster.sve_highlands_shadow_shaman, MonsterCategory.modded, SVERegion.highlands_cavern, Performance.galaxy)
+sve_swamp_golem = create_monster(ModMonster.sve_swamp_golem, MonsterCategory.modded, (SVERegion.forbidden_maze,), Performance.galaxy)
+sve_swamp_lurk = create_monster(ModMonster.sve_swamp_lurk, MonsterCategory.modded, (SVERegion.forbidden_maze,), Performance.galaxy)
+sve_swamp_putrid_ghost = create_monster(ModMonster.sve_swamp_putrid_ghost, MonsterCategory.modded, (SVERegion.forbidden_maze,), Performance.galaxy)
+sve_swamp_flower_crab = create_monster(ModMonster.sve_swamp_flower_crab, MonsterCategory.modded, (SVERegion.forbidden_maze,), Performance.galaxy)
+sve_poltergeist = create_monster(ModMonster.sve_poltergeist, MonsterCategory.modded, (SVERegion.forbidden_maze,), Performance.galaxy)
+sve_toxic_bubble = create_monster(ModMonster.sve_toxic_bubble, MonsterCategory.modded, (SVERegion.forbidden_maze,), Performance.galaxy)
+sve_fallen_adventurer = create_monster(ModMonster.sve_fallen_adventurer, MonsterCategory.modded, (SVERegion.crimson_badlands,), Performance.galaxy)
+sve_badlands_serpent = create_monster(ModMonster.sve_badlands_serpent, MonsterCategory.modded, (SVERegion.crimson_badlands,), Performance.galaxy)
+#sve_corrupt_mummy = create_monster(ModMonster.sve_corrupt_mummy, MonsterCategory.modded, (SVERegion.crimson_badlands,), Performance.galaxy) #mummy dangerous I think
+#sve_corrupt_spirit = create_monster(ModMonster.sve_corrupt_spirit, MonsterCategory.modded, (SVERegion.crimson_badlands,), Performance.galaxy)
+sve_corrupt_serpent = create_monster(ModMonster.sve_corrupt_serpent, MonsterCategory.modded, (SVERegion.crimson_badlands,), Performance.galaxy)
+#sve_royal_badlands_serpent = create_monster(ModMonster.sve_royal_badlands_serpent, MonsterCategory.modded, (SVERegion.crimson_badlands,), Performance.galaxy)
+sve_sand_scorpion = create_monster(ModMonster.sve_sand_scorpion, MonsterCategory.modded, (SVERegion.crimson_badlands,), Performance.galaxy)
+#sve_dust_spirit = create_monster(ModMonster.sve_dust_spirit, MonsterCategory.modded, (SVERegion.crimson_badlands,), Performance.galaxy) #this doesn't look like a dust spirit anymore, probs needs a rename
+#sve_badlands_skeleton = create_monster(ModMonster.sve_badlands_skeleton, MonsterCategory.modded, (SVERegion.crimson_badlands,), Performance.galaxy) #from sprite to stone golem I cut the word dangerous because there weren't other versions anyways
+#sve_badlands_skeleton_mage = create_monster(ModMonster.sve_badlands_skeleton_mage, MonsterCategory.modded, (SVERegion.crimson_badlands,), Performance.galaxy)
+#sve_highlands_shadow_brute = create_monster(ModMonster.sve_highlands_shadow_brute, MonsterCategory.modded, (SVERegion.highlands_cavern,), Performance.galaxy)
+#sve_highlands_shadow_shaman = create_monster(ModMonster.sve_highlands_shadow_shaman, MonsterCategory.modded, (SVERegion.highlands_cavern,), Performance.galaxy)
 sve_highlands_golem = create_monster(ModMonster.sve_highlands_golem, MonsterCategory.modded, (SVERegion.highlands_cavern, SVERegion.highlands_outside), Performance.galaxy)
-sve_gold_crab = create_monster(ModMonster.sve_gold_crab, MonsterCategory.modded, SVERegion.highlands_cavern, Performance.galaxy)
-sve_iron_crab = create_monster(ModMonster.sve_iron_crab, MonsterCategory.modded, SVERegion.highlands_cavern, Performance.galaxy)
-sve_copper_crab = create_monster(ModMonster.sve_copper_crab, MonsterCategory.modded, SVERegion.highlands_cavern, Performance.galaxy)
+sve_gold_crab = create_monster(ModMonster.sve_gold_crab, MonsterCategory.modded, (SVERegion.highlands_cavern,), Performance.galaxy)
+sve_iron_crab = create_monster(ModMonster.sve_iron_crab, MonsterCategory.modded, (SVERegion.highlands_cavern,), Performance.galaxy)
+sve_copper_crab = create_monster(ModMonster.sve_copper_crab, MonsterCategory.modded, (SVERegion.highlands_cavern,), Performance.galaxy)
 
 #bosses
-sve_apophis = create_monster(ModMonster.sve_apophis, MonsterCategory.modded, SVERegion.crimson_badlands, Performance.maximum)
-sve_bully_rex = create_monster(ModMonster.sve_bully_rex, MonsterCategory.modded, SVERegion.highlands_pond, Performance.maximum)
-sve_legendary_purple_mushroom = create_monster(ModMonster.sve_legendary_purple_mushroom, MonsterCategory.modded, SVERegion.forbidden_maze, Performance.maximum)
-sve_legendary_gold_slime = create_monster(ModMonster.sve_legendary_gold_slime, MonsterCategory.modded, SVERegion.highlands_pond, Performance.maximum)
-sve_legendary_sand_scorpion = create_monster(ModMonster.sve_legendary_sand_scorpion, MonsterCategory.modded, SVERegion.crimson_badlands, Performance.maximum)
+sve_apophis = create_monster(ModMonster.sve_apophis, MonsterCategory.modded, (SVERegion.crimson_badlands,), Performance.maximum)
+sve_bully_rex = create_monster(ModMonster.sve_bully_rex, MonsterCategory.modded, (SVERegion.highlands_pond,), Performance.maximum)
+sve_legendary_purple_mushroom = create_monster(ModMonster.sve_legendary_purple_mushroom, MonsterCategory.modded, (SVERegion.forbidden_maze,), Performance.maximum)
+sve_legendary_gold_slime = create_monster(ModMonster.sve_legendary_gold_slime, MonsterCategory.modded, (SVERegion.highlands_pond,), Performance.maximum)
+sve_legendary_sand_scorpion = create_monster(ModMonster.sve_legendary_sand_scorpion, MonsterCategory.modded, (SVERegion.crimson_badlands,), Performance.maximum)
 
 register_mod_content_pack(SVEContentPack(
     ModNames.sve,
