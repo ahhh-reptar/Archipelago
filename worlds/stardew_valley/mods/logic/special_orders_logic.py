@@ -1,6 +1,7 @@
 from ..mod_data import ModNames
 from ...data.craftable_data import all_crafting_recipes_by_name
 from ...logic.base_logic import BaseLogicMixin, BaseLogic
+from ...stardew_rule import Has, StardewRule
 from ...strings.ap_names.community_upgrade_names import CommunityUpgrade
 from ...strings.artisan_good_names import ArtisanGood
 from ...strings.craftable_names import Consumable, Edible, Bomb
@@ -66,3 +67,6 @@ class ModSpecialOrderLogic(BaseLogic):
             })
 
         return special_orders
+
+    def can_complete_special_order(self, special_order: str) -> StardewRule:
+        return Has(special_order, self.registry.special_order_rules, "special order")
