@@ -15,6 +15,7 @@ class StardewMonster:
     category: str
     locations: Tuple[str, ...]
     difficulty: str
+    content_pack: str | None
 
     def __repr__(self):
         return f"{self.name} [{self.category}] (Locations: {self.locations} |" \
@@ -47,8 +48,8 @@ all_monsters: List[StardewMonster] = []
 monster_modifications_by_mod: Dict[str, Dict[str, Callable[[str, StardewMonster], StardewMonster]]] = {}
 
 
-def create_monster(name: str, category: str, locations: Tuple[str, ...], difficulty: str) -> StardewMonster:
-    monster = StardewMonster(name, category, locations, difficulty)
+def create_monster(name: str, category: str, locations: Tuple[str, ...], difficulty: str, content_pack: str | None = None) -> StardewMonster:
+    monster = StardewMonster(name, category, locations, difficulty, content_pack)
     all_monsters.append(monster)
     return monster
 

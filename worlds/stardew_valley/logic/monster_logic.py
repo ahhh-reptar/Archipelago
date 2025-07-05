@@ -66,6 +66,8 @@ class MonsterLogic(BaseLogic):
             if exclude_island and all(all(location in island_regions for location in monster.locations)
                                       for monster in self.all_monsters_by_category[category]):
                 continue
+            if category.content_pack and not self.content.is_enabled(category.content_pack):
+                continue
             rules.append(self.logic.monster.can_kill_any(self.all_monsters_by_category[category]))
 
         return self.logic.and_(*rules)
