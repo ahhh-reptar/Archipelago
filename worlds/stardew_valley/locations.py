@@ -4,13 +4,12 @@ from dataclasses import dataclass
 from random import Random
 from typing import Optional, Dict, Protocol, List, Iterable
 
-from . import data, content
+from . import data
 from .bundles.bundle_room import BundleRoom
 from .content.game_content import StardewContent
 from .content.vanilla.ginger_island import ginger_island_content_pack
 from .content.vanilla.qi_board import qi_board_content_pack
 from .data.game_item import ItemTag
-from .data.museum_data import all_museum_items
 from .mods.mod_data import ModNames
 from .options import ArcadeMachineLocations, SpecialOrderLocations, Museumsanity, \
     FestivalLocations, ElevatorProgression, BackpackProgression, FarmType, options
@@ -279,17 +278,19 @@ def extend_fishsanity_locations(randomized_locations: List[LocationData], conten
         randomized_locations.append(location_table[fishsanity.to_location_name(fish.name)])
 
 
-def extend_museumsanity_locations(randomized_locations: List[LocationData], options: StardewValleyOptions, random: Random):
+def extend_museumsanity_locations(randomized_locations: List[LocationData], options: StardewValleyOptions, content: StardewContent, random: Random):
     prefix = "Museumsanity: "
     if options.museumsanity == Museumsanity.option_none:
         return
     elif options.museumsanity == Museumsanity.option_milestones:
-        randomized_locations.extend(locations_by_tag[LocationTags.MUSEUM_MILESTONES])
+        museum_locations = filter_disabled_locations(options, content, locations_by_tag[LocationTags.MUSEUM_MILESTONES])
+        randomized_locations.extend(museum_locations)
     elif options.museumsanity == Museumsanity.option_randomized:
-        randomized_locations.extend(location_table[f"{prefix}{museum_item.item_name}"]
-                                    for museum_item in all_museum_items if random.random() < 0.4)
+        museum_locations = filter_disabled_locations(options, content, locations_by_tag[LocationTags.MUSEUM_DONATIONS])
+        randomized_locations.extend(museum_location for museum_location in museum_locations if random.random() < 0.4)
     elif options.museumsanity == Museumsanity.option_all:
-        randomized_locations.extend(location_table[f"{prefix}{museum_item.item_name}"] for museum_item in all_museum_items)
+        museum_locations = filter_disabled_locations(options, content, locations_by_tag[LocationTags.MUSEUM_DONATIONS])
+        randomized_locations.extend(museum_locations)
 
 
 def extend_friendsanity_locations(randomized_locations: List[LocationData], content: StardewContent):
@@ -681,7 +682,7 @@ def create_locations(location_collector: StardewLocationCollector,
 
     extend_cropsanity_locations(randomized_locations, content)
     extend_fishsanity_locations(randomized_locations, content, random)
-    extend_museumsanity_locations(randomized_locations, options, random)
+    extend_museumsanity_locations(randomized_locations, options, content, random)
     extend_friendsanity_locations(randomized_locations, content)
 
     extend_festival_locations(randomized_locations, options, random)
