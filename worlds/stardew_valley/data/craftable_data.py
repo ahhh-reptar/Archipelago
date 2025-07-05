@@ -55,9 +55,9 @@ def friendship_recipe(name: str, friend: str, hearts: int, ingredients: Dict[str
     return create_recipe(name, ingredients, source, content_pack)
 
 
-def cutscene_recipe(name: str, region: str, friend: str, hearts: int, ingredients: Dict[str, int]) -> CraftingRecipe:
+def cutscene_recipe(name: str, region: str, friend: str, hearts: int, ingredients: Dict[str, int], content_pack: List[str] | str | None = None) -> CraftingRecipe:
     source = CutsceneSource(region, friend, hearts)
-    return create_recipe(name, ingredients, source)
+    return create_recipe(name, ingredients, source, content_pack)
 
 
 def skill_recipe(name: str, skill: str, level: int, ingredients: Dict[str, int], content_pack: List[str] | str | None = None) -> CraftingRecipe:
@@ -358,8 +358,8 @@ butter_churner = skill_recipe(ModMachine.sve_butter_churner, Skill.farming, 3,
                               {Mineral.frozen_tear: 1, MetalBar.iron: 1, Material.stone: 25, Material.wood: 25}, content_pack=ModNames.sve)
 hedge_fence = skill_recipe(ModCraftable.sve_hedge_fence, Skill.farming, 6,
                            {Material.fiber: 3, Material.wood: 1}, ModNames.sve)
-sve_marsh_tonic = friendship_recipe(ModEdible.sve_marsh_tonic, ModNPC.henchman, 4,
-                                    {Loot.slime: 30, Ingredient.sugar: 1, ModLoot.swamp_essence: 15, SVEForage.swamp_flower: 10}, content_pack=ModNames.sve)
+sve_marsh_tonic = cutscene_recipe(ModEdible.sve_marsh_tonic, SVERegion.henchman_house, ModNPC.henchman, 4,
+                                  {Loot.slime: 30, Ingredient.sugar: 1, ModLoot.swamp_essence: 15, SVEForage.swamp_flower: 10}, content_pack=ModNames.sve)
 seed_cookie = skill_recipe(ModEdible.seed_cookie, Skill.foraging, 3,
                            {TreeSeed.acorn: 1, TreeSeed.maple: 1, TreeSeed.pine: 1, SVESeed.sve_birch_seed: 1, SVESeed.sve_fir_cone: 1}, content_pack=ModNames.sve)
 small_hardwood_fence = shop_recipe(ModCraftable.small_hardwood_fence, Region.carpenter, 7000,
