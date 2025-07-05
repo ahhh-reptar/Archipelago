@@ -1,13 +1,15 @@
 from ..bases import SVTestBase
 from ... import options
 from ...locations import locations_by_tag, LocationTags, location_table
+from ...mods.mod_data import ModNames
 from ...strings.entrance_names import Entrance
 from ...strings.region_names import Region
 
 
 class TestDonationLogicAll(SVTestBase):
     options = {
-        options.Museumsanity.internal_name: options.Museumsanity.option_all
+        options.Museumsanity.internal_name: options.Museumsanity.option_all,
+        options.Mods.internal_name: frozenset({ModNames.sve}),
     }
 
     def test_cannot_make_any_donation_without_museum_access(self):
@@ -26,7 +28,8 @@ class TestDonationLogicAll(SVTestBase):
 
 class TestDonationLogicRandomized(SVTestBase):
     options = {
-        options.Museumsanity.internal_name: options.Museumsanity.option_randomized
+        options.Museumsanity.internal_name: options.Museumsanity.option_randomized,
+        options.Mods.internal_name: frozenset({ModNames.sve}),
     }
 
     def test_cannot_make_any_donation_without_museum_access(self):
@@ -47,7 +50,8 @@ class TestDonationLogicRandomized(SVTestBase):
 
 class TestDonationLogicMilestones(SVTestBase):
     options = {
-        options.Museumsanity.internal_name: options.Museumsanity.option_milestones
+        options.Museumsanity.internal_name: options.Museumsanity.option_milestones,
+        options.Mods.internal_name: frozenset({ModNames.sve}),
     }
 
     def test_cannot_make_any_donation_without_museum_access(self):
