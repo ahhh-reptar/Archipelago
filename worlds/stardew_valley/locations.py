@@ -280,17 +280,19 @@ def extend_fishsanity_locations(randomized_locations: List[LocationData], conten
         randomized_locations.append(location_table[fishsanity.to_location_name(fish.name)])
 
 
-def extend_museumsanity_locations(randomized_locations: List[LocationData], options: StardewValleyOptions, random: Random):
+def extend_museumsanity_locations(randomized_locations: List[LocationData], options: StardewValleyOptions, content: StardewContent, random: Random):
     prefix = "Museumsanity: "
     if options.museumsanity == Museumsanity.option_none:
         return
     elif options.museumsanity == Museumsanity.option_milestones:
-        randomized_locations.extend(locations_by_tag[LocationTags.MUSEUM_MILESTONES])
+        museum_locations = filter_disabled_locations(options, content, locations_by_tag[LocationTags.MUSEUM_MILESTONES])
+        randomized_locations.extend(museum_locations)
     elif options.museumsanity == Museumsanity.option_randomized:
-        randomized_locations.extend(location_table[f"{prefix}{museum_item.item_name}"]
-                                    for museum_item in all_museum_items if random.random() < 0.4)
+        museum_locations = filter_disabled_locations(options, content, locations_by_tag[LocationTags.MUSEUM_DONATIONS])
+        randomized_locations.extend(museum_location for museum_location in museum_locations if random.random() < 0.4)
     elif options.museumsanity == Museumsanity.option_all:
-        randomized_locations.extend(location_table[f"{prefix}{museum_item.item_name}"] for museum_item in all_museum_items)
+        museum_locations = filter_disabled_locations(options, content, locations_by_tag[LocationTags.MUSEUM_DONATIONS])
+        randomized_locations.extend(museum_locations)
 
 
 def extend_friendsanity_locations(randomized_locations: List[LocationData], content: StardewContent):
@@ -692,7 +694,7 @@ def create_locations(location_collector: StardewLocationCollector,
 
     extend_cropsanity_locations(randomized_locations, content)
     extend_fishsanity_locations(randomized_locations, content, random)
-    extend_museumsanity_locations(randomized_locations, options, random)
+    extend_museumsanity_locations(randomized_locations, options, content, random)
     extend_friendsanity_locations(randomized_locations, content)
 
     extend_festival_locations(randomized_locations, options, random)
