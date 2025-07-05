@@ -269,7 +269,7 @@ def set_entrance_rules(logic: StardewLogic, multiworld, player, world_options: S
     set_entrance_rule(multiworld, player, Entrance.adventurer_guild_to_bedroom, logic.monster.can_kill_max(Generic.any))
     if world_options.include_endgame_locations == IncludeEndgameLocations.option_true:
         set_entrance_rule(multiworld, player, LogicEntrance.purchase_wizard_blueprints, logic.quest.has_magic_ink())
-    set_entrance_rule(multiworld, player, LogicEntrance.search_garbage_cans, logic.time.has_lived_months(MAX_MONTHS/2))
+    set_entrance_rule(multiworld, player, LogicEntrance.search_garbage_cans, logic.time.has_lived_months(MAX_MONTHS / 2))
 
     set_entrance_rule(multiworld, player, Entrance.forest_beach_shortcut, logic.received("Forest To Beach Shortcut"))
     set_entrance_rule(multiworld, player, Entrance.mountain_jojamart_shortcut, logic.received("Mountain Shortcuts"))
@@ -482,9 +482,11 @@ def set_walnut_puzzle_rules(logic: StardewLogic, multiworld, player, world_optio
                       & logic.region.can_reach_all(Region.island_north, Region.island_west, Region.island_east, Region.island_south))
     set_location_rule(multiworld, player, "Walnutsanity: Gourmand Frog Melon", logic.has(Fruit.melon) & logic.region.can_reach(Region.island_west))
     set_location_rule(multiworld, player, "Walnutsanity: Gourmand Frog Wheat",
-                      logic.has(Vegetable.wheat) & logic.region.can_reach(Region.island_west) & logic.region.can_reach_location("Walnutsanity: Gourmand Frog Melon"))
+                      logic.has(Vegetable.wheat) & logic.region.can_reach(Region.island_west) & logic.region.can_reach_location(
+                          "Walnutsanity: Gourmand Frog Melon"))
     set_location_rule(multiworld, player, "Walnutsanity: Gourmand Frog Garlic",
-                      logic.has(Vegetable.garlic) & logic.region.can_reach(Region.island_west) & logic.region.can_reach_location("Walnutsanity: Gourmand Frog Wheat"))
+                      logic.has(Vegetable.garlic) & logic.region.can_reach(Region.island_west) & logic.region.can_reach_location(
+                          "Walnutsanity: Gourmand Frog Wheat"))
     set_location_rule(multiworld, player, "Walnutsanity: Whack A Mole", logic.tool.has_tool(Tool.watering_can, ToolMaterial.iridium))
     set_location_rule(multiworld, player, "Walnutsanity: Complete Large Animal Collection", logic.walnut.can_complete_large_animal_collection())
     set_location_rule(multiworld, player, "Walnutsanity: Complete Snake Collection", logic.walnut.can_complete_snake_collection())
@@ -1022,7 +1024,8 @@ def set_secret_note_gift_rule(logic: StardewLogic, multiworld: MultiWorld, playe
     set_location_rule(multiworld, player, secret_note_location, logic.gifts.can_fulfill(gift_requirements[secret_note_location]))
 
 
-def set_hatsanity_rules(all_location_names: Set[str], logic: StardewLogic, multiworld: MultiWorld, player: int, world_options: StardewValleyOptions, content: StardewContent):
+def set_hatsanity_rules(all_location_names: Set[str], logic: StardewLogic, multiworld: MultiWorld, player: int, world_options: StardewValleyOptions,
+                        content: StardewContent):
     for hat_location in locations.locations_by_tag[LocationTags.HATSANITY]:
         if hat_location.name not in all_location_names:
             continue
@@ -1061,7 +1064,8 @@ def set_endgame_locations_rules(logic: StardewLogic, multiworld: MultiWorld, pla
     set_location_rule(multiworld, player, "Junimo Hut Blueprint", logic.building.can_purchase_wizard_blueprint(WizardBuilding.junimo_hut))
     set_location_rule(multiworld, player, "Gold Clock Blueprint", logic.building.can_purchase_wizard_blueprint(WizardBuilding.gold_clock))
     set_location_rule(multiworld, player, "Purchase Return Scepter", logic.money.can_spend_at(Region.sewer, 2_000_000))
-    set_location_rule(multiworld, player, "Pam House Blueprint", logic.money.can_spend_at(Region.carpenter, 500_000) & logic.grind.can_grind_item(950, Material.wood))
+    set_location_rule(multiworld, player, "Pam House Blueprint",
+                      logic.money.can_spend_at(Region.carpenter, 500_000) & logic.grind.can_grind_item(950, Material.wood))
     set_location_rule(multiworld, player, "Forest To Beach Shortcut Blueprint", logic.money.can_spend_at(Region.carpenter, 75_000))
     set_location_rule(multiworld, player, "Mountain Shortcuts Blueprint", logic.money.can_spend_at(Region.carpenter, 75_000))
     set_location_rule(multiworld, player, "Town To Tide Pools Shortcut Blueprint", logic.money.can_spend_at(Region.carpenter, 75_000))
@@ -1069,7 +1073,8 @@ def set_endgame_locations_rules(logic: StardewLogic, multiworld: MultiWorld, pla
     set_location_rule(multiworld, player, "Purchase Statue Of Endless Fortune", logic.money.can_spend_at(Region.casino, 1_000_000))
     set_location_rule(multiworld, player, "Purchase Catalogue", logic.money.can_spend_at(Region.pierre_store, 30_000))
     set_location_rule(multiworld, player, "Purchase Furniture Catalogue", logic.money.can_spend_at(Region.carpenter, 200_000))
-    set_location_rule(multiworld, player, "Purchase Joja Furniture Catalogue", logic.money.can_spend_at(Region.movie_theater, 25_000)) # Place it in theater region, because it won't be available during the broken jojamart in-between state
+    set_location_rule(multiworld, player, "Purchase Joja Furniture Catalogue", logic.money.can_spend_at(Region.movie_theater,
+                                                                                                        25_000))  # Place it in theater region, because it won't be available during the broken jojamart in-between state
     set_location_rule(multiworld, player, "Purchase Junimo Catalogue", logic.money.can_spend_at(LogicRegion.traveling_cart, 70_000))
     set_location_rule(multiworld, player, "Purchase Retro Catalogue", logic.money.can_spend_at(LogicRegion.traveling_cart, 110_000))
     # set_location_rule(multiworld, player, "Find Trash Catalogue", logic) # No need, the region is enough
@@ -1201,15 +1206,22 @@ def set_sve_rules(logic: StardewLogic, multiworld: MultiWorld, player: int, cont
     set_entrance_rule(multiworld, player, SVEEntrance.museum_to_gunther_bedroom, logic.relationship.has_hearts(ModNPC.gunther, 2))
     set_entrance_rule(multiworld, player, SVEEntrance.to_aurora_basement, logic.mod.quest.has_completed_aurora_vineyard_bundle())
     set_entrance_rule(multiworld, player, SVEEntrance.forbidden_maze_to_henchman_house, (logic.quest.can_complete_quest(Quest.magic_ink) &
-                                                        logic.mod.special_order.can_complete_special_order(ModSpecialOrder.goblin_in_need) &
-                                                        (logic.has("Aegis Elixir") & logic.combat.can_fight_at_level(Performance.great)) |
+                                                                                         logic.mod.special_order.can_complete_special_order(
+                                                                                             ModSpecialOrder.goblin_in_need) &
+                                                                                         (logic.has("Aegis Elixir") & logic.combat.can_fight_at_level(
+                                                                                             Performance.great)) |
                                                                                          logic.combat.can_fight_at_level(Performance.galaxy)))
     set_entrance_rule(multiworld, player, SVEEntrance.forbidden_maze_to_henchman_backyard, (logic.quest.can_complete_quest(Quest.magic_ink) &
-                                                        logic.mod.special_order.can_complete_special_order(ModSpecialOrder.goblin_in_need) &
-                                                        (logic.has("Aegis Elixir") & logic.combat.can_fight_at_level(Performance.great)) |
-                                                        logic.combat.can_fight_at_level(Performance.galaxy) & logic.relationship.has_hearts(ModNPC.henchman, 8)))
-    set_entrance_rule(multiworld, player, SVEEntrance.forbidden_maze_to_witch_swamp, (logic.has("Aegis Elixir") & logic.combat.can_fight_at_level(Performance.great)|
-                                                                                      logic.combat.can_fight_at_level(Performance.galaxy)))
+                                                                                            logic.mod.special_order.can_complete_special_order(
+                                                                                                ModSpecialOrder.goblin_in_need) &
+                                                                                            (logic.has("Aegis Elixir") & logic.combat.can_fight_at_level(
+                                                                                                Performance.great)) |
+                                                                                            logic.combat.can_fight_at_level(
+                                                                                                Performance.galaxy) & logic.relationship.has_hearts(
+                ModNPC.henchman, 8)))
+    set_entrance_rule(multiworld, player, SVEEntrance.forbidden_maze_to_witch_swamp,
+                      (logic.has("Aegis Elixir") & logic.combat.can_fight_at_level(Performance.great) |
+                       logic.combat.can_fight_at_level(Performance.galaxy)))
     logic.mod.sve.initialize_rules()
     for location in logic.registry.sve_location_rules:
         set_rule(multiworld.get_location(location, player),
@@ -1225,8 +1237,9 @@ def set_sve_ginger_island_rules(logic: StardewLogic, multiworld: MultiWorld, pla
     set_entrance_rule(multiworld, player, SVEEntrance.wizard_to_fable_reef, logic.received(SVEQuestItem.fable_reef_portal))
     set_entrance_rule(multiworld, player, SVEEntrance.highlands_to_cave,
                       logic.tool.has_tool(Tool.pickaxe, ToolMaterial.iron) & logic.tool.has_tool(Tool.axe, ToolMaterial.iron))
-    set_entrance_rule(multiworld, player, SVEEntrance.highlands_to_diamond_cavern, (((logic.tool.has_tool(Tool.pickaxe, ToolMaterial.iron)) & (logic.tool.has_tool(Tool.axe, ToolMaterial.iron))|logic.mod.magic.can_blink())
-                                                                                    & logic.mod.sve.has_marlon_boat() & logic.combat.can_fight_at_level(Performance.great)))
+    set_entrance_rule(multiworld, player, SVEEntrance.highlands_to_diamond_cavern, (
+                ((logic.tool.has_tool(Tool.pickaxe, ToolMaterial.iron)) & (logic.tool.has_tool(Tool.axe, ToolMaterial.iron)) | logic.mod.magic.can_blink())
+                & logic.mod.sve.has_marlon_boat() & logic.combat.can_fight_at_level(Performance.great)))
     set_entrance_rule(multiworld, player, SVEEntrance.highlands_to_pond, logic.tool.has_tool(Tool.axe, ToolMaterial.iron))
 
 
