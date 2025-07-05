@@ -140,7 +140,7 @@ class RelationshipLogic(BaseLogic):
             rules.append(self.logic.mod.quest.has_completed_aurora_vineyard_bundle())
 
         elif npc == ModNPC.henchman:
-            rules.append(self.logic.quest.can_complete_quest(Quest.magic_ink) & self.logic.quest.can_complete_quest(ModSpecialOrder.goblin_in_need))
+            rules.append(self.logic.quest.can_complete_quest(Quest.magic_ink) & self.logic.mod.special_order.can_complete_special_order(ModSpecialOrder.goblin_in_need))
 
         elif npc == ModNPC.scarlett:
             scarlett_job = self.logic.received(SVEQuestItem.scarlett_job_offer)
