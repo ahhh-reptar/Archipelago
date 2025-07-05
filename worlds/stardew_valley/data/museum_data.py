@@ -9,7 +9,7 @@ from ..strings.fish_names import WaterChest
 from ..strings.forageable_names import Forageable
 from ..strings.geode_names import Geode
 from ..strings.metal_names import Mineral, Artifact, Fossil
-from ..strings.monster_names import Monster
+from ..strings.monster_names import Monster, ModMonster
 from ..strings.region_names import Region, SVERegion
 
 @dataclass(frozen=True)
@@ -297,7 +297,7 @@ class Mineral:
     star_shards = create_mineral("Star Shards", geodes=(Geode.magma, Geode.omni))
 
     #sve starts here FIXME move this to SVE content pack as soon as I know how, this shit doesn't belong here
-    galdoran_gem = create_mineral("Galdoran Gem", content_pack=ModNames.sve)  #drops from a boss monster
+    galdoran_gem = create_mineral("Galdoran Gem", SVERegion.crimson_badlands, monsters=(ModMonster.sve_legendary_sand_scorpion,), content_pack=ModNames.sve) #only drops from boss
 
 
 dwarf_scrolls = (Artifact.dwarf_scroll_i, Artifact.dwarf_scroll_ii, Artifact.dwarf_scroll_iii, Artifact.dwarf_scroll_iv)
