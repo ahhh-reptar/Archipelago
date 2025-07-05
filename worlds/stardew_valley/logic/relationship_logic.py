@@ -11,7 +11,7 @@ from ..strings.building_names import Building
 from ..strings.generic_names import Generic
 from ..strings.gift_names import Gift
 from ..strings.quest_names import Quest
-from ..strings.region_names import Region, LogicRegion
+from ..strings.region_names import Region, LogicRegion, SVERegion
 from ..strings.season_names import Season
 from ..strings.special_order_names import ModSpecialOrder
 from ..strings.villager_names import NPC, ModNPC
@@ -140,7 +140,8 @@ class RelationshipLogic(BaseLogic):
             rules.append(self.logic.mod.quest.has_completed_aurora_vineyard_bundle())
 
         elif npc == ModNPC.henchman:
-            rules.append(self.logic.quest.can_complete_quest(Quest.magic_ink) & self.logic.mod.special_order.can_complete_special_order(ModSpecialOrder.goblin_in_need))
+            rules.append(self.logic.quest.can_complete_quest(Quest.magic_ink) & self.logic.mod.special_order.can_complete_special_order(ModSpecialOrder.goblin_in_need) &
+                         self.logic.region.can_reach_all(Region.witch_hut, SVERegion.henchman_house))
 
         elif npc == ModNPC.scarlett:
             scarlett_job = self.logic.received(SVEQuestItem.scarlett_job_offer)
