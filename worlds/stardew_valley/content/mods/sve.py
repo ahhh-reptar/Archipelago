@@ -75,9 +75,6 @@ class SVEContentPack(ContentPack):
         if ginger_island_content_pack.name not in content.registered_packs:
             # Remove Lance if Ginger Island is not in content since he is first encountered in Volcano Forge
             content.villagers.pop(villagers_data.lance.name)
-            # Remove Henchman if Distant Lands is loaded because SVE automates this behavior
-        if ModNames.distant_lands in content.registered_packs:
-            content.villagers.pop(villagers_data.henchman.name)
 
 #    def dl_yes_recipe_hook(self, content: StardewContent):
 #        if ModNames.distant_lands in content.registered_packs:
