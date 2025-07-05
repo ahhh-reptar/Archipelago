@@ -4,6 +4,7 @@ from Utils import cache_self1
 from .base_logic import BaseLogic, BaseLogicMixin
 from .. import options
 from ..data.museum_data import MuseumItem, all_museum_items, all_museum_artifacts, all_museum_minerals
+from ..locations import filter_disabled_locations
 from ..stardew_rule import StardewRule, False_
 from ..strings.metal_names import Mineral
 from ..strings.region_names import Region
@@ -78,6 +79,8 @@ class MuseumLogic(BaseLogic):
             rules.append(self.logic.received("Traveling Merchant Metal Detector", 3))
 
         for donation in all_museum_items:
+            if donation.content_pack and not self.content.is_enabled(donation.content_pack):
+                continue
             rules.append(self.logic.museum.can_find_museum_item(donation))
         return self.logic.and_(*rules) & self.logic.region.can_reach(Region.museum)
 
