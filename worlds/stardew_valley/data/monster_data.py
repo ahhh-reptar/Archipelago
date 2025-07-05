@@ -54,10 +54,10 @@ def create_monster(name: str, category: str, locations: Tuple[str, ...], difficu
     return monster
 
 
-def update_monster_locations(mod_name: str, monster: StardewMonster):
+def update_monster_locations(mod_name: str, monster: StardewMonster, content_pack: str | None = None) -> StardewMonster:
     new_locations = modded_monsters_locations[mod_name][monster.name]
     total_locations = tuple(sorted(set(monster.locations + new_locations)))
-    return StardewMonster(monster.name, monster.category, total_locations, monster.difficulty)
+    return StardewMonster(monster.name, monster.category, total_locations, monster.difficulty, content_pack)
 
 
 def register_monster_modification(mod_name: str, monster: StardewMonster, modification_function):
