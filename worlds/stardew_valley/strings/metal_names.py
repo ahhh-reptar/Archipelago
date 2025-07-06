@@ -95,7 +95,7 @@ class Artifact:
     fossilized_apple = artifact("Fossilized Apple")
     old_coin = artifact("Old Coin")
     rusty_shield = artifact("Rusty Shield")
-    stone_of_yoba = artifact("Stone Of Yoba")
+    stone_of_yoba = artifact("Stone of Yoba")
 
 
 class Fossil:
