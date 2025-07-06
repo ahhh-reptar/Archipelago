@@ -88,6 +88,14 @@ class Artifact:
     rusty_spur = artifact("Rusty Spur")
     strange_doll_green = artifact("Strange Doll (Green)")
     strange_doll = artifact("Strange Doll")
+    #sve starts here
+    amber = artifact("Amber")
+    boomerang = artifact("Boomerang")
+    faded_button = artifact("Faded Button")
+    fossilized_apple = artifact("Fossilized Apple")
+    old_coin = artifact("Old Coin")
+    rusty_shield = artifact("Rusty Shield")
+    stone_of_yoba = artifact("Stone Of Yoba")
 
 
 class Fossil:
