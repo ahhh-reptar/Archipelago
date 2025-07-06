@@ -1,7 +1,7 @@
 from typing import Dict
 
 from ..mod_data import ModNames
-from ...content.mods.sve import sve_legendary_gold_slime, sve_legendary_purple_mushroom
+from ...content.mods.sve import sve_legendary_gold_slime, sve_legendary_purple_mushroom_crab
 from ...logic.base_logic import BaseLogic, BaseLogicMixin
 from ...stardew_rule import StardewRule
 from ...strings.animal_product_names import AnimalProduct
@@ -78,7 +78,7 @@ class ModQuestLogic(BaseLogic):
                                    self.logic.region.can_reach(SVERegion.grandpas_shed),
             ModQuest.LegendaryTrio: self.logic.monster.can_kill_all((ModMonster.sve_legendary_sand_scorpion,
                                                                      ModMonster.sve_legendary_gold_slime,
-                                                                     ModMonster.sve_legendary_purple_mushroom),) &
+                                                                     ModMonster.sve_legendary_purple_mushroom_crab),) &
                                     self.logic.quest.can_complete_quest(Quest.magic_ink) & self.logic.relationship.has_hearts(ModNPC.marlon, 4) & #FIXME check if magic ink still required once progressive henchman property is added, or if it's just knowing the Henchman that's required
                                     self.logic.region.can_reach_all(SVERegion.dwarf_prison, SVERegion.badlands_cave, SVERegion.henchman_house),
             ModQuest.MarlonsBoat: self.logic.has_all(*(Loot.void_essence, Loot.solar_essence, Loot.slime, Loot.bat_wing, Loot.bug_meat)) &
