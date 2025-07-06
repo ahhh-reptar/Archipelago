@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import List, Tuple, Dict, Callable
 
 from .game_item import Source
+from ..content import content_packs
 from ..mods.mod_data import ModNames
 from ..mods.mod_monster_locations import modded_monsters_locations
 from ..strings.monster_names import Monster, MonsterCategory
