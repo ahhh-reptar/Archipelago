@@ -92,7 +92,7 @@ class ModMonster:
     sve_fallen_adventurer = "Fallen Adventurer"
     sve_swamp_flower_crab = "Swamp Flower Crab"
     sve_swamp_putrid_ghost = "Swamp Putrid Ghost"
-    sve_legendary_purple_mushroom = "Legendary Purple Mushroom"
+    sve_legendary_purple_mushroom_crab = "Legendary Purple Mushroom Crab"
     sve_toxic_bubble = "Toxic Bubble"
     sve_swamp_lurk = "Swamp Lurk"
     sve_swamp_golem = "Swamp Golem"

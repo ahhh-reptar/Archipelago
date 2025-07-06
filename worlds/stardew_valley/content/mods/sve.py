@@ -142,7 +142,7 @@ sve_copper_crab = create_monster(ModMonster.sve_copper_crab, MonsterCategory.mod
 #bosses
 sve_apophis = create_monster(ModMonster.sve_apophis, MonsterCategory.modded, (SVERegion.crimson_badlands,), Performance.maximum, content_pack=ModNames.sve)
 sve_bully_rex = create_monster(ModMonster.sve_bully_rex, MonsterCategory.modded, (SVERegion.highlands_pond,), Performance.maximum, content_pack=ModNames.sve)
-sve_legendary_purple_mushroom = create_monster(ModMonster.sve_legendary_purple_mushroom, MonsterCategory.modded, (SVERegion.forbidden_maze,), Performance.maximum, content_pack=ModNames.sve)
+sve_legendary_purple_mushroom_crab = create_monster(ModMonster.sve_legendary_purple_mushroom_crab, MonsterCategory.modded, (SVERegion.forbidden_maze,), Performance.maximum, content_pack=ModNames.sve)
 sve_legendary_gold_slime = create_monster(ModMonster.sve_legendary_gold_slime, MonsterCategory.modded, (SVERegion.highlands_pond,), Performance.maximum, content_pack=ModNames.sve)
 sve_legendary_sand_scorpion = create_monster(ModMonster.sve_legendary_sand_scorpion, MonsterCategory.modded, (SVERegion.crimson_badlands,), Performance.maximum, content_pack=ModNames.sve)
 
