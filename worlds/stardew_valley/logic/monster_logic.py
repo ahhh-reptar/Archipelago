@@ -67,7 +67,10 @@ class MonsterLogic(BaseLogic):
             if exclude_island and all(all(location in island_regions for location in monster.locations)
                                       for monster in self.all_monsters_by_category[category]):
                 continue
-            if category == MonsterCategory.modded:
+            monsters_in_category = self.all_monsters_by_category[category]
+            filtered_monsters = [monster for monster in monsters_in_category if
+                                 not monster.content_pack or self.content.is_enabled(monster.content_pack)]
+            if len(filtered_monsters) <= 0:
                 continue
             rules.append(self.logic.monster.can_kill_any(self.all_monsters_by_category[category]))
 
