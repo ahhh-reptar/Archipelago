@@ -14,6 +14,7 @@ from ...data.requirement import YearRequirement, CombatRequirement, SpecificFrie
 from ...data.shop import ShopSource
 from ...logic.time_logic import MAX_MONTHS
 from ...mods.mod_data import ModNames
+from ...strings.ap_names.mods.mod_items import ModVendorLoot
 from ...strings.artisan_good_names import ArtisanGood, ModArtisanGood
 from ...strings.building_names import ModBuilding
 from ...strings.craftable_names import ModEdible
@@ -75,14 +76,6 @@ class SVEContentPack(ContentPack):
         if ginger_island_content_pack.name not in content.registered_packs:
             # Remove Lance if Ginger Island is not in content since he is first encountered in Volcano Forge
             content.villagers.pop(villagers_data.lance.name)
-
-#    def dl_yes_recipe_hook(self, content: StardewContent):
-#        if ModNames.distant_lands in content.registered_packs:
-#            content.game_items.pop(ModEdible.sve_marsh_tonic)
-
-#    def dl_no_recipe_hook(self, content: StardewContent):
-#        if not ModNames.distant_lands in content.registered_packs:
-#            content.game_items.pop(ModEdible.svedl_marsh_tonic)
 
     def harvest_source_hook(self, content: StardewContent):
         content.untag_item(SVESeed.shrub, tag=ItemTag.CROPSANITY_SEED)
@@ -171,6 +164,8 @@ register_mod_content_pack(SVEContentPack(
         SVESeed.nectarine: (ShopSource(price=6000, shop_region=Region.pierre_store),),
         SVESeed.pear: (ShopSource(price=3200, shop_region=Region.pierre_store),),
         SVESeed.persimmon: (ShopSource(price=8000, shop_region=Region.pierre_store),),
+        ModVendorLoot.sve_super_starfruit: (ShopSource(price=80000, shop_region=SVERegion.junimo_woods,
+                                                       other_requirements=(SpecificFriendRequirement(ModNPC.apples, 10),)),),
         SVESeed.sweet_potato: (ShopSource(price=134, shop_region=Region.pierre_store),),
         SVESeed.gold_carrot: (ShopSource(items_price=((3, MetalBar.gold),), shop_region=Region.desert),),
         SVESeed.tree_coin: (ShopSource(items_price=((20, ModLoot.supernatural_goo),), shop_region=SVERegion.henchman_backyard),),

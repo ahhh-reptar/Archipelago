@@ -42,7 +42,6 @@ class SVELogic(BaseLogic):
             ModArtisanGood.goose_mayonnaise: self.logic.animal.has_animal(Animal.sve_goose) & self.logic.has(Machine.mayonnaise_machine),
             SVESeed.sve_birch_seed: self.logic.skill.has_level(Skill.foraging, 1) & self.logic.ability.can_chop_trees(),
             SVESeed.sve_fir_cone: self.logic.skill.has_level(Skill.foraging, 1) & self.logic.ability.can_chop_trees(),
-            ModVendorLoot.sve_super_starfruit: self.logic.relationship.has_hearts(ModNPC.apples, 10) & self.logic.money.can_spend_at(SVERegion.junimo_woods, 80000),
             ModLoot.supernatural_goo: self.logic.monster.can_kill(ModMonster.sve_poltergeist),
             ModLoot.sludge: self.logic.monster.can_kill_any((ModMonster.sve_swamp_golem, ModMonster.sve_swamp_lurk, ModMonster.sve_toxic_bubble,)),
             ModLoot.swamp_essence: self.logic.monster.can_kill(ModMonster.sve_swamp_putrid_ghost,),
