@@ -181,6 +181,7 @@ class ModEdible:
 
 
 class ModCraftable:
+    yarn_spooler = "Yarn Spooler"
     wind_totem = "Wind Totem"
     sun_totem = "Sun Totem"
     small_hardwood_fence = "Small Hardwood Fence"
