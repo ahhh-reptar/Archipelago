@@ -1080,3 +1080,5 @@ id,name,classification,groups,content_packs
 11025,Marsh Tonic Recipe,progression,CRAFTSANITY,Stardew Valley Expanded
 11026,Small Hardwood Fence Recipe,progression,CRAFTSANITY,Stardew Valley Expanded
 11027,Henchman <3,progression,FRIENDSANITY,Stardew Valley Expanded
+11028,Monster Splitter,useful,"WEAPON,DEPRECATED",Stardew Valley Expanded
+11029,Heavy Shield,useful,"WEAPON,WEAPON_GENERIC",Stardew Valley Expanded
