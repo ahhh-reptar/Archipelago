@@ -767,20 +767,6 @@ def filter_masteries_locations(content: StardewContent, locations: Iterable[Loca
 def filter_modded_locations(locations: Iterable[LocationData], content: StardewContent) -> Iterable[LocationData]:
     return (location for location in locations if content.are_all_enabled(location.content_packs))
 
-def filter_hard_mod_combat_bosses_locations(locations: Iterable[LocationData]) -> Iterable[LocationData]:
-    mod_bosses_disabled = options.HardModCombatExclusions(1)
-    return (location for location in locations if mod_bosses_disabled or LocationTags.HARD_MOD_COMBAT_BOSSES not in location.tags)
-
-def filter_hard_mod_combat_elites_locations(locations: Iterable[LocationData]) -> Iterable[LocationData]:
-    mod_elites_disabled = options.HardModCombatExclusions(2)
-    return (location for location in locations if mod_elites_disabled or LocationTags.HARD_MOD_COMBAT_BOSSES or
-            LocationTags.HARD_MOD_COMBAT_ELITES not in location.tags)
-
-def filter_hard_mod_combat_resources_locations(locations: Iterable[LocationData]) -> Iterable[LocationData]:
-    mod_resources_disabled = options.HardModCombatExclusions(3)
-    return (location for location in locations if mod_resources_disabled or LocationTags.HARD_MOD_COMBAT_BOSSES or
-            LocationTags.HARD_MOD_COMBAT_ELITES or LocationTags.HARD_MOD_COMBAT_RESOURCES not in location.tags)
-
 def filter_disabled_locations(options: StardewValleyOptions, content: StardewContent, locations: Iterable[LocationData]) -> Iterable[LocationData]:
     locations_deprecated_filter = filter_deprecated_locations(locations)
     locations_farm_filter = filter_farm_type(options, locations_deprecated_filter)
@@ -788,7 +774,4 @@ def filter_disabled_locations(options: StardewValleyOptions, content: StardewCon
     locations_qi_filter = filter_qi_order_locations(content, locations_island_filter)
     locations_masteries_filter = filter_masteries_locations(content, locations_qi_filter)
     locations_mod_filter = filter_modded_locations(locations_masteries_filter, content)
-    locations_hard_mod_combat_bosses_filter = filter_hard_mod_combat_bosses_locations(locations_mod_filter)
-    locations_hard_mod_combat_elites_filter = filter_hard_mod_combat_elites_locations(locations_hard_mod_combat_bosses_filter)
-    locations_hard_mod_combat_resources_filter = filter_hard_mod_combat_resources_locations(locations_hard_mod_combat_elites_filter)
     return locations_mod_filter
