@@ -32,7 +32,7 @@ class ModNames:
 
 
 invalid_mod_combinations = [
-    # [ModNames.sve, ModNames.distant_lands] # This is going to become banned after Reptar's SVE update. For now, it's fine.
+     [ModNames.sve, ModNames.distant_lands] # FIXME if it turns out I can make Henchman and Zic spawn at the same time, remove this combo
 ]
 
 
