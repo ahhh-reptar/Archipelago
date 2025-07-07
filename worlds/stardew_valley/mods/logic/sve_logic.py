@@ -32,7 +32,7 @@ class SVELogic(BaseLogic):
         })
         self.registry.item_rules.update({
             AnimalProduct.sve_goose_egg: self.logic.animal.has_animal(Animal.sve_goose),
-            AnimalProduct.sve_golden_goose_egg: self.logic.animal.has_animal(Animal.sve_goose),
+            AnimalProduct.sve_golden_goose_egg: self.logic.animal.has_animal(Animal.sve_goose) & self.logic.time.has_lived_months(2),
             AnimalProduct.sve_honey_jar: self.logic.animal.has_animal(Animal.sve_bear),
             AnimalProduct.sve_camel_fur: self.logic.animal.has_animal(Animal.sve_camel),
             ModArtisanGood.sve_fir_wax: self.logic.has(Machine.tapper),
