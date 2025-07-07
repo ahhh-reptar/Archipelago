@@ -37,7 +37,7 @@ class MuseumItem:
         if isinstance(monsters, str):
             monsters = (monsters,)
 
-        return MuseumItem(item_name, artifact_spot_locations, geodes, monsters, difficulty)
+        return MuseumItem(item_name, artifact_spot_locations, geodes, monsters, difficulty, content_pack)
 
     def __repr__(self):
         return f"{self.item_name} (Artifact Spot Locations: {self.artifact_spot_locations} |" \
