@@ -45,6 +45,7 @@ class SVELogic(BaseLogic):
             ModLoot.supernatural_goo: self.logic.monster.can_kill(ModMonster.sve_poltergeist),
             ModLoot.sludge: self.logic.monster.can_kill_any((ModMonster.sve_swamp_golem, ModMonster.sve_swamp_lurk, ModMonster.sve_toxic_bubble,)),
             ModLoot.swamp_essence: self.logic.monster.can_kill(ModMonster.sve_swamp_putrid_ghost,),
+            ModLoot.golden_key: self.logic.monster.can_kill(ModMonster.sve_bully_rex,),
             ModLoot.mega_purple_mushroom: self.logic.monster.can_kill(ModMonster.sve_legendary_purple_mushroom_crab,),
             #ModMineral.sve_galdoran_gem: self.logic.monster.can_kill(ModMonster.sve_legendary_sand_scorpion,),
             ModLoot.gold_slime_egg: self.logic.monster.can_kill(ModMonster.sve_legendary_gold_slime,),

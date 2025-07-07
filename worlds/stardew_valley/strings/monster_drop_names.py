@@ -7,6 +7,7 @@ class Loot:
 
 
 class ModLoot:
+    golden_key = "Golden Key"
     sludge = "Sludge"
     gold_slime_egg = "Gold Slime Egg"
     magic_lamp = "Magic Lamp"
