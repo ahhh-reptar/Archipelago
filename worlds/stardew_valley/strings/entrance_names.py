@@ -317,7 +317,7 @@ class SVEEntrance:
     forbidden_maze_to_henchman_house = "Forbidden Maze to Henchman House"
     forbidden_maze_to_witch_swamp = "Forbidden Maze to Witch Swamp"
     forbidden_maze_to_henchman_backyard = "Forbidden Maze to Henchman Backyard"
-    highlands_to_diamond_cavern = "Highlands to Diamond Cavern"
+    highlands_to_diamond_cavern = "Highlands Outside to Diamond Cavern"
     witch_warp_cave_to_forbidden_maze = "Witch Warp Cave to Forbidden Maze"
     backwoods_to_grove = "Backwoods to Enchanted Grove"
     grove_to_outpost_warp = "Enchanted Grove to Grove Outpost Warp"
