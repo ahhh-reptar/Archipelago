@@ -3731,7 +3731,7 @@ id,region,name,tags,content_packs
 57718,Island West,Fishsanity: Sea Sponge,"FISHSANITY,GINGER_ISLAND",Stardew Valley Expanded
 57719,Island South,Fishsanity: Shiny Lunaloo,"FISHSANITY,GINGER_ISLAND",Stardew Valley Expanded
 57720,Mutant Bug Lair,Fishsanity: Snatcher Worm,FISHSANITY,Stardew Valley Expanded
-57721,Beach,Fishsanity: Starfish,"FISHSANITY,GINGER_ISLAND",Stardew Valley Expanded
+57721,Beach,Fishsanity: Starfish,FISHSANITY,Stardew Valley Expanded
 57722,Fable Reef,Fishsanity: Torpedo Trout,"FISHSANITY,GINGER_ISLAND",Stardew Valley Expanded
 57723,Witch's Swamp,Fishsanity: Void Eel,FISHSANITY,Stardew Valley Expanded
 57724,Mutant Bug Lair,Fishsanity: Water Grub,FISHSANITY,Stardew Valley Expanded
@@ -3816,7 +3816,7 @@ id,region,name,tags,content_packs
 58076,Shipping,Shipsanity: Sports Drink,SHIPSANITY,Stardew Valley Expanded
 58077,Shipping,Shipsanity: Stalk Seed,"SHIPSANITY,GINGER_ISLAND",Stardew Valley Expanded
 58078,Shipping,Shipsanity: Stamina Capsule,SHIPSANITY,Stardew Valley Expanded
-58079,Shipping,Shipsanity: Starfish,"SHIPSANITY,SHIPSANITY_FISH,GINGER_ISLAND",Stardew Valley Expanded
+58079,Shipping,Shipsanity: Starfish,"SHIPSANITY,SHIPSANITY_FISH",Stardew Valley Expanded
 58080,Shipping,Shipsanity: Swirl Stone,"SHIPSANITY,SHIPSANITY_FULL_SHIPMENT",Stardew Valley Expanded
 58081,Shipping,Shipsanity: Thistle,"SHIPSANITY,SHIPSANITY_FULL_SHIPMENT",Stardew Valley Expanded
 58082,Shipping,Shipsanity: Torpedo Trout,"SHIPSANITY,SHIPSANITY_FISH,GINGER_ISLAND",Stardew Valley Expanded
