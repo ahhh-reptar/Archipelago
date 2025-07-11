@@ -4000,16 +4000,16 @@ id,region,name,tags,content_packs
 58261,Shipping,Shipsanity: Hardwood Display: Rusty Shield,SHIPSANITY,"Archaeology,Stardew Valley Expanded"
 58262,Shipping,Shipsanity: Hardwood Display: Stone of Yoba,SHIPSANITY,"Archaeology,Stardew Valley Expanded"
 59000,Farm,Read Digging Like Worms,"BOOKSANITY,BOOKSANITY_SKILL",Archaeology
-60000,Farm,Drink Aegis Elixir,"EATSANITY,EATSANITY_SHOP",Stardew Valley Expanded
+60000,Farm,Eat Aegis Elixir,"EATSANITY,EATSANITY_SHOP",Stardew Valley Expanded
 60001,Farm,Drink Aged Blue Moon Wine,"EATSANITY,EATSANITY_SHOP",Stardew Valley Expanded
 60002,Farm,Eat Alligator,"EATSANITY,EATSANITY_FISH",Stardew Valley Expanded
 60003,Farm,Eat Ancient Fiber,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
-60004,Farm,Drink Armor Elixir,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60004,Farm,Eat Armor Elixir,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
 60005,Farm,Eat Arrowhead Shark,"EATSANITY,EATSANITY_FISH,GINGER_ISLAND",Stardew Valley Expanded
 60006,Farm,Eat Baby Lunaloo,"EATSANITY,EATSANITY_FISH,GINGER_ISLAND",Stardew Valley Expanded
 60007,Farm,Eat Baked Berry Oatmeal,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
 60008,Farm,Eat Baked Potato,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
-60009,Farm,Drink Barbarian Elixir,"EATSANITY,EATSANITY_SHOP",Stardew Valley Expanded
+60009,Farm,Eat Barbarian Elixir,"EATSANITY,EATSANITY_SHOP",Stardew Valley Expanded
 60010,Farm,Eat Barred Knifejaw,"EATSANITY,EATSANITY_FISH,GINGER_ISLAND",Stardew Valley Expanded
 60011,Farm,Eat Bearberry,"EATSANITY,EATSANITY_CROP",Stardew Valley Expanded
 60012,Farm,Eat Big Bark Burger,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
@@ -4054,7 +4054,7 @@ id,region,name,tags,content_packs
 60051,Farm,Eat Green Mushroom,"EATSANITY,EATSANITY_ARTISAN,GINGER_ISLAND",Stardew Valley Expanded
 60052,Farm,Eat Grilled Cheese Sandwich,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
 60053,Farm,Drink Haste Elixir,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
-60054,Farm,Drink Hero Elixir,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
+60054,Farm,Eat Hero Elixir,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
 60055,Farm,Eat Highlands Bass,"EATSANITY,EATSANITY_FISH,GINGER_ISLAND",Stardew Valley Expanded
 60056,Farm,Eat Honey Jar,"EATSANITY,EATSANITY_ARTISAN",Stardew Valley Expanded
 60057,Farm,Eat Ice Cream Sundae,"EATSANITY,EATSANITY_COOKING",Stardew Valley Expanded
